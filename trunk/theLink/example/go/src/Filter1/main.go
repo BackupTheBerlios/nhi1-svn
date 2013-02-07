@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/example/go/Filter1.go
+ *  \file       theLink/example/go/src/Filter1/main.go
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group

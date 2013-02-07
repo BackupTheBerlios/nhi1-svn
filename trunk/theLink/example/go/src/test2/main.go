@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/example/go/test2.go
+ *  \file       theLink/example/go/src/test2/main.go
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group

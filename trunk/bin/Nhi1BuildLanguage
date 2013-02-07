@@ -24,7 +24,8 @@ set -ue
 ## delete all environment variables to setup a "clean" build environment
 [[ "${CLEAN:-}" != "yes" ]] && exec /usr/bin/env - \
   CLEAN="yes" TERM="$TERM" HOME="$HOME" MACHTYPE="$MACHTYPE" \
-    CC="${CC:-}" CXX="${CXX:-}" CCACHE_DIR="${CCACHE_DIR:-}" "$0" "$@"
+    CC="${CC:-}" CXX="${CXX:-}" CCACHE_DIR="${CCACHE_DIR:-}" \
+      NHI1_TOOL_ROOT="${NHI1_TOOL_ROOT:-$HOME/ext/$MACHTYPE}" "$0" "$@"
 
 declare -x PATH="/bin:/usr/bin"
 
@@ -64,8 +65,7 @@ G_Source='\$URL: svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk/.OtConfig.bas
 # --------------------------------------------------------------------
 G_Description='wrapper to setup the build-environment for the "nhi1-configure" script.'
 # -------------------------------------------------------------------
-G_Argument 'ext-dir:ExtDir:$HOME/ext:extension directory:'
-G_Argument 'architecture:Arch:$MACHTYPE:architecture subdirectory of --ext-dir:'
+G_Argument 'tool-root:NHI1_TOOL_ROOT:__environment__:root for the tools directory:E'
 G_Argument 'clean:clean:0:cleanup first:B'
 G_Argument 'jobs:Jobs:2:number of parallel build jobs:'
 for l in tcl perl python ruby php kyotocabinet; do
@@ -79,7 +79,7 @@ G_Argument "use-all:useAll:0:build the 'all' options:B"
 EOF
   )"
 
-mkdir -p "$ExtDir/$Arch" || Die "unable to create directory '$ExtDir/$Arch'"
+mkdir -p "$NHI1_TOOL_ROOT" || Die "unable to create directory '$NHI1_TOOL_ROOT'"
 
 for l in ${!lang[@]} ; do
   (( ! ${lang[$l]} )) && continue
@@ -97,7 +97,7 @@ for l in ${!lang[@]} ; do
   for t in ${!use[@]} ; do
     (( !useAll && !${use[$t]} )) && continue
 
-    prefix="$ExtDir/$Arch/$(pathExtension $t)"
+    prefix="$NHI1_TOOL_ROOT/$(pathExtension $t)"
 
     case "$l" in
       perl)

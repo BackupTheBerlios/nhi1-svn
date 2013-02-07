@@ -1,6 +1,6 @@
 #!/bin/bash
 #+
-#:  \file       bin/GetFromInstall.bash
+#:  \file       sbin/GetFromInstall.bash
 #:  \brief      \$Id$
 #:  
 #:  (C) 2009 - NHI - #1 - Project - Group

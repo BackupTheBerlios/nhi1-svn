@@ -1,8 +1,8 @@
 #+
-#:  \file       bin/Makefile.am
+#:  \file       sbin/pkgIndex.tcl
 #:  \brief      \$Id$
 #:  
-#:  (C) 2007 - NHI - #1 - Project - Group
+#:  (C) 2004 - NHI - #1 - Project - Group
 #:  
 #:  \version    \$Rev$
 #:  \author     EMail: aotto1968 at users.berlios.de
@@ -10,5 +10,6 @@
 #:              please contact AUTHORS for additional information
 #:
 
-EXTRA_DIST =  Nhi1Label rcBuild Nhi1BuildLanguage Nhi1Config Nhi1Test
+package ifneeded StdLib 2.0 [list source [file join $dir StdLib.tcl]]
+package ifneeded FileLib 1.0 [list source [file join $dir FileLib.tcl]]
 

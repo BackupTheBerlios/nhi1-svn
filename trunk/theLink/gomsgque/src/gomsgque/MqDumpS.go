@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/gomsgque/src/MqDumpS.go
+ *  \file       theLink/gomsgque/src/gomsgque/MqDumpS.go
  *  \brief      \$Id$
  *  
  *  (C) 2011 - NHI - #1 - Project - Group

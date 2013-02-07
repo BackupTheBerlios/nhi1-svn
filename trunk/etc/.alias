@@ -1,0 +1,41 @@
+#+
+#:  \file       etc/.alias
+#:  \brief      \$Id$
+#:  
+#:  (C) 2013 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+export NHI1_HOME=$(dirname $(dirname $(readlink -e ~/.alias)))
+
+alias ee="vim ~/.bashrc"
+alias se=". ~/.bashrc"
+
+alias ea="vim ~/.alias"
+alias sa=". ~/.alias"
+
+for x in $NHI1_HOME/bin/Nhi1* ; do
+  alias $(basename $x)="$x"
+done
+
+alias cdpn="cd ~/Project/NHI1"
+alias cdm="cd /build/$USER/Main"
+alias cds="cd ~/src"
+
+for x in thread:t nothread:n performance-thread:pt performance-nothread:pn; do
+  IFS=:;set -- $x;unset IFS
+  alias cdm$2="cd /build/$USER/Main/$1"
+done
+
+for x in libmsgque:l ccmsgque:x tclmsgque:c test:t perlmsgque:p phpmsgque:h javamagsque:j \
+	  gomsgque:g
+do
+  IFS=:;set -- $x;unset IFS
+  alias cdr$2="cd ../$1"
+  alias cdl$2="cd theLink/$1"
+done
+

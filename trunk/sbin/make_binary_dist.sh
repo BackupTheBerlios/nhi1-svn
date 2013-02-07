@@ -1,6 +1,6 @@
 #!/bin/sh
 #+
-#:  \file       bin/make_binary_dist.sh
+#:  \file       sbin/make_binary_dist.sh
 #:  \brief      \$Id$
 #:  
 #:  (C) 2009 - NHI - #1 - Project - Group

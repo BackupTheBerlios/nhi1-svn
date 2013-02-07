@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/gomsgque/src/MqSException.go
+ *  \file       theLink/gomsgque/src/gomsgque/MqSException.go
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group

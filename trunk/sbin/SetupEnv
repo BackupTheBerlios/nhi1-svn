@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #+
-#:  \file       bin/SetupEnv
+#:  \file       sbin/SetupEnv
 #:  \brief      \$Id$
 #:  
 #:  (C) 2013 - NHI - #1 - Project - Group

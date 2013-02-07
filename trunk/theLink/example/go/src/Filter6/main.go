@@ -1,10 +1,10 @@
 /**
- *  \file       theLink/example/go/Filter6.go
- *  \brief      \$Id: LbMain 304 2010-11-13 09:57:59Z aotto1968 $
+ *  \file       theLink/example/go/src/Filter6/main.go
+ *  \brief      \$Id$
  *  
  *  (C) 2011 - NHI - #1 - Project - Group
  *  
- *  \version    \$Rev: 304 $
+ *  \version    \$Rev$
  *  \author     EMail: aotto1968 at users.berlios.de
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information

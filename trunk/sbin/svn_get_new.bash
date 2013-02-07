@@ -1,5 +1,5 @@
 #+
-#:  \file       bin/svn_get_new.bash
+#:  \file       sbin/svn_get_new.bash
 #:  \brief      \$Id$
 #:  
 #:  (C) 2010 - NHI - #1 - Project - Group

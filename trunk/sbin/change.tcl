@@ -1,6 +1,6 @@
 #!/usr/bin/env tclsh
 #+
-#:  \file       bin/change.tcl
+#:  \file       sbin/change.tcl
 #:  \brief      \$Id$
 #:  
 #:  (C) 2009 - NHI - #1 - Project - Group

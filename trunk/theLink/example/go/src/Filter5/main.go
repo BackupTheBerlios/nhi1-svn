@@ -1,10 +1,10 @@
 /**
- *  \file       theLink/example/go/Filter5.go
- *  \brief      \$Id: Filter5.go 357 2010-12-11 10:36:08Z aotto1968 $
+ *  \file       theLink/example/go/src/Filter5/main.go
+ *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
  *  
- *  \version    \$Rev: 357 $
+ *  \version    \$Rev$
  *  \author     EMail: aotto1968 at users.berlios.de
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information

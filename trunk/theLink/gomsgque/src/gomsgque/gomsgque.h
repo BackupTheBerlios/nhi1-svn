@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/gomsgque/src/gomsgque.h
+ *  \file       theLink/gomsgque/src/gomsgque/gomsgque.h
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group

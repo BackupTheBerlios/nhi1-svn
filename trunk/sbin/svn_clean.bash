@@ -1,8 +1,9 @@
+#!/bin/bash
 #+
-#:  \file       bin/pkgIndex.tcl
+#:  \file       sbin/svn_clean.bash
 #:  \brief      \$Id$
 #:  
-#:  (C) 2004 - NHI - #1 - Project - Group
+#:  (C) 2009 - NHI - #1 - Project - Group
 #:  
 #:  \version    \$Rev$
 #:  \author     EMail: aotto1968 at users.berlios.de
@@ -10,6 +11,10 @@
 #:              please contact AUTHORS for additional information
 #:
 
-package ifneeded StdLib 2.0 [list source [file join $dir StdLib.tcl]]
-package ifneeded FileLib 1.0 [list source [file join $dir FileLib.tcl]]
+svn status * | while read line ; do
+  set -- $line
+  [[ "$1" == "I" ]] && rm -fr "$2"
+done
+
+exit 0
 

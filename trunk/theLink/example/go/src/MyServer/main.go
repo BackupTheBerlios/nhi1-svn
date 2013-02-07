@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/example/go/MyServer.go
+ *  \file       theLink/example/go/src/MyServer/main.go
  *  \brief      \$Id$
  *  
  *  (C) 2009 - NHI - #1 - Project - Group

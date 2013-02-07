@@ -1,5 +1,5 @@
 #+
-#:  \file       bin/FileLib.tcl
+#:  \file       sbin/FileLib.tcl
 #:  \brief      \$Id$
 #:  
 #:  (C) 2004 - NHI - #1 - Project - Group

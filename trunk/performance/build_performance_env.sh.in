@@ -1,6 +1,6 @@
 #! /bin/bash
 #+
-#:  \file       performance/build_performance_env.sh
+#:  \file       performance/build_performance_env.sh.in
 #:  \brief      \$Id$
 #:  
 #:  (C) 2009 - NHI - #1 - Project - Group

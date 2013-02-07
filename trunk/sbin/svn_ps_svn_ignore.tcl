@@ -1,6 +1,6 @@
 #!/usr/bin/env tclsh
 #+
-#:  \file       bin/svn_ps_svn_ignore.tcl
+#:  \file       sbin/svn_ps_svn_ignore.tcl
 #:  \brief      \$Id$
 #:  
 #:  (C) 2009 - NHI - #1 - Project - Group
@@ -20,10 +20,13 @@
 
 set TMPF    [file join . svn_ps_svn_ignore.tmp]
 
-foreach {p f} [exec svn st] {
-  if {$p ne "?"} continue
+set FH [open "| svn st" r]
+while {[gets $FH p] >= 0} {
+  if {[string index $p 0] ne "?"} continue
+  set f [string range $p 8 end]
   lappend DIRS([file dirname $f]) [file tail $f]
 }
+close $FH
 
 foreach {k v} [array get DIRS] {
   set DATA [split [exec svn pg svn:ignore $k] \n]

@@ -1,5 +1,5 @@
 #+
-#:  \file       bin/LbMain
+#:  \file       sbin/LbMain
 #:  \brief      \$Id$
 #:  
 #:  (C) 2009 - NHI - #1 - Project - Group
@@ -230,8 +230,6 @@ proc Type* {} {
 ## main ...
 ##
 
-Exist? PROJECT_ENV
-
 lappend auto_path $env(FBGBASE)
 
 package require FileLib
@@ -376,6 +374,7 @@ foreach _F $argv {
 	{.cc}	    {set do [Type*]}
 	{.man}	    {set do [TypeGENERIC {'\"}]}
 	{.m4}	    {set do [TypeGENERIC dnl]}
+	{.vim}	    {set do [TypeGENERIC \"]}
 	{.phpini}   {set do [TypeGENERIC \;]}
 	{.bat}	    {set do [TypeBAT]}
 	ignore	    {continue}

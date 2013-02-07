@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/gomsgque/src/storage.go
+ *  \file       theLink/gomsgque/src/gomsgque/storage.go
  *  \brief      \$Id$
  *  
  *  (C) 2011 - NHI - #1 - Project - Group

@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/example/go/mulclient.go
+ *  \file       theLink/example/go/src/mulclient/main.go
  *  \brief      \$Id$
  *  
  *  (C) 2009 - NHI - #1 - Project - Group

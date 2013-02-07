@@ -1,10 +1,10 @@
 /**
- *  \file       theLink/gomsgque/src/MqS.go
- *  \brief      \$Id: MqS.go 603 2013-02-01 15:45:00Z aotto1968 $
+ *  \file       theLink/gomsgque/src/gomsgque/gomsgque.go.in
+ *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
  *  
- *  \version    \$Rev: 603 $
+ *  \version    \$Rev$
  *  \author     EMail: aotto1968 at users.berlios.de
  *  \attention  this software has GPL permissions to copy
  *              please contact AUTHORS for additional information

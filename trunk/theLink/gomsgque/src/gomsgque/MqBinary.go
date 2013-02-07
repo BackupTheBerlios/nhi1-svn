@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/gomsgque/src/MqBinary.go
+ *  \file       theLink/gomsgque/src/gomsgque/MqBinary.go
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group

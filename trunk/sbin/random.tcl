@@ -1,6 +1,6 @@
 #!/usr/bin/env tclsh
 #+
-#:  \file       bin/random.tcl
+#:  \file       sbin/random.tcl
 #:  \brief      \$Id$
 #:  
 #:  (C) 2009 - NHI - #1 - Project - Group

@@ -1,6 +1,6 @@
 #!/bin/bash
 #+
-#:  \file       bin/dist2svn.bash
+#:  \file       sbin/dist2svn.bash
 #:  \brief      \$Id$
 #:  
 #:  (C) 2009 - NHI - #1 - Project - Group

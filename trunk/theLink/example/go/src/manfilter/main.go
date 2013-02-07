@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/example/go/manfilter.go
+ *  \file       theLink/example/go/src/manfilter/main.go
  *  \brief      \$Id$
  *  
  *  (C) 2009 - NHI - #1 - Project - Group

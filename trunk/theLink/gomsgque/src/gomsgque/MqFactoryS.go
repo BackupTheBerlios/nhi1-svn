@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/gomsgque/src/MqFactoryS.go
+ *  \file       theLink/gomsgque/src/gomsgque/MqFactoryS.go
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group

@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/gomsgque/src/slave.go
+ *  \file       theLink/gomsgque/src/gomsgque/slave.go
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group

@@ -1,5 +1,5 @@
 /**
- *  \file       theLink/gomsgque/src/read.go
+ *  \file       theLink/gomsgque/src/gomsgque/read.go
  *  \brief      \$Id$
  *  
  *  (C) 2010 - NHI - #1 - Project - Group
