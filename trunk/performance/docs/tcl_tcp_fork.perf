@@ -1,9 +1,12 @@
-> TCLSH nothread/NHI1-0.17/theLink/example/tcl/server.tcl --tcp --host localhost --port 7783 --fork
-> nothread/NHI1-0.17/theLink/example/c/client --all --tcp --host localhost --port 7783
-C> (client) [SysConnect] TIMEOUT after '90' sec
-C> (client) found in function "GenericConnect" at file "generic_io.c"
-C> (client) found in function "TcpConnect" at file "tcp_io.c"
-C> (client) found in function "pIoConnect" at file "io.c"
-C> (client) found in function "MqLinkConnect" at file "link.c"
-C> (client) found in function "MqLinkCreate" at file "link.c"
-C> (client) use '-h' or '--help' for usage
+> TCLSH nothread/NHI1-0.17/theLink/example/tcl/server.tcl --tcp --host localhost --port 7777 --fork
+> nothread/NHI1-0.17/theLink/example/c/client --all --tcp --host localhost --port 7777
+C> (client:10895) [2013-02-07:16-03-13] [0-0-0-0x2313fb8-main]: start: --------------------------------------
+C> (client:10895) [2013-02-07:16-03-13] [0-0-0-0x2313fb8-statistics]:                      MqSendEND:   2.16e+05
+C> (client:10895) [2013-02-07:16-03-13] [0-0-0-0x2313fb8-statistics]:         MqSendEND_AND_CALLBACK:   1.18e+05
+C> (client:10895) [2013-02-07:16-03-15] [0-0-0-0x2313fb8-statistics]:             MqSendEND_AND_WAIT:   3.23e+04
+C> (client:10895) [2013-02-07:16-03-15] [0-0-0-0x2313fb8-statistics]:               MqSendPERSISTENT:   5.00e+01
+C> (client:10895) [2013-02-07:16-03-16] [0-0-0-0x2313fb8-statistics]:                  parent create:   9.08e+02
+C> (client:10895) [2013-02-07:16-03-16] [0-0-0-0x2313fb8-statistics]:                  parent delete:   2.61e+03
+C> (client:10895) [2013-02-07:16-03-17] [0-0-0-0x2313fb8-statistics]:                   child create:   3.41e+03
+C> (client:10895) [2013-02-07:16-03-17] [0-0-0-0x2313fb8-statistics]:                   child delete:   2.85e+04
+C> (client:10895) [2013-02-07:16-03-17] [0-0-0-0x2313fb8-main]: end: ----------------------------------------

@@ -493,7 +493,7 @@ uninstall-am:
 
 @USE_GO_TRUE@$(abs_builddir)/src/gomsgque/%: $(abs_srcdir)/src/gomsgque/%
 @USE_GO_TRUE@	if test -d $(dir $@) ; then true; else mkdir -p $(dir $@); fi
-@USE_GO_TRUE@	cp $< $@
+@USE_GO_TRUE@	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then cp $< $@; else true; fi
 
 @USE_GO_TRUE@all-local: $(addprefix $(abs_builddir)/, $(EXTRA_DIST))
 @USE_GO_TRUE@	$(GO) install gomsgque

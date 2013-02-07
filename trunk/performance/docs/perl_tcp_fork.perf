@@ -1,9 +1,12 @@
 > PERL nothread/NHI1-0.17/theLink/example/perl/server.pl --tcp --host localhost --port 7794 --fork
 > nothread/NHI1-0.17/theLink/example/c/client --all --tcp --host localhost --port 7794
-C> (client) [SysConnect] TIMEOUT after '90' sec
-C> (client) found in function "GenericConnect" at file "generic_io.c"
-C> (client) found in function "TcpConnect" at file "tcp_io.c"
-C> (client) found in function "pIoConnect" at file "io.c"
-C> (client) found in function "MqLinkConnect" at file "link.c"
-C> (client) found in function "MqLinkCreate" at file "link.c"
-C> (client) use '-h' or '--help' for usage
+C> (client:3859) [2013-02-07:15-16-09] [0-0-0-0xe3efb8-main]: start: --------------------------------------
+C> (client:3859) [2013-02-07:15-16-09] [0-0-0-0xe3efb8-statistics]:                      MqSendEND:   1.66e+05
+C> (client:3859) [2013-02-07:15-16-09] [0-0-0-0xe3efb8-statistics]:         MqSendEND_AND_CALLBACK:   1.14e+05
+C> (client:3859) [2013-02-07:15-16-11] [0-0-0-0xe3efb8-statistics]:             MqSendEND_AND_WAIT:   3.22e+04
+C> (client:3859) [2013-02-07:15-16-11] [0-0-0-0xe3efb8-statistics]:               MqSendPERSISTENT:   5.00e+01
+C> (client:3859) [2013-02-07:15-16-12] [0-0-0-0xe3efb8-statistics]:                  parent create:   8.18e+02
+C> (client:3859) [2013-02-07:15-16-13] [0-0-0-0xe3efb8-statistics]:                  parent delete:   7.44e+02
+C> (client:3859) [2013-02-07:15-16-13] [0-0-0-0xe3efb8-statistics]:                   child create:   7.06e+03
+C> (client:3859) [2013-02-07:15-16-13] [0-0-0-0xe3efb8-statistics]:                   child delete:   2.90e+04
+C> (client:3859) [2013-02-07:15-16-13] [0-0-0-0xe3efb8-main]: end: ----------------------------------------

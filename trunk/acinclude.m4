@@ -691,11 +691,6 @@ AC_DEFUN([SC_ENABLE_PHP], [
 #
 #------------------------------------------------------------------------
 
-#AC_DEFUN([SC_ENABLE_GO], [
-#  AC_SUBST([USE_GO], [no])
-#  AM_CONDITIONAL([USE_GO], [0])
-#])
-
 AC_DEFUN([SC_ENABLE_GO], [
   AC_SUBST([USE_GO], [no])
   AC_MSG_CHECKING([for build with GO])
@@ -705,6 +700,9 @@ AC_DEFUN([SC_ENABLE_GO], [
   )
   AC_MSG_RESULT($enable_go)
   if test x$enable_go = xyes; then
+    if test x$enable_threads = xno; then
+      AC_MSG_ERROR([GO require thread support])
+    fi
     AC_ARG_VAR([GO], [path to the 'go' tool])
     AC_PATH_PROG([GO], [go], [AC_MSG_ERROR([tool not found])]) 
   fi

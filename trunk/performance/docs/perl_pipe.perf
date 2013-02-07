@@ -1,7 +1,11 @@
 > nothread/NHI1-0.17/theLink/example/c/client --all @ PERL nothread/NHI1-0.17/theLink/example/perl/server.pl
-Can't locate Switch.pm in @INC (@INC contains: /build/dev01/Main/thread/performance/nothread/NHI1-0.17/theLink/perlmsgque/Net-PerlMsgque/blib/lib /home/dev01/ext/x86_64-suse-linux/nothread/lib/perl5/site_perl/5.16.2/x86_64-linux /home/dev01/ext/x86_64-suse-linux/nothread/lib/perl5/site_perl/5.16.2 /home/dev01/ext/x86_64-suse-linux/nothread/lib/perl5/5.16.2/x86_64-linux /home/dev01/ext/x86_64-suse-linux/nothread/lib/perl5/5.16.2 .) at nothread/NHI1-0.17/theLink/example/perl/server.pl line 14.
-BEGIN failed--compilation aborted at nothread/NHI1-0.17/theLink/example/perl/server.pl line 14.
-C> (client) [MqLinkConnect] can not start server '/home/dev01/ext/x86_64-suse-linux/nothread/bin/perl'
-C> (client) found in function "MqLinkConnect" at file "link.c"
-C> (client) found in function "MqLinkCreate" at file "link.c"
-C> (client) use '-h' or '--help' for usage
+C> (client:3750) [2013-02-07:15-15-41] [0-0-0-0x23d2e48-main]: start: --------------------------------------
+C> (client:3750) [2013-02-07:15-15-42] [0-0-0-0x23d2e48-statistics]:                      MqSendEND:   1.72e+05
+C> (client:3750) [2013-02-07:15-15-42] [0-0-0-0x23d2e48-statistics]:         MqSendEND_AND_CALLBACK:   1.10e+05
+C> (client:3750) [2013-02-07:15-15-43] [0-0-0-0x23d2e48-statistics]:             MqSendEND_AND_WAIT:   5.12e+04
+C> (client:3750) [2013-02-07:15-15-43] [0-0-0-0x23d2e48-statistics]:               MqSendPERSISTENT:   7.37e+03
+C> (client:3750) [2013-02-07:15-16-06] [0-0-0-0x23d2e48-statistics]:                  parent create:   4.48e+00
+C> (client:3750) [2013-02-07:15-16-06] [0-0-0-0x23d2e48-statistics]:                  parent delete:   1.09e+03
+C> (client:3750) [2013-02-07:15-16-07] [0-0-0-0x23d2e48-statistics]:                   child create:   7.85e+03
+C> (client:3750) [2013-02-07:15-16-07] [0-0-0-0x23d2e48-statistics]:                   child delete:   4.30e+04
+C> (client:3750) [2013-02-07:15-16-07] [0-0-0-0x23d2e48-main]: end: ----------------------------------------

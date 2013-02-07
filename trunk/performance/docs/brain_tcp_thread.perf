@@ -1,3 +1,3 @@
-> thread/NHI1-0.17/theBrain/abrain/abrain --tcp --host localhost --port 7803 --thread
-> thread/NHI1-0.17/theBrain/tests/client --all --tcp --host localhost --port 7803
+> thread/NHI1-0.17/theBrain/abrain/abrain --tcp --host localhost --port 7778 --thread
+> thread/NHI1-0.17/theBrain/tests/client --all --tcp --host localhost --port 7778
 performance.sh: line 373: thread/NHI1-0.17/theBrain/tests/client: No such file or directory

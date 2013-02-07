@@ -699,10 +699,8 @@ if {![info exists env(SRV_LST)]} {
     ruby.uds.fork
     go.pipe.pipe
     go.tcp.spawn
-    go.tcp.fork
     go.tcp.thread
     go.uds.spawn
-    go.uds.fork
     go.uds.thread
     vb.pipe.pipe
     vb.tcp.spawn
@@ -711,6 +709,8 @@ if {![info exists env(SRV_LST)]} {
     vb.uds.thread
   }
 }
+
+set tcl_traceExec 1
 
 # windows has some restrictions :(
 if {$::tcl_platform(platform) eq "windows"} {

@@ -1,11 +1,11 @@
 > nothread/NHI1-0.17/theLink/example/c/client --all @ RUBY nothread/NHI1-0.17/theLink/example/ruby/server.rb
-C> (client:12124) [2013-02-06:16-02-37] [0-0-0-0xcd5e48-main]: start: --------------------------------------
-C> (client:12124) [2013-02-06:16-02-37] [0-0-0-0xcd5e48-statistics]:                      MqSendEND:   1.86e+05
-C> (client:12124) [2013-02-06:16-02-37] [0-0-0-0xcd5e48-statistics]:         MqSendEND_AND_CALLBACK:   1.05e+05
-C> (client:12124) [2013-02-06:16-02-38] [0-0-0-0xcd5e48-statistics]:             MqSendEND_AND_WAIT:   5.06e+04
-C> (client:12124) [2013-02-06:16-02-38] [0-0-0-0xcd5e48-statistics]:               MqSendPERSISTENT:   7.15e+03
-C> (client:12124) [2013-02-06:16-02-41] [0-0-0-0xcd5e48-statistics]:                  parent create:   5.16e+01
-C> (client:12124) [2013-02-06:16-02-41] [0-0-0-0xcd5e48-statistics]:                  parent delete:   9.63e+02
-C> (client:12124) [2013-02-06:16-02-42] [0-0-0-0xcd5e48-statistics]:                   child create:   6.36e+03
-C> (client:12124) [2013-02-06:16-02-42] [0-0-0-0xcd5e48-statistics]:                   child delete:   4.01e+04
-C> (client:12124) [2013-02-06:16-02-42] [0-0-0-0xcd5e48-main]: end: ----------------------------------------
+C> (client:11683) [2013-02-07:16-04-41] [0-0-0-0x2162e48-main]: start: --------------------------------------
+C> (client:11683) [2013-02-07:16-04-42] [0-0-0-0x2162e48-statistics]:                      MqSendEND:   1.85e+05
+C> (client:11683) [2013-02-07:16-04-42] [0-0-0-0x2162e48-statistics]:         MqSendEND_AND_CALLBACK:   1.05e+05
+C> (client:11683) [2013-02-07:16-04-43] [0-0-0-0x2162e48-statistics]:             MqSendEND_AND_WAIT:   5.07e+04
+C> (client:11683) [2013-02-07:16-04-43] [0-0-0-0x2162e48-statistics]:               MqSendPERSISTENT:   6.88e+03
+C> (client:11683) [2013-02-07:16-04-46] [0-0-0-0x2162e48-statistics]:                  parent create:   5.15e+01
+C> (client:11683) [2013-02-07:16-04-46] [0-0-0-0x2162e48-statistics]:                  parent delete:   9.57e+02
+C> (client:11683) [2013-02-07:16-04-46] [0-0-0-0x2162e48-statistics]:                   child create:   6.35e+03
+C> (client:11683) [2013-02-07:16-04-46] [0-0-0-0x2162e48-statistics]:                   child delete:   4.03e+04
+C> (client:11683) [2013-02-07:16-04-46] [0-0-0-0x2162e48-main]: end: ----------------------------------------

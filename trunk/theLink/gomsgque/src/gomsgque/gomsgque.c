@@ -334,6 +334,7 @@ gomsgque_ConfigSetSetup (
   struct MqS * const context
 )
 {
+  MqConfigSetIgnoreFork(context, MQ_YES);
   return MqConfigSetSetup(context, MqLinkDefault, NULL, MqLinkDefault, NULL, sProcessExit, sThreadExit);
 }
 

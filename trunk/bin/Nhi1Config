@@ -56,7 +56,7 @@ add2var() {
 export -f add2var
 
 Usage() {
-  exec $SOURCE_HOME/../configure --help
+  exec $NHI1_HOME/configure --help
 }
 
 pathExtension() {
@@ -79,14 +79,14 @@ pathExtension() {
 export PATH=/bin:/usr/bin
 export LD_LIBRARY_PATH=
 
-SOURCE_HOME=$(dirname $(readlink -f $0))
+NHI1_HOME=$(dirname $(dirname $(readlink -f $0)))
 
 ##  Retrieve environment data
 declare -A lang
 declare -A enable
 declare -a opt
 
-eval "$($SOURCE_HOME/SetupEnv $0 "${@:-}" <<-'EOF'
+eval "$($NHI1_HOME/sbin/SetupEnv $0 "${@:-}" <<-'EOF'
 
 G_Shell 'bash'
 # ---------------------------------------------------------------------
@@ -142,9 +142,9 @@ else
   fi
 fi
 
-add2var PATH		  $HOME/ext/$MACHTYPE/$T/bin
-add2var LD_LIBRARY_PATH   $HOME/ext/$MACHTYPE/$T/lib
-add2var PKG_CONFIG_PATH   $HOME/ext/$MACHTYPE/$T/lib/pkgconfig
+add2var PATH		  $NHI1_TOOL_ROOT/$T/bin
+add2var LD_LIBRARY_PATH   $NHI1_TOOL_ROOT/$T/lib
+add2var PKG_CONFIG_PATH   $NHI1_TOOL_ROOT/$T/lib/pkgconfig
 
 [[ ${lang[go]} == "1" && -f /etc/profile.d/go.sh ]] && {
   source /etc/profile.d/go.sh
@@ -152,7 +152,7 @@ add2var PKG_CONFIG_PATH   $HOME/ext/$MACHTYPE/$T/lib/pkgconfig
 
 rm -fr /tmp/libmsgque-install
 
-bash -norc $SOURCE_HOME/../configure --prefix=/tmp/libmsgque-install "${opt[@]}" "${@:-}"
+bash -norc $NHI1_HOME/configure --prefix=/tmp/libmsgque-install "${opt[@]}" "${@:-}"
 
 #		    --enable-cxx \
 #		    --enable-java \

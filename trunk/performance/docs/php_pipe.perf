@@ -1,11 +1,11 @@
 > nothread/NHI1-0.17/theLink/example/c/client --all @ PHP nothread/NHI1-0.17/theLink/example/php/server.php
-C> (client:15825) [2013-02-06:16-13-39] [0-0-0-0xf380b8-main]: start: --------------------------------------
-C> (client:15825) [2013-02-06:16-13-40] [0-0-0-0xf380b8-statistics]:                      MqSendEND:   1.76e+05
-C> (client:15825) [2013-02-06:16-13-40] [0-0-0-0xf380b8-statistics]:         MqSendEND_AND_CALLBACK:   9.30e+04
-C> (client:15825) [2013-02-06:16-13-41] [0-0-0-0xf380b8-statistics]:             MqSendEND_AND_WAIT:   4.69e+04
-C> (client:15825) [2013-02-06:16-13-41] [0-0-0-0xf380b8-statistics]:               MqSendPERSISTENT:   6.80e+03
-C> (client:15825) [2013-02-06:16-13-43] [0-0-0-0xf380b8-statistics]:                  parent create:   1.30e+02
-C> (client:15825) [2013-02-06:16-13-43] [0-0-0-0xf380b8-statistics]:                  parent delete:   2.51e+03
-C> (client:15825) [2013-02-06:16-13-43] [0-0-0-0xf380b8-statistics]:                   child create:   5.20e+03
-C> (client:15825) [2013-02-06:16-13-43] [0-0-0-0xf380b8-statistics]:                   child delete:   4.36e+04
-C> (client:15825) [2013-02-06:16-13-43] [0-0-0-0xf380b8-main]: end: ----------------------------------------
+C> (client:6652) [2013-02-07:15-17-59] [0-0-0-0x26650b8-main]: start: --------------------------------------
+C> (client:6652) [2013-02-07:15-17-59] [0-0-0-0x26650b8-statistics]:                      MqSendEND:   1.75e+05
+C> (client:6652) [2013-02-07:15-18-00] [0-0-0-0x26650b8-statistics]:         MqSendEND_AND_CALLBACK:   9.16e+04
+C> (client:6652) [2013-02-07:15-18-01] [0-0-0-0x26650b8-statistics]:             MqSendEND_AND_WAIT:   4.65e+04
+C> (client:6652) [2013-02-07:15-18-01] [0-0-0-0x26650b8-statistics]:               MqSendPERSISTENT:   7.22e+03
+C> (client:6652) [2013-02-07:15-18-03] [0-0-0-0x26650b8-statistics]:                  parent create:   1.29e+02
+C> (client:6652) [2013-02-07:15-18-03] [0-0-0-0x26650b8-statistics]:                  parent delete:   2.41e+03
+C> (client:6652) [2013-02-07:15-18-03] [0-0-0-0x26650b8-statistics]:                   child create:   5.11e+03
+C> (client:6652) [2013-02-07:15-18-03] [0-0-0-0x26650b8-statistics]:                   child delete:   4.45e+04
+C> (client:6652) [2013-02-07:15-18-03] [0-0-0-0x26650b8-main]: end: ----------------------------------------

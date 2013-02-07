@@ -1,12 +1,12 @@
 > JAVA example.Server --uds --file ./socket.uds --spawn
 > thread/NHI1-0.17/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:10314:0x7fe3617b2700) [2013-02-06:16-01-42] [0-0-0-0x107dd98-main]: start: --------------------------------------
-C> (client:10314:0x7fe3617b2700) [2013-02-06:16-01-42] [0-0-0-0x107dd98-statistics]:                      MqSendEND:   2.18e+05
-C> (client:10314:0x7fe3617b2700) [2013-02-06:16-01-42] [0-0-0-0x107dd98-statistics]:         MqSendEND_AND_CALLBACK:   1.29e+05
-C> (client:10314:0x7fe3617b2700) [2013-02-06:16-01-43] [0-0-0-0x107dd98-statistics]:             MqSendEND_AND_WAIT:   5.43e+04
-C> (client:10314:0x7fe3617b2700) [2013-02-06:16-01-43] [0-0-0-0x107dd98-statistics]:               MqSendPERSISTENT:   7.04e+03
-C> (client:10314:0x7fe3617b2700) [2013-02-06:16-01-56] [0-0-0-0x107dd98-statistics]:                  parent create:   8.18e+00
-C> (client:10314:0x7fe3617b2700) [2013-02-06:16-01-57] [0-0-0-0x107dd98-statistics]:                  parent delete:   7.66e+02
-C> (client:10314:0x7fe3617b2700) [2013-02-06:16-01-57] [0-0-0-0x107dd98-statistics]:                   child create:   5.05e+03
-C> (client:10314:0x7fe3617b2700) [2013-02-06:16-01-57] [0-0-0-0x107dd98-statistics]:                   child delete:   3.88e+04
-C> (client:10314:0x7fe3617b2700) [2013-02-06:16-01-57] [0-0-0-0x107dd98-main]: end: ----------------------------------------
+C> (client:31879:0x7f5ca704d700) [2013-02-07:15-13-40] [0-0-0-0x8a6d98-main]: start: --------------------------------------
+C> (client:31879:0x7f5ca704d700) [2013-02-07:15-13-40] [0-0-0-0x8a6d98-statistics]:                      MqSendEND:   2.22e+05
+C> (client:31879:0x7f5ca704d700) [2013-02-07:15-13-41] [0-0-0-0x8a6d98-statistics]:         MqSendEND_AND_CALLBACK:   1.29e+05
+C> (client:31879:0x7f5ca704d700) [2013-02-07:15-13-42] [0-0-0-0x8a6d98-statistics]:             MqSendEND_AND_WAIT:   5.41e+04
+C> (client:31879:0x7f5ca704d700) [2013-02-07:15-13-42] [0-0-0-0x8a6d98-statistics]:               MqSendPERSISTENT:   6.96e+03
+C> (client:31879:0x7f5ca704d700) [2013-02-07:15-13-55] [0-0-0-0x8a6d98-statistics]:                  parent create:   8.14e+00
+C> (client:31879:0x7f5ca704d700) [2013-02-07:15-13-55] [0-0-0-0x8a6d98-statistics]:                  parent delete:   7.63e+02
+C> (client:31879:0x7f5ca704d700) [2013-02-07:15-13-55] [0-0-0-0x8a6d98-statistics]:                   child create:   5.03e+03
+C> (client:31879:0x7f5ca704d700) [2013-02-07:15-13-55] [0-0-0-0x8a6d98-statistics]:                   child delete:   3.87e+04
+C> (client:31879:0x7f5ca704d700) [2013-02-07:15-13-55] [0-0-0-0x8a6d98-main]: end: ----------------------------------------

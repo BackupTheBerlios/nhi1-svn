@@ -31,8 +31,8 @@ for x in thread:t nothread:n performance-thread:pt performance-nothread:pn; do
   alias cdm$2="cd /build/$USER/Main/$1"
 done
 
-for x in libmsgque:l ccmsgque:x tclmsgque:c test:t perlmsgque:p phpmsgque:h javamagsque:j \
-	  gomsgque:g
+for x in libmsgque:l ccmsgque:x tclmsgque:c tests:t perlmsgque:p phpmsgque:h javamsgque:j \
+	  gomsgque:g doc:d example:e rubymsgque:r
 do
   IFS=:;set -- $x;unset IFS
   alias cdr$2="cd ../$1"

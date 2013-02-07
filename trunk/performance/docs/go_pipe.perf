@@ -1,11 +1,11 @@
 > thread/NHI1-0.17/theLink/example/c/client --all @ thread/NHI1-0.17/theLink/example/go/server
-C> (client:14695:0x7f6cfab7a700) [2013-02-06:16-13-00] [0-0-0-0x144fcb8-main]: start: --------------------------------------
-C> (client:14695:0x7f6cfab7a700) [2013-02-06:16-13-00] [0-0-0-0x144fcb8-statistics]:                      MqSendEND:   2.25e+05
-C> (client:14695:0x7f6cfab7a700) [2013-02-06:16-13-00] [0-0-0-0x144fcb8-statistics]:         MqSendEND_AND_CALLBACK:   1.18e+05
-C> (client:14695:0x7f6cfab7a700) [2013-02-06:16-13-01] [0-0-0-0x144fcb8-statistics]:             MqSendEND_AND_WAIT:   5.25e+04
-C> (client:14695:0x7f6cfab7a700) [2013-02-06:16-13-01] [0-0-0-0x144fcb8-statistics]:               MqSendPERSISTENT:   6.88e+03
-C> (client:14695:0x7f6cfab7a700) [2013-02-06:16-13-04] [0-0-0-0x144fcb8-statistics]:                  parent create:   6.91e+01
-C> (client:14695:0x7f6cfab7a700) [2013-02-06:16-13-04] [0-0-0-0x144fcb8-statistics]:                  parent delete:   2.54e+03
-C> (client:14695:0x7f6cfab7a700) [2013-02-06:16-13-04] [0-0-0-0x144fcb8-statistics]:                   child create:   5.89e+03
-C> (client:14695:0x7f6cfab7a700) [2013-02-06:16-13-04] [0-0-0-0x144fcb8-statistics]:                   child delete:   3.88e+04
-C> (client:14695:0x7f6cfab7a700) [2013-02-06:16-13-04] [0-0-0-0x144fcb8-main]: end: ----------------------------------------
+C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-31] [0-0-0-0x10b8cb8-main]: start: --------------------------------------
+C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-31] [0-0-0-0x10b8cb8-statistics]:                      MqSendEND:   2.20e+05
+C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-32] [0-0-0-0x10b8cb8-statistics]:         MqSendEND_AND_CALLBACK:   1.19e+05
+C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-33] [0-0-0-0x10b8cb8-statistics]:             MqSendEND_AND_WAIT:   5.19e+04
+C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-33] [0-0-0-0x10b8cb8-statistics]:               MqSendPERSISTENT:   6.86e+03
+C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-35] [0-0-0-0x10b8cb8-statistics]:                  parent create:   6.89e+01
+C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-35] [0-0-0-0x10b8cb8-statistics]:                  parent delete:   2.84e+03
+C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-35] [0-0-0-0x10b8cb8-statistics]:                   child create:   5.84e+03
+C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-35] [0-0-0-0x10b8cb8-statistics]:                   child delete:   3.88e+04
+C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-35] [0-0-0-0x10b8cb8-main]: end: ----------------------------------------

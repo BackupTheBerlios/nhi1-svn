@@ -12,6 +12,8 @@
 
 EXTRA_DIST = build_performance_env.sh.in performance.sh.in README
 
+arg ?= ALL
+
 clean-local:
 	rm -fr thread
 	rm -fr nothread
@@ -23,5 +25,5 @@ nothread: build_performance_env.sh
 	$(SHELL) build_performance_env.sh nothread
 
 perf: performance.sh thread nothread
-	$(SHELL) performance.sh
+	$(SHELL) performance.sh $(arg)
 

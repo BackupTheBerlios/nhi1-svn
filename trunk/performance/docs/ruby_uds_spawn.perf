@@ -1,12 +1,12 @@
 > RUBY nothread/NHI1-0.17/theLink/example/ruby/server.rb --uds --file ./socket.uds --spawn
 > nothread/NHI1-0.17/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:13210) [2013-02-06:16-03-03] [0-0-0-0x2114d98-main]: start: --------------------------------------
-C> (client:13210) [2013-02-06:16-03-03] [0-0-0-0x2114d98-statistics]:                      MqSendEND:   1.85e+05
-C> (client:13210) [2013-02-06:16-03-04] [0-0-0-0x2114d98-statistics]:         MqSendEND_AND_CALLBACK:   1.04e+05
-C> (client:13210) [2013-02-06:16-03-05] [0-0-0-0x2114d98-statistics]:             MqSendEND_AND_WAIT:   5.01e+04
-C> (client:13210) [2013-02-06:16-03-05] [0-0-0-0x2114d98-statistics]:               MqSendPERSISTENT:   7.13e+03
-C> (client:13210) [2013-02-06:16-03-08] [0-0-0-0x2114d98-statistics]:                  parent create:   5.21e+01
-C> (client:13210) [2013-02-06:16-03-08] [0-0-0-0x2114d98-statistics]:                  parent delete:   9.96e+02
-C> (client:13210) [2013-02-06:16-03-08] [0-0-0-0x2114d98-statistics]:                   child create:   6.36e+03
-C> (client:13210) [2013-02-06:16-03-08] [0-0-0-0x2114d98-statistics]:                   child delete:   4.00e+04
-C> (client:13210) [2013-02-06:16-03-08] [0-0-0-0x2114d98-main]: end: ----------------------------------------
+C> (client:12759) [2013-02-07:16-05-08] [0-0-0-0xbaad98-main]: start: --------------------------------------
+C> (client:12759) [2013-02-07:16-05-08] [0-0-0-0xbaad98-statistics]:                      MqSendEND:   1.87e+05
+C> (client:12759) [2013-02-07:16-05-08] [0-0-0-0xbaad98-statistics]:         MqSendEND_AND_CALLBACK:   1.06e+05
+C> (client:12759) [2013-02-07:16-05-09] [0-0-0-0xbaad98-statistics]:             MqSendEND_AND_WAIT:   5.07e+04
+C> (client:12759) [2013-02-07:16-05-09] [0-0-0-0xbaad98-statistics]:               MqSendPERSISTENT:   7.12e+03
+C> (client:12759) [2013-02-07:16-05-12] [0-0-0-0xbaad98-statistics]:                  parent create:   5.19e+01
+C> (client:12759) [2013-02-07:16-05-12] [0-0-0-0xbaad98-statistics]:                  parent delete:   9.56e+02
+C> (client:12759) [2013-02-07:16-05-12] [0-0-0-0xbaad98-statistics]:                   child create:   6.35e+03
+C> (client:12759) [2013-02-07:16-05-12] [0-0-0-0xbaad98-statistics]:                   child delete:   3.99e+04
+C> (client:12759) [2013-02-07:16-05-12] [0-0-0-0xbaad98-main]: end: ----------------------------------------

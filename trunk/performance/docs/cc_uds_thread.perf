@@ -1,12 +1,12 @@
 > thread/NHI1-0.17/theLink/example/cc/server --uds --file ./socket.uds --thread
 > thread/NHI1-0.17/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:6428:0x7fd8f68c7700) [2013-02-06:15-57-11] [0-0-0-0x2268d98-main]: start: --------------------------------------
-C> (client:6428:0x7fd8f68c7700) [2013-02-06:15-57-11] [0-0-0-0x2268d98-statistics]:                      MqSendEND:   3.91e+05
-C> (client:6428:0x7fd8f68c7700) [2013-02-06:15-57-11] [0-0-0-0x2268d98-statistics]:         MqSendEND_AND_CALLBACK:   2.04e+05
-C> (client:6428:0x7fd8f68c7700) [2013-02-06:15-57-12] [0-0-0-0x2268d98-statistics]:             MqSendEND_AND_WAIT:   5.95e+04
-C> (client:6428:0x7fd8f68c7700) [2013-02-06:15-57-12] [0-0-0-0x2268d98-statistics]:               MqSendPERSISTENT:   7.19e+03
-C> (client:6428:0x7fd8f68c7700) [2013-02-06:15-57-13] [0-0-0-0x2268d98-statistics]:                  parent create:   5.11e+03
-C> (client:6428:0x7fd8f68c7700) [2013-02-06:15-57-13] [0-0-0-0x2268d98-statistics]:                  parent delete:   1.27e+04
-C> (client:6428:0x7fd8f68c7700) [2013-02-06:15-57-13] [0-0-0-0x2268d98-statistics]:                   child create:   9.75e+03
-C> (client:6428:0x7fd8f68c7700) [2013-02-06:15-57-13] [0-0-0-0x2268d98-statistics]:                   child delete:   3.88e+04
-C> (client:6428:0x7fd8f68c7700) [2013-02-06:15-57-13] [0-0-0-0x2268d98-main]: end: ----------------------------------------
+C> (client:28108:0x7f5ab54df700) [2013-02-07:15-12-06] [0-0-0-0x255ad98-main]: start: --------------------------------------
+C> (client:28108:0x7f5ab54df700) [2013-02-07:15-12-06] [0-0-0-0x255ad98-statistics]:                      MqSendEND:   3.89e+05
+C> (client:28108:0x7f5ab54df700) [2013-02-07:15-12-06] [0-0-0-0x255ad98-statistics]:         MqSendEND_AND_CALLBACK:   2.03e+05
+C> (client:28108:0x7f5ab54df700) [2013-02-07:15-12-07] [0-0-0-0x255ad98-statistics]:             MqSendEND_AND_WAIT:   5.94e+04
+C> (client:28108:0x7f5ab54df700) [2013-02-07:15-12-07] [0-0-0-0x255ad98-statistics]:               MqSendPERSISTENT:   7.12e+03
+C> (client:28108:0x7f5ab54df700) [2013-02-07:15-12-08] [0-0-0-0x255ad98-statistics]:                  parent create:   5.10e+03
+C> (client:28108:0x7f5ab54df700) [2013-02-07:15-12-08] [0-0-0-0x255ad98-statistics]:                  parent delete:   1.26e+04
+C> (client:28108:0x7f5ab54df700) [2013-02-07:15-12-08] [0-0-0-0x255ad98-statistics]:                   child create:   9.76e+03
+C> (client:28108:0x7f5ab54df700) [2013-02-07:15-12-08] [0-0-0-0x255ad98-statistics]:                   child delete:   3.85e+04
+C> (client:28108:0x7f5ab54df700) [2013-02-07:15-12-08] [0-0-0-0x255ad98-main]: end: ----------------------------------------

@@ -48,13 +48,13 @@ pathExtension() {
 ## =======================================================================
 ##
 
-SOURCE_HOME=$(dirname $(readlink -f $0))
+NHI1_HOME=$(dirname $(dirname $(readlink -f $0)))
 
 ##  Retrieve environment data
 declare -A lang
 declare -A use
 
-eval "$($SOURCE_HOME/SetupEnv $0 "${@:-}" <<-EOF
+eval "$($NHI1_HOME/sbin/SetupEnv $0 "${@:-}" <<-EOF
 
 G_Shell 'bash'
 # ---------------------------------------------------------------------
@@ -145,14 +145,17 @@ for l in ${!lang[@]} ; do
 	esac
 	buildConf+=(--prefix="$prefix" --enable-shared --enable-static --enable-uyield --disable-zlib)
       ;;
-      *)
+      tcl)
 	case "$t" in
 	  thread)		buildConf=(--enable-symbols --enable-threads);;
-	  nothread)		buildConf=(--enable-symbols);;
+	  nothread)		buildConf=(--enable-symbols --disable-threads);;
 	  performance-thread)	buildConf=(--enable-threads);;
-	  performance-nothread) buildConf=();;
+	  performance-nothread) buildConf=(--disable-threads);;
 	esac
 	buildConf+=(--prefix="$prefix")
+      ;;
+      *)
+	Die "invalid language $1"
       ;;
     esac
 

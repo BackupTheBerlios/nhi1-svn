@@ -1,12 +1,12 @@
 > PYTHON nothread/NHI1-0.17/theLink/example/python/server.py --tcp --host localhost --port 7788 --fork
 > nothread/NHI1-0.17/theLink/example/c/client --all --tcp --host localhost --port 7788
-C> (client:11651) [2013-02-06:16-02-07] [0-0-0-0xbe3fb8-main]: start: --------------------------------------
-C> (client:11651) [2013-02-06:16-02-07] [0-0-0-0xbe3fb8-statistics]:                      MqSendEND:   2.31e+05
-C> (client:11651) [2013-02-06:16-02-07] [0-0-0-0xbe3fb8-statistics]:         MqSendEND_AND_CALLBACK:   9.74e+04
-C> (client:11651) [2013-02-06:16-02-09] [0-0-0-0xbe3fb8-statistics]:             MqSendEND_AND_WAIT:   3.04e+04
-C> (client:11651) [2013-02-06:16-02-09] [0-0-0-0xbe3fb8-statistics]:               MqSendPERSISTENT:   5.00e+01
-C> (client:11651) [2013-02-06:16-02-10] [0-0-0-0xbe3fb8-statistics]:                  parent create:   1.01e+03
-C> (client:11651) [2013-02-06:16-02-11] [0-0-0-0xbe3fb8-statistics]:                  parent delete:   2.35e+02
-C> (client:11651) [2013-02-06:16-02-11] [0-0-0-0xbe3fb8-statistics]:                   child create:   6.68e+03
-C> (client:11651) [2013-02-06:16-02-11] [0-0-0-0xbe3fb8-statistics]:                   child delete:   2.87e+04
-C> (client:11651) [2013-02-06:16-02-11] [0-0-0-0xbe3fb8-main]: end: ----------------------------------------
+C> (client:748) [2013-02-07:15-14-05] [0-0-0-0xe57fb8-main]: start: --------------------------------------
+C> (client:748) [2013-02-07:15-14-05] [0-0-0-0xe57fb8-statistics]:                      MqSendEND:   2.30e+05
+C> (client:748) [2013-02-07:15-14-06] [0-0-0-0xe57fb8-statistics]:         MqSendEND_AND_CALLBACK:   9.76e+04
+C> (client:748) [2013-02-07:15-14-08] [0-0-0-0xe57fb8-statistics]:             MqSendEND_AND_WAIT:   3.01e+04
+C> (client:748) [2013-02-07:15-14-08] [0-0-0-0xe57fb8-statistics]:               MqSendPERSISTENT:   5.00e+01
+C> (client:748) [2013-02-07:15-14-09] [0-0-0-0xe57fb8-statistics]:                  parent create:   1.00e+03
+C> (client:748) [2013-02-07:15-14-09] [0-0-0-0xe57fb8-statistics]:                  parent delete:   2.26e+02
+C> (client:748) [2013-02-07:15-14-10] [0-0-0-0xe57fb8-statistics]:                   child create:   6.67e+03
+C> (client:748) [2013-02-07:15-14-10] [0-0-0-0xe57fb8-statistics]:                   child delete:   2.86e+04
+C> (client:748) [2013-02-07:15-14-10] [0-0-0-0xe57fb8-main]: end: ----------------------------------------
