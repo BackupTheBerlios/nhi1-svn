@@ -17,8 +17,6 @@ SUFFIXES = .c .h .class .java .jar
 #####################################################################################
 ## public JNI
 
-AM_LIBTOOLFLAGS = --tag=disable-static
-
 JAVAH_FILES = javamsgque_MqS.h javamsgque_MqBufferS.h javamsgque_MqFactoryS.h javamsgque_MqDumpS.h
 JAVAH_EXTRA_FILES = javamsgque_MqS_WAIT.h javamsgque_MqS_TIMEOUT.h javamsgque_MqS_START.h
 
@@ -41,9 +39,10 @@ libjavamsgque_la_SOURCES =  context_java.c context_java.h \
 			    MqBufferS_java.c MqFactoryS_java.c MqDumpS_java.c
 
 # use this if you want to link again the dynmic library libmsgque...
-libjavamsgque_la_CFLAGS = -I$(srcdir)/../libmsgque -DMQ_IGNORE_EXTERN $(JAVA_CPPFLAGS) $(AM_CFLAGS) 
+libjavamsgque_la_CPPFLAGS = $(JAVA_CPPFLAGS)
+libjavamsgque_la_CFLAGS = -shared -I$(srcdir)/../libmsgque -DMQ_IGNORE_EXTERN $(JAVA_CPPFLAGS)
+libjavamsgque_la_LDFLAGS = -shared -module -avoid-version -no-undefined 
 libjavamsgque_la_LIBADD = ../libmsgque/libtmp.la
-libjavamsgque_la_LDFLAGS = -module -avoid-version -no-undefined 
 
 if WIN32
 libjavamsgque_la_LDFLAGS += -Wl,--add-stdcall-alias

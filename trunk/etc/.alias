@@ -32,7 +32,7 @@ for x in thread:t nothread:n performance-thread:pt performance-nothread:pn; do
 done
 
 for x in libmsgque:l ccmsgque:x tclmsgque:c tests:t perlmsgque:p phpmsgque:h javamsgque:j \
-	  gomsgque:g doc:d example:e rubymsgque:r
+	  gomsgque:g doc:d example:e rubymsgque:r csmsgque:s pymsgque:y docs:d
 do
   IFS=:;set -- $x;unset IFS
   alias cdr$2="cd ../$1"

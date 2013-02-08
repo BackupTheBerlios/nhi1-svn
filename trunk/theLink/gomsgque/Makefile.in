@@ -65,15 +65,11 @@ target_triplet = @target@
 subdir = theLink/gomsgque
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/ax_compare_version.m4 \
-	$(top_srcdir)/m4/ax_prog_ruby_version.m4 \
-	$(top_srcdir)/m4/ax_ruby_devel.m4 \
-	$(top_srcdir)/m4/ax_with_prog.m4 \
-	$(top_srcdir)/m4/ax_with_ruby.m4 $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/acinclude.m4 $(top_srcdir)/m4/ac_java.m4 \
-	$(top_srcdir)/m4/ac_python_devel.m4 $(top_srcdir)/configure.in
+am__aclocal_m4_deps = $(top_srcdir)/m4/ax_with_prog.m4 \
+	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/acinclude.m4 \
+	$(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -114,8 +110,8 @@ CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DIRNAME = @DIRNAME@
 DLLTOOL = @DLLTOOL@
-DOT = @DOT@
 DOXYGEN = @DOXYGEN@
 DOXYPERL = @DOXYPERL@
 DSYMUTIL = @DSYMUTIL@
@@ -140,6 +136,7 @@ JAVAC = @JAVAC@
 JAVAH = @JAVAH@
 JAVA_CPPFLAGS = @JAVA_CPPFLAGS@
 JAVA_DEBUG = @JAVA_DEBUG@
+JAVA_HOME = @JAVA_HOME@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBMSGQUE_VERSION = @LIBMSGQUE_VERSION@
@@ -173,28 +170,22 @@ PERL = @PERL@
 PHP = @PHP@
 PHPCONFIG = @PHPCONFIG@
 PHPIZE = @PHPIZE@
+PKG_CONFIG = @PKG_CONFIG@
 PTHREAD_CC = @PTHREAD_CC@
 PTHREAD_CFLAGS = @PTHREAD_CFLAGS@
 PTHREAD_LIBS = @PTHREAD_LIBS@
 PYTHON = @PYTHON@
-PYTHON_CPPFLAGS = @PYTHON_CPPFLAGS@
-PYTHON_EXTRA_LDFLAGS = @PYTHON_EXTRA_LDFLAGS@
-PYTHON_EXTRA_LIBS = @PYTHON_EXTRA_LIBS@
+PYTHON_CFLAGS = @PYTHON_CFLAGS@
 PYTHON_LDFLAGS = @PYTHON_LDFLAGS@
-PYTHON_SITE_PKG = @PYTHON_SITE_PKG@
-PYTHON_VERSION = @PYTHON_VERSION@
 RANLIB = @RANLIB@
+READLINK = @READLINK@
 RUBY = @RUBY@
-RUBY_CPPFLAGS = @RUBY_CPPFLAGS@
-RUBY_EXTRA_LIBS = @RUBY_EXTRA_LIBS@
+RUBY_CFLAGS = @RUBY_CFLAGS@
 RUBY_LDFLAGS = @RUBY_LDFLAGS@
-RUBY_SITE_PKG = @RUBY_SITE_PKG@
-RUBY_VERSION = @RUBY_VERSION@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
-TCLBINDIR = @TCLBINDIR@
 TCLSH = @TCLSH@
 TCL_CFLAGS = @TCL_CFLAGS@
 TCL_INCLUDE_SPEC = @TCL_INCLUDE_SPEC@
@@ -219,7 +210,6 @@ VERSION_INFO = @VERSION_INFO@
 VPATH_HOOK = @VPATH_HOOK@
 VPATH_HOOK_CLEANUP = @VPATH_HOOK_CLEANUP@
 VPATH_HOOK_DIST = @VPATH_HOOK_DIST@
-_ACJNI_JAVAC = @_ACJNI_JAVAC@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@

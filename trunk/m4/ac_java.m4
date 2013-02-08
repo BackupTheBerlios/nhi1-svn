@@ -389,7 +389,7 @@ AC_PATH_PROG(_ACJNI_JAVAC, $JAVAC, no)
 test "x$_ACJNI_JAVAC" = xno && AC_MSG_ERROR([$JAVAC could not be found in path])
 
 _ACJNI_FOLLOW_SYMLINKS("$_ACJNI_JAVAC")
-_JTOPDIR=`echo "$_ACJNI_FOLLOWED" | sed -e 's://*:/:g' -e 's:/[[^/]]*$::'`
+_JTOPDIR=$(echo "$_ACJNI_FOLLOWED" | sed -e 's://*:/:g' -e 's:/[[^/]]*$::')
 case "$host_os" in
         darwin*)        _JTOPDIR=`echo "$_JTOPDIR" | sed -e 's:/[[^/]]*$::'`
                         _JINC="$_JTOPDIR/Headers";;
@@ -804,6 +804,7 @@ if test x"`eval 'echo $ac_cv_path_JAVAH'`" != x ; then
   )
   CPPFLAGS="$ac_save_CPPFLAGS"
 fi])
+
 # ===========================================================================
 #              http://autoconf-archive.cryp.to/ac_prog_java.html
 # ===========================================================================
@@ -913,9 +914,9 @@ fi])
 AC_DEFUN([AC_PROG_JAVA],[
 AC_REQUIRE([AC_EXEEXT])dnl
 if test x$JAVAPREFIX = x; then
-        test x$JAVA = x && AC_CHECK_PROGS(JAVA, kaffe$EXEEXT java$EXEEXT)
+  test x$JAVA = x && AC_CHECK_PROGS(JAVA, kaffe$EXEEXT java$EXEEXT)
 else
-        test x$JAVA = x && AC_CHECK_PROGS(JAVA, kaffe$EXEEXT java$EXEEXT, $JAVAPREFIX)
+  test x$JAVA = x && AC_CHECK_PROGS(JAVA, kaffe$EXEEXT java$EXEEXT, $JAVAPREFIX)
 fi
 test x$JAVA = x && AC_MSG_ERROR([no acceptable Java virtual machine found in \$PATH])
 AC_PROG_JAVA_WORKS

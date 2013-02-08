@@ -10,6 +10,24 @@ dnl  \attention  this software has GPL permissions to copy
 dnl              please contact AUTHORS for additional information
 dnl
 
+AC_DEFUN([OT_REQUIRE_PROG],[
+
+    pushdef([VARIABLE],$1)
+    pushdef([EXECUTABLE],$2)
+    pushdef([PATH_PROG],$3)
+
+    AC_PATH_PROG([]VARIABLE[],[]EXECUTABLE[],[no],[]PATH_PROG[])
+
+    if test "$VARIABLE" = "no" ; then
+      AC_MSG_ERROR([the tool ']EXECUTABLE[' is required, exit])
+    fi
+
+    popdef([PATH_PROG])
+    popdef([EXECUTABLE])
+    popdef([VARIABLE])
+])
+
+
 dnl get the socklen_t type
 
 AC_DEFUN([TYPE_SOCKLEN_T],
@@ -464,37 +482,19 @@ AC_DEFUN([SC_ENABLE_JAVA], [
     if test x$enable_threads = xno; then
       AC_MSG_ERROR([JAVA require thread support])
     fi
-    m4_include([m4/ac_java.m4])
     #------------------------------------
     AC_MSG_CHECKING(get java support);echo
     #------------------------------------
-    AC_ARG_VAR([JAVA], [path to the 'java' tool])
-    AC_PATH_PROG([JAVA], [java], [AC_MSG_ERROR([tool not found])]) 
-    if test "$build_os" == "cygwin"; then
-      JAVA=$(cygpath -m "$JAVA")
-    fi
-    AC_ARG_VAR([JAVAC], [path to the 'javac' tool])
-    AC_ARG_VAR([JAVAH], [path to the 'javah' tool])
-    AC_PATH_PROG([JAVAH], [javah], [AC_MSG_ERROR([tool not found])]) 
-    AC_ARG_VAR([JAR], [path to the 'jar' tool])
-    AC_PATH_PROG([JAR], [jar], [AC_MSG_ERROR([tool not found])]) 
-    AC_PROG_JAVAC
-    AC_CHECK_CLASSPATH
-    AC_JNI_INCLUDE_DIR
-    for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
-    do
-      JAVA_CPPFLAGS="$JAVA_CPPFLAGS -I$JNI_INCLUDE_DIR"
+    AX_WITH_PROG([JAVA],  [java],  [AC_MSG_ERROR([tool not found])]) 
+    AC_SUBST([JAVA_HOME],     [$($DIRNAME $($DIRNAME $($READLINK -f $JAVA)))])
+    dirs=()
+    for x in $(find "$JAVA_HOME/include" -type d); do
+      dirs+=("-I$x")
     done
-    if test "x$JAVA" == "x" ; then
-      AC_MSG_ERROR([JAVA executable not found])
-    fi
-    if test "x$JAVAC" == "x" ; then
-      AC_MSG_ERROR([JAVAC executable not found])
-    fi
-    if test "x$JAVAH" == "x" ; then
-      AC_MSG_ERROR([JAVAH executable not found])
-    fi
-    AC_SUBST([JAVA_CPPFLAGS])
+    AC_SUBST([JAVA_CPPFLAGS], [${dirs[[@]]}])
+    AC_PATH_PROG([JAVAC], [javac], [AC_MSG_ERROR([tool not found])], [$JAVA_HOME/bin]) 
+    AC_PATH_PROG([JAVAH], [javah], [AC_MSG_ERROR([tool not found])], [$JAVA_HOME/bin]) 
+    AC_PATH_PROG([JAR],   [jar],   [AC_MSG_ERROR([tool not found])], [$JAVA_HOME/bin]) 
   fi
   AC_SUBST([USE_JAVA], $enable_java)
   AM_CONDITIONAL([USE_JAVA], [test x$enable_java = xyes])
@@ -520,13 +520,13 @@ AC_DEFUN([SC_ENABLE_PYTHON], [
   )
   AC_MSG_RESULT($enable_python)
   if test x$enable_python = xyes; then
-    PYTHON_VERSION=3
-    m4_include([m4/ac_python_devel.m4])
-    #------------------------------------
-    AC_MSG_CHECKING(get python support);echo
-    #------------------------------------
-    AC_PYTHON_DEVEL([>= '3.0'])
-    #AM_PATH_PYTHON([3.0])
+    if $PKG_CONFIG --exists python3 ; then
+      AX_WITH_PROG([PYTHON],    [python3], [AC_MSG_ERROR([tool not found])])
+      AC_SUBST([PYTHON_CFLAGS], [$($PKG_CONFIG --cflags python3)])
+      AC_SUBST([PYTHON_LDFLAGS],[$($PKG_CONFIG --libs python3)])
+    else
+      AC_MSG_FAILURE([unable to find the package 'python3'])
+    fi
   fi
   AC_SUBST([USE_PYTHON], $enable_python)
   AM_CONDITIONAL([USE_PYTHON], [test x$enable_python = xyes])
@@ -555,27 +555,23 @@ AC_DEFUN([SC_ENABLE_CSHARP], [
     if test x$enable_threads = xno; then
       AC_MSG_ERROR([C[#] require thread support])
     fi
-    AC_ARG_VAR( [CSCOMP], [C# compiler])
-    AC_ARG_VAR( [CLREXEC], [CLR runtime])
     if test "$host_os" == "mingw32" ; then
-      AC_PATH_PROGS( [CSCOMP], [csc], [AC_MSG_ERROR([tool not found])] )
+      AX_WITH_PROG( [CSCOMP], [csc], [AC_MSG_ERROR([tool not found])] )
       CLREXEC=""
       if test "x$enable_symbols" = "xno"; then
 	AC_SUBST([CSHARP_DEBUG], ['-optimize'])
       fi
       AC_SUBST([CSHARP_OPT], [])
     else
-      AC_PROG_AWK
-      AC_PATH_PROGS( [CSCOMP], [gmcs], [AC_MSG_ERROR([tool not found])] )
-      AC_PATH_PROGS( [CLREXEC], [mono], [AC_MSG_ERROR([tool not found])] )
-      if test x$CSCOMP = x ; then
-	AC_MSG_ERROR([unable to find C[#] compiler 'gmcs'])
-      fi
-      if test x$CLREXEC = x ; then
-	AC_MSG_ERROR([unable to find CLR runtime 'mono'])
-      fi
-      if $CLREXEC -V | $AWK '/version/ {found=1;split([$]5,a,".");if (a[[1]] < 2 || (a[[1]] == 2 && a[[2]] < 4)) exit(0);else exit(1);};END {if(found==0) exit(0);}' ; then
-	AC_MSG_ERROR([mono version have to be >= 2.4])
+      if $PKG_CONFIG --exists mono ; then
+	if $PKG_CONFIG --atleast-version 2.10.6 mono ; then
+	  AX_WITH_PROG( [CSCOMP],  [gmcs], [AC_MSG_ERROR([tool not found])])
+	  AX_WITH_PROG( [CLREXEC], [mono], [AC_MSG_ERROR([tool not found])])
+	else
+	  AC_MSG_FAILURE([unable to get minimal version 2.10.6])
+	fi
+      else
+	AC_MSG_FAILURE([unable to find the package 'mono'])
       fi
       AC_SUBST([CSHARP_OPT], [-v])
     fi
@@ -608,11 +604,9 @@ AC_DEFUN([SC_ENABLE_VB], [
       AC_MSG_ERROR([a VisualBasic build "--enable-vb requires a C+ build "--enable-csharp" too])
     fi
     if test "$host_os" != "mingw32" ; then
-      AC_ARG_VAR( [VBCOMP], [VisualBasic compiler])
-      AC_PATH_PROGS( [VBCOMP], [vbnc], [AC_MSG_ERROR([tool not found])] )
+      AX_WITH_PROG( [VBCOMP], [vbnc], [AC_MSG_ERROR([tool not found])] )
     else
-      AC_ARG_VAR( [VBCOMP], [VisualBasic compiler])
-      AC_PATH_PROGS( [VBCOMP], [vbc], [AC_MSG_ERROR([tool not found])] )
+      AX_WITH_PROG( [VBCOMP], [vbc],  [AC_MSG_ERROR([tool not found])] )
     fi
   fi
   AC_SUBST([USE_VB], $enable_vb)
@@ -667,12 +661,9 @@ AC_DEFUN([SC_ENABLE_PHP], [
   )
   AC_MSG_RESULT($enable_php)
   if test x$enable_php = xyes; then
-    AC_ARG_VAR([PHP], [path to the 'php' tool])
-    AC_PATH_PROG([PHP], [php], [AC_MSG_ERROR([tool not found])]) 
+    AX_WITH_PROG([PHP], [php], [AC_MSG_ERROR([tool not found])]) 
     PHP="$PHP -c $ac_pwd/theLink/msgqueforphp/php.ini"
-    AC_ARG_VAR([PHPIZE], [path to the 'phpize' tool])
-    AC_PATH_PROG([PHPIZE], [phpize], [AC_MSG_ERROR([tool not found])]) 
-    AC_ARG_VAR([PHPCONFIG], [path to the 'php-config' tool])
+    AC_PATH_PROG([PHPIZE],    [phpize],     [AC_MSG_ERROR([tool not found])]) 
     AC_PATH_PROG([PHPCONFIG], [php-config], [AC_MSG_ERROR([tool not found])]) 
   fi
   AC_SUBST([USE_PHP], $enable_php)
@@ -703,8 +694,7 @@ AC_DEFUN([SC_ENABLE_GO], [
     if test x$enable_threads = xno; then
       AC_MSG_ERROR([GO require thread support])
     fi
-    AC_ARG_VAR([GO], [path to the 'go' tool])
-    AC_PATH_PROG([GO], [go], [AC_MSG_ERROR([tool not found])]) 
+    AX_WITH_PROG([GO], [go], [AC_MSG_ERROR([tool not found])]) 
   fi
   AC_SUBST([USE_GO], $enable_go)
   AM_CONDITIONAL([USE_GO], [test x$enable_go = xyes])
@@ -725,16 +715,11 @@ AC_DEFUN([SC_ENABLE_GO], [
 AC_DEFUN([SC_ENABLE_PERL], [
   AC_MSG_CHECKING([for build with PERL])
   AC_ARG_ENABLE(perl,
-      AS_HELP_STRING([--enable-perl], [build theLink with PERL support]),
-      enable_perl=yes, enable_perl=no
+      AS_HELP_STRING([--enable-perl], [build theLink with PERL support]), enable_perl=yes, enable_perl=no
   )
   AC_MSG_RESULT($enable_perl)
   if test x$enable_perl = xyes; then
-    AC_ARG_VAR([PERL], [perl runtime])
-    AC_PATH_PROGS([PERL], [perl], [AC_MSG_ERROR([tool not found])]) 
-    if test "$build_os" == "cygwin"; then
-      PERL=$(cygpath -m "$PERL")
-    fi
+    AX_WITH_PROG([PERL],[perl],[AC_MSG_ERROR([tool not found])])
   fi
   AC_SUBST([USE_PERL], $enable_perl)
   AM_CONDITIONAL([USE_PERL], [test x$enable_perl = xyes])
@@ -760,58 +745,53 @@ AC_DEFUN([SC_ENABLE_TCL], [
   )
   AC_MSG_RESULT($enable_tcl)
   if test x$enable_tcl = xyes; then
-    AC_ARG_VAR([TCLSH], [tcl runtime])
-    AC_PATH_PROGS( [TCLSH], [tclsh86 tclsh86g tclsh8.6 tclsh85 tclsh85g tclsh8.5 tclsh], [AC_MSG_ERROR([tool not found])] ) 
-    if test "$build_os" == "cygwin"; then
-      TCLSH=$(cygpath -m "$TCLSH")
+    AC_PATH_PROGS([TCLSH], [tclsh8.6 tclsh86 tclsh86g tclsh8.5 tclsh85 tclsh85g], [AC_MSG_ERROR([tool not found])] )
+    if test -z "$TCLSH" ; then
+      AX_WITH_PROG([TCLSH], [tclsh]) 
     fi
-    AC_SUBST([TCLBINDIR], [$(dirname $TCLSH)])
     #-----------------------------------
     AC_MSG_CHECKING(for location of tclConfig.sh script)
     #-----------------------------------
-    AC_ARG_WITH(tclcfg_path,
-	[  --with-tclcfg-path=DIR  Directory tclConfig.sh is located in.],
-	[ tclcnf="${withval}" ],
-	[ tclcnf="$TCLBINDIR/../lib $TCLBINDIR/../lib64 /lib /lib64 /lib32 /usr/lib /usr/local/lib /usr/local/tcl/lib" ])
+    tclcnf="$($DIRNAME $TCLSH)/../lib $($DIRNAME $TCLSH)/../lib64 /lib /lib64 /lib32 /usr/lib /usr/local/lib /usr/local/tcl/lib" 
 
     for prim in $tclcnf; do
       for try in ${prim} ${prim}/tcl8.* ; do
-	if test -f $try/tclConfig.sh; then
-	    AC_MSG_RESULT($try/tclConfig.sh)
-	    . $try/tclConfig.sh
-	    TCL_LIBS="$TCL_LIB_SPEC $TCL_LIBS"
-	    AC_SUBST(TCL_PACKAGE_PATH)
+        if test -f $try/tclConfig.sh; then
+            AC_MSG_RESULT($try/tclConfig.sh)
+            . $try/tclConfig.sh
+            TCL_LIBS="$TCL_LIB_SPEC $TCL_LIBS"
+            AC_SUBST(TCL_PACKAGE_PATH)
 	    TCL_INCLUDE_DIR="${TCL_INCLUDE_SPEC#-I}"
-	    test -z "$TCL_INCLUDE_DIR" && TCL_INCLUDE_DIR="$try/../include"
+            test -z "$TCL_INCLUDE_DIR" && TCL_INCLUDE_DIR="$try/../include"
 
-	    ## add support for tcl STUBS
-	    if test "$build_os" = "cygwin" ; then
-		AC_SUBST([TCL_CFLAGS], [])
-		AC_SUBST([TCL_LIBADD], [${TCL_LIB_SPEC}])
-	    else
-		if test ${TCL_SUPPORTS_STUBS} ; then
-		    AC_SUBST([TCL_CFLAGS], [-DUSE_TCL_STUBS])
-		    AC_SUBST([TCL_LIBADD], [${TCL_STUB_LIB_SPEC}])
-		fi
-	    fi
+            ## add support for tcl STUBS
+            if test "$build_os" = "cygwin" ; then
+                AC_SUBST([TCL_CFLAGS], [])
+                AC_SUBST([TCL_LIBADD], [${TCL_LIB_SPEC}])
+            else
+                if test ${TCL_SUPPORTS_STUBS} ; then
+                    AC_SUBST([TCL_CFLAGS], [-DUSE_TCL_STUBS])
+                    AC_SUBST([TCL_LIBADD], [${TCL_STUB_LIB_SPEC}])
+                fi
+            fi
 
-	    ## check if a public 'tcl.h' header file is available
-	    if test ! -f "${TCL_INCLUDE_DIR}/tcl.h"; then
-		AC_MSG_ERROR([Could not find tcl.h in ${TCL_INCLUDE_DIR}])
-	    fi
+            ## check if a public 'tcl.h' header file is available
+            if test ! -f "${TCL_INCLUDE_DIR}/tcl.h"; then
+                AC_MSG_ERROR([Could not find tcl.h in ${TCL_INCLUDE_DIR}])
+            fi
 
-	    ## check for empty TCL_INCLUDE_SPEC
-	    test -z ${TCL_INCLUDE_SPEC} && TCL_INCLUDE_SPEC="-I${TCL_INCLUDE_DIR}"
+            ## check for empty TCL_INCLUDE_SPEC
+            test -z ${TCL_INCLUDE_SPEC} && TCL_INCLUDE_SPEC="-I${TCL_INCLUDE_DIR}"
 
-	    AC_SUBST(TCL_INCLUDE_SPEC)
-	    break 2
-	fi
+            AC_SUBST(TCL_INCLUDE_SPEC)
+            break 2
+        fi
       done
     done
 
     if test -z "$TCL_LIBS"; then
-	AC_MSG_RESULT([not found])
-	AC_MSG_ERROR([Could not find tclConfig.sh in any of '$tclcnf'])
+        AC_MSG_RESULT([not found])
+        AC_MSG_ERROR([Could not find tclConfig.sh in any of '$tclcnf'])
     fi
   fi
   AC_SUBST([USE_TCL], $enable_tcl)
@@ -838,15 +818,14 @@ AC_DEFUN([SC_ENABLE_RUBY], [
   )
   AC_MSG_RESULT($enable_ruby)
   if test "x$enable_ruby" = xyes; then
-    AX_WITH_RUBY([no])
-    if test "x$RUBY" = "xno"; then
-      AC_MSG_ERROR([Could not find "ruby"])
+    pkg="ruby-1.9"
+    if $PKG_CONFIG --exists $pkg; then
+      AX_WITH_PROG([RUBY], [ruby], [AC_MSG_ERROR([tool not found])])
+      AC_SUBST([RUBY_CFLAGS], [$($PKG_CONFIG --cflags $pkg)])
+      AC_SUBST([RUBY_LDFLAGS],[$($PKG_CONFIG --libs $pkg)])
+    else
+      AC_MSG_FAILURE([unable to find the package '$pkg'])
     fi
-    AX_PROG_RUBY_VERSION([1.9.2], ruby_version_flag=ok, ruby_version_flag=ko)
-    if test "x$ruby_version_flag" = "xko"; then
-      AC_MSG_ERROR([Could not find RUBY version 1.9.2 or later])
-    fi
-    AX_RUBY_DEVEL($ruby_version)
   fi
   AC_SUBST([USE_RUBY], $enable_ruby)
   AM_CONDITIONAL([USE_RUBY], [test "x$enable_ruby" = xyes])
@@ -872,11 +851,11 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
   )
   AC_MSG_RESULT($enable_brain)
   if test "x$enable_brain" = "xbrain"; then
-    if pkg-config --exists kyotocabinet ; then
-      if pkg-config --atleast-version 1.2.76  kyotocabinet ; then
-	AC_SUBST(BRAIN_CFLAGS,[$(pkg-config --cflags kyotocabinet)])
-	AC_SUBST(BRAIN_LDADD,[$(pkg-config --libs kyotocabinet)])
-	AC_SUBST(BRAIN_LDADD_STATIC,[$(pkg-config --libs kyotocabinet)])
+    if $PKG_CONFIG --exists kyotocabinet ; then
+      if $PKG_CONFIG --atleast-version 1.2.76  kyotocabinet ; then
+	AC_SUBST(BRAIN_CFLAGS,[$($PKG_CONFIG --cflags kyotocabinet)])
+	AC_SUBST(BRAIN_LDADD,[$($PKG_CONFIG --libs kyotocabinet)])
+	AC_SUBST(BRAIN_LDADD_STATIC,[$($PKG_CONFIG --static --libs kyotocabinet)])
       else
 	AC_MSG_FAILURE([unable to get minimal version 1.2.76])
       fi

@@ -100,6 +100,10 @@ AC_MSG_CHECKING(programs);echo
 AC_C_BIGENDIAN
 SC_TOOL_ROOT
 SC_SET_VPATH_HOOK
+OT_REQUIRE_PROG([PKG_CONFIG], [pkg-config])
+OT_REQUIRE_PROG([READLINK],   [readlink])
+OT_REQUIRE_PROG([DIRNAME],    [dirname])
+
 SC_ENABLE_SYMBOLS
 SC_ENABLE_CXX
 SC_ENABLE_JAVA
@@ -117,12 +121,8 @@ SC_ENABLE_GUARD
 #------------------------------------
 AC_MSG_CHECKING(for doxygen support);echo
 #------------------------------------
-AC_ARG_VAR([DOXYGEN], [path to the doxygen tool])
-AC_ARG_VAR([DOT], [path to the dot tool])
-AC_ARG_VAR([DOXYPERL], [path to the perl tool])
-AC_PATH_PROG([DOXYGEN], [doxygen]) 
-AC_PATH_PROG([DOT], [dot]) 
-AC_PATH_PROG([DOXYPERL], [perl])
+OT_REQUIRE_PROG([DOXYGEN],  [doxygen])
+OT_REQUIRE_PROG([DOXYPERL], [perl])
 
 #------------------------------------
 AC_MSG_CHECKING([for special portability support]);echo
