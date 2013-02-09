@@ -72,6 +72,8 @@ AC_SUBST([VERSION_INFO], [22:0:0])
 
 AC_CONFIG_MACRO_DIR([m4])
 
+SC_TOOL_ROOT
+
 AM_PROG_CC_C_O
 AM_PROG_AR
 
@@ -88,33 +90,27 @@ SC_ENABLE_THREADS
 AC_MSG_CHECKING(get libtool support);echo
 #------------------------------------
 AC_DISABLE_STATIC
-#AC_REQUIRE(AC_CANONICAL_HOST)_LT_SET_OPTION([LT_INIT],[win32-dll])`
-#AC_DIAGNOSE([obsolete],[AC_LIBTOOL_WIN32_DLL: Remove this warning and the call to _LT_SET_OPTION when you put the 'win32-dll' option into LT_INIT's first parameter.])
-
-
 LT_INIT
 
 #------------------------------------
 AC_MSG_CHECKING(programs);echo
 #------------------------------------
 AC_C_BIGENDIAN
-SC_TOOL_ROOT
 SC_SET_VPATH_HOOK
-OT_REQUIRE_PROG([PKG_CONFIG], [pkg-config])
-OT_REQUIRE_PROG([READLINK],   [readlink])
-OT_REQUIRE_PROG([DIRNAME],    [dirname])
-
 SC_ENABLE_SYMBOLS
+OT_REQUIRE_PROG([PKG_CONFIG], [pkg-config])
+
 SC_ENABLE_CXX
-SC_ENABLE_JAVA
-SC_ENABLE_PYTHON
-SC_ENABLE_CSHARP
-SC_ENABLE_PHP
-SC_ENABLE_PERL
 SC_ENABLE_TCL
-SC_ENABLE_VB
+SC_ENABLE_PYTHON
+SC_ENABLE_PERL
+SC_ENABLE_PHP
 SC_ENABLE_RUBY
+SC_ENABLE_JAVA
+SC_ENABLE_CSHARP
+SC_ENABLE_VB
 SC_ENABLE_GO
+
 SC_ENABLE_BRAIN
 SC_ENABLE_GUARD
 

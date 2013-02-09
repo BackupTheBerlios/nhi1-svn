@@ -82,7 +82,7 @@ export LD_LIBRARY_PATH=
 NHI1_HOME=$(dirname $(dirname $(readlink -f $0)))
 
 ##  Retrieve environment data
-declare -A lang
+declare -A with
 declare -A enable
 declare -a opt
 
@@ -103,26 +103,22 @@ G_Argument 'tool-root:NHI1_TOOL_ROOT:__environment__:root for the tools director
 G_Argument 'use-perf:Perf:0:use performance code:B'
 G_Argument 'use-threads:Thread:0:use thread code:B'
 for l in brain guard ; do
-  G_Argument "enable-$l:enable[$l]:0:add '$l' feature support:B"
+  G_Argument "$l:enable[$l]:disable:add '$l' feature support:D:enable:disable"
 done
-for l in tcl perl python php cxx java csharp go ruby ; do
-  G_Argument "lang-$l:lang[$l]:0:add '$l' language binding:B"
+for l in cxx tcl perl python php ruby java csharp vb go ; do
+  G_Argument "$l:with[$l]:without:add '$l' language support:DY:with:without"
 done
 
 EOF
   )"
 
-for l in ${!lang[@]} ; do
-  (( ${lang[$l]} )) && opt+=(--enable-$l)
+for l in ${!with[@]} ; do
+  (( ${with[$l]} )) && opt+=(--with-$l)
 done
 
 for l in ${!enable[@]} ; do
   (( ${enable[$l]} )) && opt+=(--enable-$l)
 done
-
-# I use ccache for compiling
-(( ${lang[cxx]} )) && export CXX="ccache g++"
-export CTAGSFLAGS="--c-kinds=+p"
 
 if (( $Perf )) ; then
   opt+=(--enable-static)
@@ -146,8 +142,11 @@ add2var PATH		  $NHI1_TOOL_ROOT/$T/bin
 add2var LD_LIBRARY_PATH   $NHI1_TOOL_ROOT/$T/lib
 add2var PKG_CONFIG_PATH   $NHI1_TOOL_ROOT/$T/lib/pkgconfig
 
-[[ ${lang[go]} == "1" && -f /etc/profile.d/go.sh ]] && {
+[[ ${with[go]} == "1" && -f /etc/profile.d/go.sh ]] && {
   source /etc/profile.d/go.sh
+}
+[[ ${with[java]} == "1" && -f /etc/profile.d/alljava.sh ]] && {
+  source /etc/profile.d/alljava.sh
 }
 
 rm -fr /tmp/libmsgque-install

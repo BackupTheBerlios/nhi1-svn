@@ -42,4 +42,5 @@ export SVN_SSH="ssh -l aotto1968"
 export CCACHE_DIR="/build/$USER/Cache"
 export CC="ccache gcc"
 export CXX="ccache g++"
+export CTAGSFLAGS="--c-kinds=+p"
 

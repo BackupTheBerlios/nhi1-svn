@@ -768,13 +768,13 @@ if {!$USE_GO} {
   set env(LNG_LST) [filter -not LNG_LST go]
 }
 
-# without --enable-csharp no C#
+# without --enable-cscomp no C#
 if {!$USE_CSHARP} {
   set env(SRV_LST) [filter -not SRV_LST csharp]
   set env(LNG_LST) [filter -not LNG_LST csharp]
 }
 
-# without --enable-vb no VB.NET
+# without --enable-vbcomp no VB.NET
 if {!$USE_VB} {
   set env(SRV_LST) [filter -not SRV_LST vb]
   set env(LNG_LST) [filter -not LNG_LST vb]

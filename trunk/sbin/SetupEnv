@@ -13,6 +13,9 @@
 set -u
 #set -ux
 
+# use extended shell glob
+shopt -s extglob
+
 #%# ----------------------------------------------------------------------
 declare -x  G_FileName="${1##*/}"
 declare -x  G_Dirname="${1%/*}"; shift
@@ -76,10 +79,31 @@ Functions:
       Description ... Description of Env-Variable
       Type .......... Flag which descripts the variable
 	B) Boolean    -> A boolean variable, default '0' or '1'
+	D) ExtBoolean -> Extended Boolean, read more below
 	E) Extern     -> Should the Variable be exported
 	L) List       -> This is a 'List' with values following after
       List .......... List entries, only use with Type (B)oolean or (L)ist.
                       As Type (B)oolean only 2 List-Arguments are supported
+
+Extended Boolean:
+  A extended Boolean is defined with the 'D' type and is a boolean switch with 
+  self-defined-values. The values are the two arguments at position '6' and '7'
+  with the 'true' definition at position '6' and the 'false' definition at
+  position '7'.
+  The initial value on position 3 have to be part of the list from position
+  '6' and '7'
+  This is an example using the values 'with' as 'true' and 'without' as 'false' 
+
+         #pos: 1   2        3       4           5 6    7
+    G_Argument opt:Variable:without:Description:D:with:without
+
+  Accept the following arguments:
+    --with-opt, --with-opt=yes, --with-opt=no,
+    --without-opt, --without-opt=yes, --without-opt=no
+  Boolean 'true' is:
+    --with-opt, --with-opt=yes, --without-opt=no
+  Boolean 'false' is:
+    --without-opt, --without-opt=yes, --with-opt=no
 
 EOF
   Exit ""
@@ -205,31 +229,38 @@ function set_option {
 function set_defaults {
   declare I=$1
   declare D=$2
+  declare A=${3:-yes}
   ## special bei tables, _*_ wird expandiert
-  [[ "$D" == _*_ ]] && {
+  if [[ "$D" == _*_ ]] ; then
     D="$(eval_command $D)"
     [[ $? != 0 ]] && Error "[FKT] set_defaults"
-  }
+  fi
   ## check the value
   if [[ $D != "?" && -n ${SE_List[$I]} ]] ; then
     declare -i idx=0
     declare -a tmpl
-    IFS="|"
-    tmpl=(${SE_List[$I]})
-    unset IFS
+    IFS="|"; tmpl=(${SE_List[$I]}); unset IFS
     if [[ $D == "%#:"* ]] ; then
       idx=${D##%#:}
       D=${tmpl[$idx]}
-    else
-      declare -i idx=0
-      declare -i max=${#tmpl[*]}
-      while ((idx < max)) ; do
+    elif [[ "${SE_Type[$I]}" == *D* ]] ; then
+      if [[ "$A" != "yes" && "$A" != "no" ]] ; then
+	Error "[FKT] set_defaults: the option '${SE_Options[$I]}' only accept argument 'yes|no' not !$A!"
+      fi
+      for ((idx=0; idx<2; idx++)) ; do
 	[[ "$D" == "${tmpl[$idx]}" ]] && break
-	let idx+=1
       done
-      (( idx >= max )) && {
-	Error "[FKT] set_defaults: '-${SE_Options[$I]} $D' is not part of index '${SE_List[$I]}'"
-      }
+      if [[ "$A" == "no" ]]; then
+	D="${tmpl[!$idx]}"
+      fi
+    else
+      declare -i max=${#tmpl[*]}
+      for ((idx=0; idx<max; idx++)) ; do
+	[[ "$D" == "${tmpl[$idx]}" ]] && break
+      done
+      if (( idx >= max )) ; then
+	Error "[FKT] set_defaults: the option '${SE_Options[$I]}' only accept value '${SE_List[$I]}' not !$D!"
+      fi
     fi
   fi
   ## save values
@@ -367,71 +398,6 @@ function setup_ENV_file {
   echo "$SE_Value"
 }
 
-function G_Argument {
-  declare option="$1"
-## be sure to get the right 'format'
-  [[ "$option" != *$NIFS* ]] && continue
-## declare
-  declare option
-  declare opt
-  declare var
-  declare def
-  declare dfi
-## delete all spaces at the begin and end
-  option=${option%%+([[:space:]])}
-  option=${option##+([[:space:]])}
-  IFS=$NIFS
-  set -- $option
-  opt=$1
-  var=$2
-  def=$3
-  dfi=${4:-"No text for <$var>"}
-  typ=${5:-}
-  #Print "opt<$opt>, var<$var>, def<$def>, dfi<$dfi>, typ<$typ>"
-## 1. name of the option
-  # POST
-## 2. name of the variable
-  SE_Variables[$SE_NOptions]="$var"
-  SE_IDX[$var]=$SE_NOptions
-  SE_INV[$opt]=$SE_NOptions
-## 3. the default
-  [[ $SE_LOOP == 1 && $G_LOOP != 0 ]] && {
-    def=${!var:-$def}
-  }
-  if [[ -z "$def" ]] ; then
-    if (( $# > 5 )) ; then
-      def=$6
-    elif [[ $typ == *B* ]] ; then
-      def=1 
-    fi
-  fi
-## 4. the description
-  # POST
-## 5. the type
-  SE_Type[$SE_NOptions]=$typ
-  [[ $typ == *E* || $SE_LOOP == 1 ]] && print_extern $var
-## 6. set the List values
-  IFS="|"
-  if (($# > 5)) ; then
-    shift 5
-    SE_List[$SE_NOptions]="$*"
-  elif [[ $typ == *B* ]] ; then
-    SE_List[$SE_NOptions]="1${IFS}0"
-  else
-    SE_List[$SE_NOptions]=""
-  fi
-## POST operation
-  set_option	  $SE_NOptions "$opt"
-  if [[ "$def" == "__environment__" ]] ; then
-    set_defaults $SE_NOptions ${!var:-undef}
-  else
-    set_defaults $SE_NOptions "$def"
-  fi
-  set_description $SE_NOptions "$dfi"
-## finish
-  SE_NOptions+=1
-}
-
 function source { 
 ## Soll verhindern das eine Datei 2x eingelesen wird
   [[ -f $1 ]] && {
@@ -518,17 +484,12 @@ function get_user_usage {
     i+=1
   done
   (( SE_NLOptions > 0 )) && { Print "\n  Custom long options:\n" ; }
-  let i=0
-  while (( i < SE_NOptions ))
+  for ((i=0; i<SE_NOptions; i++))
   do
     (( ${#SE_Options[$i]} < 2 )) && { let i+=1 ; continue ; }
-    if [[ -n ${SE_List[$i]} ]] ; then
-      space3="${SE_Descriptions[$i]} (${SE_List[$i]})"
-    else
-      space3="${SE_Descriptions[$i]}"
-    fi
+    space3="${SE_Descriptions[$i]}"
+    [[ -n "${SE_List[$i]}" ]] && space3+=" (${SE_List[$i]})"
     Print "    %-${max2}s\n         %-${max3}s =  ${SE_Defaults[$i]:0:30}\n"  "--${SE_Options[$i]}" "$space3"
-    i+=1
   done
   Print "\n  Global options:\n"
   for t in  "-c:clean screen" \
@@ -552,10 +513,9 @@ function parse_commandline {
   set -- "${G_Args[@]}"
   (( ! $# )) && return
 
-  declare -i i=0
-  declare o=""
+  declare opt arg key
+  declare -i num=$# idx=0
   declare SE_HELP=""
-  declare -i num=$#
 ## step through the options
   while (( $# > 0 )) ; do
     ## Setup default options
@@ -575,37 +535,38 @@ function parse_commandline {
       esac
 
     ## Setup OptionString
-      o="${1##+([-+])}"
-      if [[ "$o" != "$1" ]] ; then
-	i=${SE_INV[$o]:--1}
-      else
-	i=-1
-      fi
+      arg="${1##*=}"
+      [[ "$arg" == "$1" ]] && arg=""
+      opt="${1%%=*}"
+      key="${opt##+(-|+)}"
+      idx=${SE_INV[$key]:--1}
 
     ## parse option-value
       if (( i != -1 )) ; then
-	if (( ${#o} > 1 )) ; then
-	  if [[ ${SE_Type[$i]} == *B* ]] ; then
-	    if [[ "$1" == "--$o" ]] ; then
-	      set_defaults $i "%#:0"; shift 1
-	    elif [[ "$1" == "++$o" ]] ; then
-	      set_defaults $i "%#:1"; shift 1
+	if (( ${#key} > 1 )) ; then
+	  if [[ ${SE_Type[$idx]} == *B* ]] ; then
+	    if [[ "$opt" == "--$key" ]] ; then
+	      set_defaults $idx "%#:0"; shift 1
+	    elif [[ "$opt" == "++$key" ]] ; then
+	      set_defaults $idx "%#:1"; shift 1
 	    fi
+	  elif [[ ${SE_Type[$idx]} == *D* ]] ; then
+	    set_defaults $idx "${key%%-*}" "$arg"; shift 1
 	  else
-	    if [[ "$1" == "--$o" ]] ; then
-	      set_defaults $i "$2"; shift 2
+	    if [[ "$opt" == "--$key" ]] ; then
+	      set_defaults $idx "$2"; shift 2
 	    fi
 	  fi
 	else
-	  if [[ ${SE_Type[$i]} == *B* ]] ; then
-	    if [[ "$1" == "-$o" ]] ; then
-	      set_defaults $i "%#:0"; shift 1
-	    elif [[ "$1" == "+$o" ]] ; then
-	      set_defaults $i "%#:1"; shift 1
+	  if [[ ${SE_Type[$idx]} == *B* ]] ; then
+	    if [[ "$opt" == "-$key" ]] ; then
+	      set_defaults $idx "%#:0"; shift 1
+	    elif [[ "$opt" == "+$key" ]] ; then
+	      set_defaults $idx "%#:1"; shift 1
 	    fi
 	  else
-	    if [[ "$1" == "-$o" ]] ; then
-	      set_defaults $i "$2"; shift 2
+	    if [[ "$opt" == "-$key" ]] ; then
+	      set_defaults $idx "$2"; shift 2
 	    fi
 	  fi
 	fi
@@ -843,6 +804,75 @@ declare clear="$(tput clear)"
 Debug "Reading Commandline" ################################################################
 ##
 
+function G_Argument {
+  declare option="$1"
+## be sure to get the right 'format'
+  [[ "$option" != *$NIFS* ]] && continue
+## declare
+  declare option opt opt2 var def dfi
+## delete all spaces at the begin and end
+  option=${option%%+([[:space:]])}
+  option=${option##+([[:space:]])}
+  IFS=$NIFS
+  set -- $option
+  opt=$1
+  var=$2
+  def=$3
+  dfi=${4:-"No text for <$var>"}
+  typ=${5:-}
+  shift 5
+  if [[ $typ == *D* ]] ; then
+    [[ $# -ne 2 ]] && \
+      Error "type 'D' require exact '2' additinal argiments like 'yes:no' or 'enable:disable'"
+    opt2="$2-$opt"
+    opt="$1-$opt"
+  fi
+  #Print "opt<$opt>, var<$var>, def<$def>, dfi<$dfi>, typ<$typ>"
+## 1. name of the option
+  # POST
+## 2. name of the variable
+  SE_Variables[$SE_NOptions]="$var"
+  SE_IDX[$var]=$SE_NOptions
+  SE_INV[$opt]=$SE_NOptions
+  [[ $typ == *D* ]] && SE_INV[$opt2]=$SE_NOptions
+## 3. the default
+  [[ $SE_LOOP == 1 && $G_LOOP != 0 ]] && {
+    def=${!var:-$def}
+  }
+  if [[ -z "$def" ]] ; then
+    if (( $# > 0 )) ; then
+      def=$1
+    elif [[ $typ == *B* ]] ; then
+      def=1 
+    fi
+  fi
+## 4. the description
+  # POST
+## 5. the type
+  SE_Type[$SE_NOptions]="$typ"
+  [[ $typ == *E* || $SE_LOOP == 1 ]] && print_extern $var
+## 6. set the List values
+  IFS="|"
+  if (($# > 0)) ; then
+    SE_List[$SE_NOptions]="$*"
+  elif [[ $typ == *B* ]] ; then
+    SE_List[$SE_NOptions]="1${IFS}0"
+  else
+    SE_List[$SE_NOptions]=""
+  fi
+  unset IFS
+## POST operation
+  set_option $SE_NOptions "$opt"
+  if [[ "$def" == "__environment__" ]] ; then
+    set_defaults $SE_NOptions ${!var:-undef}
+  else
+    set_defaults $SE_NOptions "$def"
+  fi
+  set_description $SE_NOptions "$dfi"
+## finish
+  SE_NOptions+=1
+}
+
 function G_Option {
   case "$1" in
     lookup)
@@ -915,9 +945,12 @@ Debug "Parse Command Line" #####################################################
 ##
 
 #print_array SE_Options
+#print_array SE_Type
 #print_array SE_Variables
 #print_array SE_Defaults
 #print_array SE_Descriptions
+#print_a_array SE_IDX
+#print_a_array SE_INV
 
 parse_commandline
 
