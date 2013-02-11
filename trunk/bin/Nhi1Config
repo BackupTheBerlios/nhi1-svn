@@ -25,7 +25,7 @@ set -ue
 [[ "${CLEAN:-}" != "yes" ]] && exec /usr/bin/env - \
   CLEAN="yes" TERM="$TERM" HOME="$HOME" MACHTYPE="$MACHTYPE" \
     CC="${CC:-}" CXX="${CXX:-}" CCACHE_DIR="${CCACHE_DIR:-}" \
-      PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}" \
+      PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}" SE_Debug="${SE_Debug:-0}" \
 	NHI1_TOOL_ROOT="${NHI1_TOOL_ROOT:-$HOME/ext/$MACHTYPE}" "$0" "$@"
 
 ## some useful procs
@@ -85,9 +85,9 @@ NHI1_HOME=$(dirname $(dirname $(readlink -f $0)))
 declare -A with
 declare -A enable
 declare -a opt
+declare -i yes=1 no=0
 
-eval "$($NHI1_HOME/sbin/SetupEnv $0 "${@:-}" <<-'EOF'
-
+eval "$($NHI1_HOME/sbin/SetupEnv $0 $@ <<-'EOF'
 G_Shell 'bash'
 # ---------------------------------------------------------------------
 G_Date='$Date$'
@@ -106,7 +106,7 @@ for l in brain guard ; do
   G_Argument "$l:enable[$l]:disable:add '$l' feature support:D:enable:disable"
 done
 for l in cxx tcl perl python php ruby java csharp vb go ; do
-  G_Argument "$l:with[$l]:without:add '$l' language support:DY:with:without"
+  G_Argument "$l:with[$l]:without:add '$l' language support:DV:with:without"
 done
 
 EOF
