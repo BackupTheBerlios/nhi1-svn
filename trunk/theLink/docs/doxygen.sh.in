@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -u
+
 ## template definition
 man=@abs_srcdir@/man/local.generic
 libmsgque_private=@abs_srcdir@/man/Doxyfile.msgque
@@ -67,43 +69,62 @@ export HAVE_DOT=NO
     export  HTML_FOOTER=""
   fi
 
-set -xv
+#set -x
 
 ## Main
 (
   for D
   do
     echo "======================================================================="
-    if test -f $D ; then
-      FN=$D
-      D=$(dirname $D)
-    else
-      FN="$D/Doxyfile*"
+    if test ! -e "$D" ; then
+      D="@abs_srcdir@/$D"
     fi
-    pushd $D || {
-      echo ERROR: $1 is no directory
+    if test ! -e "$D" ; then
+      echo "Error: unable to open directory '$D'"
+      exit 1
+    fi
+    if test -f "$D" ; then
+      FN="$D"
+      D="$(dirname $D)"
+    elif test -d "$D"; then
+      FN="$D/Doxyfile*"
+    else
+      echo "Error: '$D' ist not a file and not a directory"
+      exit 1
+    fi
+    pushd "$D" || {
+      echo "ERROR: $1 is no directory"
       exit 2
     }
     shift
-    D=$(basename $D)
+    D=$(basename "$D")
 
   ## search and generate the files
     for F in $FN ; do
       test ! -f $F && continue
-      P=$(basename $F)
-      P="${P##*.}"
-      test "$F" == "$P" && P="$(basename $PWD)"
-      test "$D" == "$P" && D=dummy
+      if [[ "$F" == */Doxyfile.* ]] ; then
+	P=$(basename "$F")
+	P="${P##*.}"
+      else
+	P=''
+      fi
+      #test "$F" == "$P" && P="$(basename $PWD)"
+      #test "$D" == "$P" && D=''
       echo "#########################################################################"
       echo "start: $F"
-      export  PROJECT="$P"
+      export  PROJECT="${P:-$D}"
       export  DOCDIR="@abs_top_srcdir@/html/theLink/$PROJECT"
       echo "PROJECT: $PROJECT"
       echo "DOCDIR: $DOCDIR"
       rm -fr "$DOCDIR"
       mkdir -p "$DOCDIR"
-      #echo "cat @abs_srcdir@/Doxyfile.generic ${!D} ${!P} $F | @DOXYGEN@"
-      cat "@abs_srcdir@/Doxyfile.generic" ${!D} ${!P} "$F" | "@DOXYGEN@" - 2>&1
+      echo "
+@abs_srcdir@/Doxyfile.generic \ 
+  ${!D:-} \ 
+    ${!P:-} \ 
+      $F | @DOXYGEN@
+"
+      cat "@abs_srcdir@/Doxyfile.generic" ${!D:-} ${!P:-} "$F" | "@DOXYGEN@" - 2>&1
     done
 
     popd

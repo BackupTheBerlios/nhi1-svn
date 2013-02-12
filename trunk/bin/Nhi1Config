@@ -22,11 +22,11 @@ set -ue
 ## =======================================================================
 
 ## delete all environment variables to setup a "clean" build environment
-[[ "${CLEAN:-}" != "yes" ]] && exec /usr/bin/env - \
-  CLEAN="yes" TERM="$TERM" HOME="$HOME" MACHTYPE="$MACHTYPE" \
-    CC="${CC:-}" CXX="${CXX:-}" CCACHE_DIR="${CCACHE_DIR:-}" \
-      PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}" SE_Debug="${SE_Debug:-0}" \
-	NHI1_TOOL_ROOT="${NHI1_TOOL_ROOT:-$HOME/ext/$MACHTYPE}" "$0" "$@"
+#[[ "${CLEAN:-}" != "yes" ]] && exec /usr/bin/env - \
+#  CLEAN="yes" TERM="$TERM" HOME="$HOME" MACHTYPE="$MACHTYPE" \
+#    CC="${CC:-}" CXX="${CXX:-}" CCACHE_DIR="${CCACHE_DIR:-}" \
+#      PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}" SE_Debug="${SE_Debug:-0}" \
+#	NHI1_TOOL_ROOT="${NHI1_TOOL_ROOT:-$HOME/ext/$MACHTYPE}" "$0" "$@"
 
 ## some useful procs
 add2var() {
@@ -41,7 +41,7 @@ add2var() {
   typeset -i i
   declare -a array
 ## set array arguments
-  array=(${!var})
+  array=(${!var:-})
 ## cleanup array
   for a in $add ; do
     for (( i=0 ; i<${#array[*]} ; i+=1 )) ; do
@@ -85,7 +85,6 @@ NHI1_HOME=$(dirname $(dirname $(readlink -f $0)))
 declare -A with
 declare -A enable
 declare -a opt
-declare -i yes=1 no=0
 
 eval "$($NHI1_HOME/sbin/SetupEnv $0 $@ <<-'EOF'
 G_Shell 'bash'
@@ -113,23 +112,23 @@ EOF
   )"
 
 for l in ${!with[@]} ; do
-  (( ${with[$l]} )) && opt+=(--with-$l)
+  opt+=(--with-$l=${with[$l]})
 done
 
 for l in ${!enable[@]} ; do
-  (( ${enable[$l]} )) && opt+=(--enable-$l)
+  opt+=(--enable-$l=${enable[$l]})
 done
 
-if (( $Perf )) ; then
+if [[ $Perf == 'yes' ]] ; then
   opt+=(--enable-static)
-  if (( $Thread )) ; then
+  if [[ $Thread == 'yes' ]] ; then
     T=$(pathExtension performance-thread)
     opt+=(--enable-threads)
   else
     T=$(pathExtension performance-nothread)
   fi
 else
-  if (( $Thread )) ; then
+  if [[ $Thread == 'yes' ]] ; then
     T=$(pathExtension thread)
     opt+=(--enable-threads --enable-symbols)
   else
@@ -151,27 +150,6 @@ add2var PKG_CONFIG_PATH   $NHI1_TOOL_ROOT/$T/lib/pkgconfig
 
 rm -fr /tmp/libmsgque-install
 
+set -x
 bash -norc $NHI1_HOME/configure --prefix=/tmp/libmsgque-install "${opt[@]}" "${@:-}"
 
-#		    --enable-cxx \
-#		    --enable-java \
-#		    --enable-csharp \
-#		    --enable-go \
-#		    --enable-ruby \
-#		    --enable-python \
-#		    --enable-perl \
-#		    --enable-php \
-
-#		    --enable-brain \
-#		    --enable-guard \
-#		    --enable-tcl \
-#		    --enable-ruby \
-#		    --enable-cxx \
-#		    --enable-java \
-#		    --enable-go \
-#		    --enable-csharp \
-#		    --enable-python \
-#		    --enable-perl \
-#		    --enable-php \
-#		    --enable-vb \
-#		    --enable-static \

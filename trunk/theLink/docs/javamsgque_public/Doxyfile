@@ -22,4 +22,5 @@ OPTIMIZE_OUTPUT_JAVA	= YES
 OPTIMIZE_OUTPUT_FOR_C	= NO
 STRIP_FROM_PATH		= $(SRCDIR)/libmsgque $(SRCDIR)/javamsgque
 STRIP_FROM_INC_PATH	= $(SRCDIR)/libmsgque
+#TAGFILES	       += $(DOCDIR)/../libmsgque/libmsgque.tag=libmsgque
 

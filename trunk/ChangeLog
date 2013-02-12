@@ -22,7 +22,7 @@
 #1 fig bug in rubymsgque, now the toplevel class initialize method does not 
 need a template dummy argument anymore.
 
-\vaerbatim
+\verbatim
 class MyServer < MqS
   def initialize()
     super()

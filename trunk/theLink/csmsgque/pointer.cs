@@ -41,7 +41,7 @@ internal delegate MqErrorE MqEventF ([In]IntPtr context);
 
 public partial class MqS {
 
-  /// \api public version from \ref MqTokenF
+  /// \api public version from MqTokenF
   public delegate void Callback();
 }
 

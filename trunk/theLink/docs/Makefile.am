@@ -12,8 +12,10 @@
 
 include list.mk
 
+arg ?= ALL
+
 DX_DEPEND =	\
-		doxygen.sh.in \
+		doxygen.sh \
 		$(top_srcdir)/theLink/libmsgque/*.c \
 		$(top_srcdir)/theLink/libmsgque/*.h \
 		$(top_srcdir)/theLink/javamsgque/*.c \
@@ -35,9 +37,17 @@ DX_DEPEND =	\
 		$(top_srcdir)/theLink/acmds/aexec
 
 html-local: $(DX_DEPEND) $(DX_DIST)
-	${SHELL} doxygen.sh -release ALL
+	${SHELL} doxygen.sh -release $(arg)
+
+help:
+	@echo
+	@echo usage: make html ?arg=ALL?
+	@echo
+	@echo the following targets are supported:
+	@echo
+	@cd $(srcdir); find * -mindepth 1 -name "Doxyfile*"
+	@echo
 
 EXTRA_DIST = $(DX_DIST)
-
 
 

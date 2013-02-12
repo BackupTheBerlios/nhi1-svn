@@ -82,7 +82,7 @@ EOF
 mkdir -p "$NHI1_TOOL_ROOT" || Die "unable to create directory '$NHI1_TOOL_ROOT'"
 
 for l in ${!lang[@]} ; do
-  (( ! ${lang[$l]} )) && continue
+  [[ ${lang[$l]} == 'no' ]] && continue
 
   case "$l" in
     perl)   buildScript=./Configure;;
@@ -95,7 +95,7 @@ for l in ${!lang[@]} ; do
   esac
 
   for t in ${!use[@]} ; do
-    (( !useAll && !${use[$t]} )) && continue
+    [[ $useAll == 'no' && ${use[$t]} == 'no' ]] && continue
 
     prefix="$NHI1_TOOL_ROOT/$(pathExtension $t)"
 

@@ -16,6 +16,7 @@
 ##
 
 EXTRA_DIST = \
+    $(wildcard $(srcdir)/*.go) \
     src/mulserver/main.go \
     src/Filter5/main.go \
     src/Filter6/main.go \

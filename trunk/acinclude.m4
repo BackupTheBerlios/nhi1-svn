@@ -42,13 +42,12 @@ AC_DEFUN([OT_WITH_PROG],[
 
   AC_ARG_VAR(VARIABLE,Absolute path to 'ID' TYPE)
 
-  VARIABLE=''
   AC_MSG_CHECKING(for build with: ID);
   AC_ARG_WITH(ID,AS_HELP_STRING([--with-ID=[[[PATH]]]],absolute path to 'ID' TYPE), [
     AS_IF([test "$withval" != yes -a "$withval" != no],[
       VARIABLE="$withval"
       withval='yes'
-      AC_MSG_RESULT($withval)
+      AC_MSG_RESULT($VARIABLE)
     ],[
       AC_MSG_RESULT($withval)
       AS_IF([test "$withval" = yes], [
@@ -74,7 +73,32 @@ AC_DEFUN([OT_WITH_PROG],[
   popdef([ID])
 ])
 
+AC_DEFUN([OT_ENABLE],[
+  pushdef([ID],$1)
+  pushdef([TXT],[$2])
+  pushdef([VAR],[enable_]$1)
+  pushdef([FLAG],[USE_]translit($1,[a-z],[A-Z]))
 
+  AC_MSG_CHECKING(for build with: ID);
+  AC_ARG_ENABLE(ID,AS_HELP_STRING([--enable-ID], [TXT]), [
+    VAR="$enableval"
+    AC_MSG_RESULT($VAR)
+    AS_IF([test "$VAR" != 'yes' -a "$VAR" != 'no'],[
+      AC_MSG_ERROR(only accept 'yes' or 'no' as argument for 'ID' - exit)
+    ])
+  ],[
+    VAR='no'
+    AC_MSG_RESULT($VAR)
+  ])
+
+  AC_SUBST(FLAG, "$ID")
+  AM_CONDITIONAL(FLAG, [test -n "$ID"])
+
+  popdef([FLAG])
+  popdef([VAR])
+  popdef([TXT])
+  popdef([ID])
+])
 
 dnl get the socklen_t type
 
@@ -630,7 +654,7 @@ AC_DEFUN([SC_ENABLE_VB], [
 #------------------------------------------------------------------------
 
 AC_DEFUN([SC_ENABLE_CXX], [
-  OT_WITH_PROG(cxx, CXX, [g++], compiler)
+  OT_WITH_PROG(cxx, CXX, ,compiler)
 ])
 
 #------------------------------------------------------------------------
@@ -766,7 +790,7 @@ AC_DEFUN([SC_ENABLE_TCL], [
 
 AC_DEFUN([SC_ENABLE_RUBY], [
   OT_WITH_PROG(ruby, RUBY, ruby, interpreter)
-  AS_IF([test -n "$ruby"], [
+  AS_IF([test -n "$RUBY"], [
     AS_IF([$PKG_CONFIG --exists ruby-1.9], [
       AC_SUBST([RUBY_CFLAGS], [$($PKG_CONFIG --cflags ruby-1.9)])
       AC_SUBST([RUBY_LDFLAGS],[$($PKG_CONFIG --libs ruby-1.9)])
@@ -789,13 +813,8 @@ AC_DEFUN([SC_ENABLE_RUBY], [
 #------------------------------------------------------------------------
 
 AC_DEFUN([SC_ENABLE_BRAIN], [
-  AC_MSG_CHECKING([for build with theBrain])
-  AC_ARG_ENABLE(brain,
-      AS_HELP_STRING([--enable-brain], [build theBrain, NHI1 database support]),
-      enable_brain=yes, enable_brain=no
-  )
-  AC_MSG_RESULT($enable_brain)
-  if test "x$enable_brain" = "xbrain"; then
+  OT_ENABLE([brain], [build theBrain, NHI1 database support])
+  if test "$enable_brain" = "yes"; then
     if $PKG_CONFIG --exists kyotocabinet ; then
       if $PKG_CONFIG --atleast-version 1.2.76  kyotocabinet ; then
 	AC_SUBST(BRAIN_CFLAGS,[$($PKG_CONFIG --cflags kyotocabinet)])
@@ -808,8 +827,6 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
       AC_MSG_ERROR([unable to find the package 'kyotocabinet'])
     fi
   fi
-  AC_SUBST([USE_BRAIN], $enable_brain)
-  AM_CONDITIONAL([USE_BRAIN], [test x$enable_brain = xyes])
 ])
 
 #------------------------------------------------------------------------
@@ -825,14 +842,7 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
 #------------------------------------------------------------------------
 
 AC_DEFUN([SC_ENABLE_GUARD], [
-  AC_MSG_CHECKING([for build with GUARD])
-  AC_ARG_ENABLE(guard,
-      AS_HELP_STRING([--enable-guard], [build theLink with GUARD support]),
-      enable_guard=yes, enable_guard=no
-  )
-  AC_MSG_RESULT($enable_guard)
-  AC_SUBST([USE_GUARD], $enable_guard)
-  AM_CONDITIONAL([USE_GUARD], [test x$enable_guard = xyes])
+  OT_ENABLE([guard], [build theGuard, NHI1 encryption support])
 ])
 
 #------------------------------------------------------------------------
