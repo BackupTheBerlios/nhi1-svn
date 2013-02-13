@@ -10,8 +10,9 @@
 #:              please contact AUTHORS for additional information
 #:
 
-TESTS_ENVIRONMENT = $(TCLSH)
-TESTS = $(srcdir)/all.tcl
-
 EXTRA_DIST = $(srcdir)/*.tcl $(srcdir)/*.bash $(srcdir)/*.env
+
+TESTS_ENVIRONMENT = PATH="$(path)" LD_LIBRARY_PATH="$(ld_library_path)" $(TCLSH)
+
+TESTS = $(srcdir)/all.tcl
 

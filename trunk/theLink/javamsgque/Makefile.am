@@ -51,10 +51,7 @@ endif
 #####################################################################################
 ## JAR file
 
-JAVA_FILES = $(srcdir)/IBgError.java $(srcdir)/IServerSetup.java  \
-    $(srcdir)/MqBufferS.java $(srcdir)/MqS.java $(srcdir)/ICallback.java $(srcdir)/IServerCleanup.java \
-      $(srcdir)/IService.java $(srcdir)/MqSException.java $(srcdir)/IEvent.java $(srcdir)/MqFactoryS.java \
-	$(srcdir)/MqDumpS.java
+JAVA_FILES = $(srcdir)/*.java
 
 MQS_MAIN = javamsgque/MqS.class
 
@@ -74,6 +71,6 @@ mqs_DATA = javamsgque.jar
 
 pkglib_LTLIBRARIES = libjavamsgque.la
 BUILT_SOURCES = $(mqs_DATA) $(JAVAH_FILES)
-EXTRA_DIST = $(JAVA_FILES) context_java.h
+EXTRA_DIST = $(JAVA_FILES)
 CLEANFILES = $(BUILT_SOURCES) $(JAVAH_EXTRA_FILES) javamsgque/*.class
 

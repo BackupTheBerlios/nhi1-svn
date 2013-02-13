@@ -28,9 +28,10 @@ function Build # <thread|nothread> <config-arg>...
     (
       cd @PACKAGE@-@PACKAGE_VERSION@
 
-      ./bin/Nhi1Config +i -p --use-perf $@ \
-	--lang-python --lang-cxx --lang-tcl --lang-perl \
-	  --lang-ruby --lang-php --prefix="@abs_builddir@/$BUILD" || exit 1
+      ./bin/Nhi1Config +i +s -p --use-perf $@ \
+	--tool-root='@NHI1_TOOL_ROOT@' \
+	--with-python --with-cxx --with-tcl --with-perl \
+	  --with-ruby --with-php --prefix="@abs_builddir@/$BUILD" || exit 1
 
       make || exit 1
     ) || exit 1
@@ -39,7 +40,7 @@ function Build # <thread|nothread> <config-arg>...
 
 ## main
 if test "$1" = "thread" ; then
-  Build thread --use-threads --lang-csharp --lang-java --lang-go
+  Build thread --use-threads --with-csharp --with-java --with-go
 elif test "$1" = "nothread" ; then
   Build nothread 
 fi

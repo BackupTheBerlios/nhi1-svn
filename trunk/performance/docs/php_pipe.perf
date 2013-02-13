@@ -1,11 +1,11 @@
 > nothread/NHI1-0.17/theLink/example/c/client --all @ PHP nothread/NHI1-0.17/theLink/example/php/server.php
-C> (client:6652) [2013-02-07:15-17-59] [0-0-0-0x26650b8-main]: start: --------------------------------------
-C> (client:6652) [2013-02-07:15-17-59] [0-0-0-0x26650b8-statistics]:                      MqSendEND:   1.75e+05
-C> (client:6652) [2013-02-07:15-18-00] [0-0-0-0x26650b8-statistics]:         MqSendEND_AND_CALLBACK:   9.16e+04
-C> (client:6652) [2013-02-07:15-18-01] [0-0-0-0x26650b8-statistics]:             MqSendEND_AND_WAIT:   4.65e+04
-C> (client:6652) [2013-02-07:15-18-01] [0-0-0-0x26650b8-statistics]:               MqSendPERSISTENT:   7.22e+03
-C> (client:6652) [2013-02-07:15-18-03] [0-0-0-0x26650b8-statistics]:                  parent create:   1.29e+02
-C> (client:6652) [2013-02-07:15-18-03] [0-0-0-0x26650b8-statistics]:                  parent delete:   2.41e+03
-C> (client:6652) [2013-02-07:15-18-03] [0-0-0-0x26650b8-statistics]:                   child create:   5.11e+03
-C> (client:6652) [2013-02-07:15-18-03] [0-0-0-0x26650b8-statistics]:                   child delete:   4.45e+04
-C> (client:6652) [2013-02-07:15-18-03] [0-0-0-0x26650b8-main]: end: ----------------------------------------
+C> (client:3020) [2013-02-13:07-49-03] [0-0-0-0x8710b8-main]: start: --------------------------------------
+C> (client:3020) [2013-02-13:07-49-03] [0-0-0-0x8710b8-statistics]:                      MqSendEND:   1.74e+05
+C> (client:3020) [2013-02-13:07-49-03] [0-0-0-0x8710b8-statistics]:         MqSendEND_AND_CALLBACK:   9.23e+04
+C> (client:3020) [2013-02-13:07-49-04] [0-0-0-0x8710b8-statistics]:             MqSendEND_AND_WAIT:   4.70e+04
+C> (client:3020) [2013-02-13:07-49-04] [0-0-0-0x8710b8-statistics]:               MqSendPERSISTENT:   7.19e+03
+C> (client:3020) [2013-02-13:07-49-06] [0-0-0-0x8710b8-statistics]:                  parent create:   1.30e+02
+C> (client:3020) [2013-02-13:07-49-06] [0-0-0-0x8710b8-statistics]:                  parent delete:   2.59e+03
+C> (client:3020) [2013-02-13:07-49-06] [0-0-0-0x8710b8-statistics]:                   child create:   5.18e+03
+C> (client:3020) [2013-02-13:07-49-07] [0-0-0-0x8710b8-statistics]:                   child delete:   4.45e+04
+C> (client:3020) [2013-02-13:07-49-07] [0-0-0-0x8710b8-main]: end: ----------------------------------------

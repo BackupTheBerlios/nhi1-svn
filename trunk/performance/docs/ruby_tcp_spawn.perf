@@ -1,12 +1,12 @@
-> RUBY nothread/NHI1-0.17/theLink/example/ruby/server.rb --tcp --host localhost --port 7778 --spawn
-> nothread/NHI1-0.17/theLink/example/c/client --all --tcp --host localhost --port 7778
-C> (client:12216) [2013-02-07:16-04-54] [0-0-0-0x214cfb8-main]: start: --------------------------------------
-C> (client:12216) [2013-02-07:16-04-55] [0-0-0-0x214cfb8-statistics]:                      MqSendEND:   1.75e+05
-C> (client:12216) [2013-02-07:16-04-55] [0-0-0-0x214cfb8-statistics]:         MqSendEND_AND_CALLBACK:   1.18e+05
-C> (client:12216) [2013-02-07:16-04-57] [0-0-0-0x214cfb8-statistics]:             MqSendEND_AND_WAIT:   3.22e+04
-C> (client:12216) [2013-02-07:16-04-57] [0-0-0-0x214cfb8-statistics]:               MqSendPERSISTENT:   5.00e+01
-C> (client:12216) [2013-02-07:16-05-00] [0-0-0-0x214cfb8-statistics]:                  parent create:   5.10e+01
-C> (client:12216) [2013-02-07:16-05-00] [0-0-0-0x214cfb8-statistics]:                  parent delete:   9.19e+02
-C> (client:12216) [2013-02-07:16-05-00] [0-0-0-0x214cfb8-statistics]:                   child create:   5.77e+03
-C> (client:12216) [2013-02-07:16-05-00] [0-0-0-0x214cfb8-statistics]:                   child delete:   2.70e+04
-C> (client:12216) [2013-02-07:16-05-00] [0-0-0-0x214cfb8-main]: end: ----------------------------------------
+> RUBY nothread/NHI1-0.17/theLink/example/ruby/server.rb --tcp --host localhost --port 7791 --spawn
+> nothread/NHI1-0.17/theLink/example/c/client --all --tcp --host localhost --port 7791
+C> (client:30608) [2013-02-13:07-45-50] [0-0-0-0xecafb8-main]: start: --------------------------------------
+C> (client:30608) [2013-02-13:07-45-51] [0-0-0-0xecafb8-statistics]:                      MqSendEND:   1.72e+05
+C> (client:30608) [2013-02-13:07-45-51] [0-0-0-0xecafb8-statistics]:         MqSendEND_AND_CALLBACK:   1.07e+05
+C> (client:30608) [2013-02-13:07-45-53] [0-0-0-0xecafb8-statistics]:             MqSendEND_AND_WAIT:   3.19e+04
+C> (client:30608) [2013-02-13:07-45-53] [0-0-0-0xecafb8-statistics]:               MqSendPERSISTENT:   5.00e+01
+C> (client:30608) [2013-02-13:07-45-56] [0-0-0-0xecafb8-statistics]:                  parent create:   5.15e+01
+C> (client:30608) [2013-02-13:07-45-56] [0-0-0-0xecafb8-statistics]:                  parent delete:   9.18e+02
+C> (client:30608) [2013-02-13:07-45-56] [0-0-0-0xecafb8-statistics]:                   child create:   5.87e+03
+C> (client:30608) [2013-02-13:07-45-56] [0-0-0-0xecafb8-statistics]:                   child delete:   2.74e+04
+C> (client:30608) [2013-02-13:07-45-56] [0-0-0-0xecafb8-main]: end: ----------------------------------------

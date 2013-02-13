@@ -1,12 +1,12 @@
 > nothread/NHI1-0.17/theLink/example/c/server --tcp --host localhost --port 7777 --fork
 > nothread/NHI1-0.17/theLink/example/c/client --all --tcp --host localhost --port 7777
-C> (client:26842) [2013-02-07:15-11-14] [0-0-0-0x12ccfb8-main]: start: --------------------------------------
-C> (client:26842) [2013-02-07:15-11-15] [0-0-0-0x12ccfb8-statistics]:                      MqSendEND:   4.12e+05
-C> (client:26842) [2013-02-07:15-11-15] [0-0-0-0x12ccfb8-statistics]:         MqSendEND_AND_CALLBACK:   2.01e+05
-C> (client:26842) [2013-02-07:15-11-16] [0-0-0-0x12ccfb8-statistics]:             MqSendEND_AND_WAIT:   3.67e+04
-C> (client:26842) [2013-02-07:15-11-16] [0-0-0-0x12ccfb8-statistics]:               MqSendPERSISTENT:   5.00e+01
-C> (client:26842) [2013-02-07:15-11-17] [0-0-0-0x12ccfb8-statistics]:                  parent create:   2.52e+03
-C> (client:26842) [2013-02-07:15-11-17] [0-0-0-0x12ccfb8-statistics]:                  parent delete:   6.57e+03
-C> (client:26842) [2013-02-07:15-11-18] [0-0-0-0x12ccfb8-statistics]:                   child create:   1.08e+04
-C> (client:26842) [2013-02-07:15-11-18] [0-0-0-0x12ccfb8-statistics]:                   child delete:   2.85e+04
-C> (client:26842) [2013-02-07:15-11-18] [0-0-0-0x12ccfb8-main]: end: ----------------------------------------
+C> (client:23198) [2013-02-13:07-42-13] [0-0-0-0xcfdfb8-main]: start: --------------------------------------
+C> (client:23198) [2013-02-13:07-42-13] [0-0-0-0xcfdfb8-statistics]:                      MqSendEND:   4.21e+05
+C> (client:23198) [2013-02-13:07-42-13] [0-0-0-0xcfdfb8-statistics]:         MqSendEND_AND_CALLBACK:   2.03e+05
+C> (client:23198) [2013-02-13:07-42-15] [0-0-0-0xcfdfb8-statistics]:             MqSendEND_AND_WAIT:   3.63e+04
+C> (client:23198) [2013-02-13:07-42-15] [0-0-0-0xcfdfb8-statistics]:               MqSendPERSISTENT:   5.00e+01
+C> (client:23198) [2013-02-13:07-42-16] [0-0-0-0xcfdfb8-statistics]:                  parent create:   2.52e+03
+C> (client:23198) [2013-02-13:07-42-16] [0-0-0-0xcfdfb8-statistics]:                  parent delete:   6.55e+03
+C> (client:23198) [2013-02-13:07-42-16] [0-0-0-0xcfdfb8-statistics]:                   child create:   1.09e+04
+C> (client:23198) [2013-02-13:07-42-16] [0-0-0-0xcfdfb8-statistics]:                   child delete:   2.85e+04
+C> (client:23198) [2013-02-13:07-42-16] [0-0-0-0xcfdfb8-main]: end: ----------------------------------------

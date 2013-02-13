@@ -10,6 +10,6 @@
 #:              please contact AUTHORS for additional information
 #:
 
-EXTRA_DIST =  $(wildcard $(srcdir)/*)
+EXTRA_DIST =  $(srcdir)/*
  
 

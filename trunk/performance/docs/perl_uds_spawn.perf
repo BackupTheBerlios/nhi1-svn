@@ -1,12 +1,12 @@
 > PERL nothread/NHI1-0.17/theLink/example/perl/server.pl --uds --file ./socket.uds --spawn
 > nothread/NHI1-0.17/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:5348) [2013-02-07:15-17-04] [0-0-0-0xbc0d98-main]: start: --------------------------------------
-C> (client:5348) [2013-02-07:15-17-04] [0-0-0-0xbc0d98-statistics]:                      MqSendEND:   1.70e+05
-C> (client:5348) [2013-02-07:15-17-05] [0-0-0-0xbc0d98-statistics]:         MqSendEND_AND_CALLBACK:   1.11e+05
-C> (client:5348) [2013-02-07:15-17-06] [0-0-0-0xbc0d98-statistics]:             MqSendEND_AND_WAIT:   5.12e+04
-C> (client:5348) [2013-02-07:15-17-06] [0-0-0-0xbc0d98-statistics]:               MqSendPERSISTENT:   7.29e+03
-C> (client:5348) [2013-02-07:15-17-29] [0-0-0-0xbc0d98-statistics]:                  parent create:   4.49e+00
-C> (client:5348) [2013-02-07:15-17-29] [0-0-0-0xbc0d98-statistics]:                  parent delete:   1.09e+03
-C> (client:5348) [2013-02-07:15-17-29] [0-0-0-0xbc0d98-statistics]:                   child create:   7.88e+03
-C> (client:5348) [2013-02-07:15-17-29] [0-0-0-0xbc0d98-statistics]:                   child delete:   4.34e+04
-C> (client:5348) [2013-02-07:15-17-29] [0-0-0-0xbc0d98-main]: end: ----------------------------------------
+C> (client:1707) [2013-02-13:07-48-08] [0-0-0-0xfcfd98-main]: start: --------------------------------------
+C> (client:1707) [2013-02-13:07-48-08] [0-0-0-0xfcfd98-statistics]:                      MqSendEND:   1.67e+05
+C> (client:1707) [2013-02-13:07-48-08] [0-0-0-0xfcfd98-statistics]:         MqSendEND_AND_CALLBACK:   1.09e+05
+C> (client:1707) [2013-02-13:07-48-09] [0-0-0-0xfcfd98-statistics]:             MqSendEND_AND_WAIT:   5.09e+04
+C> (client:1707) [2013-02-13:07-48-09] [0-0-0-0xfcfd98-statistics]:               MqSendPERSISTENT:   7.43e+03
+C> (client:1707) [2013-02-13:07-48-32] [0-0-0-0xfcfd98-statistics]:                  parent create:   4.50e+00
+C> (client:1707) [2013-02-13:07-48-33] [0-0-0-0xfcfd98-statistics]:                  parent delete:   1.19e+03
+C> (client:1707) [2013-02-13:07-48-33] [0-0-0-0xfcfd98-statistics]:                   child create:   7.91e+03
+C> (client:1707) [2013-02-13:07-48-33] [0-0-0-0xfcfd98-statistics]:                   child delete:   4.27e+04
+C> (client:1707) [2013-02-13:07-48-33] [0-0-0-0xfcfd98-main]: end: ----------------------------------------

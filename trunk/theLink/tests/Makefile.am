@@ -10,14 +10,10 @@
 #:              please contact AUTHORS for additional information
 #:
 
-##
-## ==========================================================================
-## Main
-##
-
-EXTRA_DIST = README.tests massclient.bash $(wildcard $(srcdir)/*.tcl) $(wildcard $(srcdir)/*.test)
+EXTRA_DIST = README.tests massclient.bash $(srcdir)/*.tcl $(srcdir)/*.test
 
 TESTS_ENVIRONMENT = PATH="$(path)" LD_LIBRARY_PATH="$(ld_library_path)" $(TCLSH)
-#TESTS = $(srcdir)/all.tcl
-TESTS = $(srcdir)/int.test
+
+TESTS = $(srcdir)/all.tcl
+#TESTS = $(srcdir)/int.test
 

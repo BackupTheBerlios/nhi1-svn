@@ -267,10 +267,7 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-EXTRA_DIST = manfilter.php mulclient.php mulserver.php MyClient.php \
-	      MyServer.php testclient.php testserver.php Filter1.php \
-		Filter2.php Filter3.php Filter4.php Filter5.php server.php
-
+EXTRA_DIST = $(srcdir)/*.php
 all: all-am
 
 .SUFFIXES:

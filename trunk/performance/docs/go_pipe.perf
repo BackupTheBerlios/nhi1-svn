@@ -1,11 +1,11 @@
 > thread/NHI1-0.17/theLink/example/c/client --all @ thread/NHI1-0.17/theLink/example/go/server
-C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-31] [0-0-0-0x10b8cb8-main]: start: --------------------------------------
-C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-31] [0-0-0-0x10b8cb8-statistics]:                      MqSendEND:   2.20e+05
-C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-32] [0-0-0-0x10b8cb8-statistics]:         MqSendEND_AND_CALLBACK:   1.19e+05
-C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-33] [0-0-0-0x10b8cb8-statistics]:             MqSendEND_AND_WAIT:   5.19e+04
-C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-33] [0-0-0-0x10b8cb8-statistics]:               MqSendPERSISTENT:   6.86e+03
-C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-35] [0-0-0-0x10b8cb8-statistics]:                  parent create:   6.89e+01
-C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-35] [0-0-0-0x10b8cb8-statistics]:                  parent delete:   2.84e+03
-C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-35] [0-0-0-0x10b8cb8-statistics]:                   child create:   5.84e+03
-C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-35] [0-0-0-0x10b8cb8-statistics]:                   child delete:   3.88e+04
-C> (client:9835:0x7fb0966d8700) [2013-02-07:16-02-35] [0-0-0-0x10b8cb8-main]: end: ----------------------------------------
+C> (client:2132:0x7f6923f58700) [2013-02-13:07-48-34] [0-0-0-0x171acb8-main]: start: --------------------------------------
+C> (client:2132:0x7f6923f58700) [2013-02-13:07-48-34] [0-0-0-0x171acb8-statistics]:                      MqSendEND:   2.30e+05
+C> (client:2132:0x7f6923f58700) [2013-02-13:07-48-34] [0-0-0-0x171acb8-statistics]:         MqSendEND_AND_CALLBACK:   1.22e+05
+C> (client:2132:0x7f6923f58700) [2013-02-13:07-48-35] [0-0-0-0x171acb8-statistics]:             MqSendEND_AND_WAIT:   5.20e+04
+C> (client:2132:0x7f6923f58700) [2013-02-13:07-48-35] [0-0-0-0x171acb8-statistics]:               MqSendPERSISTENT:   6.88e+03
+C> (client:2132:0x7f6923f58700) [2013-02-13:07-48-38] [0-0-0-0x171acb8-statistics]:                  parent create:   6.93e+01
+C> (client:2132:0x7f6923f58700) [2013-02-13:07-48-38] [0-0-0-0x171acb8-statistics]:                  parent delete:   3.54e+03
+C> (client:2132:0x7f6923f58700) [2013-02-13:07-48-38] [0-0-0-0x171acb8-statistics]:                   child create:   5.91e+03
+C> (client:2132:0x7f6923f58700) [2013-02-13:07-48-38] [0-0-0-0x171acb8-statistics]:                   child delete:   3.88e+04
+C> (client:2132:0x7f6923f58700) [2013-02-13:07-48-38] [0-0-0-0x171acb8-main]: end: ----------------------------------------

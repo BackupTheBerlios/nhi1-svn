@@ -1,12 +1,12 @@
 > nothread/NHI1-0.17/theLink/example/cc/server --uds --file ./socket.uds --spawn
 > nothread/NHI1-0.17/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:28224) [2013-02-07:15-12-10] [0-0-0-0xeb6d98-main]: start: --------------------------------------
-C> (client:28224) [2013-02-07:15-12-10] [0-0-0-0xeb6d98-statistics]:                      MqSendEND:   4.46e+05
-C> (client:28224) [2013-02-07:15-12-10] [0-0-0-0xeb6d98-statistics]:         MqSendEND_AND_CALLBACK:   2.23e+05
-C> (client:28224) [2013-02-07:15-12-11] [0-0-0-0xeb6d98-statistics]:             MqSendEND_AND_WAIT:   6.15e+04
-C> (client:28224) [2013-02-07:15-12-11] [0-0-0-0xeb6d98-statistics]:               MqSendPERSISTENT:   7.78e+03
-C> (client:28224) [2013-02-07:15-12-12] [0-0-0-0xeb6d98-statistics]:                  parent create:   7.01e+02
-C> (client:28224) [2013-02-07:15-12-12] [0-0-0-0xeb6d98-statistics]:                  parent delete:   6.39e+03
-C> (client:28224) [2013-02-07:15-12-12] [0-0-0-0xeb6d98-statistics]:                   child create:   1.19e+04
-C> (client:28224) [2013-02-07:15-12-12] [0-0-0-0xeb6d98-statistics]:                   child delete:   4.31e+04
-C> (client:28224) [2013-02-07:15-12-12] [0-0-0-0xeb6d98-main]: end: ----------------------------------------
+C> (client:24589) [2013-02-13:07-43-09] [0-0-0-0x1b2dd98-main]: start: --------------------------------------
+C> (client:24589) [2013-02-13:07-43-09] [0-0-0-0x1b2dd98-statistics]:                      MqSendEND:   4.42e+05
+C> (client:24589) [2013-02-13:07-43-09] [0-0-0-0x1b2dd98-statistics]:         MqSendEND_AND_CALLBACK:   2.27e+05
+C> (client:24589) [2013-02-13:07-43-10] [0-0-0-0x1b2dd98-statistics]:             MqSendEND_AND_WAIT:   6.20e+04
+C> (client:24589) [2013-02-13:07-43-10] [0-0-0-0x1b2dd98-statistics]:               MqSendPERSISTENT:   7.78e+03
+C> (client:24589) [2013-02-13:07-43-11] [0-0-0-0x1b2dd98-statistics]:                  parent create:   7.03e+02
+C> (client:24589) [2013-02-13:07-43-11] [0-0-0-0x1b2dd98-statistics]:                  parent delete:   6.45e+03
+C> (client:24589) [2013-02-13:07-43-11] [0-0-0-0x1b2dd98-statistics]:                   child create:   1.17e+04
+C> (client:24589) [2013-02-13:07-43-11] [0-0-0-0x1b2dd98-statistics]:                   child delete:   4.31e+04
+C> (client:24589) [2013-02-13:07-43-11] [0-0-0-0x1b2dd98-main]: end: ----------------------------------------

@@ -1,11 +1,11 @@
 > nothread/NHI1-0.17/theLink/example/c/client --all @ nothread/NHI1-0.17/theLink/example/cc/server
-C> (client:27535) [2013-02-07:15-11-41] [0-0-0-0x2016c78-main]: start: --------------------------------------
-C> (client:27535) [2013-02-07:15-11-41] [0-0-0-0x2016c78-statistics]:                      MqSendEND:   4.37e+05
-C> (client:27535) [2013-02-07:15-11-41] [0-0-0-0x2016c78-statistics]:         MqSendEND_AND_CALLBACK:   2.17e+05
-C> (client:27535) [2013-02-07:15-11-42] [0-0-0-0x2016c78-statistics]:             MqSendEND_AND_WAIT:   6.11e+04
-C> (client:27535) [2013-02-07:15-11-42] [0-0-0-0x2016c78-statistics]:               MqSendPERSISTENT:   7.79e+03
-C> (client:27535) [2013-02-07:15-11-43] [0-0-0-0x2016c78-statistics]:                  parent create:   7.01e+02
-C> (client:27535) [2013-02-07:15-11-43] [0-0-0-0x2016c78-statistics]:                  parent delete:   6.60e+03
-C> (client:27535) [2013-02-07:15-11-43] [0-0-0-0x2016c78-statistics]:                   child create:   1.19e+04
-C> (client:27535) [2013-02-07:15-11-44] [0-0-0-0x2016c78-statistics]:                   child delete:   4.32e+04
-C> (client:27535) [2013-02-07:15-11-44] [0-0-0-0x2016c78-main]: end: ----------------------------------------
+C> (client:23897) [2013-02-13:07-42-40] [0-0-0-0x1bdfc78-main]: start: --------------------------------------
+C> (client:23897) [2013-02-13:07-42-40] [0-0-0-0x1bdfc78-statistics]:                      MqSendEND:   4.49e+05
+C> (client:23897) [2013-02-13:07-42-40] [0-0-0-0x1bdfc78-statistics]:         MqSendEND_AND_CALLBACK:   2.26e+05
+C> (client:23897) [2013-02-13:07-42-41] [0-0-0-0x1bdfc78-statistics]:             MqSendEND_AND_WAIT:   6.22e+04
+C> (client:23897) [2013-02-13:07-42-41] [0-0-0-0x1bdfc78-statistics]:               MqSendPERSISTENT:   7.89e+03
+C> (client:23897) [2013-02-13:07-42-42] [0-0-0-0x1bdfc78-statistics]:                  parent create:   7.00e+02
+C> (client:23897) [2013-02-13:07-42-42] [0-0-0-0x1bdfc78-statistics]:                  parent delete:   1.41e+04
+C> (client:23897) [2013-02-13:07-42-42] [0-0-0-0x1bdfc78-statistics]:                   child create:   1.06e+04
+C> (client:23897) [2013-02-13:07-42-42] [0-0-0-0x1bdfc78-statistics]:                   child delete:   4.34e+04
+C> (client:23897) [2013-02-13:07-42-42] [0-0-0-0x1bdfc78-main]: end: ----------------------------------------

@@ -81,9 +81,8 @@ AC_DEFUN([OT_ENABLE],[
 
   AC_MSG_CHECKING(for build with: ID);
   AC_ARG_ENABLE(ID,AS_HELP_STRING([--enable-ID], [TXT]), [
-    VAR="$enableval"
-    AC_MSG_RESULT($VAR)
-    AS_IF([test "$VAR" != 'yes' -a "$VAR" != 'no'],[
+    AC_MSG_RESULT($enableval)
+    AS_IF([test "$enableval" != 'yes' -a "$enableval" != 'no'],[
       AC_MSG_ERROR(only accept 'yes' or 'no' as argument for 'ID' - exit)
     ])
   ],[
@@ -91,7 +90,7 @@ AC_DEFUN([OT_ENABLE],[
     AC_MSG_RESULT($VAR)
   ])
 
-  AC_SUBST(FLAG, "$ID")
+  AC_SUBST(FLAG, "$VAR")
   AM_CONDITIONAL(FLAG, [test -n "$ID"])
 
   popdef([FLAG])

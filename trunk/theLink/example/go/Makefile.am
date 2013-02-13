@@ -15,25 +15,7 @@
 ## GO
 ##
 
-EXTRA_DIST = \
-    $(wildcard $(srcdir)/*.go) \
-    src/mulserver/main.go \
-    src/Filter5/main.go \
-    src/Filter6/main.go \
-    src/test1/main.go \
-    src/manfilter/main.go \
-    src/testserver/main.go \
-    src/test2/main.go \
-    src/server/main.go \
-    src/MyServer/main.go \
-    src/Filter4/main.go \
-    src/Filter1/main.go \
-    src/Filter3/main.go \
-    src/testclient/main.go \
-    src/mulclient/main.go \
-    src/MyClient/main.go \
-    src/Filter2/main.go \
-    src/client/main.go
+EXTRA_DIST = $(srcdir)/*.go $(srcdir)/src/*/*.go
   
 if USE_GO
 

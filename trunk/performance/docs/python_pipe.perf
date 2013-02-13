@@ -1,11 +1,11 @@
 > nothread/NHI1-0.17/theLink/example/c/client --all @ PYTHON nothread/NHI1-0.17/theLink/example/python/server.py
-C> (client:639) [2013-02-07:15-13-56] [0-0-0-0x20cbef8-main]: start: --------------------------------------
-C> (client:639) [2013-02-07:15-13-56] [0-0-0-0x20cbef8-statistics]:                      MqSendEND:   2.47e+05
-C> (client:639) [2013-02-07:15-13-56] [0-0-0-0x20cbef8-statistics]:         MqSendEND_AND_CALLBACK:   9.37e+04
-C> (client:639) [2013-02-07:15-13-57] [0-0-0-0x20cbef8-statistics]:             MqSendEND_AND_WAIT:   4.75e+04
-C> (client:639) [2013-02-07:15-13-57] [0-0-0-0x20cbef8-statistics]:               MqSendPERSISTENT:   7.18e+03
-C> (client:639) [2013-02-07:15-14-03] [0-0-0-0x20cbef8-statistics]:                  parent create:   2.30e+01
-C> (client:639) [2013-02-07:15-14-03] [0-0-0-0x20cbef8-statistics]:                  parent delete:   3.73e+02
-C> (client:639) [2013-02-07:15-14-03] [0-0-0-0x20cbef8-statistics]:                   child create:   7.34e+03
-C> (client:639) [2013-02-07:15-14-03] [0-0-0-0x20cbef8-statistics]:                   child delete:   3.92e+04
-C> (client:639) [2013-02-07:15-14-03] [0-0-0-0x20cbef8-main]: end: ----------------------------------------
+C> (client:29475) [2013-02-13:07-44-57] [0-0-0-0x1a44ef8-main]: start: --------------------------------------
+C> (client:29475) [2013-02-13:07-44-57] [0-0-0-0x1a44ef8-statistics]:                      MqSendEND:   2.30e+05
+C> (client:29475) [2013-02-13:07-44-58] [0-0-0-0x1a44ef8-statistics]:         MqSendEND_AND_CALLBACK:   9.35e+04
+C> (client:29475) [2013-02-13:07-44-59] [0-0-0-0x1a44ef8-statistics]:             MqSendEND_AND_WAIT:   4.70e+04
+C> (client:29475) [2013-02-13:07-44-59] [0-0-0-0x1a44ef8-statistics]:               MqSendPERSISTENT:   7.07e+03
+C> (client:29475) [2013-02-13:07-45-04] [0-0-0-0x1a44ef8-statistics]:                  parent create:   2.31e+01
+C> (client:29475) [2013-02-13:07-45-05] [0-0-0-0x1a44ef8-statistics]:                  parent delete:   3.91e+02
+C> (client:29475) [2013-02-13:07-45-05] [0-0-0-0x1a44ef8-statistics]:                   child create:   7.30e+03
+C> (client:29475) [2013-02-13:07-45-05] [0-0-0-0x1a44ef8-statistics]:                   child delete:   3.94e+04
+C> (client:29475) [2013-02-13:07-45-05] [0-0-0-0x1a44ef8-main]: end: ----------------------------------------

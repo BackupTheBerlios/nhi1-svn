@@ -15,34 +15,30 @@ set -u
 
 export LANG="C"
 
-#find env.sh config filre
-T=$PWD
-while [[ ! -f "$T/env.sh" || "$T" = '/' ]] ; do T=$(dirname "$T"); done
-if [[ -f "$T/env.sh" ]] ; then
-  . "$T/env.sh"
+# find env.sh config file
+abs_top_builddir=$PWD
+while [[ ! -f "$abs_top_builddir/env.sh" && "$abs_top_builddir" != '/' ]] ; do 
+  abs_top_builddir=$(dirname "$abs_top_builddir")
+done
+if [[ -r "$abs_top_builddir/env.sh" ]] ; then
+  . "$abs_top_builddir/env.sh"
 else
-  echo "unable to find the 'env.sh' configuration file"
-  echo "please build first and than use this toll in the build-tree"
-  exit 1
+ echo "unable to find the 'env.sh' configuration file"
+ echo "please build first and than use this tool in the build-tree"
 fi
 
-if [[ ${WINDIR:-} != "" ]] ; then
-  PATH=$PATH:$LD_LIBRARY_PATH
-  EXT=.exe
-  MONO=""
-else
-  EXT=""
-  MONO=$CLREXEC
-fi
-export TS_DEBUG=0
+##
+## =========================================================================
+## Functions
+##
 
 Usage() {
   cat - <<-EOF
-usage $0 ?-ur? ?-vg|-gdb|-kdbg|-ddd|-lc|-sr|-sp|-st? args...
-
-The scripts used in this directory are used to verify the libmsgque
-library including the the other language bindings.
+The scripts used process test-cases to verify the features gives.
 Testing is done using the tcltest feature of the tcl distribution.
+The genaral syntax is:
+
+  $0 ?global-options? script ?script-options?
 
   1. using the test feature of the build environment
         > cd NHI1-X.X
@@ -50,54 +46,51 @@ Testing is done using the tcltest feature of the tcl distribution.
 
   2. invoke an individual test script for language "python" and "perl"
         > cd NHI1-X.X/theLink/tests
-        > ./MakeTclTest.bash int.test --only-python-perl
+        > ./Nhi1Test.bash int.test --only-python-perl
 
   3. invoke all tests for language "go" using "threads" and only "binary" data
         > cd NHI1-X.X/theLink/tests
-        > ./MakeTclTest.bash ./all.tcl --only-go --only-threads --only-binary
+        > ./Nhi1Test.bash ./all.tcl --only-go --only-threads --only-binary
 
   4. start "tcl" server using "tcp" and listing on port "7777" and "spawn"
      for every new connection a new server
         > cd NHI1-X.X/theLink/tests
-        > ./MakeTclTest.bash ../example/tcl/server.tcl --tcp --port 7777 --spawn
+        > ./Nhi1Test.bash ../example/tcl/server.tcl --tcp --port 7777 --spawn
 
 Help is available with the following commands:
 
   1. test specific help
         > cd NHI1-X.X/theLink/tests
-        > ./MakeTclTest.bash ./all.tcl --help
+        > ./Nhi1Test.bash ./all.tcl --help
      or
-        > ./MakeTclTest.bash ./all.tcl --help-msgque
+        > ./Nhi1Test.bash ./all.tcl --help-msgque
 
   2. tcltest specific help
         > man tcltest
 
 Available test scripts:
 
-$(cd $abs_top_srcdir/theLink/tests; ls -C *.test)
+$(cd $abs_top_srcdir/theLink/tests; ls -1 *.test | xargs -n 4 printf '  %-18s %-18s %-18s %-18s\n')
 
-Setup the test-environment, usually you don't specify the following optione:
+The prefix is used to add debugger or profiler tools in front of the executable.
+The following tools are supported:
 
-  -ur:	  use-remote
-  -st:	  strace
+  st:   strace
             > $PREFIX_st
-  -vg:	  valgrind:
+  vg:   valgrind:
             > $PREFIX_vg
-  -sp:	  valgrind: gen-suppressions
+  sp:   valgrind: gen-suppressions
             > $PREFIX_sp
-  -lc:	  valgrind: leak-chec
+  lc:   valgrind: leak-chec
             > $PREFIX_lc
-  -sr:	  valgrind: leak-chec + show-reachable
+  sr:   valgrind: leak-chec + show-reachable
             > $PREFIX_sr
-  -gdb:	  use debugger 'gdb'
+  gdb:  use debugger 'gdb'
             > $PREFIX_gdb
-  -ddd:	  use debugger 'ddd'
+  ddd:  use debugger 'ddd'
             > $PREFIX_ddd
-  -kdbg:  use debugger 'kdbg'
+  kdbg: use debugger 'kdbg'
             > $PREFIX_kdbg
-  -lookup:  lookup a single like:
-	    > MakeTclTest -lookup server.c
-
 EOF
   exit 1
 }
@@ -118,7 +111,7 @@ lookup() {
       # look into the example directories
       case "$CMD" in
 	*.tcl)      CMDDIR="$abs_top_srcdir/theLink/example/tcl";;
-	*.test)     CMDDIR="$abs_top_srcdir/theLink/test/";;
+	*.test)     CMDDIR="$abs_top_srcdir/theLink/tests/";;
 	*.java)     CMDDIR="$abs_top_builddir/theLink/example/java";;
 	*.py)	    CMDDIR="$abs_top_srcdir/theLink/example/python";;
 	*.pl)	    CMDDIR="$abs_top_srcdir/theLink/example/perl";;
@@ -136,13 +129,13 @@ lookup() {
 
   # find executable is CMD is a script-file
   case "$CMD" in
-    *.tcl|*.test)   EXE="$TCLSH";;
-    *.java)	    EXE="$JAVA"; CMD="${CMD%.*}";;
-    *.py)	    EXE="$PYTHON";;
-    *.pl)	    EXE="$PERL -I$abs_top_srcdir/theLink/example/perl";;
-    *.rb)	    EXE="$RUBY";;
-    *.php)	    EXE="$PHP";;
-    *.cs|*.exe)	    EXE="$MONO"; CMD="${CMD%.*}.exe";;
+    *.tcl|*.test)   EXE="${TCLSH:-tclsh}";;
+    *.java)	    EXE="${JAVA:-java}"; CMD="${CMD%.*}";;
+    *.py)	    EXE="${PYTHON:-python}";;
+    *.pl)	    EXE="${PERL:-perl} -I$abs_top_srcdir/theLink/example/perl";;
+    *.rb)	    EXE="${RUBY:-ruby}";;
+    *.php)	    EXE="${PHP:-php}";;
+    *.cs|*.exe)	    EXE="${MONO:-mono}"; CMD="${CMD%.*}.exe";;
     *.go)	    EXE=""; CMD="${CMD%.*}$EXT";;
     *.cc)	    EXE=""; CMD="${CMD%.*}$EXT";;
     *.c)	    EXE=""; CMD="${CMD%.*}$EXT";;
@@ -159,11 +152,25 @@ lookup() {
   echo "${ret[@]}"
 }
 
+##
+## =========================================================================
+## Main
+##
+
+# special Windows
+if [[ ${WINDIR:-} != "" ]] ; then
+  PATH=$PATH:$LD_LIBRARY_PATH
+  EXT=.exe
+  MONO=""
+else
+  EXT=""
+  MONO=$CLREXEC
+fi
+export TS_DEBUG=0
+
 PREFIX=""
 POSTFIX="cat"
 TEE="yes"
-
-declare -i lookup=0
 
 PREFIX_vg="valgrind --trace-children=yes --num-callers=36 --quiet"
 PREFIX_gdb="gdb -d ../perlmsgque/Net*/ --tui --args"
@@ -174,64 +181,75 @@ PREFIX_sr="valgrind --trace-children=yes --leak-check=full --show-reachable=yes 
 PREFIX_st="strace"
 PREFIX_sp="valgrind --trace-children=yes --leak-check=full --num-callers=36 --quiet --gen-suppressions=all"
 
+##
+## =========================================================================
+## Command-Line
+##
+
+eval "$($abs_top_srcdir/sbin/SetupEnv "$0" "$@" <<-'EOF'
+G_Shell 'bash'
+# ---------------------------------------------------------------------
+G_Date='$Date$'
+G_Revision='$Revision$'
+G_Author='$Author: aotto1968 $'
+G_Source='$URL: svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk/bin/Nhi1Config $'
+# --------------------------------------------------------------------
+G_Description='frontend to run test-scripts'
+G_HelpProc='Usage'
+# -------------------------------------------------------------------
+G_Option break-on-non-option
+G_Argument 'prefix:prefix:no:prefix test with:L:no:vg:gdb:ddd:kdbg:lc:sr:st:sp:mdb'
+G_Argument 'lookup:lookup:no:lookup a test-script:B'
+G_Argument 'remote:remote::add --tcp --port 7777 --thread to the argument(s)'
+
+EOF
+  )"
 
 (( $# == 0 )) && Usage
+
+if [[ "$lookup" == 'yes' ]] ; then
+  lookup "$1"
+  exit
+fi
+
 [[ $1 == "-ur" ]] && {
-  shift
   set -- "$@" --tcp --port 7777 --thread
 }
-case "$1" in
-  -vg) 
+case "$prefix" in
+  vg) 
     PREFIX=$PREFIX_vg
-    POSTFIX="grep -v DWARF2"
-    shift
+    POSTFIX='grep -v DWARF2'
   ;;
-  -gdb) 
+  gdb) 
     PREFIX=$PREFIX_gdb
-    POSTFIX=""
-    TEE="no"
-    shift
+    POSTFIX=''
+    TEE='no'
   ;;
-  -ddd) 
+  ddd) 
     PREFIX=$PREFIX_ddd
-    TEE="no"
-    shift
+    TEE='no'
   ;;
-  -kdbg) 
+  kdbg) 
     PREFIX=$PREFIX_kdbg
-    TEE="no"
-    shift
+    TEE='no'
   ;;
-  -lc) 
+  lc) 
     PREFIX=$PREFIX_lc
-    POSTFIX="grep -v DWARF2"
-    shift
+    POSTFIX='grep -v DWARF2'
   ;;
-  -sr) 
+  sr) 
     PREFIX=$PREFIX_sr
-    POSTFIX="grep -v DWARF2"
-    shift
+    POSTFIX='grep -v DWARF2'
   ;;
-  -st) 
+  st) 
     PREFIX=$PREFIX_st
-    shift
   ;;
-  -sp) 
+  sp) 
     PREFIX=$PREFIX_sp
-    POSTFIX="grep -v DWARF2"
-    shift
+    POSTFIX='grep -v DWARF2'
   ;;
-  -mdb) 
-    MONO="mdb"
-    shift
-  ;;
-  -lookup) 
-    lookup "$2"
-    exit
-    shift
-  ;;
-  -*)
-    Usage
+  mdb) 
+    MONO='mdb'
   ;;
 esac
 

@@ -1,12 +1,12 @@
-> TCLSH nothread/NHI1-0.17/theLink/example/tcl/server.tcl --tcp --host localhost --port 7777 --fork
-> nothread/NHI1-0.17/theLink/example/c/client --all --tcp --host localhost --port 7777
-C> (client:10895) [2013-02-07:16-03-13] [0-0-0-0x2313fb8-main]: start: --------------------------------------
-C> (client:10895) [2013-02-07:16-03-13] [0-0-0-0x2313fb8-statistics]:                      MqSendEND:   2.16e+05
-C> (client:10895) [2013-02-07:16-03-13] [0-0-0-0x2313fb8-statistics]:         MqSendEND_AND_CALLBACK:   1.18e+05
-C> (client:10895) [2013-02-07:16-03-15] [0-0-0-0x2313fb8-statistics]:             MqSendEND_AND_WAIT:   3.23e+04
-C> (client:10895) [2013-02-07:16-03-15] [0-0-0-0x2313fb8-statistics]:               MqSendPERSISTENT:   5.00e+01
-C> (client:10895) [2013-02-07:16-03-16] [0-0-0-0x2313fb8-statistics]:                  parent create:   9.08e+02
-C> (client:10895) [2013-02-07:16-03-16] [0-0-0-0x2313fb8-statistics]:                  parent delete:   2.61e+03
-C> (client:10895) [2013-02-07:16-03-17] [0-0-0-0x2313fb8-statistics]:                   child create:   3.41e+03
-C> (client:10895) [2013-02-07:16-03-17] [0-0-0-0x2313fb8-statistics]:                   child delete:   2.85e+04
-C> (client:10895) [2013-02-07:16-03-17] [0-0-0-0x2313fb8-main]: end: ----------------------------------------
+> TCLSH nothread/NHI1-0.17/theLink/example/tcl/server.tcl --tcp --host localhost --port 7783 --fork
+> nothread/NHI1-0.17/theLink/example/c/client --all --tcp --host localhost --port 7783
+C> (client:24814) [2013-02-13:07-43-17] [0-0-0-0x103cfb8-main]: start: --------------------------------------
+C> (client:24814) [2013-02-13:07-43-18] [0-0-0-0x103cfb8-statistics]:                      MqSendEND:   2.11e+05
+C> (client:24814) [2013-02-13:07-43-18] [0-0-0-0x103cfb8-statistics]:         MqSendEND_AND_CALLBACK:   1.22e+05
+C> (client:24814) [2013-02-13:07-43-19] [0-0-0-0x103cfb8-statistics]:             MqSendEND_AND_WAIT:   3.24e+04
+C> (client:24814) [2013-02-13:07-43-20] [0-0-0-0x103cfb8-statistics]:               MqSendPERSISTENT:   5.00e+01
+C> (client:24814) [2013-02-13:07-43-21] [0-0-0-0x103cfb8-statistics]:                  parent create:   9.20e+02
+C> (client:24814) [2013-02-13:07-43-21] [0-0-0-0x103cfb8-statistics]:                  parent delete:   2.71e+03
+C> (client:24814) [2013-02-13:07-43-21] [0-0-0-0x103cfb8-statistics]:                   child create:   3.43e+03
+C> (client:24814) [2013-02-13:07-43-21] [0-0-0-0x103cfb8-statistics]:                   child delete:   2.86e+04
+C> (client:24814) [2013-02-13:07-43-21] [0-0-0-0x103cfb8-main]: end: ----------------------------------------

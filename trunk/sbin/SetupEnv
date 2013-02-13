@@ -70,6 +70,8 @@ Functions:
       > print configuration after setup
     call-in-loop
       > loop over the SetupEnv to run external tests
+    break-on-non-option
+      > break command-line parsing after the first non-option
   G_Argument <string>
     The String is a ':' sparated siring with the format:
 
@@ -480,10 +482,8 @@ function get_environment_usage {
 
 function get_detail_user_usage {
   if [[ -n "${G_HelpProc:-}" ]] ; then
+    Print "\n  Detail help:\n"
     Eval "$G_HelpProc 1>&2"
-    Exit ""
-  else
-    Error "the user-detail-usage is not installed, use 'G_HelpProc' to add"
   fi
 }
 
@@ -498,8 +498,8 @@ function get_user_usage {
   declare space3
 
   ## work
-  Print "\nusage: $G_FileName ?Options? ${SE_Args[*]:-}"
-  (( SE_NOptions > SE_NLOptions )) && { Print "\n  Custom short options:\n" ; }
+  Print "\nusage: $G_FileName ?Options? ${SE_Args[*]:-}\n"
+  (( SE_NOptions > SE_NLOptions )) && { Print "\n  Custom short options:\n\n" ; }
   while (( i < SE_NOptions ))
   do
     (( ${#SE_Options[$i]} > 1 )) && { let i+=1 ; continue ; }
@@ -511,7 +511,7 @@ function get_user_usage {
     Print "    %-${max}s =  ${SE_Defaults[$i]:0:30}\n" "$space"
     i+=1
   done
-  (( SE_NLOptions > 0 )) && { Print "\n  Custom long options:\n" ; }
+  (( SE_NLOptions > 0 )) && { Print "\n  Custom long options:\n\n" ; }
   for ((i=0; i<SE_NOptions; i++))
   do
     (( ${#SE_Options[$i]} < 2 )) && { let i+=1 ; continue ; }
@@ -527,12 +527,16 @@ function get_user_usage {
 	    "-p(+):print (not) the configuration" \
 	    "--help,-h:get user usage" \
 	    "--help-environment:get environment database usage" \
-	    "--help-setup:get setup usage" \
-	    "--help-detail:get detail help from wrapper tool"
+	    "--help-setup:get setup usage"
   do
     IFS=':'; set -- $t; unset IFS
     Print "\n    %-18s : %s" "$1" "$2"
   done
+  Print "\n"
+  if [[ -n "${G_HelpProc:-}" ]] ; then
+    Print "\n  Detail usage:"
+    Eval "$G_HelpProc | sed -e 's/^/    /' 1>&2"
+  fi
   Exit '\n'
 }
 
@@ -559,7 +563,6 @@ function parse_commandline {
 	-h|--help) shift; let SE_HELP=1; continue ;;
 	--help-environment) shift; let SE_HELP=2; continue ;;
 	--help-setup) shift; let SE_HELP=3; continue ;;
-	--help-detail) shift; let SE_HELP=4; continue ;;
       esac
 
     ## Setup OptionString
@@ -607,7 +610,11 @@ function parse_commandline {
 	  fi
 	fi
       else
-	SE_Args+=($1) ; shift 1
+	if (( $SE_BrakeOnNonOption )) ; then
+	  SE_Args=("$@"); break
+	else
+	  SE_Args+=("$1"); shift 1
+	fi
       fi
   done
 
@@ -619,7 +626,6 @@ function parse_commandline {
     1)	get_user_usage;;
     2)	get_environment_usage;;
     3)	get_setup_usage;;
-    4)	get_detail_user_usage;;
   esac
 }
 
@@ -792,6 +798,7 @@ declare	    SE_LENV=''
 declare -i  SE_WARNING=0
 declare -i  SE_PrintCfg=0
 declare -i  SE_PrintVar=0
+declare -i  SE_BrakeOnNonOption=0
 declare -i  SE_IDX_MAX_COMMANDS=0
 
 declare -i  SE_NOptions=0
@@ -828,14 +835,17 @@ function G_Argument {
 ## delete all spaces at the begin and end
   option=${option%%+([[:space:]])}
   option=${option##+([[:space:]])}
-  IFS=':'
-  set -- $option
+  IFS=':'; set -- $option; unset IFS
   opt=$1
   var=$2
   def=$3
   dfi=${4:-"No text for <$var>"}
   typ=${5:-}
-  shift 5
+  if (( $# < 5 )) ; then
+    shift $#
+  else
+    shift 5
+  fi
   if [[ $typ == *D* ]] ; then
     if [[ $# -ne 2 ]] ; then
       Error "type 'D' require exact '2' additinal arguments like 'yes:no' or 'enable:disable'"
@@ -847,7 +857,7 @@ function G_Argument {
   elif [[ $typ == *B* ]] ; then
     set -- ${bool[@]}
   fi
-  #Print "opt<$opt>, var<$var>, def<$def>, dfi<$dfi>, typ<$typ>"
+  #Print "opt<$opt>, var<$var>, def<$def>, dfi<$dfi>, typ<$typ>, @<$*>\n"
 ## 1. name of the option
   # POST
 ## 2. name of the variable
@@ -909,6 +919,9 @@ function G_Option {
     ;;
     call-in-loop)
       SE_LOOP=1
+    ;;
+    break-on-non-option)
+      SE_BrakeOnNonOption=1
     ;;
     *)
       get_setup_usage

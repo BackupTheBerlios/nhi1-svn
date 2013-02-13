@@ -10,12 +10,7 @@
 #:              please contact AUTHORS for additional information
 #:
 
-EXTRA_DIST =  src/gomsgque/MqS.go src/gomsgque/MqSException.go src/gomsgque/MqBufferS.go \
-	      src/gomsgque/MqBinary.go src/gomsgque/MqDumpS.go src/gomsgque/send.go \
-	      src/gomsgque/read.go src/gomsgque/link.go src/gomsgque/config.go \
-	      src/gomsgque/service.go src/gomsgque/slave.go src/gomsgque/storage.go \
-	      src/gomsgque/MqFactoryS.go \
-	      src/gomsgque/gomsgque.h src/gomsgque/gomsgque.c
+EXTRA_DIST =  $(srcdir)/src/gomsgque/*.go $(srcdir)/src/gomsgque/*.h $(srcdir)/src/*/gomsgque.c
 
 if USE_GO
 

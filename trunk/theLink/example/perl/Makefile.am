@@ -15,7 +15,5 @@
 ## Main
 ##
 
-EXTRA_DIST = manfilter.pl  mulclient.pl  mulserver.pl  MyClient.pl  MyServer.pl \
-		testclient.pl testserver.pl server.pl Switch.pm \
-		    Filter1.pl Filter2.pl Filter3.pl Filter4.pl Filter5.pl
+EXTRA_DIST = $(srcdir)/*.pl
 

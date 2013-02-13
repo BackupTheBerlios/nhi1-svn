@@ -1,12 +1,12 @@
 > nothread/NHI1-0.17/theLink/example/cc/server --tcp --host localhost --port 7782 --spawn
 > nothread/NHI1-0.17/theLink/example/c/client --all --tcp --host localhost --port 7782
-C> (client:27876) [2013-02-07:15-11-56] [0-0-0-0x7affb8-main]: start: --------------------------------------
-C> (client:27876) [2013-02-07:15-11-56] [0-0-0-0x7affb8-statistics]:                      MqSendEND:   4.22e+05
-C> (client:27876) [2013-02-07:15-11-56] [0-0-0-0x7affb8-statistics]:         MqSendEND_AND_CALLBACK:   2.01e+05
-C> (client:27876) [2013-02-07:15-11-58] [0-0-0-0x7affb8-statistics]:             MqSendEND_AND_WAIT:   3.66e+04
-C> (client:27876) [2013-02-07:15-11-58] [0-0-0-0x7affb8-statistics]:               MqSendPERSISTENT:   5.00e+01
-C> (client:27876) [2013-02-07:15-11-59] [0-0-0-0x7affb8-statistics]:                  parent create:   6.56e+02
-C> (client:27876) [2013-02-07:15-11-59] [0-0-0-0x7affb8-statistics]:                  parent delete:   5.30e+03
-C> (client:27876) [2013-02-07:15-11-59] [0-0-0-0x7affb8-statistics]:                   child create:   1.04e+04
-C> (client:27876) [2013-02-07:15-11-59] [0-0-0-0x7affb8-statistics]:                   child delete:   2.85e+04
-C> (client:27876) [2013-02-07:15-11-59] [0-0-0-0x7affb8-main]: end: ----------------------------------------
+C> (client:24241) [2013-02-13:07-42-55] [0-0-0-0x206afb8-main]: start: --------------------------------------
+C> (client:24241) [2013-02-13:07-42-55] [0-0-0-0x206afb8-statistics]:                      MqSendEND:   4.07e+05
+C> (client:24241) [2013-02-13:07-42-55] [0-0-0-0x206afb8-statistics]:         MqSendEND_AND_CALLBACK:   1.95e+05
+C> (client:24241) [2013-02-13:07-42-56] [0-0-0-0x206afb8-statistics]:             MqSendEND_AND_WAIT:   3.62e+04
+C> (client:24241) [2013-02-13:07-42-57] [0-0-0-0x206afb8-statistics]:               MqSendPERSISTENT:   5.00e+01
+C> (client:24241) [2013-02-13:07-42-58] [0-0-0-0x206afb8-statistics]:                  parent create:   6.56e+02
+C> (client:24241) [2013-02-13:07-42-58] [0-0-0-0x206afb8-statistics]:                  parent delete:   5.36e+03
+C> (client:24241) [2013-02-13:07-42-58] [0-0-0-0x206afb8-statistics]:                   child create:   1.04e+04
+C> (client:24241) [2013-02-13:07-42-58] [0-0-0-0x206afb8-statistics]:                   child delete:   2.89e+04
+C> (client:24241) [2013-02-13:07-42-58] [0-0-0-0x206afb8-main]: end: ----------------------------------------

@@ -21,13 +21,6 @@ set -ue
 ##
 ## =======================================================================
 
-## delete all environment variables to setup a "clean" build environment
-#[[ "${CLEAN:-}" != "yes" ]] && exec /usr/bin/env - \
-#  CLEAN="yes" TERM="$TERM" HOME="$HOME" MACHTYPE="$MACHTYPE" \
-#    CC="${CC:-}" CXX="${CXX:-}" CCACHE_DIR="${CCACHE_DIR:-}" \
-#      PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}" SE_Debug="${SE_Debug:-0}" \
-#	NHI1_TOOL_ROOT="${NHI1_TOOL_ROOT:-$HOME/ext/$MACHTYPE}" "$0" "$@"
-
 ## some useful procs
 add2var() {
   (($# != 2)) && {
