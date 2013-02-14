@@ -23,7 +23,6 @@ if {![info exists testdir]} {
 ##
 ## set filter
 set env(TS_FILTER)  [file join $guardbuilddir aguard aguard]
-set env(TS_LIBRARY) [info script]
 
 ##
 ## load the test library

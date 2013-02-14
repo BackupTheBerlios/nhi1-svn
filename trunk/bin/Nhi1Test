@@ -32,6 +32,11 @@ fi
 ## Functions
 ##
 
+Die() {
+  echo "Error[${BASH_LINENO[1]}]: $*" 1>&2
+  exit 1
+}
+
 Usage() {
   cat - <<-EOF
 The scripts used process test-cases to verify the features gives.
@@ -99,7 +104,7 @@ EOF
 # lookup the token
 #
 lookup() {
-  declare -a ret=()
+  declare -a ret
   declare CMDDIR=$(cd $(dirname -- $1);pwd)
   declare CMD=$(basename -- $1)
 
@@ -111,7 +116,7 @@ lookup() {
       # look into the example directories
       case "$CMD" in
 	*.tcl)      CMDDIR="$abs_top_srcdir/theLink/example/tcl";;
-	*.test)     CMDDIR="$abs_top_srcdir/theLink/tests/";;
+	*.test)     CMDDIR="$abs_top_srcdir/theLink/tests";;
 	*.java)     CMDDIR="$abs_top_builddir/theLink/example/java";;
 	*.py)	    CMDDIR="$abs_top_srcdir/theLink/example/python";;
 	*.pl)	    CMDDIR="$abs_top_srcdir/theLink/example/perl";;
@@ -125,9 +130,16 @@ lookup() {
       esac
     }
   }
-  CMD="$CMDDIR/$CMD"
 
-  # find executable is CMD is a script-file
+  if [[ -r "$CMDDIR/$CMD" ]] ; then
+    CMD="$CMDDIR/$CMD"
+  else
+    Die "unable to find comand-file '$CMD'"
+  fi
+
+set +xv
+
+  # find executable if CMD is a script-file
   case "$CMD" in
     *.tcl|*.test)   EXE="${TCLSH:-tclsh}";;
     *.java)	    EXE="${JAVA:-java}"; CMD="${CMD%.*}";;
@@ -141,11 +153,6 @@ lookup() {
     *.c)	    EXE=""; CMD="${CMD%.*}$EXT";;
     *)		    EXE="";;
   esac
-
-  [[ ! -e  "$CMD" ]] && {
-    echo "unable to find the path for command: '$CMD'"
-    exit 1
-  }
 
   test -n "$EXE" && ret+=("$EXE")
   ret+=("$CMD")
@@ -180,6 +187,16 @@ PREFIX_lc="valgrind --trace-children=yes --leak-check=full --num-callers=36 --qu
 PREFIX_sr="valgrind --trace-children=yes --leak-check=full --show-reachable=yes --num-callers=36 --quiet"
 PREFIX_st="strace"
 PREFIX_sp="valgrind --trace-children=yes --leak-check=full --num-callers=36 --quiet --gen-suppressions=all"
+
+# setup special variables
+case "$1" in
+  *.tcl|*.test)   
+    # find library.tcl
+    d="$abs_top_srcdir${PWD#$abs_top_builddir}"
+    [[ -r "$d/library.tcl" ]] && export TS_LIBRARY="$d/library.tcl"
+    unset d
+  ;;
+esac
 
 ##
 ## =========================================================================
@@ -262,7 +279,7 @@ id=${id%.*}
 
 while (( $# )) ; do
   if (( $first )) ; then
-    cmdline+=( $(lookup $1) )
+    cmdline+=( $(lookup $1) ) || exit
     first=0
   else
     cmdline+=($1)

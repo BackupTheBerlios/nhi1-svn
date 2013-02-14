@@ -195,3 +195,6 @@ unset -nocomplain I B C S
 ## finish
 ##
 freeTests
+
+# vim: set syn=tcl:
+

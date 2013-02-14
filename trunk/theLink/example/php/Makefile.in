@@ -16,11 +16,11 @@
 
 #+
 #:  \file       theLink/example/php/Makefile.am
-#:  \brief      \$Id: Makefile.am 596 2013-01-28 15:00:31Z aotto1968 $
+#:  \brief      \$Id: Makefile.am 614 2013-02-13 15:25:36Z aotto1968 $
 #:  
 #:  (C) 2007 - NHI - #1 - Project - Group
 #:  
-#:  \version    \$Rev: 596 $
+#:  \version    \$Rev: 614 $
 #:  \author     EMail: aotto1968 at users.berlios.de
 #:  \attention  this software has GPL permissions to copy
 #:              please contact AUTHORS for additional information

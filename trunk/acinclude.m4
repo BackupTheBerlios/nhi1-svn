@@ -91,7 +91,7 @@ AC_DEFUN([OT_ENABLE],[
   ])
 
   AC_SUBST(FLAG, "$VAR")
-  AM_CONDITIONAL(FLAG, [test -n "$ID"])
+  AM_CONDITIONAL(FLAG, [test "$VAR" = 'yes'])
 
   popdef([FLAG])
   popdef([VAR])
