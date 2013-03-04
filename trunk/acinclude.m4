@@ -813,19 +813,19 @@ AC_DEFUN([SC_ENABLE_RUBY], [
 
 AC_DEFUN([SC_ENABLE_BRAIN], [
   OT_ENABLE([brain], [build theBrain, NHI1 database support])
-  if test "$enable_brain" = "yes"; then
-    if $PKG_CONFIG --exists kyotocabinet ; then
-      if $PKG_CONFIG --atleast-version 1.2.76  kyotocabinet ; then
-	AC_SUBST(BRAIN_CFLAGS,[$($PKG_CONFIG --cflags kyotocabinet)])
-	AC_SUBST(BRAIN_LDADD,[$($PKG_CONFIG --libs kyotocabinet)])
-	AC_SUBST(BRAIN_LDADD_STATIC,[$($PKG_CONFIG --static --libs kyotocabinet)])
-      else
-	AC_MSG_ERROR([unable to get minimal version 1.2.76])
-      fi
-    else
-      AC_MSG_ERROR([unable to find the package 'kyotocabinet'])
-    fi
-  fi
+#  if test "$enable_brain" = "yes"; then
+#    if $PKG_CONFIG --exists kyotocabinet ; then
+#      if $PKG_CONFIG --atleast-version 1.2.76  kyotocabinet ; then
+#	AC_SUBST(BRAIN_CFLAGS,[$($PKG_CONFIG --cflags kyotocabinet)])
+#	AC_SUBST(BRAIN_LDADD,[$($PKG_CONFIG --libs kyotocabinet)])
+#	AC_SUBST(BRAIN_LDADD_STATIC,[$($PKG_CONFIG --static --libs kyotocabinet)])
+#      else
+#	AC_MSG_ERROR([unable to get minimal version 1.2.76])
+#      fi
+#    else
+#      AC_MSG_ERROR([unable to find the package 'kyotocabinet'])
+#    fi
+#  fi
 ])
 
 #------------------------------------------------------------------------

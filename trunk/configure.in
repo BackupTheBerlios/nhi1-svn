@@ -91,6 +91,7 @@ AC_MSG_CHECKING(get libtool support);echo
 #------------------------------------
 AC_DISABLE_STATIC
 LT_INIT
+LT_LIB_DLLOAD
 
 #------------------------------------
 AC_MSG_CHECKING(programs);echo

@@ -10,7 +10,8 @@
 #:              please contact AUTHORS for additional information
 #:
 
-SUBDIRS = abrain
+#SUBDIRS = abrain
+SUBDIRS = 
 
 if USE_CXX
 SUBDIRS += atrans
