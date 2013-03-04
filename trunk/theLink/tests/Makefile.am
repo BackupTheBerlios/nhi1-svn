@@ -12,8 +12,8 @@
 
 EXTRA_DIST = README.tests massclient.bash $(srcdir)/*.tcl $(srcdir)/*.test
 
-TESTS_ENVIRONMENT = PATH="$(path)" LD_LIBRARY_PATH="$(ld_library_path)" $(TCLSH)
+TESTS_ENVIRONMENT = $(abs_top_srcdir)/bin/Nhi1Test
 
-TESTS = $(srcdir)/all.tcl
+TESTS = all.tcl
 #TESTS = $(srcdir)/int.test
 

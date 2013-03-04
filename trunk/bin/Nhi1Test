@@ -25,6 +25,7 @@ if [[ -r "$abs_top_builddir/env.sh" ]] ; then
 else
  echo "unable to find the 'env.sh' configuration file"
  echo "please build first and than use this tool in the build-tree"
+ exit
 fi
 
 ##
@@ -189,7 +190,7 @@ PREFIX_st="strace"
 PREFIX_sp="valgrind --trace-children=yes --leak-check=full --num-callers=36 --quiet --gen-suppressions=all"
 
 # setup special variables
-case "$1" in
+case "${1:-}" in
   *.tcl|*.test)   
     # find library.tcl
     d="$abs_top_srcdir${PWD#$abs_top_builddir}"

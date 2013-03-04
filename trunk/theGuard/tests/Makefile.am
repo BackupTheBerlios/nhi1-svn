@@ -12,7 +12,7 @@
 
 EXTRA_DIST = $(srcdir)/*.tcl $(srcdir)/*.bash $(srcdir)/*.env
 
-TESTS_ENVIRONMENT = PATH="$(path)" LD_LIBRARY_PATH="$(ld_library_path)" $(TCLSH)
+TESTS_ENVIRONMENT = $(abs_top_srcdir)/bin/Nhi1Test
 
-TESTS = $(srcdir)/all.tcl
+TESTS = all.tcl
 

@@ -15,7 +15,7 @@ include list.mk
 arg ?= ALL
 
 DX_DEPEND =	\
-		doxygen.sh \
+		$(top_srcdir)/bin/Nhi1Docs \
 		$(top_srcdir)/theLink/libmsgque/*.c \
 		$(top_srcdir)/theLink/libmsgque/*.h \
 		$(top_srcdir)/theLink/javamsgque/*.c \
@@ -37,7 +37,7 @@ DX_DEPEND =	\
 		$(top_srcdir)/theLink/acmds/aexec
 
 html-local: $(DX_DEPEND) $(DX_DIST)
-	${SHELL} doxygen.sh -release $(arg)
+	$(top_srcdir)/bin/Nhi1Docs --release $(arg)
 
 help:
 	@echo

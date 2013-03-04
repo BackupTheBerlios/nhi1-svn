@@ -119,6 +119,7 @@ AC_MSG_CHECKING(for doxygen support);echo
 #------------------------------------
 OT_REQUIRE_PROG([DOXYGEN],  [doxygen])
 OT_REQUIRE_PROG([DOXYPERL], [perl])
+AC_PATH_PROG([DOT],[dot])
 
 #------------------------------------
 AC_MSG_CHECKING([for special portability support]);echo
@@ -173,7 +174,7 @@ AC_SUBST([ld_library_path],[$LD_LIBRARY_PATH])
 
 AC_CONFIG_FILES([Makefile theLink/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile
       theLink/tests/Makefile theLink/tests/exec.env
-	theLink/docs/Makefile bin/Makefile sbin/Makefile etc/Makefile theLink/docs/doxygen.sh
+	theLink/docs/Makefile bin/Makefile sbin/Makefile etc/Makefile
 	  theLink/libmsgque/Makefile theLink/example/c/Makefile
 	    theLink/ccmsgque/Makefile theLink/example/cc/Makefile
 	      theLink/tclmsgque/Makefile theLink/example/tcl/Makefile env.sh env.tcl

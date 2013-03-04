@@ -10,5 +10,5 @@
 #:              please contact AUTHORS for additional information
 #:
 
-EXTRA_DIST =  Nhi1Label rcBuild Nhi1BuildLanguage Nhi1Config Nhi1Test
+EXTRA_DIST =  Nhi1Label rcBuild Nhi1BuildLanguage Nhi1Config Nhi1Test Nhi1Docs
 

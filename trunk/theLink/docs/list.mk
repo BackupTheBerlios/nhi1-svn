@@ -48,5 +48,4 @@ rubymsgque_private/Doxyfile \
 rubymsgque_private/main.doc \
 stylesheet.css \
 tclmsgque_private/Doxyfile \
-tclmsgque_private/main.doc \
-doxygen.sh.in
+tclmsgque_private/main.doc
