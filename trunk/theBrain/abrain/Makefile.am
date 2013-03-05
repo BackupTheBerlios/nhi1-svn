@@ -15,8 +15,8 @@ bin_PROGRAMS = abrain$(EXEEXT)
 CLEANFILES =
 
 abrain_SOURCES = abrain.c 
-abrain_CFLAGS = -static -I$(srcdir)/../../theLink/libmsgque -I$(srcdir)/../libbrain \
-		      -DMQ_IGNORE_EXTERN $(BRAIN_CFLAGS)
+abrain_CFLAGS = -static -I$(srcdir)/../../theLink/libmsgque -I$(srcdir)/../../theLink/sqlite \
+		      -DMQ_IGNORE_EXTERN
 
-abrain_LDADD = $(BRAIN_LDADD_STATC) ../../theLink/libmsgque/libtmps.la
+abrain_LDADD = ../../theLink/libmsgque/libtmps.la
 
