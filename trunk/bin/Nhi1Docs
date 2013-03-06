@@ -1,4 +1,15 @@
 #!/bin/bash
+#+
+#:  \file       bin/Nhi1Docs
+#:  \brief      \$Id$
+#:  
+#:  (C) 2013 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 
 set -u
 
@@ -80,8 +91,8 @@ EOF
 eval "$($abs_top_srcdir/sbin/SetupEnv "$0" "$@" <<-'EOF'
 G_Shell 'bash'
 # ---------------------------------------------------------------------
-G_Date='$Date: 2013-02-14 16:15:08 +0000 (Thu, 14 Feb 2013) $'
-G_Revision='$Revision: 615 $'
+G_Date='$Date$'
+G_Revision='$Revision$'
 G_Author='$Author: aotto1968 $'
 G_Source='$URL: svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk/bin/Nhi1Config $'
 # --------------------------------------------------------------------

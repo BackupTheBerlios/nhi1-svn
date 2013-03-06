@@ -48,14 +48,14 @@
   }
 #define CHECK_ARGS(s) \
   if (MqReadGetNumItems(mqctx))  { \
-    return MqErrorV (mqctx, __func__, -1, "usage: %s (%s)\n", __func__, s); \
+    return MqErrorV (mqctx, __func__, SQLITE_ERROR, "usage: %s (%s)\n", __func__, s); \
   }
 #define check_sqlite(E) \
   if (unlikely((E) != SQLITE_OK))
 #define check_NULL(E) \
   if (unlikely((E) == NULL))
 
-#define DB_PREPARE_MAX 10
+#define DB_PREPARE_MAX 100
 
 /// \brief the local \b context of the \ref server tool
 /// \mqctx
@@ -64,6 +64,7 @@ struct BrainCtxS {
   MQ_CST	storage;	///< storage file
   sqlite3	*db;		///< database handle
   sqlite3_stmt	*prepare[DB_PREPARE_MAX];	///< prepared statements
+  MQ_INT	prepare_start;	///< point to the next empty prepare empty
 };
 
 /*****************************************************************************/
@@ -107,16 +108,17 @@ BrainHelp (const char * base)
 static enum MqErrorE IdxGet ( struct MqS * const mqctx, MQ_INT *pidx ) {
   MqErrorCheck (MqReadI (mqctx, pidx));
   if (*pidx < 0 || *pidx > DB_PREPARE_MAX-1) {
-    MqErrorV (mqctx, __func__, 1, "prepare index out of range: 0 <= idx <= %i", DB_PREPARE_MAX-1);
+    MqErrorV (mqctx, __func__, SQLITE_ERROR, "prepare index out of range: 0 <= idx <= %i", DB_PREPARE_MAX-1);
     goto error;
   }
 error:
   return MqErrorStack(mqctx);
 }
 
-static enum MqErrorE IdxFinalize ( struct MqS * const mqctx, MQ_INT idx ) {
+inline static enum MqErrorE IdxFinalize ( struct MqS * const mqctx, MQ_INT idx ) {
   SETUP_brain;
   if (brain->prepare[idx] != NULL) {
+    //MqDLogV(mqctx,0,"free prepare[%i]", idx);
     DbErrorCheck(sqlite3_finalize(brain->prepare[idx]));
     brain->prepare[idx] = NULL;
   }
@@ -130,9 +132,25 @@ static enum MqErrorE HdlGet ( struct MqS * const mqctx, sqlite3_stmt **phdl ) {
   MqErrorCheck (IdxGet (mqctx, &idx));
   *phdl = brain->prepare[idx];
   check_NULL(*phdl) {
-    MqErrorV (mqctx, __func__, 1, "the prepare-index '%i' was NOT defined", idx);
+    MqErrorV (mqctx, __func__, SQLITE_ERROR, "the prepare-index '%i' was NOT defined", idx);
   }
 error:
+  return MqErrorStack(mqctx);
+}
+
+static enum MqErrorE ctxCleanup ( struct MqS * const mqctx ) {
+  SETUP_brain;
+  MqSysFree (brain->storage);
+  if (brain->db != NULL) {
+    for (MQ_INT idx=0; idx<brain->prepare_start-1; idx++) {
+      MqErrorCheck (IdxFinalize (mqctx, idx));
+    }
+    brain->prepare_start=0;
+    DbErrorCheck(sqlite3_close(brain->db))
+    brain->db=NULL;
+  }
+error:
+  brain->db = NULL;
   return MqErrorStack(mqctx);
 }
 
@@ -178,47 +196,67 @@ static enum MqErrorE STEP ( ARGS ) {
 	DbErrorCheck (sqlite3_bind_double (hdl,idx,buf->cur.A->D));
 	break;
       case MQ_BINT:
-	DbErrorCheck (sqlite3_bind_blob (hdl,idx,buf->cur.B,buf->cursize,SQLITE_TRANSIENT));
+	if (buf->cursize == 0) {
+	  DbErrorCheck (sqlite3_bind_null (hdl,idx));
+	} else {
+	  DbErrorCheck (sqlite3_bind_blob (hdl,idx,buf->cur.B,buf->cursize,SQLITE_TRANSIENT));
+	}
 	break;
       case MQ_STRT:
 	DbErrorCheck (sqlite3_bind_text (hdl,idx,buf->cur.C,buf->cursize,SQLITE_TRANSIENT));
 	break;
       case MQ_LSTT: case MQ_TRAT:
-	MqErrorC (mqctx, __func__, 1, "invalid protocoll");
+	MqErrorC (mqctx, __func__, SQLITE_ERROR, "invalid protocoll");
 	break;
     }
   }
 
-label_step_1:
+MqSendSTART(mqctx);
+while (true) {
   switch (sqlite3_step(hdl)) {
-    case SQLITE_ROW:
-      switch () {
-	case SQLITE_INTEGER:
-
-	  break;
-	case SQLITE_FLOAT:
-
-	  break;
-	case SQLITE_BLOB:
-  
-	  break;
-	case SQLITE_TEXT:
-
-	  break;
-	case SQLITE_NULL:
-
-	  break;
+    case SQLITE_ROW: {
+      MqSendL_START(mqctx);
+      for (idx=0; idx<sqlite3_column_count(hdl); idx++) {
+	switch (sqlite3_column_type(hdl,idx)) {
+	  case SQLITE_INTEGER:
+	    switch (sqlite3_column_bytes(hdl,idx)) {
+	      case 1: MqSendY(mqctx, sqlite3_column_int(hdl,idx)); break;
+	      case 2: MqSendS(mqctx, sqlite3_column_int(hdl,idx)); break;
+	      case 3: 
+	      case 4: MqSendI(mqctx, sqlite3_column_int(hdl,idx)); break;
+	      case 6: 
+	      case 8: MqSendW(mqctx, sqlite3_column_int(hdl,idx)); break;
+	    }
+	    break;
+	  case SQLITE_FLOAT:
+	    MqSendD(mqctx, sqlite3_column_double(hdl, idx)); break;
+	    break;
+	  case SQLITE_BLOB:
+	    MqSendB(mqctx, sqlite3_column_blob(hdl, idx), sqlite3_column_bytes(hdl,idx)); break;
+	    break;
+	  case SQLITE_TEXT:
+	    MqSendC(mqctx, (MQ_CST) sqlite3_column_text(hdl, idx)); break;
+	    break;
+	  case SQLITE_NULL:
+	    MqSendB(mqctx, NULL, 0); break;
+	    break;
+	}
       }
+      MqSendL_END(mqctx);
+      continue;
       break;
+    }
     case SQLITE_DONE:
-      break;
+      goto error;
     case SQLITE_LOCKED:
     case SQLITE_BUSY:
-      goto label_step_1;
+      continue;
     default:
       MqErrorC (mqctx, __func__, sqlite3_extended_errcode(brain->db), sqlite3_errmsg(brain->db));
+      DbErrorCheck(sqlite3_reset(hdl));
       goto error;
   }
+}
 
 error:
   return MqSendRETURN(mqctx);
@@ -503,21 +541,40 @@ error:
 
 static enum MqErrorE PREP ( ARGS ) {
   SETUP_brain;
-  MQ_CST tail=NULL, sql=NULL;
+  MQ_CST sql;
   MQ_INT idx;
-  for (idx=0; idx<DB_PREPARE_MAX && brain->prepare[idx]!=NULL; idx++);
-  if (idx >= DB_PREPARE_MAX) {
-    MqErrorV (mqctx, __func__, 1, "unable to find a free prepare entry, only %i entries are allowed.", DB_PREPARE_MAX);
-    goto error;
-  }
-  MqErrorCheck(MqReadC(mqctx,&sql));
-  DbErrorCheck(sqlite3_prepare_v2(brain->db, sql, -1, &brain->prepare[idx], &tail));
-  if (tail != NULL) {
-    MqErrorV (mqctx, __func__, 1, "leftover sql-statement: %s", tail);
-    goto error;
+  MQ_BUF buf;
+  MqErrorCheck(MqReadU(mqctx,&buf));
+  if (MqBufferGetType(buf) == 'I') {
+    MqErrorCheck(MqBufferGetI(buf,&idx));
+    if (brain->prepare[idx] != NULL) {
+      MqErrorV (mqctx, __func__, SQLITE_ERROR, "unable to use prepare entry '%i' - already in use.", idx);
+      goto error;
+    }
+    MqErrorCheck(MqReadC(mqctx,&sql));
+  } else {
+    idx = brain->prepare_start;
+    MqErrorCheck(MqBufferGetC(buf,&sql));
   }
   MqSendSTART(mqctx);
-  MqSendI(mqctx, idx);
+  while (sql != NULL && *sql != '\0') {
+    for (; idx<DB_PREPARE_MAX && brain->prepare[idx]!=NULL; idx++);
+    if (idx >= DB_PREPARE_MAX) {
+      MqErrorV (mqctx, __func__, SQLITE_ERROR, "unable to find a free prepare entry - only '%i' entries are allowed.", DB_PREPARE_MAX);
+      goto error;
+    }
+    brain->prepare_start=idx+1;
+    DbErrorCheck(sqlite3_prepare_v2(brain->db, sql, -1, &brain->prepare[idx], &sql));
+    MqSendI(mqctx, idx);
+  }
+error:
+  return MqSendRETURN(mqctx);
+}
+
+static enum MqErrorE FINA ( ARGS ) {
+  MQ_INT idx;
+  MqErrorCheck(IdxGet(mqctx, &idx));
+  MqErrorCheck(IdxFinalize(mqctx, idx));
 error:
   return MqSendRETURN(mqctx);
 }
@@ -525,19 +582,11 @@ error:
 static enum MqErrorE OPEN ( ARGS );
 
 static enum MqErrorE CLOS ( ARGS ) {
-  SETUP_brain;
-  MqSendSTART(mqctx);
-
-  // close the database
-  MqSysFree (brain->storage);
-  DbErrorCheck (sqlite3_close(brain->db));
-
-  // add/remove services
+  MqErrorCheck (ctxCleanup(mqctx));
   MqErrorCheck (MqServiceDelete (mqctx, "-ALL"));
   MqErrorCheck (MqServiceCreate (mqctx, "OPEN", OPEN, NULL, NULL));
 
 error:
-  brain->db = NULL;
   return MqSendRETURN(mqctx);
 }
 
@@ -550,7 +599,7 @@ static enum MqErrorE OPEN ( ARGS ) {
     MqErrorCheck(MqReadC(mqctx,&dbstorage));
 
     if (dbstorage == NULL || *dbstorage == '\0') {
-      return MqErrorC (mqctx, __func__, 1, "storage-file is empty or invalid");
+      return MqErrorC (mqctx, __func__, SQLITE_ERROR, "storage-file is empty or invalid");
     }
 
     if (dbstorage[0] == '#') {
@@ -575,6 +624,7 @@ static enum MqErrorE OPEN ( ARGS ) {
   MqErrorCheck (MqServiceCreate (mqctx, "CLOS", CLOS, NULL, NULL));
   MqErrorCheck (MqServiceCreate (mqctx, "EXEC", EXEC, NULL, NULL));
   MqErrorCheck (MqServiceCreate (mqctx, "PREP", PREP, NULL, NULL));
+  MqErrorCheck (MqServiceCreate (mqctx, "FINA", FINA, NULL, NULL));
   MqErrorCheck (MqServiceCreate (mqctx, "STEP", STEP, NULL, NULL));
 
 /*
@@ -613,18 +663,8 @@ BrainCleanup (
 )
 {
   SETUP_brain;
-
-  MqSysFree (brain->storage);
-
-  if (brain->db != NULL) {
-    for (MQ_INT idx=0; idx<DB_PREPARE_MAX; idx++) {
-      MqErrorCheck (IdxFinalize (mqctx, idx));
-    }
-    DbErrorCheck(sqlite3_close(brain->db))
-  }
-
+  DbErrorCheck(ctxCleanup(mqctx));
 error:
-  brain->db = NULL;
   return MqErrorStack(mqctx);
 }
 
@@ -634,6 +674,8 @@ BrainSetup (
   MQ_PTR data
 )
 {
+  SETUP_brain;
+  brain->prepare_start=0;
   MqErrorCheck (MqServiceCreate (mqctx, "OPEN", OPEN, NULL, NULL));
 
 error:

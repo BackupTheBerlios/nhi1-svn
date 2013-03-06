@@ -22,7 +22,7 @@ array set LABELUSE {
     ./win			{ README.win .sh }
     ./performance		{ env.sh.in .sh }
     ./bin			{ Nhi1Label .sh Nhi1Config .sh rcBuild .sh Nhi1BuildLanguage .sh Nhi1Test .sh 
-				  Nhi1Docs .sh }
+				  Nhi1Docs .sh Nhi1Tags .sh }
     ./sbin			{ LbMain .sh log .sh SetupEnv .sh }
     ./etc			{ .alias .sh .bashrc .sh .vimrc .vim }
     ./theLink/gomsgque    	{ MakeGoMsgque.inc.in .sh }
@@ -106,7 +106,7 @@ config.h*       config.status  EXPERIMENTAL     ltmain.sh     mkinstalldirs     
 				    configure config.guess config.sub .PERSONAL missing autom4te.cache 
 				    config.log mqconfig.h.in libtool config.status stamp-h1 
 				    Makefile mqconfig.h NHI1-* doxygen.* doxygen-doc distcheck.out
-				    .CTAGS .OtConfig compile binary-dist build_nothread build_thread build_perf
+				    .OtConfig compile binary-dist build_nothread build_thread build_perf
 				    tags .IDEEN config.out INSTALL out.log env.sh .IMPORTANT .CLEAN env.tcl
 				    discheck.out msgqueforphp *.bak mqconfig.h.in~ *.log .PUT_HTML
 				    .GREP_FOR_SOURCE_CODE .PHP.info build_test html .ToDo

@@ -112,7 +112,7 @@ lookup() {
   # fix the CMD path
   [[ ! -e "$CMDDIR/$CMD" ]] && {
     # look for CMD in the same directory but in the source tree
-    CMDDIR="$abs_top_srcdir/${CMDDIR#$abs_top_builddir}"
+    CMDDIR="$abs_top_srcdir/${CMDDIR#$abs_top_builddir/}"
     [[ ! -e  "$CMDDIR/$CMD" ]] && {
       # look into the example directories
       case "$CMD" in
@@ -137,8 +137,6 @@ lookup() {
   else
     Die "unable to find comand-file '$CMD'"
   fi
-
-set +xv
 
   # find executable if CMD is a script-file
   case "$CMD" in
@@ -283,7 +281,7 @@ while (( $# )) ; do
     cmdline+=( $(lookup $1) ) || exit
     first=0
   else
-    cmdline+=($1)
+    cmdline+=( $1 )
     [[ "$1" == "@" ]] && first=1
   fi
   shift

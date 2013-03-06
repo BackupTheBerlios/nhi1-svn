@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #+
-#:  \file       .CTAGS2
+#:  \file       bin/Nhi1Tags
 #:  \brief      \$Id$
 #:  
 #:  (C) 2004 - NHI - #1 - Project - Group
@@ -11,66 +11,74 @@
 #:              please contact AUTHORS for additional information
 #:
 
-D=${PWD%%/NHI1*}/NHI1
-DO="yes"
-BASE=$(basename $PWD)
+set -u
 
-#. $D/env.sh
-
-set -xu
-
-if [[ $HOSTTYPE == "FreeBSD" ]] ; then
-  ADD=""
+# find top-level directory
+abs_top_dir=$PWD
+while [[ ! -f "$abs_top_dir/env.sh" && "${abs_top_dir##*/}" != 'NHI1' && "$abs_top_dir" != '/' ]] ; do
+  abs_top_dir=$(dirname "$abs_top_dir")
+done
+if [[ -r "$abs_top_dir/env.sh" ]] ; then
+  . "$abs_top_dir/env.sh"
 else
-  ADD="--c-kinds=+p"
+  abs_top_srcdir=$abs_top_dir
 fi
 
-[[ ! -f $D/tags || $D/.CTAGS -nt $D/tags ]] && (
-    cd $D
-    ctags $(find /usr/include -type f)
-    ctags -a $PWD/theLink/sqlite/sqlite3.c
+DO='yes'
+BASE="$(basename $PWD)"
+SPWD="$abs_top_srcdir${PWD#$abs_top_dir}"
+
+if [[ $HOSTTYPE == "FreeBSD" ]] ; then
+  ADD=''
+else
+  ADD='--c-kinds=+p'
+fi
+
+set -x
+[[ ! -f $abs_top_dir/tags ]] && (
+  cd $abs_top_dir
+  ctags $(find /usr/include -type f)
 )
 
-cp $D/tags .
+cp $abs_top_dir/tags .
 
 [[ $BASE != "libmsgque" && $BASE != "ccmsgque" ]] && {
-  test -d $D/libmsgque && \
-    ctags -a $ADD $D/libmsgque/*.[ch]
-  test -d $D/theLink/libmsgque && \
-    ctags -a $ADD $D/theLink/libmsgque/*.[ch]
+  test -d $abs_top_srcdir/theLink/libmsgque && \
+    ctags -a $ADD $abs_top_srcdir/theLink/libmsgque/*.[ch]
 }
 
-[[ $PWD == *theBrain* ]] && \
-  ctags -a $ADD $HOME/src/tokyocabinet-1.4.39-thread/*.[ch]
+[[ $BASE != "sqlite" ]] && {
+  ctags -a $abs_top_srcdir/theLink/sqlite/*.[ch]
+}
 
 [[ $BASE = "c" ]] && {
-    ctags -a $ADD *.[ch]
+  ctags -a $ADD $SPWD/*.[ch]
 }
 
 [[ $BASE = "cc" ]] && {
-    ctags -a $ADD $abs_top_builddir/theLink/ccmsgque/*.h
+  ctags -a $ADD $abs_top_builddir/theLink/ccmsgque/*.h
 }
 
 [[ $BASE = "ccmsgque" ]] && {
-    ctags -a $ADD --language-force=C++ $(find /usr/include/c++/4.3/ -type f)
-    ctags -a $ADD *.cc *.h
+  ctags -a $ADD --language-force=C++ $(find /usr/include/c++/4.3/ -type f)
+  ctags -a $ADD $SPWD/*.cc $SPWD/*.h
 }
 
 [[ $BASE == "tclmsgque" ]] && {
-    ctags -a $ADD $HOME/src/tcl-latest/generic/*.[ch]
-    ctags -a $ADD $HOME/src/tcl-latest/unix/*.[ch]
-    ctags -a $ADD *.[ch] -I HD,NS
-    exit 0
+  ctags -a $ADD $HOME/src/tcl-latest/generic/*.[ch]
+  ctags -a $ADD $HOME/src/tcl-latest/unix/*.[ch]
+  ctags -a $ADD $SPWD/*.[ch] -I HD,NS
+  exit 0
 }
 
 [[ $BASE == "javamsgque" ]] && {
   find $JAVA_HOME/include -name "*.h" | \
     xargs ctags -a $ADD -I NS
-  ctags -a $ADD *.java
+  ctags -a $ADD $SPWD/*.java
 }
 
 [[ $BASE == "csmsgque" ]] && {
-  ctags -a $ADD *.cs
+  ctags -a $ADD $SPWD/*.cs
 }
 
 [[ $BASE == "pymsgque" ]] && {
@@ -96,8 +104,8 @@ cp $D/tags .
 [[ $PWD == *example/java* ]] && {
   find $JAVA_HOME/include -name "*.h" | \
     xargs ctags -a $ADD -I NS
-  ctags -a $ADD ../../javamsgque/*.java ../../javamsgque/*.[ch]
-  ctags -a $ADD *.java
+  ctags -a $ADD $abs_top_srcdir/theLink/javamsgque/*.java  $abs_top_srcdir/theLink/javamsgque/*.[ch]
+  ctags -a $ADD $SPWD/*.java
   DO=no
 }
 
@@ -119,24 +127,18 @@ cp $D/tags .
 }
 
 [[ $BASE == "tests" ]] && {
-  ctags -a $ADD ../../theLink/tests/*.tcl *.test
-}
-
-[[ $BASE == "libbrain" ]] && {
-  ctags -a $ADD ../tokyocabinet/*.[ch]
+  ctags -a $ADD $abs_top_srcdir/theLink/tests/*.tcl *.test
 }
 
 [[ $BASE == "atrans" ]] && {
-  ctags -a $ADD *.cc
+  ctags -a $ADD $SPWD/*.cc
 }
 
 # add all "c" and "h" files in the local directory
 if [[ $DO == "yes" ]] ; then
-  set *.[ch]
-  test -f $1 && ctags -a $ADD -I NS "$@"
+  set $SPWD/*.[ch]
+  test -f ${1:-} && ctags -a $ADD -I NS "$@"
 fi
-
-## add
 
 ## add
 

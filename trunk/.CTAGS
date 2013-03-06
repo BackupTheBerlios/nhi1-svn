@@ -1,2 +1,0 @@
-ctags	$(find /usr/include -type f)
-ctags -a $PWD/theLink/sqlite/sqlite3.c
