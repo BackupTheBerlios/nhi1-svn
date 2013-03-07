@@ -13,6 +13,14 @@
 set TS_LIBRARY [info script]
 
 ##
+## setup database files
+array set DB_LST {
+  file  test.db
+  mem   :memory:
+  temp  {}
+}
+
+##
 ## define the language list
 if {![info exists env(LNG_LST)]} {
   set env(LNG_LST) {db}

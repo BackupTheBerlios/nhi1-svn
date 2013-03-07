@@ -1,10 +1,10 @@
 #+
 #:  \file       theBrain/tests/brain.test
-#:  \brief      \$Id$
+#:  \brief      \$Id: brain.test 619 2013-03-06 16:00:51Z aotto1968 $
 #:  
 #:  (C) 2002 - NHI - #1 - Project - Group
 #:  
-#:  \version    \$Rev$
+#:  \version    \$Rev: 619 $
 #:  \author     EMail: aotto1968 at users.berlios.de
 #:  \attention  this software has GPL permissions to copy
 #:              please contact AUTHORS for additional information
@@ -21,21 +21,16 @@ if {![testConstraint brain]} return
 
 #set tcl_traceExec 1
 
-array set DB_LST {
-  file	test.db
-  mem	#memdb#
-  temp	#tmpdb#
-}
-
 array set SQL {
   testtbl   "CREATE TABLE IF NOT EXISTS testtbl (id INTEGER PRIMARY KEY, dval double, tval TEXT);"
+  droptbl   "DROP TABLE IF EXISTS testtble;"
   doupltbl  "CREATE TABLE testtbl (id INTEGER PRIMARY KEY, dval double, tval TEXT);"
   simptbl   "CREATE TABLE IF NOT EXISTS simptbl (id INTEGER PRIMARY KEY);"
   errtbl    "CREATE TOBLE IF NOT EXISTS errtbl  (id INTEGER PRIMARY KEY, dval double, tval TEXT);"
 
-  testins   "/* TYP=IDC */ INSERT INTO testtbl (id, dval, tval) VALUES (?, ?, ?);"
+  testins   "/* in:IDC */ INSERT INTO testtbl (id, dval, tval) VALUES (?, ?, ?);"
 
-  testsel   "/* TYP=DC  */ SELECT dval, tval FROM testtbl WHERE id < ?;"
+  testsel   "/* in:I out:DC  */ SELECT dval, tval FROM testtbl WHERE id < ?;"
 }
 
 ##
@@ -64,147 +59,85 @@ array set SQL {
 Setup $I $B $C $S
 
       foreach dbfile [list mem] {
+Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
 
 # tests ----------------------------
 
-test brain-1-($I|$B|$C|$S|$dbfile) {OPEN and CLOSE using an database} \
-    -body           {
-      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
-      Echo0 $FH_LAST CLOS
-    } \
-    -returnCodes    ok \
-    -result         ""
-
-test brain-1e-($I|$B|$C|$S|$dbfile) {OPEN invalid database} \
-    -body           {
-      Echo0 $FH_LAST OPEN SendC "/xyz"
-      Echo0 $FH_LAST CLOS
-    } \
-    -returnCodes    error \
-    -result         {C> (client-0) [service-call-error] <Tok|OPEN> <Num|14>
-S> (server-0) [OPEN] unable to open database file}
-
-test brain-2-($I|$B|$C|$S|$dbfile) {create table} \
+test prepare-1-($I|$B|$C|$S|$dbfile) {prepare statement for insert} \
     -setup	    {
-      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
-    } \
-    -body           {
-      Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
-    } \
-    -cleanup	    {
-      Echo0 $FH_LAST CLOS
-    } \
-    -returnCodes    ok \
-    -result         ""
-
-test brain-2-e1-($I|$B|$C|$S|$dbfile) {create table with error} \
-    -setup	    {
-      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
-    } \
-    -body           {
-      Echo0 $FH_LAST EXEC SendC $SQL(errtbl)
-    } \
-    -cleanup	    {
-      Echo0 $FH_LAST CLOS
-    } \
-    -returnCodes    error \
-    -result	    {C> (client-0) [service-call-error] <Tok|EXEC> <Num|1>
-S> (server-0) [EXEC] near "TOBLE": syntax error}
-
-test brain-2-e2-($I|$B|$C|$S|$dbfile) {create table twice} \
-    -setup	    {
-      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
-      Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
-    } \
-    -body           {
-      Echo0 $FH_LAST EXEC SendC $SQL(doupltbl)
-    } \
-    -cleanup	    {
-      Echo0 $FH_LAST CLOS
-    } \
-    -returnCodes    error \
-    -result	    {C> (client-0) [service-call-error] <Tok|EXEC> <Num|1>
-S> (server-0) [EXEC] table testtbl already exists}
-
-test brain-2-o1-($I|$B|$C|$S|$dbfile) {create table with two arguments} \
-    -setup	    {
-      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
-    } \
-    -body           {
-      Echo0 $FH_LAST EXEC SendC "$SQL(testtbl)$SQL(simptbl)"
-    } \
-    -cleanup	    {
-      Echo0 $FH_LAST CLOS
-    } \
-    -returnCodes    ok \
-    -result	    {}
-
-test brain-3-o1-($I|$B|$C|$S|$dbfile) {prepare statement for insert} \
-    -setup	    {
-      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
       Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
     } \
     -body           {
       Echo1 $FH_LAST PREP ReadI SendC $SQL(testins)
     } \
     -cleanup	    {
-      Echo0 $FH_LAST CLOS
+      Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
     } \
     -returnCodes    ok \
     -result	    {0}
 
-test brain-3-o2-($I|$B|$C|$S|$dbfile) {prepare duplicate statement} \
+test prepare-2-($I|$B|$C|$S|$dbfile) {prepare duplicate statement} \
     -setup	    {
-      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
       Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
     } \
     -body           {
       EchoL $FH_LAST PREP SendC $SQL(testins)$SQL(testsel)
     } \
     -cleanup	    {
-      Echo0 $FH_LAST CLOS
+      Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
     } \
     -returnCodes    ok \
     -result	    {0 1}
 
-test brain-3-o3-($I|$B|$C|$S|$dbfile) {prepare statement and insert} \
+test prepare-3-($I|$B|$C|$S|$dbfile) {prepare statement and insert} \
     -setup	    {
-      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
       Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
       set hdl [Echo1 $FH_LAST PREP ReadI SendC $SQL(testins)]
     } \
     -body           {
-      EchoL $FH_LAST STEP SendI $hdl SendI 1 SendD 0.3 SendC otto
-      EchoL $FH_LAST STEP SendI $hdl SendI 2 SendD 0.4 SendC otto2
-      EchoL $FH_LAST STEP SendI $hdl SendI 3 SendD 0.5 SendC otto3
+      Echo0 $FH_LAST STEP SendI $hdl SendI 1 SendD 0.3 SendC otto
     } \
     -cleanup	    {
-      Echo0 $FH_LAST CLOS
+      Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
     } \
     -returnCodes    ok \
     -result	    {}
 
-test brain-3-s3-($I|$B|$C|$S|$dbfile) {prepare statement and insert with duplicate row} \
+test prepare-4-($I|$B|$C|$S|$dbfile) {prepare statement and insert multiple rows} \
     -setup	    {
-      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
       Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
       set hdl [Echo1 $FH_LAST PREP ReadI SendC $SQL(testins)]
     } \
     -body           {
-      EchoL $FH_LAST STEP SendI $hdl SendI 1 SendD 0.3 SendC otto
-      EchoL $FH_LAST STEP SendI $hdl SendI 2 SendD 0.4 SendC otto2
-      EchoL $FH_LAST STEP SendI $hdl SendI 1 SendD 0.5 SendC otto3
+      Echo0 $FH_LAST STEP SendI $hdl SendI 1 SendD 0.3 SendC otto1
+      Echo0 $FH_LAST STEP SendI $hdl SendI 2 SendD 0.4 SendC otto2
+      Echo0 $FH_LAST STEP SendI $hdl SendI 3 SendD 0.5 SendC otto3
     } \
     -cleanup	    {
-      Echo0 $FH_LAST CLOS
+      Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
+    } \
+    -returnCodes    ok \
+    -result	    {}
+
+test prepare-4-e1-($I|$B|$C|$S|$dbfile) {prepare statement and insert with duplicate row} \
+    -setup	    {
+      Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
+      set hdl [Echo1 $FH_LAST PREP ReadI SendC $SQL(testins)]
+    } \
+    -body           {
+      Echo0 $FH_LAST STEP SendI $hdl SendI 1 SendD 0.3 SendC otto1
+      Echo0 $FH_LAST STEP SendI $hdl SendI 2 SendD 0.4 SendC otto2
+      Echo0 $FH_LAST STEP SendI $hdl SendI 1 SendD 0.5 SendC otto3
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
     } \
     -returnCodes    error \
     -result	    {C> (client-0) [service-call-error] <Tok|STEP> <Num|19>
 S> (server-0) [STEP] PRIMARY KEY must be unique}
 
-test brain-3-o4-($I|$B|$C|$S|$dbfile) {select from table} \
+test prepare-5-($I|$B|$C|$S|$dbfile) {select gingle row from table} \
     -setup	    {
-      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
       Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
       set hdl [Echo1 $FH_LAST PREP ReadI SendC $SQL(testins)]
       EchoL $FH_LAST STEP SendI $hdl SendI 1 SendD 0.3 SendC otto
@@ -216,7 +149,7 @@ test brain-3-o4-($I|$B|$C|$S|$dbfile) {select from table} \
       EchoL $FH_LAST STEP SendI $shdl SendI 2
     } \
     -cleanup	    {
-      Echo0 $FH_LAST CLOS
+      Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
     } \
     -returnCodes    ok \
     -result	    {{0.3 otto}}
@@ -276,6 +209,7 @@ S> (server-0) found in function "HdlGet" at file "abrain.c"}
 
 # cleanup ---------------------------
 
+Echo0 $FH_LAST CLOS
       } ; # dbfile
 
 Cleanup

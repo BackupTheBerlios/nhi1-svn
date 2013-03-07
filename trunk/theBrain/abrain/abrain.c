@@ -14,6 +14,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "sqlite3.h"
 #include "msgque.h"
@@ -60,11 +61,15 @@
 /// \brief the local \b context of the \ref server tool
 /// \mqctx
 struct BrainCtxS {
-  struct MqS	mqctx;		///< \mqctxI
-  MQ_CST	storage;	///< storage file
-  sqlite3	*db;		///< database handle
-  sqlite3_stmt	*prepare[DB_PREPARE_MAX];	///< prepared statements
-  MQ_INT	prepare_start;	///< point to the next empty prepare empty
+  struct MqS	mqctx;			    ///< \mqctxI
+  MQ_CST	storage;		    ///< storage file
+  sqlite3	*db;			    ///< database handle
+  sqlite3_stmt	*prepStmt[DB_PREPARE_MAX];  ///< array prepared statement pointer
+  MQ_STR	inType[DB_PREPARE_MAX];	    ///< array prepared statement input types string
+  MQ_STR	inEnd[DB_PREPARE_MAX];	    ///< array prepared statement input types end pointer
+  MQ_STR	outType[DB_PREPARE_MAX];    ///< array prepared statement output types string
+  MQ_STR	outEnd[DB_PREPARE_MAX];	    ///< array prepared statement output types end pointer
+  MQ_INT	prepare_start;		    ///< point to the next empty prepare empty
 };
 
 /*****************************************************************************/
@@ -72,8 +77,6 @@ struct BrainCtxS {
 /*                               Request Handler                             */
 /*                                                                           */
 /*****************************************************************************/
-
-#define DbFinalize(st) {sqlite3_finalize(st);st=NULL;}
 
 /// \brief display help using \b -h or \b --help command-line option
 /// \param base the executable usually: <tt>basename(argv[0])</tt>
@@ -117,23 +120,36 @@ error:
 
 inline static enum MqErrorE IdxFinalize ( struct MqS * const mqctx, MQ_INT idx ) {
   SETUP_brain;
-  if (brain->prepare[idx] != NULL) {
-    //MqDLogV(mqctx,0,"free prepare[%i]", idx);
-    DbErrorCheck(sqlite3_finalize(brain->prepare[idx]));
-    brain->prepare[idx] = NULL;
+  if (brain->prepStmt[idx] != NULL) {
+    DbErrorCheck(sqlite3_finalize(brain->prepStmt[idx]));
+    brain->prepStmt[idx] = NULL;
+    MqSysFree(brain->inType[idx]);
+    brain->inEnd[idx] = NULL;
+    MqSysFree(brain->outType[idx]);
+    brain->outEnd[idx] = NULL;
   }
 error:
   return MqErrorStack(mqctx);
 }
 
-static enum MqErrorE HdlGet ( struct MqS * const mqctx, sqlite3_stmt **phdl ) {
+inline static enum MqErrorE HdlGet ( 
+  struct MqS * const mqctx, 
+  sqlite3_stmt **phdl, 
+  MQ_CST *pInType,
+  MQ_CST *pInEnd,
+  MQ_CST *pOutType, 
+  MQ_CST *pOutEnd 
+) {
   SETUP_brain;
   MQ_INT idx;
   MqErrorCheck (IdxGet (mqctx, &idx));
-  *phdl = brain->prepare[idx];
-  check_NULL(*phdl) {
+  check_NULL(*phdl = brain->prepStmt[idx]) {
     MqErrorV (mqctx, __func__, SQLITE_ERROR, "the prepare-index '%i' was NOT defined", idx);
   }
+  *pInType = brain->inType[idx];
+  *pInEnd = brain->inEnd[idx];
+  *pOutType = brain->outType[idx];
+  *pOutEnd = brain->outEnd[idx];
 error:
   return MqErrorStack(mqctx);
 }
@@ -142,7 +158,7 @@ static enum MqErrorE ctxCleanup ( struct MqS * const mqctx ) {
   SETUP_brain;
   MqSysFree (brain->storage);
   if (brain->db != NULL) {
-    for (MQ_INT idx=0; idx<brain->prepare_start-1; idx++) {
+    for (MQ_INT idx=0; idx<brain->prepare_start; idx++) {
       MqErrorCheck (IdxFinalize (mqctx, idx));
     }
     brain->prepare_start=0;
@@ -160,41 +176,97 @@ error:
 /*                                                                           */
 /*****************************************************************************/
 
+inline static enum MqTypeE GetTypeE ( MQ_STRB t ) {
+  switch (t) {
+    case 'C': return MQ_STRT;
+    case 'I': return MQ_INTT;
+    case 'D': return MQ_DBLT;
+    case 'W': return MQ_WIDT;
+    case 'B': return MQ_BINT;
+    case 'Y': return MQ_BYTT;
+    case 'O': return MQ_BOLT;
+    case 'S': return MQ_SRTT;
+    case 'F': return MQ_FLTT;
+    case 'L': return MQ_LSTT;
+    case 'T': return MQ_TRAT;
+  }
+  return MQ_STRT;
+}
+
+inline static MQ_STRB GetTypeS ( enum MqTypeE const ntype ) {
+  switch (ntype) {
+    case MQ_STRT: return 'C';
+    case MQ_INTT: return 'I';
+    case MQ_DBLT: return 'D';
+    case MQ_WIDT: return 'W';
+    case MQ_BINT: return 'B';
+    case MQ_BYTT: return 'Y';
+    case MQ_BOLT: return 'O';
+    case MQ_SRTT: return 'S';
+    case MQ_FLTT: return 'F';
+    case MQ_LSTT: return 'L';
+    case MQ_TRAT: return 'T';
+  }
+  return '*';
+}
+
+inline static enum MqTypeE GetTypeD ( sqlite3_stmt *hdl, MQ_INT idx ) {
+  switch (sqlite3_column_type(hdl,idx)) {
+    case SQLITE_INTEGER:
+      switch (sqlite3_column_bytes(hdl,idx)) {
+	case 1: return MQ_BYTT;
+	case 2: return MQ_SRTT;
+	case 3: 
+	case 4: return MQ_INTT;
+	case 6: 
+	case 8: return MQ_WIDT;
+      }
+      break;
+    case SQLITE_FLOAT: return MQ_DBLT;
+    case SQLITE_BLOB:  return MQ_BINT;
+    case SQLITE_TEXT:  return MQ_STRT;
+    case SQLITE_NULL:  return MQ_BINT;
+  }
+  return MQ_SRTT;
+}
+
 static enum MqErrorE STEP ( ARGS ) {
   SETUP_brain;
-  sqlite3_stmt *hdl=NULL;
-  MQ_BUF buf;
   MQ_INT idx=0;
+  MQ_BUF buf;
+  sqlite3_stmt *hdl=NULL;
+  MQ_CST inType=NULL,  inEnd=NULL;
+  MQ_CST outType=NULL, outEnd=NULL;
+  enum MqTypeE ntype;
 
-  MqErrorCheck(HdlGet(mqctx, &hdl));
+  MqErrorCheck(HdlGet(mqctx, &hdl, &inType, &inEnd, &outType, &outEnd));
   DbErrorCheck(sqlite3_reset(hdl));
 
   MqSendSTART(mqctx);
   while (MqReadItemExists(mqctx)) {
     idx+=1;
     MqErrorCheck(MqReadU(mqctx,&buf));
-    switch (buf->type) {
-      case MQ_BYTT:
-	DbErrorCheck (sqlite3_bind_int (hdl,idx,buf->cur.A->Y));
-	break;
-      case MQ_BOLT:
-	DbErrorCheck (sqlite3_bind_int (hdl,idx,buf->cur.A->O));
-	break;
-      case MQ_SRTT:
-	DbErrorCheck (sqlite3_bind_int (hdl,idx,buf->cur.A->S));
-	break;
-      case MQ_INTT:
-	DbErrorCheck (sqlite3_bind_int (hdl,idx,buf->cur.A->I));
-	break;
-      case MQ_WIDT:
-	DbErrorCheck (sqlite3_bind_int64 (hdl,idx,buf->cur.A->W));
-	break;
-      case MQ_FLTT:
-	DbErrorCheck (sqlite3_bind_double (hdl,idx,buf->cur.A->F));
-	break;
-      case MQ_DBLT:
-	DbErrorCheck (sqlite3_bind_double (hdl,idx,buf->cur.A->D));
-	break;
+    if (inType && inType < inEnd) {
+      ntype = GetTypeE(*inType);
+      if (buf->type != ntype) {
+	MqErrorV(mqctx,__func__,SQLITE_ERROR,
+	  "the buffer type '%c' does not match database type '%c'", 
+	    MqBufferGetType(buf), *inType);
+	goto error;
+      }
+      inType++;
+    } else {
+      ntype = buf->type;
+    }
+    switch (ntype) {
+      case MQ_BYTT: DbErrorCheck(sqlite3_bind_int(hdl,idx,buf->cur.A->Y)); break;
+      case MQ_BOLT: DbErrorCheck(sqlite3_bind_int(hdl,idx,buf->cur.A->O)); break;
+      case MQ_SRTT: DbErrorCheck(sqlite3_bind_int(hdl,idx,buf->cur.A->S)); break;
+      case MQ_INTT: DbErrorCheck(sqlite3_bind_int(hdl,idx,buf->cur.A->I)); break;
+      case MQ_WIDT: DbErrorCheck(sqlite3_bind_int64(hdl,idx,buf->cur.A->W)); break;
+      case MQ_FLTT: DbErrorCheck(sqlite3_bind_double(hdl,idx,buf->cur.A->F)); break;
+      case MQ_DBLT: DbErrorCheck(sqlite3_bind_double(hdl,idx,buf->cur.A->D)); break;
+      case MQ_STRT: DbErrorCheck(sqlite3_bind_text (hdl,idx,buf->cur.C,buf->cursize,SQLITE_TRANSIENT)); break;
       case MQ_BINT:
 	if (buf->cursize == 0) {
 	  DbErrorCheck (sqlite3_bind_null (hdl,idx));
@@ -202,143 +274,132 @@ static enum MqErrorE STEP ( ARGS ) {
 	  DbErrorCheck (sqlite3_bind_blob (hdl,idx,buf->cur.B,buf->cursize,SQLITE_TRANSIENT));
 	}
 	break;
-      case MQ_STRT:
-	DbErrorCheck (sqlite3_bind_text (hdl,idx,buf->cur.C,buf->cursize,SQLITE_TRANSIENT));
-	break;
       case MQ_LSTT: case MQ_TRAT:
-	MqErrorC (mqctx, __func__, SQLITE_ERROR, "invalid protocoll");
+	MqErrorV (mqctx, __func__, SQLITE_ERROR, "invalid protocoll item '%c'", GetTypeS(ntype));
 	break;
     }
   }
 
-MqSendSTART(mqctx);
-while (true) {
-  switch (sqlite3_step(hdl)) {
-    case SQLITE_ROW: {
-      MqSendL_START(mqctx);
-      for (idx=0; idx<sqlite3_column_count(hdl); idx++) {
-	switch (sqlite3_column_type(hdl,idx)) {
-	  case SQLITE_INTEGER:
-	    switch (sqlite3_column_bytes(hdl,idx)) {
-	      case 1: MqSendY(mqctx, sqlite3_column_int(hdl,idx)); break;
-	      case 2: MqSendS(mqctx, sqlite3_column_int(hdl,idx)); break;
-	      case 3: 
-	      case 4: MqSendI(mqctx, sqlite3_column_int(hdl,idx)); break;
-	      case 6: 
-	      case 8: MqSendW(mqctx, sqlite3_column_int(hdl,idx)); break;
-	    }
-	    break;
-	  case SQLITE_FLOAT:
-	    MqSendD(mqctx, sqlite3_column_double(hdl, idx)); break;
-	    break;
-	  case SQLITE_BLOB:
-	    MqSendB(mqctx, sqlite3_column_blob(hdl, idx), sqlite3_column_bytes(hdl,idx)); break;
-	    break;
-	  case SQLITE_TEXT:
-	    MqSendC(mqctx, (MQ_CST) sqlite3_column_text(hdl, idx)); break;
-	    break;
-	  case SQLITE_NULL:
-	    MqSendB(mqctx, NULL, 0); break;
-	    break;
+  MQ_CST pos;
+  MqSendSTART(mqctx);
+  while (true) {
+    switch (sqlite3_step(hdl)) {
+      case SQLITE_ROW: {
+	MqSendL_START(mqctx);
+	for (idx=0,pos=outType; idx<sqlite3_column_count(hdl); idx++) {
+	  ntype = pos && pos < outEnd ? GetTypeE(*pos++) : GetTypeD(hdl,idx);
+	  switch (ntype) {
+	    case MQ_BYTT: MqSendY(mqctx, sqlite3_column_int(hdl,idx)); break;
+	    case MQ_BOLT: MqSendO(mqctx, sqlite3_column_int(hdl,idx)); break;
+	    case MQ_SRTT: MqSendS(mqctx, sqlite3_column_int(hdl,idx)); break;
+	    case MQ_INTT: MqSendI(mqctx, sqlite3_column_int(hdl,idx)); break;
+	    case MQ_WIDT: MqSendW(mqctx, sqlite3_column_int(hdl,idx)); break;
+	    case MQ_FLTT: MqSendF(mqctx, sqlite3_column_double(hdl, idx)); break;
+	    case MQ_DBLT: MqSendD(mqctx, sqlite3_column_double(hdl, idx)); break;
+	    case MQ_STRT: MqSendC(mqctx, (MQ_CST) sqlite3_column_text(hdl, idx)); break;
+	    case MQ_BINT: MqSendB(mqctx, sqlite3_column_blob(hdl, idx), sqlite3_column_bytes(hdl,idx)); break;
+	    case MQ_LSTT: case MQ_TRAT:
+	      MqErrorV (mqctx, __func__, SQLITE_ERROR, "invalid protocoll item '%c'", GetTypeS(ntype));
+	      break;
+	  }
 	}
+	MqSendL_END(mqctx);
+	continue;
+	break;
       }
-      MqSendL_END(mqctx);
-      continue;
-      break;
+      case SQLITE_DONE:
+	goto error;
+      case SQLITE_LOCKED:
+      case SQLITE_BUSY:
+	continue;
+      default:
+	MqErrorC (mqctx, __func__, sqlite3_extended_errcode(brain->db), sqlite3_errmsg(brain->db));
+	DbErrorCheck(sqlite3_reset(hdl));
+	goto error;
     }
-    case SQLITE_DONE:
-      goto error;
-    case SQLITE_LOCKED:
-    case SQLITE_BUSY:
-      continue;
-    default:
-      MqErrorC (mqctx, __func__, sqlite3_extended_errcode(brain->db), sqlite3_errmsg(brain->db));
-      DbErrorCheck(sqlite3_reset(hdl));
-      goto error;
   }
-}
 
 error:
   return MqSendRETURN(mqctx);
 }
 
 /*
-static enum MqErrorE AKEP ( ARGS ) {
-  SETUP_ADB;
-  MQ_CBI val;
-  MQ_SIZE vlen;
+   static enum MqErrorE AKEP ( ARGS ) {
+   SETUP_ADB;
+   MQ_CBI val;
+   MQ_SIZE vlen;
 
-  MqSendSTART(mqctx);
-  while (MqReadItemExists(mqctx)) {
-    READ_N (key,klen);
-    READ_N (val,vlen);
-    DbErrorCheck (tcadbputkeep(adb, key, klen, val, vlen));
-  }
+   MqSendSTART(mqctx);
+   while (MqReadItemExists(mqctx)) {
+   READ_N (key,klen);
+   READ_N (val,vlen);
+   DbErrorCheck (tcadbputkeep(adb, key, klen, val, vlen));
+   }
 
 error:
-  return MqSendRETURN(mqctx);
+return MqSendRETURN(mqctx);
 }
 
 static enum MqErrorE AKEP_F ( ARGS ) {
-  SETUP_FDB;
+SETUP_FDB;
 
-  MQ_CBI val;
-  MQ_SIZE vlen;
+MQ_CBI val;
+MQ_SIZE vlen;
 
-  MqSendSTART(mqctx);
-  while (MqReadItemExists(mqctx)) {
-    READ_W (key);
-    READ_N (val,vlen);
-    DbErrorCheck (tcfdbputkeep(fdb, key, val, vlen));
-  }
+MqSendSTART(mqctx);
+while (MqReadItemExists(mqctx)) {
+READ_W (key);
+READ_N (val,vlen);
+DbErrorCheck (tcfdbputkeep(fdb, key, val, vlen));
+}
 
 error:
-  return MqSendRETURN(mqctx);
+return MqSendRETURN(mqctx);
 }
 
 static enum MqErrorE AGET ( ARGS ) {
-  SETUP_ADB;
-  MQ_BIN val;
-  MQ_SIZE vlen;
+SETUP_ADB;
+MQ_BIN val;
+MQ_SIZE vlen;
 
-  MqSendSTART(mqctx);
-  while (MqReadItemExists(mqctx)) {
-    READ_N (key,klen);
-    DbErrorCheck(val = tcadbget(adb, key, klen, &vlen));
-    MqSendN(mqctx, val, vlen);
-    free(val);
-  }
+MqSendSTART(mqctx);
+while (MqReadItemExists(mqctx)) {
+READ_N (key,klen);
+DbErrorCheck(val = tcadbget(adb, key, klen, &vlen));
+MqSendN(mqctx, val, vlen);
+free(val);
+}
 
 error:
-  return MqSendRETURN(mqctx);
+return MqSendRETURN(mqctx);
 }
 
 static enum MqErrorE AGET_F ( ARGS ) {
-  SETUP_FDB;
+SETUP_FDB;
 
-  MQ_BIN val;
-  MQ_SIZE vlen;
+MQ_BIN val;
+MQ_SIZE vlen;
 
-  MqSendSTART(mqctx);
-  while (MqReadItemExists(mqctx)) {
-    READ_W (key);
-    DbErrorCheck(val=tcfdbget(fdb, key, &vlen));
-    MqSendN(mqctx, val, vlen);
-    free(val);
-  }
+MqSendSTART(mqctx);
+while (MqReadItemExists(mqctx)) {
+READ_W (key);
+DbErrorCheck(val=tcfdbget(fdb, key, &vlen));
+MqSendN(mqctx, val, vlen);
+free(val);
+}
 
 error:
-  return MqSendRETURN(mqctx);
+return MqSendRETURN(mqctx);
 }
 
 static enum MqErrorE AITI ( ARGS ) {
-  SETUP_brain;
+SETUP_brain;
 
-  MqSendSTART(mqctx);
-  DbErrorCheck(tcadbiterinit(brain->db));
+MqSendSTART(mqctx);
+DbErrorCheck(tcadbiterinit(brain->db));
 
 error:
-  return MqSendRETURN(mqctx);
+return MqSendRETURN(mqctx);
 }
 
 static enum MqErrorE AITN ( ARGS ) {
@@ -541,30 +602,77 @@ error:
 
 static enum MqErrorE PREP ( ARGS ) {
   SETUP_brain;
-  MQ_CST sql;
+  MQ_CST sql,end,type,start;
   MQ_INT idx;
   MQ_BUF buf;
+
+  // parse prefix
   MqErrorCheck(MqReadU(mqctx,&buf));
-  if (MqBufferGetType(buf) == 'I') {
+  if (buf->type == MQ_INTT) {
     MqErrorCheck(MqBufferGetI(buf,&idx));
-    if (brain->prepare[idx] != NULL) {
+    if (brain->prepStmt[idx] != NULL) {
       MqErrorV (mqctx, __func__, SQLITE_ERROR, "unable to use prepare entry '%i' - already in use.", idx);
       goto error;
     }
-    MqErrorCheck(MqReadC(mqctx,&sql));
+    MqErrorCheck(MqReadU(mqctx,&buf));
   } else {
     idx = brain->prepare_start;
-    MqErrorCheck(MqBufferGetC(buf,&sql));
   }
+  MqErrorCheck(MqBufferGetC(buf,&sql));
+  end = sql + buf->cursize;
+
+  // process values
   MqSendSTART(mqctx);
   while (sql != NULL && *sql != '\0') {
-    for (; idx<DB_PREPARE_MAX && brain->prepare[idx]!=NULL; idx++);
+    // get the index
+    for (; idx<DB_PREPARE_MAX && brain->prepStmt[idx]!=NULL; idx++);
     if (idx >= DB_PREPARE_MAX) {
       MqErrorV (mqctx, __func__, SQLITE_ERROR, "unable to find a free prepare entry - only '%i' entries are allowed.", DB_PREPARE_MAX);
       goto error;
     }
+    // find 'in:???' prefix
+    brain->inType[idx]  = NULL;
+    brain->inEnd[idx]   = NULL;
+    brain->outType[idx] = NULL;
+    brain->outEnd[idx]  = NULL;
+    // 1. search for '/' as beginn of comment
+    for (start=sql; start<end && *start != '/' && *start != ';'; start++);
+    // 2. '/*' as 2cnd char
+    if (start == end || *start++ != '/' || *start++ != '*') goto update;
+
+  // find 'in:???' prefix
+    // in1. 'WS' before "TYPE:???"
+    for (; start<end && isspace(*start); start++);
+    // in2. 'in:' the prefix
+    if (start >= end-3 || strncmp(start, "in:", 3)) goto out;
+    start+=3;
+    // in3. 'ASCII' as beginn of comment
+    for (type=start; start<end && isupper(*start); start++); 
+    if (start == end) goto out;
+    // in4. we have everything
+    brain->inType[idx] = MqSysStrNDup(mqctx, type, (start-type-1));
+    brain->inEnd[idx] = brain->inType[idx] + (start-type);
+    *brain->inEnd[idx] = '\0';
+
+out:
+  // find 'out:???' prefix
+    // out1. 'WS' before "TYPE:???"
+    for (; start<end && isspace(*start); start++);
+    // out2. 'out:' the prefix
+    if (start >= end-4 || strncmp(start, "out:", 4)) goto update;
+    start+=4;
+    // out3. 'ASCII' as beginn of comment
+    for (type=start; start<end && isupper(*start); start++); 
+    if (start == end) goto update;
+    // out4. we have everything
+    brain->outType[idx] = MqSysStrNDup(mqctx, type, (start-type-1));
+    brain->outEnd[idx] = brain->outType[idx] + (start-type);
+    *brain->outEnd[idx] = '\0';
+
+update:
+    // update the database
     brain->prepare_start=idx+1;
-    DbErrorCheck(sqlite3_prepare_v2(brain->db, sql, -1, &brain->prepare[idx], &sql));
+    DbErrorCheck(sqlite3_prepare_v2(brain->db, sql, -1, &brain->prepStmt[idx], &sql));
     MqSendI(mqctx, idx);
   }
 error:
@@ -598,18 +706,8 @@ static enum MqErrorE OPEN ( ARGS ) {
     MQ_CST dbstorage;
     MqErrorCheck(MqReadC(mqctx,&dbstorage));
 
-    if (dbstorage == NULL || *dbstorage == '\0') {
+    if (dbstorage == NULL) {
       return MqErrorC (mqctx, __func__, SQLITE_ERROR, "storage-file is empty or invalid");
-    }
-
-    if (dbstorage[0] == '#') {
-      // a "temporary" database require, by sqlite default, an "empty-string".
-      // for me an "empty-string" is an error, I prefer "#tmpdb#"
-      if (!strcmp(dbstorage,"#tmpdb#")) {
-	dbstorage = "";
-      } else if (!strcmp(dbstorage,"#memdb#")) {
-	dbstorage = ":memory:";
-      }
     }
 
     MqDLogV(mqctx,5,"try to open database '%s'\n", dbstorage);
