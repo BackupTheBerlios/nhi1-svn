@@ -22,15 +22,15 @@ if {![testConstraint brain]} return
 #set tcl_traceExec 1
 
 array set SQL {
-  testtbl   "CREATE TABLE IF NOT EXISTS testtbl (id INTEGER PRIMARY KEY, dval double, tval TEXT);"
-  droptbl   "DROP TABLE IF EXISTS testtble;"
+  testtbl   "CREATE TABLE testtbl (id INTEGER PRIMARY KEY, dval double, tval TEXT NOT NULL);"
+  droptbl   "DROP TABLE testtbl;"
   doupltbl  "CREATE TABLE testtbl (id INTEGER PRIMARY KEY, dval double, tval TEXT);"
-  simptbl   "CREATE TABLE IF NOT EXISTS simptbl (id INTEGER PRIMARY KEY);"
-  errtbl    "CREATE TOBLE IF NOT EXISTS errtbl  (id INTEGER PRIMARY KEY, dval double, tval TEXT);"
+  simptbl   "CREATE TABLE simptbl (id INTEGER PRIMARY KEY);"
+  errtbl    "CREATE TOBLE errtbl  (id INTEGER PRIMARY KEY, dval double, tval TEXT);"
 
   testins   "/* in:IDC */ INSERT INTO testtbl (id, dval, tval) VALUES (?, ?, ?);"
 
-  testsel   "/* in:I out:DC  */ SELECT dval, tval FROM testtbl WHERE id < ?;"
+  testsel   "/* in:I out:DC */ SELECT dval, tval FROM testtbl WHERE id < ?;"
 }
 
 ##
@@ -81,7 +81,7 @@ test prepare-2-($I|$B|$C|$S|$dbfile) {prepare duplicate statement} \
       Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
     } \
     -body           {
-      EchoL $FH_LAST PREP SendC $SQL(testins)$SQL(testsel)
+      EchoL $FH_LAST PREP SendI 0 SendC $SQL(testins)$SQL(testsel)
     } \
     -cleanup	    {
       Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
@@ -89,13 +89,13 @@ test prepare-2-($I|$B|$C|$S|$dbfile) {prepare duplicate statement} \
     -returnCodes    ok \
     -result	    {0 1}
 
-test prepare-3-($I|$B|$C|$S|$dbfile) {prepare statement and insert} \
+test prepare-3-($I|$B|$C|$S|$dbfile) {insert single row} \
     -setup	    {
       Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
-      set hdl [Echo1 $FH_LAST PREP ReadI SendC $SQL(testins)]
+      Echo1 $FH_LAST PREP ReadI SendI 0 SendC $SQL(testins)
     } \
     -body           {
-      Echo0 $FH_LAST STEP SendI $hdl SendI 1 SendD 0.3 SendC otto
+      Echo0 $FH_LAST STEP SendI 0 SendI 1 SendD 0.3 SendC otto
     } \
     -cleanup	    {
       Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
@@ -103,15 +103,74 @@ test prepare-3-($I|$B|$C|$S|$dbfile) {prepare statement and insert} \
     -returnCodes    ok \
     -result	    {}
 
+test prepare-3-c1-($I|$B|$C|$S|$dbfile) {insert string type at pos 1} \
+    -setup	    {
+      Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
+      Echo1 $FH_LAST PREP ReadI SendI 0 SendC $SQL(testins)
+    } \
+    -body           {
+      Echo0 $FH_LAST STEP SendI 0 SendC "1" SendD 0.3 SendC otto
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
+    } \
+    -returnCodes    ok \
+    -result	    {}
+
+test prepare-3-e1-($I|$B|$C|$S|$dbfile) {insert string type withe wrong value at pos 1} \
+    -setup	    {
+      Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
+      Echo1 $FH_LAST PREP ReadI SendI 0 SendC $SQL(testins)
+    } \
+    -body           {
+      Echo0 $FH_LAST STEP SendI 0 SendC "1.1" SendD 0.3 SendC otto
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
+    } \
+    -returnCodes    error \
+    -result	    {C> (client-0) [service-call-error] <Tok|STEP> <Num|1>
+S> (server-0) [pBufferGetA4] size ERROR, can not convert '1.1' into an 'INT' object}
+
+test prepare-3-e2-($I|$B|$C|$S|$dbfile) {insert wrong type at pos 1} \
+    -setup	    {
+      Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
+      Echo1 $FH_LAST PREP ReadI SendI 0 SendC $SQL(testins)
+    } \
+    -body           {
+      Echo0 $FH_LAST STEP SendI 0 SendD 1.3 SendD 0.3 SendC otto
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
+    } \
+    -returnCodes    error \
+    -result	    {C> (client-0) [service-call-error] <Tok|STEP> <Num|1>
+S> (server-0) [STEP] the buffer type 'D' does not match database type 'I'}
+
+test prepare-3-e3-($I|$B|$C|$S|$dbfile) {insert with missing argument} \
+    -setup	    {
+      Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
+      Echo1 $FH_LAST PREP ReadI SendI 0 SendC $SQL(testins)
+    } \
+    -body           {
+      Echo0 $FH_LAST STEP SendI 0 SendI 1 SendD 0.3
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
+    } \
+    -returnCodes    error \
+    -result	    {C> (client-0) [service-call-error] <Tok|STEP> <Num|19>
+S> (server-0) [STEP] testtbl.tval may not be NULL}
+
 test prepare-4-($I|$B|$C|$S|$dbfile) {prepare statement and insert multiple rows} \
     -setup	    {
       Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
-      set hdl [Echo1 $FH_LAST PREP ReadI SendC $SQL(testins)]
+      Echo1 $FH_LAST PREP ReadI SendI 0 SendC $SQL(testins)
     } \
     -body           {
-      Echo0 $FH_LAST STEP SendI $hdl SendI 1 SendD 0.3 SendC otto1
-      Echo0 $FH_LAST STEP SendI $hdl SendI 2 SendD 0.4 SendC otto2
-      Echo0 $FH_LAST STEP SendI $hdl SendI 3 SendD 0.5 SendC otto3
+      Echo0 $FH_LAST STEP SendI 0 SendI 1 SendD 0.3 SendC otto1
+      Echo0 $FH_LAST STEP SendI 0 SendI 2 SendD 0.4 SendC otto2
+      Echo0 $FH_LAST STEP SendI 0 SendI 3 SendD 0.5 SendC otto3
     } \
     -cleanup	    {
       Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
@@ -122,12 +181,12 @@ test prepare-4-($I|$B|$C|$S|$dbfile) {prepare statement and insert multiple rows
 test prepare-4-e1-($I|$B|$C|$S|$dbfile) {prepare statement and insert with duplicate row} \
     -setup	    {
       Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
-      set hdl [Echo1 $FH_LAST PREP ReadI SendC $SQL(testins)]
+      Echo1 $FH_LAST PREP ReadI SendI 0 SendC $SQL(testins)
     } \
     -body           {
-      Echo0 $FH_LAST STEP SendI $hdl SendI 1 SendD 0.3 SendC otto1
-      Echo0 $FH_LAST STEP SendI $hdl SendI 2 SendD 0.4 SendC otto2
-      Echo0 $FH_LAST STEP SendI $hdl SendI 1 SendD 0.5 SendC otto3
+      Echo0 $FH_LAST STEP SendI 0 SendI 1 SendD 0.3 SendC otto1
+      Echo0 $FH_LAST STEP SendI 0 SendI 2 SendD 0.4 SendC otto2
+      Echo0 $FH_LAST STEP SendI 0 SendI 1 SendD 0.5 SendC otto3
     } \
     -cleanup	    {
       Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
@@ -136,17 +195,17 @@ test prepare-4-e1-($I|$B|$C|$S|$dbfile) {prepare statement and insert with dupli
     -result	    {C> (client-0) [service-call-error] <Tok|STEP> <Num|19>
 S> (server-0) [STEP] PRIMARY KEY must be unique}
 
-test prepare-5-($I|$B|$C|$S|$dbfile) {select gingle row from table} \
+test prepare-5-($I|$B|$C|$S|$dbfile) {select single row from table} \
     -setup	    {
       Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
-      set hdl [Echo1 $FH_LAST PREP ReadI SendC $SQL(testins)]
-      EchoL $FH_LAST STEP SendI $hdl SendI 1 SendD 0.3 SendC otto
-      EchoL $FH_LAST STEP SendI $hdl SendI 2 SendD 0.4 SendC otto2
-      EchoL $FH_LAST STEP SendI $hdl SendI 3 SendD 0.5 SendC otto3
-      set shdl [Echo1 $FH_LAST PREP ReadI SendC $SQL(testsel)]
+      Echo1 $FH_LAST PREP ReadI SendI 0 SendC $SQL(testins)
+      EchoL $FH_LAST STEP SendI 0 SendI 1 SendD 0.3 SendC otto
+      EchoL $FH_LAST STEP SendI 0 SendI 2 SendD 0.4 SendC otto2
+      EchoL $FH_LAST STEP SendI 0 SendI 3 SendD 0.5 SendC otto3
+      Echo1 $FH_LAST PREP ReadI SendI 1 SendC $SQL(testsel)
     } \
     -body           {
-      EchoL $FH_LAST STEP SendI $shdl SendI 2
+      EchoL $FH_LAST STEP SendI 1 SendI 2
     } \
     -cleanup	    {
       Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
@@ -154,58 +213,43 @@ test prepare-5-($I|$B|$C|$S|$dbfile) {select gingle row from table} \
     -returnCodes    ok \
     -result	    {{0.3 otto}}
 
-test brain-3-o4b-($I|$B|$C|$S|$dbfile) {select multiple columns from table} \
+test prepare-5-e1-($I|$B|$C|$S|$dbfile) {select single row with FRONG type} \
     -setup	    {
-      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
       Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
-      set hdl [Echo1 $FH_LAST PREP ReadI SendC $SQL(testins)]
-      EchoL $FH_LAST STEP SendI $hdl SendI 1 SendD 0.3 SendC otto
-      EchoL $FH_LAST STEP SendI $hdl SendI 2 SendD 0.4 SendC otto2
-      EchoL $FH_LAST STEP SendI $hdl SendI 3 SendD 0.5 SendC otto3
-      set shdl [Echo1 $FH_LAST PREP ReadI SendC $SQL(testsel)]
+      Echo1 $FH_LAST PREP ReadI SendI 0 SendC $SQL(testins)
+      EchoL $FH_LAST STEP SendI 0 SendI 1 SendD 0.3 SendC otto
+      EchoL $FH_LAST STEP SendI 0 SendI 2 SendD 0.4 SendC otto2
+      EchoL $FH_LAST STEP SendI 0 SendI 3 SendD 0.5 SendC otto3
+      Echo1 $FH_LAST PREP ReadI SendI 1 SendC "/* in:I out:DD */ $SQL(testsel)"
     } \
     -body           {
-      EchoL $FH_LAST STEP SendI $shdl SendC SendI 3
+      EchoL $FH_LAST STEP SendI 1 SendI 2
     } \
     -cleanup	    {
-      Echo0 $FH_LAST CLOS
-    } \
-    -returnCodes    ok \
-    -result	    {{0.3 otto} {0.4 otto2}}
-
-test brain-3-o5-($I|$B|$C|$S|$dbfile) {finalize} \
-    -setup	    {
-      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
-      Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
-      set hdl [Echo1 $FH_LAST PREP ReadI SendC $SQL(testins)]
-    } \
-    -body           {
-      Echo0 $FH_LAST FINA SendI $hdl
-    } \
-    -cleanup	    {
-      Echo0 $FH_LAST CLOS
-    } \
-    -returnCodes    ok \
-    -result	    {}
-
-test brain-3-e5-($I|$B|$C|$S|$dbfile) {insert after finalize} \
-    -setup	    {
-      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
-      Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
-      set hdl [Echo1 $FH_LAST PREP ReadI SendC $SQL(testins)]
-      Echo0 $FH_LAST FINA SendI $hdl
-    } \
-    -body           {
-      EchoL $FH_LAST STEP SendI $hdl SendI 1 SendD 0.3 SendC otto
-    } \
-    -cleanup	    {
-      Echo0 $FH_LAST CLOS
+      Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
     } \
     -returnCodes    error \
     -result	    {C> (client-0) [service-call-error] <Tok|STEP> <Num|1>
-S> (server-0) [HdlGet] the prepare-index '0' was NOT defined
-S> (server-0) found in function "HdlGet" at file "abrain.c"}
+S> (server-0) [pBufferGetA8] size ERROR, can not convert 'otto' into an 'DBL' object
+S> (server-0) found in function "MqBufferCastTo" at file "buffer.c"}
 
+test prepare-6-($I|$B|$C|$S|$dbfile) {select multiple columns from table} \
+    -setup	    {
+      Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
+      Echo1 $FH_LAST PREP ReadI SendI 0 SendC $SQL(testins)
+      EchoL $FH_LAST STEP SendI 0 SendI 1 SendD 0.3 SendC otto
+      EchoL $FH_LAST STEP SendI 0 SendI 2 SendD 0.4 SendC otto2
+      EchoL $FH_LAST STEP SendI 0 SendI 3 SendD 0.5 SendC otto3
+      Echo1 $FH_LAST PREP ReadI SendI 1 SendC $SQL(testsel)
+    } \
+    -body           {
+      EchoL $FH_LAST STEP SendI 1 SendI 3
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
+    } \
+    -returnCodes    ok \
+    -result	    {{0.3 otto} {0.4 otto2}}
 
 # cleanup ---------------------------
 

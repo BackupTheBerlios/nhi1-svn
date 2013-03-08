@@ -13,3 +13,6 @@ set background=dark
 set softtabstop=2
 set shiftwidth=2
 set modeline
+
+map <C-l> <C-]>
+

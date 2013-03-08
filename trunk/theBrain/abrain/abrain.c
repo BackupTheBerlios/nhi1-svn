@@ -34,6 +34,7 @@
 #define MQCTX ((struct MqS*const)brain)
 #define MQ_CONTEXT_S mqctx
 #define SETUP_brain struct BrainCtxS*const brain = BRAINCTX
+#define SETUP_db sqlite3*const db = brain->db
 #define SETUP_W(sh) \
   SETUP_brain; \
   MQ_WID key; \
@@ -230,6 +231,14 @@ inline static enum MqTypeE GetTypeD ( sqlite3_stmt *hdl, MQ_INT idx ) {
   return MQ_SRTT;
 }
 
+#define case1(t,f,c) \
+  case t##T: { \
+    t dat; \
+    MqErrorCheck(MqBufferGet ## c(buf,&dat)); \
+    DbErrorCheck(f(hdl,idx,dat)); \
+    break; \
+  }
+
 static enum MqErrorE STEP ( ARGS ) {
   SETUP_brain;
   MQ_INT idx=0;
@@ -248,7 +257,7 @@ static enum MqErrorE STEP ( ARGS ) {
     MqErrorCheck(MqReadU(mqctx,&buf));
     if (inType && inType < inEnd) {
       ntype = GetTypeE(*inType);
-      if (buf->type != ntype) {
+      if (buf->type != ntype && buf->type != MQ_STRT) {
 	MqErrorV(mqctx,__func__,SQLITE_ERROR,
 	  "the buffer type '%c' does not match database type '%c'", 
 	    MqBufferGetType(buf), *inType);
@@ -258,7 +267,7 @@ static enum MqErrorE STEP ( ARGS ) {
     } else {
       ntype = buf->type;
     }
-    switch (ntype) {
+    switch (buf->type) {
       case MQ_BYTT: DbErrorCheck(sqlite3_bind_int(hdl,idx,buf->cur.A->Y)); break;
       case MQ_BOLT: DbErrorCheck(sqlite3_bind_int(hdl,idx,buf->cur.A->O)); break;
       case MQ_SRTT: DbErrorCheck(sqlite3_bind_int(hdl,idx,buf->cur.A->S)); break;
@@ -266,7 +275,29 @@ static enum MqErrorE STEP ( ARGS ) {
       case MQ_WIDT: DbErrorCheck(sqlite3_bind_int64(hdl,idx,buf->cur.A->W)); break;
       case MQ_FLTT: DbErrorCheck(sqlite3_bind_double(hdl,idx,buf->cur.A->F)); break;
       case MQ_DBLT: DbErrorCheck(sqlite3_bind_double(hdl,idx,buf->cur.A->D)); break;
-      case MQ_STRT: DbErrorCheck(sqlite3_bind_text (hdl,idx,buf->cur.C,buf->cursize,SQLITE_TRANSIENT)); break;
+      case MQ_STRT: 
+	switch (ntype) {
+	  case1(MQ_BYT,sqlite3_bind_int,Y)
+	  case1(MQ_BOL,sqlite3_bind_int,O)
+	  case1(MQ_SRT,sqlite3_bind_int,S)
+	  case1(MQ_INT,sqlite3_bind_int,I)
+	  case1(MQ_WID,sqlite3_bind_int64,W)
+	  case1(MQ_FLT,sqlite3_bind_double,F)
+	  case1(MQ_DBL,sqlite3_bind_double,D)
+	  case MQ_STRT: 
+	    DbErrorCheck(sqlite3_bind_text (hdl,idx,buf->cur.C,buf->cursize,SQLITE_TRANSIENT)); 
+	    break;
+	  case MQ_BINT: 
+	    if (buf->cursize == 0) {
+	      DbErrorCheck (sqlite3_bind_null (hdl,idx));
+	    } else {
+	      DbErrorCheck (sqlite3_bind_blob (hdl,idx,buf->cur.B,buf->cursize,SQLITE_TRANSIENT));
+	    }
+	    break;
+	  case MQ_LSTT: case MQ_TRAT:
+	    MqErrorV (mqctx, __func__, SQLITE_ERROR, "invalid protocoll item '%c'", GetTypeS(ntype));
+	}
+	break;
       case MQ_BINT:
 	if (buf->cursize == 0) {
 	  DbErrorCheck (sqlite3_bind_null (hdl,idx));
@@ -280,28 +311,35 @@ static enum MqErrorE STEP ( ARGS ) {
     }
   }
 
+  buf = NULL;
   MQ_CST pos;
   MqSendSTART(mqctx);
   while (true) {
     switch (sqlite3_step(hdl)) {
       case SQLITE_ROW: {
+	if (buf == NULL) buf = MqBufferCreate(mqctx,8);
 	MqSendL_START(mqctx);
 	for (idx=0,pos=outType; idx<sqlite3_column_count(hdl); idx++) {
 	  ntype = pos && pos < outEnd ? GetTypeE(*pos++) : GetTypeD(hdl,idx);
-	  switch (ntype) {
-	    case MQ_BYTT: MqSendY(mqctx, sqlite3_column_int(hdl,idx)); break;
-	    case MQ_BOLT: MqSendO(mqctx, sqlite3_column_int(hdl,idx)); break;
-	    case MQ_SRTT: MqSendS(mqctx, sqlite3_column_int(hdl,idx)); break;
-	    case MQ_INTT: MqSendI(mqctx, sqlite3_column_int(hdl,idx)); break;
-	    case MQ_WIDT: MqSendW(mqctx, sqlite3_column_int(hdl,idx)); break;
-	    case MQ_FLTT: MqSendF(mqctx, sqlite3_column_double(hdl, idx)); break;
-	    case MQ_DBLT: MqSendD(mqctx, sqlite3_column_double(hdl, idx)); break;
-	    case MQ_STRT: MqSendC(mqctx, (MQ_CST) sqlite3_column_text(hdl, idx)); break;
-	    case MQ_BINT: MqSendB(mqctx, sqlite3_column_blob(hdl, idx), sqlite3_column_bytes(hdl,idx)); break;
-	    case MQ_LSTT: case MQ_TRAT:
-	      MqErrorV (mqctx, __func__, SQLITE_ERROR, "invalid protocoll item '%c'", GetTypeS(ntype));
+	  switch (sqlite3_column_type(hdl,idx)) {
+	    case SQLITE_INTEGER:
+	      MqBufferSetW(buf,sqlite3_column_int64(hdl,idx));
+	      break;
+	    case SQLITE_FLOAT:
+	      MqBufferSetD(buf,sqlite3_column_double(hdl,idx));
+	      break;
+	    case SQLITE_BLOB:
+	      MqBufferSetB(buf,sqlite3_column_blob(hdl, idx), sqlite3_column_bytes(hdl,idx));
+	      break;
+	    case SQLITE_TEXT:
+	      MqBufferSetC(buf,(MQ_CST)sqlite3_column_text(hdl, idx));
+	      break;
+	    case SQLITE_NULL:
+	      MqBufferSetI(buf,0);
 	      break;
 	  }
+	  MqErrorCheck(MqBufferCastTo(buf,ntype));
+	  MqErrorCheck(MqSendU(mqctx,buf));
 	}
 	MqSendL_END(mqctx);
 	continue;
@@ -320,6 +358,8 @@ static enum MqErrorE STEP ( ARGS ) {
   }
 
 error:
+  sqlite3_reset(hdl);
+  MqBufferDelete(&buf);
   return MqSendRETURN(mqctx);
 }
 
@@ -610,10 +650,7 @@ static enum MqErrorE PREP ( ARGS ) {
   MqErrorCheck(MqReadU(mqctx,&buf));
   if (buf->type == MQ_INTT) {
     MqErrorCheck(MqBufferGetI(buf,&idx));
-    if (brain->prepStmt[idx] != NULL) {
-      MqErrorV (mqctx, __func__, SQLITE_ERROR, "unable to use prepare entry '%i' - already in use.", idx);
-      goto error;
-    }
+    MqErrorCheck(IdxFinalize(mqctx, idx));
     MqErrorCheck(MqReadU(mqctx,&buf));
   } else {
     idx = brain->prepare_start;
