@@ -13,6 +13,26 @@
 set TS_LIBRARY [info script]
 
 ##
+## setup configuration data
+array set DB_LST {
+  file	test.db
+  mem	:memory:
+  temp	{}
+}
+
+array set SQL {
+  testtbl   "CREATE TABLE testtbl (id INTEGER PRIMARY KEY, dval double, tval TEXT NOT NULL);"
+  droptbl   "DROP TABLE testtbl;"
+  doupltbl  "CREATE TABLE testtbl (id INTEGER PRIMARY KEY, dval double, tval TEXT);"
+  simptbl   "CREATE TABLE simptbl (id INTEGER PRIMARY KEY);"
+  errtbl    "CREATE TOBLE errtbl  (id INTEGER PRIMARY KEY, dval double, tval TEXT);"
+
+  testins   "/* in:IDC */ INSERT INTO testtbl (id, dval, tval) VALUES (?, ?, ?);"
+
+  testsel   "/* in:I out:DC */ SELECT dval, tval FROM testtbl WHERE id < ?;"
+}
+
+##
 ## setup database files
 array set DB_LST {
   file  test.db

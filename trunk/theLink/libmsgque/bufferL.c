@@ -577,11 +577,10 @@ MqBufferLCheckOptionU (
   MQ_BUF * const var
 )
 {
-  struct MqBufferS * lbuf;
   MQ_SIZE index;
   MQ_SIZE len;
 
-	if (!bufL) return MQ_OK;
+  if (!bufL) return MQ_OK;
 
   index = 0;
   len = strlen(opt);
@@ -589,7 +588,6 @@ MqBufferLCheckOptionU (
   while ((index = MqBufferLSearchC (bufL, opt, len, index)) != -1) {
     MqBufferLDeleteItem (context, bufL, index, 1, MQ_YES);
     if (likely (bufL->cursize) && likely (index < bufL->cursize)) {
-      lbuf = bufL->data[index];
       if (*var) MqBufferDelete(var);
       *var = bufL->data[index];
       MqBufferLDeleteItem (context, bufL, index, 1, MQ_NO);

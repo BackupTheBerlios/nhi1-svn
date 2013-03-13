@@ -71,6 +71,7 @@ struct BrainCtxS {
   MQ_STR	outType[DB_PREPARE_MAX];    ///< array prepared statement output types string
   MQ_STR	outEnd[DB_PREPARE_MAX];	    ///< array prepared statement output types end pointer
   MQ_INT	prepare_start;		    ///< point to the next empty prepare empty
+  MQ_BUF	buf;			    ///< context local storage
 };
 
 /*****************************************************************************/
@@ -228,7 +229,7 @@ inline static enum MqTypeE GetTypeD ( sqlite3_stmt *hdl, MQ_INT idx ) {
     case SQLITE_TEXT:  return MQ_STRT;
     case SQLITE_NULL:  return MQ_BINT;
   }
-  return MQ_SRTT;
+  return MQ_BINT;
 }
 
 #define case1(t,f,c) \
@@ -238,6 +239,49 @@ inline static enum MqTypeE GetTypeD ( sqlite3_stmt *hdl, MQ_INT idx ) {
     DbErrorCheck(f(hdl,idx,dat)); \
     break; \
   }
+
+inline static enum MqErrorE GetFromDBnat ( 
+  struct MqS * const mqctx, 
+  enum MqTypeE ntype,
+  sqlite3_stmt *hdl, 
+  MQ_INT idx
+) {
+  switch (ntype) {
+    case MQ_STRT: return MqSendC(mqctx,(MQ_CST)sqlite3_column_text(hdl,idx));
+    case MQ_INTT: return MqSendI(mqctx,(MQ_INT)sqlite3_column_int(hdl,idx));
+    case MQ_SRTT: return MqSendS(mqctx,(MQ_SRT)sqlite3_column_int(hdl,idx));
+    case MQ_BYTT: return MqSendY(mqctx,(MQ_BYT)sqlite3_column_int(hdl,idx));
+    case MQ_BOLT: return MqSendY(mqctx,(MQ_BOL)sqlite3_column_int(hdl,idx));
+    case MQ_WIDT: return MqSendW(mqctx,(MQ_WID)sqlite3_column_int64(hdl,idx));
+    case MQ_DBLT: return MqSendD(mqctx,(MQ_DBL)sqlite3_column_double(hdl,idx));
+    case MQ_FLTT: return MqSendF(mqctx,(MQ_FLT)sqlite3_column_double(hdl,idx));
+    case MQ_BINT: return MqSendB(mqctx,sqlite3_column_blob(hdl,idx),sqlite3_column_bytes(hdl,idx));
+    case MQ_LSTT: case MQ_TRAT:
+      return MqErrorV (mqctx, __func__, SQLITE_ERROR, "invalid protocoll item '%c'", GetTypeS(ntype));
+  }
+  return MQ_BINT;
+}
+
+inline static enum MqErrorE GetFromDBary ( 
+  struct MqS * const mqctx, 
+  enum MqTypeE ntype,
+  sqlite3_stmt *hdl, 
+  MQ_INT idx
+) {
+  switch (ntype) {
+    case MQ_BINT:
+      return MqSendB(mqctx,(MQ_BIN)sqlite3_column_blob(hdl,idx),sqlite3_column_bytes(hdl,idx));
+    case MQ_STRT:
+      return MqSendC(mqctx,(MQ_CST)sqlite3_column_text(hdl,idx));
+    default:
+      return MqSendU(mqctx,
+	MqBufferCastTo( 
+	  MqBufferSetC(BRAINCTX->buf, (MQ_CST)sqlite3_column_text(hdl, idx)),
+	  ntype
+	)
+      );
+  }
+}
 
 static enum MqErrorE STEP ( ARGS ) {
   SETUP_brain;
@@ -311,35 +355,25 @@ static enum MqErrorE STEP ( ARGS ) {
     }
   }
 
-  buf = NULL;
   MQ_CST pos;
   MqSendSTART(mqctx);
   while (true) {
     switch (sqlite3_step(hdl)) {
       case SQLITE_ROW: {
-	if (buf == NULL) buf = MqBufferCreate(mqctx,8);
 	MqSendL_START(mqctx);
-	for (idx=0,pos=outType; idx<sqlite3_column_count(hdl); idx++) {
-	  ntype = pos && pos < outEnd ? GetTypeE(*pos++) : GetTypeD(hdl,idx);
+	for (idx=0,pos=outType; idx<sqlite3_column_count(hdl); idx++,pos++) {
+	  ntype = pos && pos < outEnd ? GetTypeE(*pos) : GetTypeD(hdl,idx);
 	  switch (sqlite3_column_type(hdl,idx)) {
 	    case SQLITE_INTEGER:
-	      MqBufferSetW(buf,sqlite3_column_int64(hdl,idx));
-	      break;
 	    case SQLITE_FLOAT:
-	      MqBufferSetD(buf,sqlite3_column_double(hdl,idx));
+	    case SQLITE_NULL:
+	      MqErrorCheck(GetFromDBnat(mqctx, ntype, hdl, idx));
 	      break;
 	    case SQLITE_BLOB:
-	      MqBufferSetB(buf,sqlite3_column_blob(hdl, idx), sqlite3_column_bytes(hdl,idx));
-	      break;
 	    case SQLITE_TEXT:
-	      MqBufferSetC(buf,(MQ_CST)sqlite3_column_text(hdl, idx));
-	      break;
-	    case SQLITE_NULL:
-	      MqBufferSetI(buf,0);
+	      MqErrorCheck(GetFromDBary(mqctx, ntype, hdl, idx));
 	      break;
 	  }
-	  MqErrorCheck(MqBufferCastTo(buf,ntype));
-	  MqErrorCheck(MqSendU(mqctx,buf));
 	}
 	MqSendL_END(mqctx);
 	continue;
@@ -359,276 +393,8 @@ static enum MqErrorE STEP ( ARGS ) {
 
 error:
   sqlite3_reset(hdl);
-  MqBufferDelete(&buf);
   return MqSendRETURN(mqctx);
 }
-
-/*
-   static enum MqErrorE AKEP ( ARGS ) {
-   SETUP_ADB;
-   MQ_CBI val;
-   MQ_SIZE vlen;
-
-   MqSendSTART(mqctx);
-   while (MqReadItemExists(mqctx)) {
-   READ_N (key,klen);
-   READ_N (val,vlen);
-   DbErrorCheck (tcadbputkeep(adb, key, klen, val, vlen));
-   }
-
-error:
-return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE AKEP_F ( ARGS ) {
-SETUP_FDB;
-
-MQ_CBI val;
-MQ_SIZE vlen;
-
-MqSendSTART(mqctx);
-while (MqReadItemExists(mqctx)) {
-READ_W (key);
-READ_N (val,vlen);
-DbErrorCheck (tcfdbputkeep(fdb, key, val, vlen));
-}
-
-error:
-return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE AGET ( ARGS ) {
-SETUP_ADB;
-MQ_BIN val;
-MQ_SIZE vlen;
-
-MqSendSTART(mqctx);
-while (MqReadItemExists(mqctx)) {
-READ_N (key,klen);
-DbErrorCheck(val = tcadbget(adb, key, klen, &vlen));
-MqSendN(mqctx, val, vlen);
-free(val);
-}
-
-error:
-return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE AGET_F ( ARGS ) {
-SETUP_FDB;
-
-MQ_BIN val;
-MQ_SIZE vlen;
-
-MqSendSTART(mqctx);
-while (MqReadItemExists(mqctx)) {
-READ_W (key);
-DbErrorCheck(val=tcfdbget(fdb, key, &vlen));
-MqSendN(mqctx, val, vlen);
-free(val);
-}
-
-error:
-return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE AITI ( ARGS ) {
-SETUP_brain;
-
-MqSendSTART(mqctx);
-DbErrorCheck(tcadbiterinit(brain->db));
-
-error:
-return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE AITN ( ARGS ) {
-  SETUP_ADB;
-
-  MQ_INT num=999999;
-  if (MqReadItemExists(mqctx)) {
-    MqErrorCheck (MqReadI (mqctx, &num));
-  }
-
-  MqSendSTART(mqctx);
-  while (num-- >= 0 && (key=tcadbiternext(adb, &klen)) != NULL) {
-    MqSendN(mqctx, key, klen);
-    free((MQ_BIN)key);
-  }
-
-error:
-  return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE AITN_F ( ARGS ) {
-  SETUP_FDB;
-
-  MQ_INT num=999999;
-  if (MqReadItemExists(mqctx)) {
-    MqErrorCheck (MqReadI (mqctx, &num));
-  }
-
-  MqSendSTART(mqctx);
-  while (num-- >= 0 && (key=(MQ_WID)tcfdbiternext(fdb)) != 0) {
-    MqSendW(mqctx, key);
-  }
-
-error:
-  return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE AITA ( ARGS ) {
-  SETUP_ADB;
-  MQ_BIN val;
-  MQ_SIZE vlen;
-
-  MQ_INT num=999999;
-  if (MqReadItemExists(mqctx)) {
-    MqErrorCheck (MqReadI (mqctx, &num));
-  }
-
-  MqSendSTART(mqctx);
-  while ( num-- >= 0 && (key=tcadbiternext(adb, &klen)) != NULL ) {
-    MqSendN(mqctx, key, klen);
-    DbErrorCheck(val=tcadbget(adb, key, klen, &vlen));
-    MqSendN(mqctx, val, vlen);
-    free((MQ_BIN)key);
-    free(val);
-  }
-
-error:
-  return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE AITA_F ( ARGS ) {
-  SETUP_FDB;
-
-  MQ_BIN val;
-  MQ_SIZE vlen;
-
-  MQ_INT num=999999;
-  if (MqReadItemExists(mqctx)) {
-    MqErrorCheck (MqReadI (mqctx, &num));
-  }
-
-  MqSendSTART(mqctx);
-  while ( num-- >= 0 && (key=tcfdbiternext(fdb)) != 0 ) {
-    MqSendW(mqctx, key);
-    DbErrorCheck(val=tcfdbget(fdb, key, &vlen));
-    MqSendN(mqctx, val, vlen);
-    free(val);
-  }
-
-error:
-  return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE AOUT ( ARGS ) {
-  SETUP_ADB;
-
-  MqSendSTART(mqctx);
-  while (MqReadItemExists(mqctx)) {
-    READ_N (key,klen);
-    DbErrorCheck(tcadbout(adb, key, klen));
-  }
-
-error:
-  return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE AOUT_F ( ARGS ) {
-  SETUP_FDB;
-
-  MqSendSTART(mqctx);
-  while (MqReadItemExists(mqctx)) {
-    READ_W (key);
-    DbErrorCheck(tcfdbout(fdb, key));
-  }
-
-error:
-  return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE ASIZ ( ARGS ) {
-  SETUP_ADB;
-  MQ_INT size;
-
-  MqSendSTART(mqctx);
-  while (MqReadItemExists(mqctx)) {
-    READ_N (key,klen);
-    size = tcadbvsiz(adb, key, klen);
-    DbErrorCheck(size!=-1);
-    MqSendI(mqctx,size);
-  }
-
-error:
-  return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE ASIZ_F ( ARGS ) {
-  SETUP_FDB;
-  MQ_INT size;
-
-  MqSendSTART(mqctx);
-  while (MqReadItemExists(mqctx)) {
-    READ_W (key);
-    size = tcfdbvsiz(fdb, key);
-    DbErrorCheck(size!=-1);
-    MqSendI(mqctx,size);
-  }
-
-error:
-  return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE AOTM ( ARGS ) {
-  SETUP_brain;
-  MQ_CST params = NULL;
-
-  MqSendSTART(mqctx);
-  if (MqReadItemExists(mqctx)) {
-    MqErrorCheck (MqReadC (mqctx, &params));
-  }
-
-  DbErrorCheck (tcadboptimize(brain->db, params));
-
-error:
-  return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE AVAN ( ARGS ) {
-  SETUP_brain;
-  MqSendSTART(mqctx);
-  DbErrorCheck (tcadbvanish(brain->db));
-error:
-  return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE ATRB ( ARGS ) {
-  SETUP_brain;
-  MqSendSTART(mqctx);
-  DbErrorCheck (tcadbtranbegin(brain->db));
-error:
-  return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE ATRC ( ARGS ) {
-  SETUP_brain;
-  MqSendSTART(mqctx);
-  DbErrorCheck (tcadbtrancommit(brain->db));
-error:
-  return MqSendRETURN(mqctx);
-}
-
-static enum MqErrorE ATRA ( ARGS ) {
-  SETUP_brain;
-  MqSendSTART(mqctx);
-  DbErrorCheck (tcadbtranabort(brain->db));
-error:
-  return MqSendRETURN(mqctx);
-}
-
-*/
 
 static enum MqErrorE EXEC ( ARGS ) {
   SETUP_brain;
@@ -762,24 +528,6 @@ static enum MqErrorE OPEN ( ARGS ) {
   MqErrorCheck (MqServiceCreate (mqctx, "FINA", FINA, NULL, NULL));
   MqErrorCheck (MqServiceCreate (mqctx, "STEP", STEP, NULL, NULL));
 
-/*
-  MqErrorCheck (MqServiceCreate (mqctx, "AITI", AITI, NULL, NULL));
-  MqErrorCheck (MqServiceCreate (mqctx, "AOTM", AOTM, NULL, NULL));
-  MqErrorCheck (MqServiceCreate (mqctx, "AVAN", AVAN, NULL, NULL));
-  MqErrorCheck (MqServiceCreate (mqctx, "ATRB", ATRB, NULL, NULL));
-  MqErrorCheck (MqServiceCreate (mqctx, "ATRC", ATRC, NULL, NULL));
-  MqErrorCheck (MqServiceCreate (mqctx, "ATRA", ATRA, NULL, NULL));
-*/
-/*
-  MqErrorCheck (MqServiceCreate (mqctx, "AKEP", AKEP_W, NULL, NULL));
-  MqErrorCheck (MqServiceCreate (mqctx, "AGET", AGET_W, NULL, NULL));
-  MqErrorCheck (MqServiceCreate (mqctx, "AITN", AITN_W, NULL, NULL));
-  MqErrorCheck (MqServiceCreate (mqctx, "AITA", AITA_W, NULL, NULL));
-  MqErrorCheck (MqServiceCreate (mqctx, "AOUT", AOUT_W, NULL, NULL));
-  MqErrorCheck (MqServiceCreate (mqctx, "ASIZ", ASIZ_W, NULL, NULL));
-*/
-
-
   MqSendSTART(mqctx);
 error:
   return MqSendRETURN(mqctx);
@@ -798,7 +546,8 @@ BrainCleanup (
 )
 {
   SETUP_brain;
-  DbErrorCheck(ctxCleanup(mqctx));
+  MqBufferDelete(&brain->buf);
+  MqErrorCheck(ctxCleanup(mqctx));
 error:
   return MqErrorStack(mqctx);
 }
@@ -811,6 +560,7 @@ BrainSetup (
 {
   SETUP_brain;
   brain->prepare_start=0;
+  brain->buf = MqBufferCreate(mqctx, 10);
   MqErrorCheck (MqServiceCreate (mqctx, "OPEN", OPEN, NULL, NULL));
 
 error:

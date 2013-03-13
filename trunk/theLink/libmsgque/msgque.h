@@ -2541,7 +2541,7 @@ MQ_EXTERN void MQ_DECL MqBufferDelete (
   struct MqBufferS ** const bufP
 );
 
-/// \attention this funcation can \b only be called as long as the \e biffer-context is \b alive
+/// \attention this funcation can \b only be called as long as the \e buffer-context is \b alive
 MQ_EXTERN struct MqBufferS*  MQ_DECL MqBufferDeleteSave (
   struct MqBufferS * buf
 );
@@ -2844,7 +2844,7 @@ MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetV (
 /// \buf
 /// \type
 /// \retMqErrorE
-MQ_EXTERN enum MqErrorE
+MQ_EXTERN struct MqBufferS *
 MQ_DECL MqBufferCastTo (
   struct MqBufferS * const buf,
   enum MqTypeE const type
@@ -3620,7 +3620,11 @@ MQ_EXTERN int MQ_DECL MqErrorIsEXIT (
 
 /// \brief check on error
 /// \return on #MQ_OK and #MQ_CONTINUE return \b 1 and an #MQ_ERROR return \b 0
-#define MqErrorCheckI(PROC) (unlikely((PROC) >= MQ_ERROR))
+static mq_inline int MqErrorCheckI(
+  const enum MqErrorE err
+) {
+  return (unlikely((err) >= MQ_ERROR));
+}
 /// \brief check \e return-code and <I>goto error</I> on error
 #define MqErrorCheck(PROC) if (MqErrorCheckI(PROC)) goto error
 /// \brief check \e return-code and <I>break</I> on error

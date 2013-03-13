@@ -21,18 +21,6 @@ if {![testConstraint brain]} return
 
 #set tcl_traceExec 1
 
-array set SQL {
-  testtbl   "CREATE TABLE testtbl (id INTEGER PRIMARY KEY, dval double, tval TEXT NOT NULL);"
-  droptbl   "DROP TABLE testtbl;"
-  doupltbl  "CREATE TABLE testtbl (id INTEGER PRIMARY KEY, dval double, tval TEXT);"
-  simptbl   "CREATE TABLE simptbl (id INTEGER PRIMARY KEY);"
-  errtbl    "CREATE TOBLE errtbl  (id INTEGER PRIMARY KEY, dval double, tval TEXT);"
-
-  testins   "/* in:IDC */ INSERT INTO testtbl (id, dval, tval) VALUES (?, ?, ?);"
-
-  testsel   "/* in:I out:DC */ SELECT dval, tval FROM testtbl WHERE id < ?;"
-}
-
 ##
 ## -----------------------------------------------------------------------
 ## Master/Child + Binary yes/no
@@ -129,8 +117,9 @@ test prepare-3-e1-($I|$B|$C|$S|$dbfile) {insert string type withe wrong value at
       Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
     } \
     -returnCodes    error \
-    -result	    {C> (client-0) [service-call-error] <Tok|STEP> <Num|1>
-S> (server-0) [pBufferGetA4] size ERROR, can not convert '1.1' into an 'INT' object}
+    -match	    glob \
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|STEP> <Num|1>
+[sS]> (server-0) \[pBufferGetA4] size ERROR, can not convert '1.1' into an 'INT' object}
 
 test prepare-3-e2-($I|$B|$C|$S|$dbfile) {insert wrong type at pos 1} \
     -setup	    {
@@ -144,8 +133,9 @@ test prepare-3-e2-($I|$B|$C|$S|$dbfile) {insert wrong type at pos 1} \
       Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
     } \
     -returnCodes    error \
-    -result	    {C> (client-0) [service-call-error] <Tok|STEP> <Num|1>
-S> (server-0) [STEP] the buffer type 'D' does not match database type 'I'}
+    -match	    glob \
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|STEP> <Num|1>
+[sS]> (server-0) \[STEP] the buffer type 'D' does not match database type 'I'}
 
 test prepare-3-e3-($I|$B|$C|$S|$dbfile) {insert with missing argument} \
     -setup	    {
@@ -159,8 +149,9 @@ test prepare-3-e3-($I|$B|$C|$S|$dbfile) {insert with missing argument} \
       Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
     } \
     -returnCodes    error \
-    -result	    {C> (client-0) [service-call-error] <Tok|STEP> <Num|19>
-S> (server-0) [STEP] testtbl.tval may not be NULL}
+    -match	    glob \
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|STEP> <Num|19>
+[sS]> (server-0) \[STEP] testtbl.tval may not be NULL}
 
 test prepare-4-($I|$B|$C|$S|$dbfile) {prepare statement and insert multiple rows} \
     -setup	    {
@@ -192,8 +183,9 @@ test prepare-4-e1-($I|$B|$C|$S|$dbfile) {prepare statement and insert with dupli
       Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
     } \
     -returnCodes    error \
-    -result	    {C> (client-0) [service-call-error] <Tok|STEP> <Num|19>
-S> (server-0) [STEP] PRIMARY KEY must be unique}
+    -match	    glob \
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|STEP> <Num|19>
+[sS]> (server-0) \[STEP] PRIMARY KEY must be unique}
 
 test prepare-5-($I|$B|$C|$S|$dbfile) {select single row from table} \
     -setup	    {
@@ -213,7 +205,7 @@ test prepare-5-($I|$B|$C|$S|$dbfile) {select single row from table} \
     -returnCodes    ok \
     -result	    {{0.3 otto}}
 
-test prepare-5-e1-($I|$B|$C|$S|$dbfile) {select single row with FRONG type} \
+test prepare-5-e1-($I|$B|$C|$S|$dbfile) {select single row with WRONG type} \
     -setup	    {
       Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
       Echo1 $FH_LAST PREP ReadI SendI 0 SendC $SQL(testins)
@@ -229,9 +221,10 @@ test prepare-5-e1-($I|$B|$C|$S|$dbfile) {select single row with FRONG type} \
       Echo0 $FH_LAST EXEC SendC $SQL(droptbl)
     } \
     -returnCodes    error \
-    -result	    {C> (client-0) [service-call-error] <Tok|STEP> <Num|1>
-S> (server-0) [pBufferGetA8] size ERROR, can not convert 'otto' into an 'DBL' object
-S> (server-0) found in function "MqBufferCastTo" at file "buffer.c"}
+    -match	    glob \
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|STEP> <Num|1>
+[sS]> (server-0) \[pBufferGetA8] size ERROR, can not convert 'otto' into an 'DBL' object
+[sS]> (server-0) found in function "MqBufferCastTo" at file "buffer.c"}
 
 test prepare-6-($I|$B|$C|$S|$dbfile) {select multiple columns from table} \
     -setup	    {

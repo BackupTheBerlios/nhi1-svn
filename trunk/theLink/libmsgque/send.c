@@ -604,6 +604,8 @@ MqSendU (
   struct MqSendS * const send = context->link.send;
   if (unlikely(send == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
+  } else if (MqErrorCheckI(MqErrorGetCodeI(in->context))) {
+    return MqErrorCopy(context,in->context);
   } else {
     // reset current buffer pointer to the data pointer
     in->cur.B = in->data;

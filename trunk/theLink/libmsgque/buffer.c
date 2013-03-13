@@ -532,7 +532,7 @@ pBufferGetA2 (
 #endif
   } else if ( buf->type == MQ_STRT ) {
     // MQ_SRTT
-		MQ_STR end;
+    MQ_STR end;
     long ret;
     errno = 0;
     ret = str2int (buf->cur.C, &end, 0);
@@ -1054,7 +1054,7 @@ MqBufferSetV (
   return buf;
 }
 
-enum MqErrorE
+struct MqBufferS *
 MqBufferCastTo (
   struct MqBufferS * const buf,
   enum MqTypeE const type
@@ -1063,7 +1063,7 @@ MqBufferCastTo (
   MQ_ATO val;
 
   if (buf->type == type)
-    return MQ_OK;
+    return buf;
 
   switch (type & MQ_TYPE_IS_NATIVE) {
     case 8:
@@ -1083,13 +1083,14 @@ MqBufferCastTo (
       sBufferSetA1 (buf, val, type);
       break;
     default:
-      return MqErrorDb2(buf->context,MQ_ERROR_CAST_TO_NON_ATOM);
+      MqErrorDb2(buf->context,MQ_ERROR_CAST_TO_NON_ATOM);
   }
 
-  return MQ_OK;
+  return buf;
 
 error:
-  return MqErrorStack (MQ_ERROR_S);
+  MqErrorStack (MQ_ERROR_S);
+  return buf;
 }
 
 /*****************************************************************************/
