@@ -29,6 +29,7 @@
 
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
 #include <errno.h>
 #endif
 
@@ -37,6 +38,7 @@ using namespace ccmsgque;
 
 class atrans : public MqC, public IServerSetup,
 		  public IServerCleanup, public IEvent {
+
   public:
     atrans(MqS *tmpl) : MqC(tmpl) {
       ConfigSetIgnoreExit (true);
@@ -109,11 +111,12 @@ class atrans : public MqC, public IServerSetup,
     }
 
   public:
-
     void SysMkDir (MQ_CST dirname, mode_t mode ) {
-      if (mq_mkdir (dirname, mode) == -1) {
-	ErrorV (__func__, errno, "can not create directory <%s> -> ERR<%s>", dirname, strerror (errno));
-	ErrorRaise();
+      if(access(dirname, F_OK) == -1){
+	if (mq_mkdir (dirname, mode) == -1) {
+	  ErrorV (__func__, errno, "can not create directory <%s> -> ERR<%s>", dirname, strerror (errno));
+	  ErrorRaise();
+	}
       }
     }
 
@@ -139,7 +142,7 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
     struct MqBufferLS *args = MqBufferLCreateArgs (argc, argv);
 
     // setup direktory
-    MqBufferLCheckOptionC(MQ_ERROR_PANIC, args, "-datadir", &datadir);
+    MqBufferLCheckOptionC(MQ_ERROR_PANIC, args, "--datadir", &datadir);
     if (datadir != NULL) {
       filter->SysChDir (datadir);
       MqSysFree (datadir);

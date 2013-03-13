@@ -15,11 +15,5 @@
 
 TESTS = $(srcdir)/all.sh
 
-EXTRA_DIST = $(srcdir)/*.tcl $(srcdir)/*.test $(srcdir)/*.bash $(srcdir)/*.env
-
-noinst_PROGRAMS = client
-
-client_SOURCES = client.c stat.c stat.h
-client_CPPFLAGS = -I$(srcdir)/../../theLink/libmsgque -DMQ_IGNORE_EXTERN
-client_LDADD = -lm ../../theLink/libmsgque/libtmp.la
+EXTRA_DIST = $(srcdir)/*.tcl $(srcdir)/*.test
 
