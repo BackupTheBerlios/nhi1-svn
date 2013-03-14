@@ -105,6 +105,12 @@ EOF
 # lookup the token
 #
 lookup() {
+  if [[ "$1" == '-silent' ]] ; then
+    declare -i silent=1
+    shift
+  else
+    declare -i silent=0
+  fi
   declare -a ret
   declare CMDDIR=$(cd $(dirname -- $1);pwd)
   declare CMD=$(basename -- $1)
@@ -134,28 +140,32 @@ lookup() {
 
   if [[ -r "$CMDDIR/$CMD" ]] ; then
     CMD="$CMDDIR/$CMD"
-  else
+  elif (( ! silent )) ; then
     Die "unable to find comand-file '$CMD'"
   fi
 
-  # find executable if CMD is a script-file
-  case "$CMD" in
-    *.tcl|*.test)   EXE="${TCLSH:-tclsh}";;
-    *.java)	    EXE="${JAVA:-java}"; CMD="${CMD%.*}";;
-    *.py)	    EXE="${PYTHON:-python}";;
-    *.pl)	    EXE="${PERL:-perl} -I$abs_top_srcdir/theLink/example/perl";;
-    *.rb)	    EXE="${RUBY:-ruby}";;
-    *.php)	    EXE="${PHP:-php}";;
-    *.cs|*.exe)	    EXE="${MONO:-mono}"; CMD="${CMD%.*}.exe";;
-    *.go)	    EXE=""; CMD="${CMD%.*}$EXT";;
-    *.cc)	    EXE=""; CMD="${CMD%.*}$EXT";;
-    *.c)	    EXE=""; CMD="${CMD%.*}$EXT";;
-    *)		    EXE="";;
-  esac
+  if (( silent )) ; then
+    echo $CMD
+  else 
+    # find executable if CMD is a script-file
+    case "$CMD" in
+      *.tcl|*.test)   EXE="${TCLSH:-tclsh}";;
+      *.java)	    EXE="${JAVA:-java}"; CMD="${CMD%.*}";;
+      *.py)	    EXE="${PYTHON:-python}";;
+      *.pl)	    EXE="${PERL:-perl} -I$abs_top_srcdir/theLink/example/perl";;
+      *.rb)	    EXE="${RUBY:-ruby}";;
+      *.php)	    EXE="${PHP:-php}";;
+      *.cs|*.exe)	    EXE="${MONO:-mono}"; CMD="${CMD%.*}.exe";;
+      *.go)	    EXE=""; CMD="${CMD%.*}$EXT";;
+      *.cc)	    EXE=""; CMD="${CMD%.*}$EXT";;
+      *.c)	    EXE=""; CMD="${CMD%.*}$EXT";;
+      *)		    EXE="";;
+    esac
 
-  test -n "$EXE" && ret+=("$EXE")
-  ret+=("$CMD")
-  echo "${ret[@]}"
+    test -n "$EXE" && ret+=("$EXE")
+    ret+=("$CMD")
+    echo "${ret[@]}"
+  fi
 }
 
 ##
@@ -269,20 +279,34 @@ case "$prefix" in
   ;;
 esac
 
+# set local tcltest configuration file
+export TS_LIBRARY=$(lookup -silent library.tcl)
+if [[ -r "$TS_LIBRARY" ]] ; then
+  echo "add: TS_LIBRARY=$PWD/library.tcl"
+else
+  echo "skip: TS_LIBRARY"
+  unset TS_LIBRARY
+fi
+
 # rebuild command line, expand the path, find executable etc..
 #
-cmdline=()
-first=1
-id=$(basename -- $1)
-id=${id%.*}
+declare -a cmdline=()
+declare -a args=()
+declare -i first=1
+declare id=all
 
 while (( $# )) ; do
-  if (( $first )) ; then
-    cmdline+=( $(lookup $1) ) || exit
-    first=0
+  if [[ "$1" == -* && $first -eq 1 ]] ; then
+    args+=($1)
   else
-    cmdline+=( $1 )
-    [[ "$1" == "@" ]] && first=1
+    if (( first )) ; then
+      id=$(basename -- ${PWD%/*})_$(basename -- ${1%.*})
+      cmdline+=( $(lookup $1) ${args[@]:-} ) || exit
+      first=0
+    else
+      cmdline+=( $1 )
+      [[ "$1" == "@" ]] && first=1
+    fi
   fi
   shift
 done

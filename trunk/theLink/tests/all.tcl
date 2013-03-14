@@ -10,11 +10,11 @@
 #:              please contact AUTHORS for additional information
 #:
 
-if {![llength $argv]} {
-  lappend argv --full-testing
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
 }
-
-source [file join [file dirname [info script]] library.tcl]
 
 singleProcess false
 
@@ -24,6 +24,9 @@ testsDirectory $testdir
 
 ## set debugging level
 tcltest::verbose {pass body error}
+if ([string equal [tcltest::skipFiles] {l.*.test}]) {
+  tcltest::skipFiles {}
+}
 
 # just run the files specified by the following line
 #configure -file {int.test}

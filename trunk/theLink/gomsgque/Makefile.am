@@ -10,7 +10,9 @@
 #:              please contact AUTHORS for additional information
 #:
 
-EXTRA_DIST =  $(srcdir)/src/gomsgque/*.go $(srcdir)/src/gomsgque/*.h $(srcdir)/src/*/gomsgque.c
+GO_FILES = src/gomsgque/*.go src/gomsgque/*.h src/gomsgque/*.c
+
+EXTRA_DIST = $(srcdir)/src/gomsgque/*.go $(srcdir)/src/gomsgque/*.h $(srcdir)/src/gomsgque/*.c
 
 if USE_GO
 
@@ -30,7 +32,7 @@ $(abs_builddir)/src/gomsgque/%: $(abs_srcdir)/src/gomsgque/%
 	if test -d $(dir $@) ; then true; else mkdir -p $(dir $@); fi
 	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then cp $< $@; else true; fi
 
-all-local: $(addprefix $(abs_builddir)/, $(EXTRA_DIST))
+all-local: $(subst $(abs_srcdir), $(abs_builddir), $(wildcard $(abs_srcdir)/src/gomsgque/*))
 	$(GO) install gomsgque
 
 clean-local: 

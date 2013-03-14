@@ -48,7 +48,7 @@ dist-hook:
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-cxx \
       --enable-python --enable-perl --enable-csharp --enable-java --enable-ruby \
-	  --enable-php --enable-go --enable-threads
+	  --enable-php --enable-go --enable-threads --enable-brain --enable-guard
 
 #DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-python --enable-threads --enable-guard --enable-brain
 

@@ -818,6 +818,9 @@ while {true} {
     {^--pipe-testing$} {
       set argv [list --only-pipe --only-binary --max 5 {*}$argv]
     }
+    {^--string-testing$} {
+      set argv [list --only-pipe --only-string --max 5 {*}$argv]
+    }
     {^--thread-testing$} {
       set argv [list --only-binary --max 5 --only-thread --only-tcp {*}$argv]
     }
@@ -955,7 +958,8 @@ while {true} {
       puts " compound OPTIONS"
       puts "  --testing  ....... --only-binary --max 5 --only-pipe --only-num 1"
       puts "  --full-testing ... --only-binary --max 5"
-      puts "  --pipe-testing .... --only-binary --max 5 --only-pipe"
+      puts "  --pipe-testing ... --only-binary --max 5 --only-pipe"
+      puts "  --string-testing . --only-string --max 5 --only-pipe"
       puts "  --thread-testing . --only-binary --max 5 --only-thread --only-tcp"
       puts "  --fork-testing ... --only-binary --max 5 --only-fork --only-tcp"
       puts "  --spawn-testing .. --only-binary --max 5 --only-spawn --only-tcp"

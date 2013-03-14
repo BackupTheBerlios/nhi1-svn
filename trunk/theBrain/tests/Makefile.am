@@ -10,10 +10,9 @@
 #:              please contact AUTHORS for additional information
 #:
 
-#TESTS = $(srcdir)/all.sh $(srcdir)/util_test.sh $(srcdir)/hdb_test.sh \
-#	  $(srcdir)/bdb_test.sh
-
-TESTS = $(srcdir)/all.sh
-
 EXTRA_DIST = $(srcdir)/*.tcl $(srcdir)/*.test
+
+TESTS_ENVIRONMENT = $(abs_top_srcdir)/bin/Nhi1Test --full-testing
+
+TESTS = $(abs_top_srcdir)/theLink/tests/all.tcl
 

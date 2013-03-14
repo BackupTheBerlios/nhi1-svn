@@ -12,7 +12,7 @@
 
 EXTRA_DIST = README.tests massclient.bash $(srcdir)/*.tcl $(srcdir)/*.test
 
-TESTS_ENVIRONMENT = $(abs_top_srcdir)/bin/Nhi1Test
+TESTS_ENVIRONMENT = $(abs_top_srcdir)/bin/Nhi1Test --full-testing
 
 TESTS = all.tcl
 #TESTS = $(srcdir)/int.test

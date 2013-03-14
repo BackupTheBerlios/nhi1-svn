@@ -72,7 +72,7 @@ if {![info exists testdir]} {
 
 ##
 ## load the test library
-source [file join [file dirname [info script]] .. .. theLink tests library.tcl]
+source [file join $linksrcdir tests library.tcl]
 
 ##
 ## check if BRAIN is available

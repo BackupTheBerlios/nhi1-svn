@@ -10,9 +10,9 @@
 #:              please contact AUTHORS for additional information
 #:
 
-EXTRA_DIST = $(srcdir)/*.tcl $(srcdir)/*.bash $(srcdir)/*.env
+EXTRA_DIST = $(srcdir)/*.tcl 
 
-TESTS_ENVIRONMENT = $(abs_top_srcdir)/bin/Nhi1Test
+TESTS_ENVIRONMENT = $(abs_top_srcdir)/bin/Nhi1Test --full-testing
 
-TESTS = all.tcl
+TESTS = $(abs_top_srcdir)/theLink/tests/all.tcl
 

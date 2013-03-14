@@ -271,7 +271,8 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-EXTRA_DIST = $(srcdir)/src/gomsgque/*.go $(srcdir)/src/gomsgque/*.h $(srcdir)/src/*/gomsgque.c
+GO_FILES = src/gomsgque/*.go src/gomsgque/*.h src/gomsgque/*.c
+EXTRA_DIST = $(srcdir)/src/gomsgque/*.go $(srcdir)/src/gomsgque/*.h $(srcdir)/src/gomsgque/*.c
 
 #####################################################################################
 @USE_GO_TRUE@GOPATH = $(abs_builddir)
@@ -480,7 +481,7 @@ uninstall-am:
 @USE_GO_TRUE@	if test -d $(dir $@) ; then true; else mkdir -p $(dir $@); fi
 @USE_GO_TRUE@	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then cp $< $@; else true; fi
 
-@USE_GO_TRUE@all-local: $(addprefix $(abs_builddir)/, $(EXTRA_DIST))
+@USE_GO_TRUE@all-local: $(subst $(abs_srcdir), $(abs_builddir), $(wildcard $(abs_srcdir)/src/gomsgque/*))
 @USE_GO_TRUE@	$(GO) install gomsgque
 
 @USE_GO_TRUE@clean-local: 
