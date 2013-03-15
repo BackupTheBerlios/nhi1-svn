@@ -46,7 +46,7 @@ dist-hook:
 	rm -fr $(distdir)/html
 	cp -pr $(srcdir)/html $(distdir)
 
-DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-cxx \
+DISTCHECK_CONFIGURE_FLAGS = --with-tool-root=$(NHI1_TOOL_ROOT) --enable-static --enable-tcl --enable-cxx \
       --enable-python --enable-perl --enable-csharp --enable-java --enable-ruby \
 	  --enable-php --enable-go --enable-threads --enable-brain --enable-guard
 

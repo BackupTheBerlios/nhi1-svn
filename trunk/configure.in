@@ -173,7 +173,7 @@ AC_SUBST([path],[$PATH])
 AC_SUBST([ld_library_path],[$LD_LIBRARY_PATH])
 
 AC_CONFIG_FILES([Makefile theLink/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile
-      theLink/tests/Makefile theLink/tests/exec.env
+      theLink/tests/Makefile 
 	theLink/docs/Makefile bin/Makefile sbin/Makefile etc/Makefile
 	  theLink/libmsgque/Makefile theLink/example/c/Makefile
 	    theLink/ccmsgque/Makefile theLink/example/cc/Makefile
