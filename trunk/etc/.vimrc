@@ -14,5 +14,5 @@ set softtabstop=2
 set shiftwidth=2
 set modeline
 
-map <C-ö> <C-]>
+map <C-k> <C-]>
 

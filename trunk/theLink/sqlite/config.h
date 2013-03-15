@@ -47,9 +47,9 @@
 // memory after it is freed, writing off the ends of a memory allocation, freeing memory 
 // not previously obtained from the memory allocator, or failing to initialize newly 
 // allocated memory. 
-#ifdef _DEBUG
-# define SQLITE_MEMDEBUG 1
-#endif
+//#ifdef _DEBUG
+//# define SQLITE_MEMDEBUG 1
+//#endif
 
 // This option controls whether or not code is included in SQLite to enable it to operate 
 // safely in a multithreaded environment. The default is SQLITE_THREADSAFE=1 which is safe 

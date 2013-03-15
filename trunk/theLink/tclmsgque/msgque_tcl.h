@@ -298,7 +298,7 @@ struct TclContextS {
 
 // from msgque_tcl.h
 
-MQ_STR NS(printName) ( Tcl_Obj *);
+MQ_CST NS(printName) ( Tcl_Obj *);
 MQ_STR NS(printObj)  ( const char *, Tcl_Obj *);
 int NS(MqS_Cmd) ( ClientData, Tcl_Interp *, int, Tcl_Obj * const [] );
 

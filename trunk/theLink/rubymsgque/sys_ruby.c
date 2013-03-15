@@ -187,6 +187,7 @@ void NS(MqS_Sys_Init)(void) {
   MqLal.SysExit	    = SysExit;
   //MqLal.SysWait = SysWait;
 
-  MqLal.SysSelect   = (MqSysSelectF) rb_thread_select;
+  // deprecated: MqLal.SysSelect   = (MqSysSelectF) rb_thread_select;
+  MqLal.SysSelect   = (MqSysSelectF) rb_thread_fd_select;
 }
 

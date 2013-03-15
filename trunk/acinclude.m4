@@ -40,7 +40,7 @@ AC_DEFUN([OT_WITH_PROG],[
   pushdef([TYPE],$4)
   pushdef([PATH_PROG],$5)
 
-  AC_ARG_VAR(VARIABLE,Absolute path to 'ID' TYPE)
+  AC_ARG_VAR(VARIABLE,absolute path to 'ID' TYPE)
 
   AC_MSG_CHECKING(for build with: ID);
   AC_ARG_WITH(ID,AS_HELP_STRING([--with-ID=[[[PATH]]]],absolute path to 'ID' TYPE), [
@@ -69,6 +69,31 @@ AC_DEFUN([OT_WITH_PROG],[
   popdef([PATH_PROG])
   popdef([TYPE])
   popdef([EXECUTABLE])
+  popdef([VARIABLE])
+  popdef([ID])
+])
+
+AC_DEFUN([OT_WITH_DIR],[
+  pushdef([ID],$1)
+  pushdef([VARIABLE],$2)
+
+  AC_ARG_VAR(VARIABLE,absolute path to the 'ID' directory)
+
+  AC_MSG_CHECKING(for build with: ID);
+  AC_ARG_WITH(ID,AS_HELP_STRING([--with-ID=DIR],absolute path to the 'ID' directory), [
+    AS_IF([test "$withval" != yes -a "$withval" != no],[
+      VARIABLE="$withval"
+      AC_MSG_RESULT($VARIABLE)
+    ],[
+      AC_MSG_RESULT($withval)
+      AC_MSG_ERROR(an directory argument for 'ID' is required)
+    ])
+  ],[
+    AC_MSG_RESULT([no])
+    AC_MSG_ERROR(an directory argument for 'ID' is required)
+  ])
+  AC_SUBST(VARIABLE)
+
   popdef([VARIABLE])
   popdef([ID])
 ])
@@ -169,46 +194,6 @@ if (*p != *q) { return(1); }
       [Define if pointers to integers require aligned access])
   fi
 )
-
-#------------------------------------------------------------------------
-# SC_SET_VPATH_HOOK --
-#
-#       add support for VPATH build
-#
-# Arguments:
-#       none
-#	need variable "VPATH_FILES" be defined
-#
-# Results:
-#
-#       Add a new variable VPATH_HOOK and VPATH_HOOK cleanup to automake
-#
-#------------------------------------------------------------------------
-
-AC_DEFUN([SC_SET_VPATH_HOOK], [
-    AC_MSG_CHECKING([add VPATH hook])
-    AC_SUBST([VPATH_HOOK], ['@if test ! -f .vpath_files -a "$(srcdir)" != "." ; then (cd "$(srcdir)" && cp -r $(VPATH_FILES) "$(abs_builddir)";) && touch ".vpath_files" && chmod -R u+w $(VPATH_FILES) && echo "VPATH copy"; else true; fi && touch ".vpath_hook"'])
-    AC_SUBST([VPATH_HOOK_CLEANUP], ['-rm -f .vpath_hook; test -f .vpath_files && rm -fr .vpath_files $(VPATH_FILES)'])
-    AC_SUBST([VPATH_HOOK_DIST], ['-rm -f $(distdir)/.vpath_hook'])
-])
-
-#------------------------------------------------------------------------
-# SC_TOOL_ROOT --
-#
-#       add support for VPATH build
-#
-# Arguments:
-#       none
-#
-# Results:
-#       Add a new variable NHI1_TOOL_ROOT
-#
-#------------------------------------------------------------------------
-
-AC_DEFUN([SC_TOOL_ROOT], [
-    AC_ARG_VAR([NHI1_TOOL_ROOT], [path to the toplevel tool directory (Nhi1BuildLanguage)])
-    AC_SUBST([NHI1_TOOL_ROOT])
-])
 
 #------------------------------------------------------------------------
 # SC_ENABLE_SYMBOLS --
@@ -531,7 +516,36 @@ AC_DEFUN([SC_ENABLE_THREADS], [
 ])
 
 #------------------------------------------------------------------------
-# SC_ENABLE_JAVA --
+# SC_WITH_TOOL_ROOT --
+#
+#       add support for the NHI1 tool support directory
+#       hosting development-language installation
+#
+# Arguments:
+#       none
+#
+# Results:
+#       Add a new variable NHI1_TOOL_ROOT
+#
+#------------------------------------------------------------------------
+
+AC_DEFUN([SC_WITH_TOOL_ROOT], [
+  OT_WITH_DIR([tool-root],[NHI1_TOOL_ROOT])
+  OT_REQUIRE_PROG([PKG_CONFIG], [pkg-config])
+  case "$enable_symbols:$enable_threads" in
+    yes:yes)  T="test"		;;
+    yes:no)   T="test/nothred"	;;
+    no:yes)   T="."		;;
+    no:no)    T="nothread"	;;
+  esac
+  export PATH=$NHI1_TOOL_ROOT/$T/bin${PATH+:}${PATH:-}
+  export LD_LIBRARY_PATH=$NHI1_TOOL_ROOT/$T/lib${LD_LIBRARY_PATH+:}${LD_LIBRARY_PATH:-}
+  export PKG_CONFIG_PATH=$NHI1_TOOL_ROOT/$T/lib/pkgconfig${PKG_CONFIG_PATH+:}${PKG_CONFIG_PATH:-}
+  unset T
+])
+
+#------------------------------------------------------------------------
+# SC_WITH_JAVA --
 #
 #       Specify if java support is needed
 #
@@ -542,7 +556,7 @@ AC_DEFUN([SC_ENABLE_THREADS], [
 #
 #------------------------------------------------------------------------
 
-AC_DEFUN([SC_ENABLE_JAVA], [
+AC_DEFUN([SC_WITH_JAVA], [
   OT_WITH_PROG(java, JAVA, java, runtime)
   AS_IF([test -n "$JAVA"], [
     OT_CHECK_THREAD([java])
@@ -560,7 +574,7 @@ AC_DEFUN([SC_ENABLE_JAVA], [
 ])
 
 #------------------------------------------------------------------------
-# SC_ENABLE_PYTHON --
+# SC_WITH_PYTHON --
 #
 #       Specify if python support is needed
 #
@@ -571,7 +585,7 @@ AC_DEFUN([SC_ENABLE_JAVA], [
 #
 #------------------------------------------------------------------------
 
-AC_DEFUN([SC_ENABLE_PYTHON], [
+AC_DEFUN([SC_WITH_PYTHON], [
   OT_WITH_PROG(python, PYTHON, python3, interpreter)
   AS_IF([test -n "$PYTHON"], [
     AS_IF([$PKG_CONFIG --exists python3], [
@@ -584,7 +598,7 @@ AC_DEFUN([SC_ENABLE_PYTHON], [
 ])
 
 #------------------------------------------------------------------------
-# SC_ENABLE_CSHARP --
+# SC_WITH_CSHARP --
 #
 #       Specify if C# support is needed
 #
@@ -595,7 +609,7 @@ AC_DEFUN([SC_ENABLE_PYTHON], [
 #
 #------------------------------------------------------------------------
 
-AC_DEFUN([SC_ENABLE_CSHARP], [
+AC_DEFUN([SC_WITH_CSHARP], [
   OT_WITH_PROG(csharp, CSCOMP, [csc gmcs], compiler)
   AS_IF([test -n "$CSCOMP"], [
     OT_CHECK_THREAD([CSharp])
@@ -620,7 +634,7 @@ AC_DEFUN([SC_ENABLE_CSHARP], [
 ])
 
 #------------------------------------------------------------------------
-# SC_ENABLE_VB --
+# SC_WITH_VB --
 #
 #       Specify if VisualBasic (VB) support is needed
 #
@@ -631,7 +645,7 @@ AC_DEFUN([SC_ENABLE_CSHARP], [
 #
 #------------------------------------------------------------------------
 
-AC_DEFUN([SC_ENABLE_VB], [
+AC_DEFUN([SC_WITH_VB], [
   OT_WITH_PROG(vb, VBCOMP, [vbnc vbc], compiler)
   AS_IF([test -n "$VBCOMP"], [
     AS_IF([test -z "$CSCOMP"], [
@@ -641,7 +655,7 @@ AC_DEFUN([SC_ENABLE_VB], [
 ])
 
 #------------------------------------------------------------------------
-# SC_ENABLE_CXX --
+# SC_WITH_CXX --
 #
 #       Specify if C++ support is needed
 #
@@ -652,12 +666,12 @@ AC_DEFUN([SC_ENABLE_VB], [
 #
 #------------------------------------------------------------------------
 
-AC_DEFUN([SC_ENABLE_CXX], [
+AC_DEFUN([SC_WITH_CXX], [
   OT_WITH_PROG(cxx, CXX, ,compiler)
 ])
 
 #------------------------------------------------------------------------
-# SC_ENABLE_PHP --
+# SC_WITH_PHP --
 #
 #       Specify if PHP support is needed
 #
@@ -668,7 +682,7 @@ AC_DEFUN([SC_ENABLE_CXX], [
 #
 #------------------------------------------------------------------------
 
-AC_DEFUN([SC_ENABLE_PHP], [
+AC_DEFUN([SC_WITH_PHP], [
   OT_WITH_PROG(php, PHP, php, interpreter)
   AS_IF([test -n "$PHP"], [
     PHP="$PHP -c $ac_pwd/theLink/msgqueforphp/php.ini"
@@ -678,7 +692,7 @@ AC_DEFUN([SC_ENABLE_PHP], [
 ])
 
 #------------------------------------------------------------------------
-# SC_ENABLE_GO --
+# SC_WITH_GO --
 #
 #       Specify if GO support is needed
 #
@@ -689,7 +703,7 @@ AC_DEFUN([SC_ENABLE_PHP], [
 #
 #------------------------------------------------------------------------
 
-AC_DEFUN([SC_ENABLE_GO], [
+AC_DEFUN([SC_WITH_GO], [
   OT_WITH_PROG(go, GO, go, compiler)
   AS_IF([test -n "$GO"], [
     OT_CHECK_THREAD([go])
@@ -697,7 +711,7 @@ AC_DEFUN([SC_ENABLE_GO], [
 ])
 
 #------------------------------------------------------------------------
-# SC_ENABLE_PERL --
+# SC_WITH_PERL --
 #
 #       Specify if PERL support is needed
 #
@@ -708,12 +722,12 @@ AC_DEFUN([SC_ENABLE_GO], [
 #
 #------------------------------------------------------------------------
 
-AC_DEFUN([SC_ENABLE_PERL], [
+AC_DEFUN([SC_WITH_PERL], [
   OT_WITH_PROG(perl, PERL, perl, interpreter)
 ])
 
 #------------------------------------------------------------------------
-# SC_ENABLE_TCL --
+# SC_WITH_TCL --
 #
 #       Specify if TCL support is needed
 #
@@ -724,7 +738,7 @@ AC_DEFUN([SC_ENABLE_PERL], [
 #
 #------------------------------------------------------------------------
 
-AC_DEFUN([SC_ENABLE_TCL], [
+AC_DEFUN([SC_WITH_TCL], [
   OT_WITH_PROG(tcl, TCLSH, [tclsh8.6 tclsh86 tclsh86g tclsh8.5 tclsh85 tclsh85g], interpreter)
   AS_IF([test -n "$TCLSH"], [
     #-----------------------------------
@@ -776,7 +790,7 @@ AC_DEFUN([SC_ENABLE_TCL], [
 ])
 
 #------------------------------------------------------------------------
-# SC_ENABLE_RUBY --
+# SC_WITH_RUBY --
 #
 #       Specify if RUBY support is needed
 #
@@ -787,7 +801,7 @@ AC_DEFUN([SC_ENABLE_TCL], [
 #
 #------------------------------------------------------------------------
 
-AC_DEFUN([SC_ENABLE_RUBY], [
+AC_DEFUN([SC_WITH_RUBY], [
   OT_WITH_PROG(ruby, RUBY, ruby, interpreter)
   AS_IF([test -n "$RUBY"], [
     AS_IF([$PKG_CONFIG --exists ruby-1.9], [
@@ -813,19 +827,6 @@ AC_DEFUN([SC_ENABLE_RUBY], [
 
 AC_DEFUN([SC_ENABLE_BRAIN], [
   OT_ENABLE([brain], [build theBrain, NHI1 database support])
-#  if test "$enable_brain" = "yes"; then
-#    if $PKG_CONFIG --exists kyotocabinet ; then
-#      if $PKG_CONFIG --atleast-version 1.2.76  kyotocabinet ; then
-#	AC_SUBST(BRAIN_CFLAGS,[$($PKG_CONFIG --cflags kyotocabinet)])
-#	AC_SUBST(BRAIN_LDADD,[$($PKG_CONFIG --libs kyotocabinet)])
-#	AC_SUBST(BRAIN_LDADD_STATIC,[$($PKG_CONFIG --static --libs kyotocabinet)])
-#      else
-#	AC_MSG_ERROR([unable to get minimal version 1.2.76])
-#      fi
-#    else
-#      AC_MSG_ERROR([unable to find the package 'kyotocabinet'])
-#    fi
-#  fi
 ])
 
 #------------------------------------------------------------------------

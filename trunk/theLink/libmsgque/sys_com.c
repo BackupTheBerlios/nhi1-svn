@@ -291,7 +291,13 @@ SysBind (
      const socklen_t addrlen
 ) {
   if (unlikely (bind (socket, my_addr, addrlen) == SOCKET_ERROR)) {
-    return sSysMqErrorMsg (context, __func__, "bind");
+    MQ_CST host;
+    MQ_INT port;
+    enum MqErrorE ret = sSysMqErrorMsg (context, __func__, "bind");
+    if (!MqErrorCheckI(SysGetTcpInfo(context,(struct sockaddr_in*)my_addr,&host,&port))) {
+      MqErrorSAppendV(context,"%s socket host<%s> and port<%u>", (MQ_IS_SERVER(context)?"local":"remote"),host, port);
+    }
+    return ret;
   }
 
   return MQ_OK;

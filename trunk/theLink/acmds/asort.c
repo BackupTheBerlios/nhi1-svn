@@ -182,7 +182,7 @@ SortFTR (
   sortkey->line = line;
   sortctx->sort_cursize++;
   if (key->type != sortctx->type) {
-    MqErrorCheck( MqErrorGetCodeI(MqBufferCastTo (key, sortctx->type)));
+    MqErrorCheck( MqErrorGetCodeI( MqBufferCastTo (key, sortctx->type)->context ));
   }
 error:
   return MqSendRETURN (mqctx);

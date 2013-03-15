@@ -21,48 +21,8 @@ set -ue
 ##
 ## =======================================================================
 
-## some useful procs
-add2var() {
-  (($# != 2)) && {
-    echo "usage: $0 VAR Add1:Add2:..."
-    echo "using arguments: $@"
-    return 1
-  }
-  IFS=:
-  local var=$1;
-  local add=$2;
-  typeset -i i
-  declare -a array
-## set array arguments
-  array=(${!var:-})
-## cleanup array
-  for a in $add ; do
-    for (( i=0 ; i<${#array[*]} ; i+=1 )) ; do
-      [ "$a" == "${array[$i]}" ] && unset array[$i]
-    done
-    i=0;
-  done
-## set the new global variable
-  eval export $var=\"\$add\${array[*]:+:}\${array[*]:-}\"
-  unset IFS
-}
-export -f add2var
-
 Usage() {
   exec $NHI1_HOME/configure --help
-}
-
-pathExtension() {
-  case "$1" in
-    thread)                 echo "test";;
-    nothread)               echo "test/nothred";;
-    performance-thread)     echo ".";;
-    performance-nothread)   echo "nothread";;
-    *)                      
-      echo "ERROR: unknown pathExtension '$1'"
-      exit 1
-    ;;
-  esac
 }
 
 ##
@@ -104,6 +64,8 @@ done
 EOF
   )"
 
+opt+=("--with-tool-root=$NHI1_TOOL_ROOT")
+
 for l in ${!with[@]} ; do
   opt+=(--with-$l=${with[$l]})
 done
@@ -115,24 +77,15 @@ done
 if [[ $Perf == 'yes' ]] ; then
   opt+=(--enable-static)
   if [[ $Thread == 'yes' ]] ; then
-    T=$(pathExtension performance-thread)
     opt+=(--enable-threads)
-  else
-    T=$(pathExtension performance-nothread)
   fi
 else
   if [[ $Thread == 'yes' ]] ; then
-    T=$(pathExtension thread)
     opt+=(--enable-threads --enable-symbols)
   else
-    T=$(pathExtension nothread)
     opt+=(--enable-symbols)
   fi
 fi
-
-add2var PATH		  $NHI1_TOOL_ROOT/$T/bin
-add2var LD_LIBRARY_PATH   $NHI1_TOOL_ROOT/$T/lib
-add2var PKG_CONFIG_PATH   $NHI1_TOOL_ROOT/$T/lib/pkgconfig
 
 [[ ${with[go]} == "1" && -f /etc/profile.d/go.sh ]] && {
   source /etc/profile.d/go.sh

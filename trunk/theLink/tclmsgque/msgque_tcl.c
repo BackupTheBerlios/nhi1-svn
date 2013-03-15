@@ -48,7 +48,7 @@ int NS(FactoryDefaultIdent) (TCL_ARGS);
 
 
 /// \brief helper to print the name of a \e Tcl_Obj
-MQ_STR NS(printName) (
+MQ_CST NS(printName) (
   Tcl_Obj * Obj
 )
 {
@@ -63,7 +63,7 @@ MQ_STR NS(printObj) (
 {
   char *buf = ckalloc (206);
   int len;
-  char *name = NS(printName) (Obj);
+  MQ_CST name = NS(printName) (Obj);
 
   // fill the buf and get the len back
   len = mq_snprintf (buf, 206, "%s: obj<%p>, refCount<%i>, type<%s>, string<%s>",
@@ -315,7 +315,7 @@ static int NS(Print) (
         Tcl_WrongNumArgs (interp, 4, objv, "tclObj");
         return TCL_ERROR;
       }
-      Tcl_SetResult (interp, NS(printName) (objv[3]), TCL_VOLATILE);
+      Tcl_SetResult (interp, (char*) NS(printName) (objv[3]), TCL_VOLATILE);
   }
 
   return TCL_OK;

@@ -97,8 +97,7 @@ cp $abs_top_dir/tags .
 }
 
 [[ $BASE == "rubymsgque" ]] && {
-  find -L $HOME/src/ruby-latest -name "*.[ch]" | \
-    xargs ctags -a $ADD
+  find -L $HOME/src/ruby-latest -name "*.[ch]" | xargs ctags -a $ADD
 }
 
 [[ $PWD == *example/java* ]] && {

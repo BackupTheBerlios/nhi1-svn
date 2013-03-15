@@ -72,6 +72,9 @@ ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM1> <Num|1>
 ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
 [Ss]> (server-0) \[*pTokenInvoke] token <DUM2> not found}
 
+
+
+
 test trans-2-($I|$B|$C|$S) {send valid data} \
     -setup	    {
       set TMP	[MakeFile "START" tmp.txt]
@@ -168,6 +171,7 @@ foreach I [getNum 3] {
     -body           {
       Bg @stdout {*}$SRV
       Bg @stdout {*}$FTR
+      after 100
       foreach {FIRST CTX} [Create $I $CON1] break
       Echo0 $CTX LOGF SendC $TMP
 
@@ -200,7 +204,9 @@ test trans-X2-($I|$B|$S) {send multiple error + valid data} \
     } \
     -body           {
       Bg @stdout {*}$SRV
+      after 100
       Bg @stdout {*}$FTR
+      after 100
       foreach {FIRST CTX} [Create $I $CON1] break
       Echo0 $CTX LOGF SendC $TMP
 
@@ -239,6 +245,7 @@ test trans-X3-($I|$B|$S) {multiple filter with EOF error} \
       Bg @stdout {*}$SRV
       Bg @stdout {*}$FT1
       Bg @stdout {*}$FT2
+      after 100
       foreach {FIRST CTX} [Create $I $CON1] break
       Echo0 $CTX LOGF SendC $TMP
 
@@ -291,6 +298,7 @@ test trans-X4-($I|$B|$S) {multiple filter with EOF error} \
       Bg @stdout {*}$SRV
       Bg @stdout {*}$FT1
       Bg @stdout {*}$FT2
+      after 100
       foreach {FIRST LAST} [Create $I $CON1] break
       Echo0 $LAST LOGF SendC $TMP
       Echo0 $LAST PRNT SendC T1
@@ -410,7 +418,4 @@ test trans-Y1 {try to connect a "not-created" link} \
 ##
 
 freeTests
-
-
-
 

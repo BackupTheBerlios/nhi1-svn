@@ -487,28 +487,11 @@ proc dummy_server {channel clientaddr clientport} {
 }
 
 proc FindFreePort {} {
-  global env
-  ## check if a user set default is available
-  if {$env(TS_PORT) ne "PORT"} {
-    return $env(TS_PORT)
+  if {$::env(TS_PORT) ne "PORT"} {
+    return $::env(TS_PORT)
+  } else {
+    return [incr ::portNUM]
   }
-  ## generate unique port
-  global portNUM
-  set TRY 10
-  while true {
-    incr portNUM
-    if {[catch {socket -server dummy_server $portNUM} FH ]} {
-      Print FH
-      incr TRY -1
-      if {$TRY < 0} {
-	Error "PANIC: unable to get a free port"
-      }
-      continue
-    }
-    close $FH
-    break
-  }
-  return $portNUM
 }
 
 set CLEANUP_FILES [list]
@@ -615,6 +598,7 @@ proc SetConstraints {args} {
 }
 
 proc Block {num} {
+  puts "Block $num ...."
   return [expr {[lsearch -exact -sorted -integer -increasing $::env(BLOCK_LST) $num] != -1}]
 }
 
