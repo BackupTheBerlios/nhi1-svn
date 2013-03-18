@@ -77,7 +77,9 @@ test tool-proc-lookup {check using '--with-tcl' and tool-path lookup} \
     } \
     -returnCodes    ok \
     -match	    glob \
-    -result	    "*checking for build with: tcl... $TCLSH*"
+    -result	    "*checking for build with: tcl... lookup*checking for tclsh8.6... $NHI1_TOOL_ROOT*[file tail $TCLSH]*"
+
+# "*checking for tclsh8.6... $TCLSH*"
 
 test tool-proc-lookup-yes {check using '--with-tcl=yes' and tool-path lookup} \
     -setup	    {
@@ -88,14 +90,12 @@ test tool-proc-lookup-yes {check using '--with-tcl=yes' and tool-path lookup} \
     } \
     -returnCodes    ok \
     -match	    glob \
-    -result	    "*checking for build with: tcl... $TCLSH*"
+    -result	    "*checking for build with: tcl... lookup*checking for tclsh8.6... $NHI1_TOOL_ROOT*[file tail $TCLSH]*"
 
 test tool-proc-lookup-not-found {check using '--with-php' and tool-path lookup} \
     -setup	    {
       cd $dir/$PACKAGE-$PACKAGE_VERSION
       set env(NHI1_TOOL_ROOT) .
-parray env
-      catch {unset env(PHP)}
     } \
     -cleanup	    {
       unset env(NHI1_TOOL_ROOT)

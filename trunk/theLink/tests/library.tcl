@@ -29,6 +29,16 @@ if {![info exists testdir]} {
 
 source [file join $linkbuilddir .. env.tcl]
 
+array set env [list \
+  PYTHON  $PYTHON \
+  RUBY	  $RUBY \
+  JAVA	  $JAVA \
+  TCLSH   $TCLSH \
+  PERL	  $PERL \
+  PHP	  $PHP \
+  CLREXEC $CLREXEC \
+]
+
 ## C# using different double format depending on
 ## system language -> we test only the default language
 set env(LANG) C
@@ -389,7 +399,6 @@ proc getServerOnly {srv} {
 }
 
 proc getClient {cmd} {
-  global env
   set RET [list]
 
   # prefix (debugger)
@@ -402,8 +411,8 @@ proc getClient {cmd} {
   lappend RET {*}[getPostfix c]
 
   # startup
-  if {$env(TS_STARTUP_AS) ne "NO"} {
-    lappend RET {*}$env(TS_STARTUP_AS)
+  if {$::env(TS_STARTUP_AS) ne "NO"} {
+    lappend RET {*}$::env(TS_STARTUP_AS)
   }
 
   return $RET
@@ -425,14 +434,13 @@ proc getATool {arg} {
 
     # startup
     if {$::env(TS_STARTUP_AS) ne "NO"} {
-      lappend RET {*}$env(TS_STARTUP_AS)
+      lappend RET {*}$::env(TS_STARTUP_AS)
     }
 
     return $RET
 }
 
 proc getExampleExecutable {srv} {
-  global env
   set RET [list]
 
   regexp {^(.+)\.(\w+)$} $srv all path lng
@@ -459,7 +467,6 @@ proc getExampleExecutable {srv} {
 }
 
 proc getExample {srv args} {
-    global env
     set RET [list]
 
     # prefix (debugger)
@@ -474,8 +481,8 @@ proc getExample {srv args} {
     lappend RET {*}[getPostfix $srv]
 
     # startup
-    if {$env(TS_STARTUP_AS) ne "NO"} {
-      lappend RET {*}$env(TS_STARTUP_AS)
+    if {$::env(TS_STARTUP_AS) ne "NO"} {
+      lappend RET {*}$::env(TS_STARTUP_AS)
     }
     return $RET
 }

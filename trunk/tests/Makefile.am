@@ -12,11 +12,7 @@
 
 EXTRA_DIST = $(srcdir)/*.test $(srcdir)/*.tcl
 
-clean-local:
-	rm -fr thread
-	rm -fr nothread
-
 TESTS_ENVIRONMENT = $(abs_top_srcdir)/bin/Nhi1Test
 
-TESTS = all.tcl
+TESTS = $(abs_top_srcdir)/theLink/tests/all.tcl
 
