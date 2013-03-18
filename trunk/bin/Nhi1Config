@@ -51,7 +51,6 @@ G_Description='wrapper to setup the build-environment for the "nhi1-configure" s
 G_HelpProc='Usage'
 # -------------------------------------------------------------------
 G_Option local-data-file default
-G_Argument 'tool-root:NHI1_TOOL_ROOT:__environment__:root for the tools directory:E'
 G_Argument 'use-perf:Perf:0:use performance code:B'
 G_Argument 'use-threads:Thread:0:use thread code:B'
 for l in brain guard ; do
@@ -63,8 +62,6 @@ done
 
 EOF
   )"
-
-opt+=("--with-tool-root=$NHI1_TOOL_ROOT")
 
 for l in ${!with[@]} ; do
   opt+=(--with-$l=${with[$l]})
@@ -96,6 +93,5 @@ fi
 
 rm -fr /tmp/libmsgque-install
 
-set -x
-bash -norc $NHI1_HOME/configure --prefix=/tmp/libmsgque-install "${opt[@]}" "${@:-}"
+bash -norc $NHI1_HOME/configure --prefix=/tmp/libmsgque-install "${opt[@]}" ${@:-}
 

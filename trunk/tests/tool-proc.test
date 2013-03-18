@@ -1,0 +1,114 @@
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+## environment for all test-cases
+unset env(NHI1_TOOL_ROOT)
+set dir [makeDirectory tool-proc]
+exec tar -C $dir -xjf ../$PACKAGE-$PACKAGE_VERSION.tar.bz2 >&@stdout
+set env(NHI1_TOOL_ROOT) $NHI1_TOOL_ROOT
+
+test tool-proc-arg {check using '--with-tcl=PATH'} \
+    -setup	    {
+      cd $dir/$PACKAGE-$PACKAGE_VERSION
+    } \
+    -body           {
+      cd $dir/$PACKAGE-$PACKAGE_VERSION
+      exec bin/Nhi1Config +i +s +p --use-perf --with-tcl=$TCLSH
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result	    "*checking for build with: tcl... $TCLSH*"
+
+test tool-proc-with-environment {check using '--with-tcl' with tool-path from env} \
+    -setup	    {
+      cd $dir/$PACKAGE-$PACKAGE_VERSION
+      set env(TCLSH) $TCLSH
+    } \
+    -cleanup	    {
+      unset env(TCLSH)
+    } \
+    -body           {
+      exec bin/Nhi1Config +i +s +p --use-perf --with-tcl
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result	    "*checking for build with: tcl... $TCLSH*"
+
+test tool-proc-with-no {check using '--with-tcl=no'} \
+    -setup	    {
+      cd $dir/$PACKAGE-$PACKAGE_VERSION
+      set env(TCLSH) $TCLSH
+    } \
+    -cleanup	    {
+      unset env(TCLSH)
+    } \
+    -body           {
+      exec bin/Nhi1Config +i +s +p --use-perf --with-tcl=no
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result	    "*checking for build with: tcl... no*"
+
+test tool-proc-without {check using '--without-tcl'} \
+    -setup	    {
+      cd $dir/$PACKAGE-$PACKAGE_VERSION
+      set env(TCLSH) $TCLSH
+    } \
+    -cleanup	    {
+      unset env(TCLSH)
+    } \
+    -body           {
+      exec bin/Nhi1Config +i +s +p --use-perf --without-tcl
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result	    "*checking for build with: tcl... no*"
+
+test tool-proc-lookup {check using '--with-tcl' and tool-path lookup} \
+    -setup	    {
+      cd $dir/$PACKAGE-$PACKAGE_VERSION
+    } \
+    -body           {
+      exec bin/Nhi1Config +i +s +p --use-perf --with-tcl
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result	    "*checking for build with: tcl... $TCLSH*"
+
+test tool-proc-lookup-yes {check using '--with-tcl=yes' and tool-path lookup} \
+    -setup	    {
+      cd $dir/$PACKAGE-$PACKAGE_VERSION
+    } \
+    -body           {
+      exec bin/Nhi1Config +i +s +p --use-perf --with-tcl=yes
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result	    "*checking for build with: tcl... $TCLSH*"
+
+test tool-proc-lookup-not-found {check using '--with-php' and tool-path lookup} \
+    -setup	    {
+      cd $dir/$PACKAGE-$PACKAGE_VERSION
+      set env(NHI1_TOOL_ROOT) .
+parray env
+      catch {unset env(PHP)}
+    } \
+    -cleanup	    {
+      unset env(NHI1_TOOL_ROOT)
+    } \
+    -body           {
+      exec bin/Nhi1Config +i +s +p --use-perf --with-php
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result	    "*configure: error: unable to find the tool 'php' - exit*"
+
+
+cleanupTests
+
+# vim: set syn=tcl:
+

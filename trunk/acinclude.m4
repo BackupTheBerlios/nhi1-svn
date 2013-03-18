@@ -43,24 +43,30 @@ AC_DEFUN([OT_WITH_PROG],[
   AC_ARG_VAR(VARIABLE,absolute path to 'ID' TYPE)
 
   AC_MSG_CHECKING(for build with: ID);
-  AC_ARG_WITH(ID,AS_HELP_STRING([--with-ID=[[[PATH]]]],absolute path to 'ID' TYPE), [
+  AC_ARG_WITH(ID,AS_HELP_STRING([--with-ID[[[=PATH]]]],[absolute path to 'ID' TYPE]), [
     AS_IF([test "$withval" != yes -a "$withval" != no],[
       VARIABLE="$withval"
       withval='yes'
       AC_MSG_RESULT($VARIABLE)
     ],[
-      AC_MSG_RESULT($withval)
-      AS_IF([test "$withval" = yes], [
-	AC_PATH_PROGS([]VARIABLE[],[]EXECUTABLE[],[no],[]PATH_PROG[])
-	AS_IF([test "$VARIABLE" = no], [
-	  AC_MSG_ERROR(unable to find the tool 'ID' - exit)
+      AS_IF([test "$withval" = no], [
+	AC_MSG_RESULT($withval)
+	VARIABLE=""
+      ],[
+	AS_IF([test -z "$VARIABLE"], [
+	  AC_MSG_RESULT(lookup)
+	  AC_PATH_PROGS([]VARIABLE[],[]EXECUTABLE[],[],[]PATH_PROG[])
+	  AS_IF([test -z "$VARIABLE"], [
+	    AC_MSG_ERROR(unable to find the tool 'ID' - exit)
+	  ])
+	],[
+	  AC_MSG_RESULT($VARIABLE)
 	])
       ])
     ])
   ],[
-    AC_MSG_RESULT([no])
+    AC_MSG_RESULT($VARIABLE)
   ])
-
   pushdef([FLAG],[USE_]translit($1,[a-z],[A-Z]))
   AC_SUBST(FLAG, "$withval")
   AM_CONDITIONAL(FLAG, [test -n "$VARIABLE"])
@@ -86,11 +92,16 @@ AC_DEFUN([OT_WITH_DIR],[
       AC_MSG_RESULT($VARIABLE)
     ],[
       AC_MSG_RESULT($withval)
-      AC_MSG_ERROR(an directory argument for 'ID' is required)
+      AC_MSG_ERROR([the option '--with-ID' and a directory argument is required])
     ])
   ],[
-    AC_MSG_RESULT([no])
-    AC_MSG_ERROR(an directory argument for 'ID' is required)
+    AC_MSG_RESULT($VARIABLE)
+    AS_IF([test -z "$VARIABLE"],[
+      AC_MSG_ERROR(the option '--with-ID' or the environment variable 'VARIABLE' is required)
+    ])
+  ])
+  AS_IF([test ! -d "$VARIABLE"],[
+    AC_MSG_ERROR([the directory '$VARIABLE' is no directory])
   ])
   AC_SUBST(VARIABLE)
 

@@ -72,8 +72,6 @@ AC_SUBST([VERSION_INFO], [22:0:0])
 
 AC_CONFIG_MACRO_DIR([m4])
 
-SC_TOOL_ROOT
-
 AM_PROG_CC_C_O
 AM_PROG_AR
 
@@ -172,8 +170,8 @@ fi
 AC_SUBST([path],[$PATH])
 AC_SUBST([ld_library_path],[$LD_LIBRARY_PATH])
 
-AC_CONFIG_FILES([Makefile theLink/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile
-      theLink/tests/Makefile 
+AC_CONFIG_FILES([Makefile tests/Makefile
+      theLink/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile theLink/tests/Makefile 
 	theLink/docs/Makefile bin/Makefile sbin/Makefile etc/Makefile
 	  theLink/libmsgque/Makefile theLink/example/c/Makefile
 	    theLink/ccmsgque/Makefile theLink/example/cc/Makefile

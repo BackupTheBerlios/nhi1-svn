@@ -1,0 +1,61 @@
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+## environment for all test-cases
+unset env(NHI1_TOOL_ROOT)
+set dir [makeDirectory tool-root]
+exec tar -C $dir -xjf ../$PACKAGE-$PACKAGE_VERSION.tar.bz2 >&@stdout
+
+test tool-root-no {check without using the 'tool-root' option} \
+    -body           {
+      cd $dir/$PACKAGE-$PACKAGE_VERSION
+      exec bin/Nhi1Config +i +s +p --use-perf
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result	    {*configure: error: the option '--with-tool-root' or the environment variable 'NHI1_TOOL_ROOT' is required*} 
+
+test tool-root-wrong {check using wrong 'tool-root' option} \
+    -body           {
+      cd $dir/$PACKAGE-$PACKAGE_VERSION
+      exec bin/Nhi1Config +i +s +p --use-perf --with-tool-root=hhh
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result	    {*configure: error: the directory 'hhh' is no directory*}
+
+test tool-root-with {check using 'tool-root' option with missing directory argument} \
+    -body           {
+      cd $dir/$PACKAGE-$PACKAGE_VERSION
+      exec bin/Nhi1Config +i +s +p --use-perf --with-tool-root
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result	    {*configure: error: the option '--with-tool-root' and a directory argument is required*}
+
+test tool-root-without {check without using 'tool-root'} \
+    -body           {
+      cd $dir/$PACKAGE-$PACKAGE_VERSION
+      exec bin/Nhi1Config +i +s +p --use-perf --without-tool-root
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result	    {*configure: error: the option '--with-tool-root' and a directory argument is required*}
+
+test tool-root {check with the 'tool-root' environmnet variable 'NHI1_TOOL_ROOT'} \
+    -body           {
+      cd $dir/$PACKAGE-$PACKAGE_VERSION
+      set env(NHI1_TOOL_ROOT) $NHI1_TOOL_ROOT
+      exec bin/Nhi1Config +i +s +p --use-perf
+      unset env(NHI1_TOOL_ROOT)
+    } \
+    -returnCodes    ok 
+
+cleanupTests
+
+# vim: set syn=tcl:
+

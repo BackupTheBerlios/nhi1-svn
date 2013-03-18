@@ -21,7 +21,7 @@ export LD_LIBRARY_PATH
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = theLink performance bin sbin etc
+SUBDIRS = theLink performance bin sbin etc tests
 if USE_BRAIN
 SUBDIRS += theBrain
 endif
