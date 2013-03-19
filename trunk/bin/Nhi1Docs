@@ -88,6 +88,11 @@ Directories ... use on of the following targets:
 EOF
 }
 
+Error() {
+  echo "error: $1" 1>&2
+  exit ${2:-1}
+}
+
 eval "$($abs_top_srcdir/sbin/SetupEnv "$0" "$@" <<-'EOF'
 G_Shell 'bash'
 # ---------------------------------------------------------------------
@@ -110,14 +115,8 @@ EOF
     Usage
     exit 1
 }
-[[ "$usedot" == "yes" && -z "$DOT" ]] && {
-    echo "error: dot tool not available, please install" 1>&2
-    exit 1
-}
-[[ -z "$DOXYGEN" ]] && {
-    echo ERROR: no 'doxygen' support available 2>&1
-    exit 1
-}
+[[ "$usedot" == "yes" && -z "$DOT" ]] && Error "dot tool not available, please install"
+[[ -z "$DOXYGEN" ]] && Error "no 'doxygen' support available"
 
 [[ $1 == "ALL" ]] && {
     set -- $abs_srcdir/man $abs_srcdir/*_private $abs_srcdir/main
@@ -130,7 +129,7 @@ EOF
   export  BUILDDIR="$abs_top_builddir/theLink"
   export  VERSION="$LIBMSGQUE_VERSION"
   export  PERL_PATH="$DOXYPERL"
-  export  DOT_PATH="$(dirname $DOT)"
+  export  DOT_PATH="${DOT%/*}"
   export  GENERATE_MAN='NO' 
   export  GENERATE_RTF='NO' 
   export  GENERATE_XML='NO' 
@@ -151,19 +150,10 @@ EOF
   for D
   do
     echo "======================================================================="
-    case "$D" in
-      *_private)
-      ;;
-      *)
-	D+=_private
-      ;;
-    esac
     if test ! -e "$D" ; then
-      D="$abs_srcdir/$D"
-    fi
-    if test ! -e "$D" ; then
-      echo "Error: unable to open directory '$D'"
-      exit 1
+      [[ "$D" != *_private ]] && D+=_private
+      [[ ! -e "$D" ]] && D="$abs_srcdir/${D#$abs_builddir/}"
+      [[ ! -e "$D" ]] && Error "unable to open directory '$D'"
     fi
     if test -f "$D" ; then
       FN="$D"
@@ -171,13 +161,9 @@ EOF
     elif test -d "$D"; then
       FN="$D/Doxyfile*"
     else
-      echo "Error: '$D' ist not a file and not a directory"
-      exit 1
+      Error "'$D' ist not a file and not a directory"
     fi
-    pushd "$D" || {
-      echo "ERROR: $1 is no directory"
-      exit 2
-    }
+    pushd "$D" || Error "$1 is no directory" 2
     shift
     D=$(basename "$D")
 

@@ -29,13 +29,13 @@ docs/asplit.help: docs atool
 	./atool split --help 2>docs/asplit.help
 
 docs/aexec.help: docs $(srcdir)/aexec
-	$(SHELL) $(builddir)/../tests/exec.env TCLSH $(srcdir)/aexec --help 2>docs/aexec.help
+	$(top_srcdir)/bin/Nhi1Test $(srcdir)/aexec.tcl --help 2>docs/aexec.help
 
 docs/msgque.help: docs $(srcdir)/aexec
-	$(SHELL) $(builddir)/../tests/exec.env TCLSH $(srcdir)/aexec --help-msgque 2>docs/msgque.help
+	$(top_srcdir)/bin/Nhi1Test $(srcdir)/aexec.tcl --help-msgque 2>docs/msgque.help
 
 docs/tclmsgque.help: docs $(srcdir)/aexec
-	$(SHELL) $(builddir)/../tests/exec.env TCLSH $(srcdir)/aexec --help-tclmsgque 1>docs/tclmsgque.help
+	$(top_srcdir)/bin/Nhi1Test $(srcdir)/aexec.tcl --help-tclmsgque 1>docs/tclmsgque.help
 
 bin_PROGRAMS = atool
 EXTRA_DIST = aexec

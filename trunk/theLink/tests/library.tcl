@@ -1141,13 +1141,16 @@ proc Start {mode isError id cl ident {clname ""} {srvname ""}} {
     eval $Start_PREFIX
   }
   if {$isError} {
-    if {[catch {$FH_LAST {*}$cl} ERROR]} { error $ERROR }
+    $FH_LAST {*}$cl
   } else {
-    set NUM 10
+    set NUM 0
     while {[catch {$FH_LAST {*}$cl} ERROR]} {
-      puts "RETRY: $cl"
+      puts "RETRY: $cl -> $ERROR"
+      flush stdout
+      catch {$FH_LAST LinkDelete}
       incr NUM
-      if {$NUM > 10} { Error $ERROR }
+      if {$NUM > 10} { error $ERROR }
+      after 1000
     }
   }
   if {$env(TS_SETUP)} { puts "Start <-" }

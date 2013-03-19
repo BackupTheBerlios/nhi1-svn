@@ -57,8 +57,13 @@ END_C_DECLS
 /*****************************************************************************/
 
 #if defined(MQ_HAS_THREAD)
-# define MX(s) fprintf(stderr, "%s(%s:%d:%d:%p) -> %s \n", __func__, __FILE__, __LINE__, mq_getpid(), \
+# if defined(HAVE_PTHREAD) /* unix thread */
+#   define MX(s) fprintf(stderr, "%s(%s:%d:%d:%li) -> %s \n", __func__, __FILE__, __LINE__, mq_getpid(), \
 	      MqThreadSelfP(), #s);fflush(stderr);
+# else /* windows THREAD */
+#   define MX(s) fprintf(stderr, "%s(%s:%d:%d:%p) -> %s \n", __func__, __FILE__, __LINE__, mq_getpid(), \
+	      MqThreadSelfP(), #s);fflush(stderr);
+# endif
 #else
 # define MX(s) fprintf(stderr, "%s(%s:%d:%d) -> %s \n", __func__, __FILE__, __LINE__, mq_getpid(), #s);fflush(stderr);
 #endif

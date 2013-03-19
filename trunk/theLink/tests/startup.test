@@ -80,6 +80,7 @@ if {[Block 1]} {
 	  if {[string match "*java*"   $S]} continue
 	  if {[string match "*csharp*" $S]} continue
 	  if {[string match "*vb*" $S]} continue
+	  if {[string match "*go*" $S]} continue
 	  if {[string match "*tcl*" $S] && [info exists ::tcl_platform(threaded)]} continue
 	}
 
@@ -125,7 +126,6 @@ proc Start {server args} {
   $FH {*}$args @ {*}[getServerOnly $server.pipe]
   return $FH
 }
-
 
 set SILENT --silent
 
@@ -253,13 +253,4 @@ foreach C pipe {
 
 freeTests
 
-
-
-
-
-
-
-
-
-
-
+# vim: set syn=tcl:

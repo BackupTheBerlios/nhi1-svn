@@ -290,14 +290,32 @@ SysBind (
      const struct sockaddr *my_addr,
      const socklen_t addrlen
 ) {
-  if (unlikely (bind (socket, my_addr, addrlen) == SOCKET_ERROR)) {
-    MQ_CST host;
-    MQ_INT port;
-    enum MqErrorE ret = sSysMqErrorMsg (context, __func__, "bind");
-    if (!MqErrorCheckI(SysGetTcpInfo(context,(struct sockaddr_in*)my_addr,&host,&port))) {
-      MqErrorSAppendV(context,"%s socket host<%s> and port<%u>", (MQ_IS_SERVER(context)?"local":"remote"),host, port);
+  MQ_INT num = context->config.io.timeout;
+  while (1) {
+    if (unlikely (bind (socket, my_addr, addrlen) == SOCKET_ERROR)) {
+      enum MqErrorE ret = MQ_OK;
+      // handle: ERRNO<98> ERR<Address already in use>
+      if (my_addr->sa_family == AF_INET) {
+	MQ_CST host;
+	MQ_INT port;
+	if (sSysGetErrorNum == WIN32_WSA(EADDRINUSE)) {
+	  MqLal.SysSleep(MQ_ERROR_IGNORE, 1);
+	  if (--num > 0) {
+	    MqDLogV(context,1,"%s - wait for %i seconds\n",strerror (sSysGetErrorNum), num);
+	    sSysSetErrorNum(0);
+	    continue;
+	  }
+	}
+	ret = sSysMqErrorMsg (context, __func__, "bind");
+	if (!MqErrorCheckI(SysGetTcpInfo(MQ_ERROR_IGNORE,(struct sockaddr_in*)my_addr,&host,&port))) {
+	  MqErrorSAppendV(context,"%s socket host<%s> and port<%u>", (MQ_IS_SERVER(context)?"local":"remote"),host, port);
+	}
+      } else {
+	ret = sSysMqErrorMsg (context, __func__, "bind");
+      }
+      return ret;
     }
-    return ret;
+    break;
   }
 
   return MQ_OK;
