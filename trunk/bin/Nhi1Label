@@ -35,6 +35,7 @@ array set LABELIGNORE {
     ./bin			{ *.sw* Makefile Makefile.in tags }
     ./etc			{ *.sw* Makefile Makefile.in tags }
     ./sbin			{ *.sw* Makefile Makefile.in tags }
+    ./tests			{ *.sw* Makefile Makefile.in tags }
     ./html			{ * }
     ./man			{ * }
     ./binary-build		{ * }
@@ -114,12 +115,6 @@ config.h*       config.status  EXPERIMENTAL     ltmain.sh     mkinstalldirs     
 				}
 }
 
-array set env [list \
-    PROJECT_SRC	    $LHOME \
-    PROJECT_BUILD   $LHOME \
-    FBGBASE	    [file join $LHOME sbin] \
-]
-
 set LLabel [list								\
     "%PREFIX%  \\file       %FILE%"						\
     "%PREFIX%  \\brief      \\%ID%"						\
@@ -132,5 +127,5 @@ set LLabel [list								\
     "%PREFIX%              please contact AUTHORS for additional information"   \
 ]
 
-source $env(FBGBASE)/LbMain
+source [file join $LHOME sbin LbMain]
 

@@ -50,6 +50,7 @@ Variables:
   G_Source........ the file source ($URL: ... $)
   G_Description... the long description of the usage
   G_HelpProc...... an external function to be called for additional help
+  G_HelpText...... an text used as additional help-message
 
 Functions:
   G_Shell
@@ -485,6 +486,8 @@ function get_detail_user_usage {
   if [[ -n "${G_HelpProc:-}" ]] ; then
     Print "\n  Detail help:\n"
     Eval "$G_HelpProc 1>&2"
+  elif [[ -n "${G_HelpText:-}" ]] ; then
+    Print "\n  Detail help:\n$G_HelpText"
   fi
 }
 
@@ -537,6 +540,9 @@ function get_user_usage {
   if [[ -n "${G_HelpProc:-}" ]] ; then
     Print "\n  Detail usage:"
     Eval "$G_HelpProc | sed -e 's/^/    /' 1>&2"
+  elif [[ -n "${G_HelpText:-}" ]] ; then
+    Print "\n  Detail usage:"
+    Eval "echo '$G_HelpText' | sed -e 's/^/    /' 1>&2"
   fi
   Exit '\n'
 }

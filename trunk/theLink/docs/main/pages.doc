@@ -19,11 +19,34 @@
 \verbinclude debug.out
 **/
 
+/**
+\page Nhi1Label Nhi1Label
+\verbinclude Nhi1Label.help
+*/
 
+/**
+\page rcBuild rcBuild
+\verbinclude rcBuild.help
+*/
 
+/**
+\page Nhi1BuildLanguage Nhi1BuildLanguage
+\verbinclude Nhi1BuildLanguage.help
+*/
 
+/**
+\page Nhi1Config Nhi1Config
+\verbinclude Nhi1Config.help
+*/
 
+/**
+\page Nhi1Test Nhi1Test
+\verbinclude Nhi1Test.help
+*/
 
-
+/**
+\page Nhi1Docs Nhi1Docs
+\verbinclude Nhi1Docs.help
+*/
 
 

@@ -1145,7 +1145,7 @@ proc Start {mode isError id cl ident {clname ""} {srvname ""}} {
   } else {
     set NUM 0
     while {[catch {$FH_LAST {*}$cl} ERROR]} {
-      puts "RETRY: $cl -> $ERROR"
+      puts "RETRY: $cl\n$ERROR"
       flush stdout
       catch {$FH_LAST LinkDelete}
       incr NUM

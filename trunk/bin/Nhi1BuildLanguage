@@ -68,14 +68,22 @@ G_Description='wrapper to setup the build-environment for the "nhi1-configure" s
 G_Argument 'tool-root:NHI1_TOOL_ROOT:__environment__:root for the tools directory:E'
 G_Argument 'clean:clean:0:cleanup first:B'
 G_Argument 'jobs:Jobs:2:number of parallel build jobs:'
-for l in tcl perl python ruby php kyotocabinet; do
+for l in tcl perl python ruby php ; do
   G_Argument "lang-\$l:lang[\$l]:0:build the '\$l' language:B"
 done
 for l in thread nothread performance-thread performance-nothread; do
   G_Argument "use-\$l:use[\$l]:0:build the '\$l' options:B"
 done
 G_Argument "use-all:useAll:0:build the 'all' options:B"
+G_HelpText="this tool is used to build a set of programming-language interpreter
+using different compiling-options and used for different test-cases.
 
+The languages  supported: perl, python, php, ruby, tcl
+The test-cases supported: (no)thread, (no)performance
+
+This tool require a local directory called 'LNG-latest' as link to language
+sources ready for compilation.
+"
 EOF
   )"
 
@@ -135,15 +143,6 @@ for l in ${!lang[@]} ; do
 	  performance-nothread) buildConf=(--disable-pthread);;
 	esac
 	buildConf+=(--prefix="$prefix" --enable-shared)
-      ;;
-      kyotocabinet)
-	case "$t" in
-	  thread)		buildConf=(--enable-debug --enable-devel);;
-	  nothread)		buildConf=(--enable-debug --enable-devel);;
-	  performance-thread)	buildConf=();;
-	  performance-nothread) buildConf=();;
-	esac
-	buildConf+=(--prefix="$prefix" --enable-shared --enable-static --enable-uyield --disable-zlib)
       ;;
       tcl)
 	case "$t" in

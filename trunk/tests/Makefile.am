@@ -1,10 +1,10 @@
 #+
-#:  \file       performance/Makefile.am
-#:  \brief      \$Id: Makefile.am 609 2013-02-07 16:12:35Z aotto1968 $
+#:  \file       tests/Makefile.am
+#:  \brief      \$Id$
 #:  
 #:  (C) 2007 - NHI - #1 - Project - Group
 #:  
-#:  \version    \$Rev: 609 $
+#:  \version    \$Rev$
 #:  \author     EMail: aotto1968 at users.berlios.de
 #:  \attention  this software has GPL permissions to copy
 #:              please contact AUTHORS for additional information

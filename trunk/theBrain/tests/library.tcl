@@ -1,5 +1,5 @@
 #+
-#:  \file       theBrain/tests/libbrain.tcl
+#:  \file       theBrain/tests/library.tcl
 #:  \brief      \$Id$
 #:  
 #:  (C) 2009 - NHI - #1 - Project - Group

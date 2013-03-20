@@ -19,6 +19,7 @@ FILE_PATTERNS	    +=	*.doc
 EXAMPLE_PATH	    =	$(SRCDIR)/.. $(SRCDIR) $(SRCDIR)/acmds $(BUILDDIR)/acmds/docs $(SRCDIR)/docs/main \
 			$(SRCDIR)/docs/man $(SRCDIR)/tests $(BUILDDIR)/example/c/docs \
 			$(SRCDIR)/../performance/docs \
+			$(BUILDDIR)/../bin/docs \
 			$(SRCDIR)/example/c \
 			$(SRCDIR)/example/cc \
 			$(SRCDIR)/example/tcl \

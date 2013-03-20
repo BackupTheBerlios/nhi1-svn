@@ -76,6 +76,47 @@ ToBui() {
 # with force-reload (in case signaling is not supported) are
 # considered a success.
 
+Usage() {
+  cat <<-EOF
+
+	Usage: ${0##*/} {start|stop|status|restart|force-reload|reload|backup|install|uninstall|tobuild|tobak}
+
+	A tool to create an build-environment using an tempfs filesystem.
+
+	  The goal is to create a faster compile-edit-cyclus using the directories:
+
+	  /build ......... build directory, moutpoint of the tempfs filesystem
+	  /backup ........ backup directory, persistent storage of the /build directory
+	  /SOURCE ........ source-code directory can be choosen free
+
+	  The "${0##*/} start" will be called at system startup to mount a tempfs 
+	  filesystem to the /build directory. After mounting the /build directory 
+	  will be initialized with the data from the /backup directory.
+
+	  The "${0##*/} stop" will be called at system shutdown to save the date 
+	  from the /build directory into the /backup directory. After saving data
+	  the tempfs filesystem will be umounted.
+
+	the following sub-commands are supported:
+	
+	  start .......... mount and initialize /build
+	  stop ........... save und umount the /build
+	  restart ........ stop + start
+	  force-reload ... initialize /build, delete all new files
+	  reload ......... initialize /build, keep new files
+	  backup ......... save /build to /backup
+	  status ......... check if /build is mounted
+	  install ........ register ${0##*/} as service
+	  uninstall ...... unregister ${0##*/} as service
+	  tobuild ........ initialize /build from /backup
+	  tobak .......... save /build to /backup
+
+EOF
+  exit
+}
+
+test "$1" = "-h" -o "$1" = "--help" && Usage
+
 (( $UID != 0 )) && {
   echo "ERROR: run this command as root"
   exit 1
@@ -212,8 +253,7 @@ case "$1" in
 	ToBak
 	;;
     *)
-	echo "Usage: $0 {start|stop|status|restart|force-reload|reload|backup|install|uninstall|tobuild|tobak}"
-	exit 1
+	Usage
 	;;
 esac
 rc_exit

@@ -29,6 +29,7 @@ fi
 cd "$abs_top_builddir/theLink/docs"
 
 abs_srcdir="$abs_top_srcdir/theLink/docs"
+abs_builddir="$abs_top_builddir/theLink/docs"
 
 ## template definition
 man=$abs_srcdir/man/local.generic
@@ -150,7 +151,11 @@ EOF
   for D
   do
     echo "======================================================================="
-    if test ! -e "$D" ; then
+    if test -e "$abs_builddir/$D" ; then
+      D="$abs_builddir/$D"
+    elif test -e "$abs_srcdir/$D" ; then
+      D="$abs_srcdir/$D"
+    elif test ! -e "$D" ; then
       [[ "$D" != *_private ]] && D+=_private
       [[ ! -e "$D" ]] && D="$abs_srcdir/${D#$abs_builddir/}"
       [[ ! -e "$D" ]] && Error "unable to open directory '$D'"

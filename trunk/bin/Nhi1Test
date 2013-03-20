@@ -40,43 +40,63 @@ Die() {
 
 Usage() {
   cat - <<-EOF
-The scripts used process test-cases to verify the features gives.
-Testing is done using the tcltest feature of the tcl distribution.
-The genaral syntax is:
+The script is used as a wrapper to a NHI1 related tool, written using 
+one of the suported programming language abd identifed by the file postfix:
 
-  $0 ?global-options? script ?script-options?
+  tcl, pl, php, rb, py, cs, vb, go, java, c, cc, test
 
-  1. using the test feature of the build environment
-        > cd NHI1-X.X
-        > make check (not available for windows)
+The general sytax is:
 
-  2. invoke an individual test script for language "python" and "perl"
+  > Nhi1Test [options...] file.POSTFIX [options...] args...
+
+If the "file.POSTFIX" argument has NO absolute path the file is search in the 
+local, local-relative-in-source or example ... directory.
+
+example:
+
+  1. invoke a single executable identified by the language postfix
+        > Nhi1Test path/to/myprog.(tcl|pl|php|rb|py|cs|vb|go|java|c|cc|test)
+
+  2. invoke a test script to test the "python" and "perl" features
         > cd NHI1-X.X/theLink/tests
-        > ./Nhi1Test.bash int.test --only-python-perl
+        > Nhi1Test int.test --only-python-perl
 
   3. invoke all tests for language "go" using "threads" and only "binary" data
         > cd NHI1-X.X/theLink/tests
-        > ./Nhi1Test.bash ./all.tcl --only-go --only-threads --only-binary
+        > Nhi1Test all.tcl --only-go --only-threads --only-binary
 
-  4. start "tcl" server using "tcp" and listing on port "7777" and "spawn"
-     for every new connection a new server
+  4. start "tcl" server from the example-directory using "tcp" and listing on 
+     port "7777" and "spawn" for every new connection a new server
         > cd NHI1-X.X/theLink/tests
-        > ./Nhi1Test.bash ../example/tcl/server.tcl --tcp --port 7777 --spawn
+        > Nhi1Test server.tcl --tcp --port 7777 --spawn
+
+  5. make all tests (not available for windows)
+        > cd NHI1-X.X
+        > make check
 
 Help is available with the following commands:
 
   1. test specific help
         > cd NHI1-X.X/theLink/tests
-        > ./Nhi1Test.bash ./all.tcl --help
+        > Nhi1Test all.tcl --help
      or
-        > ./Nhi1Test.bash ./all.tcl --help-msgque
+        > Nhi1Test all.tcl --help-msgque
 
   2. tcltest specific help
         > man tcltest
 
 Available test scripts:
-
-$(cd $abs_top_srcdir/theLink/tests; ls -1 *.test | xargs -n 4 printf '  %-18s %-18s %-18s %-18s\n')
+$(
+  find $abs_top_srcdir -name tests | while read dir ; do
+    ( 
+      ls $dir/*.test 1>/dev/null 2>&1 && {
+	echo -e "\n  ${dir#$abs_top_srcdir/}:"
+	cd $dir
+	ls -1 *.test | xargs -n 4 printf '    %-18s %-18s %-18s %-18s\n'
+      }
+    )
+  done
+)
 
 The prefix is used to add debugger or profiler tools in front of the executable.
 The following tools are supported:
@@ -200,22 +220,17 @@ PREFIX_st="strace"
 PREFIX_sp="valgrind --trace-children=yes --leak-check=full --num-callers=36 --quiet --gen-suppressions=all"
 
 # setup special variables
-case "${1:-}" in
-  *.tcl|*.test)   
-    # find library.tcl
-    d="$abs_top_srcdir${PWD#$abs_top_builddir}"
-    [[ -r "$d/library.tcl" ]] && export TS_LIBRARY="$d/library.tcl"
-    unset d
-  ;;
-esac
+#case "${1:-}" in
+#  *.tcl|*.test)   
+#    # find library.tcl
+#    d="$abs_top_srcdir${PWD#$abs_top_builddir}"
+#    [[ -r "$d/library.tcl" ]] && export TS_LIBRARY="$d/library.tcl"
+#    unset d
+#  ;;
+#esac
 
-if [[ "$1" == *.test || "$1" == *all.tcl ]] ; then
-  TEE="yes"
-  POSTFIX="cat"
-else
-  TEE="no"
-  POSTFIX=""
-fi
+TEE=""
+POSTFIX=""
 
 ##
 ## =========================================================================
@@ -310,6 +325,10 @@ while (( $# )) ; do
     args+=("$1")
   else
     if (( first )) ; then
+      if [[ "$1" == *.test || "$1" == *all.tcl ]] ; then
+	TEE="${TEE:-yes}"
+	POSTFIX="${POSTFIX:-cat}"
+      fi
       id=$(basename -- "${PWD%/*}")_$(basename -- "${1%.*}")
       cmdline+=( $(lookup $1) ) || exit
       (( ${#args[@]} )) && cmdline+=( "${args[@]:-}" )

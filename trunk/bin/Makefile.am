@@ -12,3 +12,11 @@
 
 EXTRA_DIST =  Nhi1Label rcBuild Nhi1BuildLanguage Nhi1Config Nhi1Test Nhi1Docs
 
+docs:
+	mkdir -p docs
+
+docs/%.help: $(srcdir)/% docs
+	$< -h 1>$@ 2>&1;true
+
+html-local: $(patsubst %,docs/%.help,$(EXTRA_DIST))
+

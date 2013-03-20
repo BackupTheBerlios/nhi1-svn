@@ -55,7 +55,7 @@ proc Header {_LIST OLD PRE BODY POST} {
 	if {$h eq ""} break
     }
  ## new header
-    set file [::FileLib::MkRel $::F $::env(PROJECT_SRC)]
+    set file [::FileLib::MkRel $::F $::LHOME]
     lappend LIST $PRE
     foreach l $LLabel {
 	lappend LIST	[ 
@@ -230,15 +230,26 @@ proc Type* {} {
 ## main ...
 ##
 
-lappend auto_path $env(FBGBASE)
+lappend auto_path [file dirname [info script]]
 
 package require FileLib
 
 if {[OptionB -h]} {
-    puts "usage [file tail $argv0] \[-w\] \[-e\] \[-v\] -- \[file\] ..."
-    puts "  -w ... do the write (default only print)"
-    puts "  -e ... edit the configuration file"
-    puts "  -v ... be verbose"
+puts "
+usage [file tail $argv0] \[-w\] \[-e\] \[-v\] -- \[file\] ...
+
+  A tool to create a standarized file-header to the top of each file.
+  Each line of the file-header is prefixed with a comment-identifier to
+  avoid compiler/interpreter interaction.
+
+  Without any option a list of files-ready-for-update will be written to stdout.
+
+  The following options are available:
+
+    -w ... do the write (default only print)
+    -e ... edit the configuration file
+    -v ... be verbose
+"
     exit 1
 }
 if {[lindex $argv 0] eq "--"} {
@@ -254,8 +265,8 @@ if {[OptionB -e]} {
 }
 
 set PWD		    [::FileLib::GetAbsNoLinkFile [pwd]]
-set PROJECT_SRC	    [::FileLib::GetAbsNoLinkFile $env(PROJECT_SRC)]
-set PROJECT_BUILD   [::FileLib::GetAbsNoLinkFile $env(PROJECT_BUILD)]
+set PROJECT_SRC	    [::FileLib::GetAbsNoLinkFile $::LHOME]
+set PROJECT_BUILD   [::FileLib::GetAbsNoLinkFile $::LHOME]
 set YEAR	    [clock format [clock seconds] -format %Y]
 
 array set MAP {
@@ -405,3 +416,4 @@ foreach _F $argv {
     file delete $TF
 }
 
+# vim:  syn=tcl

@@ -103,12 +103,36 @@ setup and maintaining the link and is responsible for: \n
 </TABLE>
 
 \section detail Misc Documentation
-  \ref wp2\n
-  \ref features\n
-  \ref context \n
-  \ref filter\n
-  \ref performance\n
-  \ref faq\n
+<TABLE border="1" cellspacing="1" >
+  <TR>  
+    <TH>tools</TH> 
+    <TH>documentation</TH> 
+  </TR>
+  <TR>  
+      <TD>\ref rcBuild</TD>
+      <TD>\ref wp2</TD>
+  </TR>
+  <TR>  
+      <TD>\ref Nhi1Label</TD>
+      <TD>\ref features</TD>
+  </TR>
+  <TR>  
+      <TD>\ref Nhi1BuildLanguage</TD>
+      <TD>\ref context</TD>
+  </TR>
+  <TR>  
+      <TD>\ref Nhi1Config</TD>
+      <TD>\ref filter</TD>
+  </TR>
+  <TR>  
+      <TD>\ref Nhi1Test</TD>
+      <TD>\ref performance</TD>
+  </TR>
+  <TR>  
+      <TD>\ref Nhi1Docs</TD>
+      <TD>\ref faq</TD>
+  </TR>
+</TABLE>
 
 \section main_example1 Example1 Client/Server to multiplicate two double values
 <TABLE>
