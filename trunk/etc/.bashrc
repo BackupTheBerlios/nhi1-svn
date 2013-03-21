@@ -40,7 +40,12 @@ export SVN_SSH="ssh -l aotto1968"
 
 # I use ccache for compiling
 export CCACHE_DIR="/build/$USER/Cache"
-export CC="ccache gcc"
-export CXX="ccache g++"
+if test "$OSTYPE" = "cygwin" ; then
+  export CC="ccache x86_64-w64-mingw32-gcc"
+  export CXX="ccache x86_64-w64-mingw32-g++.exe" 
+else
+  export CC="ccache gcc"
+  export CXX="ccache g++"
+fi
 export CTAGSFLAGS="--c-kinds=+p"
 

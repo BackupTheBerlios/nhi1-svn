@@ -19,6 +19,8 @@ alias se=". ~/.bashrc"
 alias ea="vim ~/.alias"
 alias sa=". ~/.alias"
 
+alias ev="vim ~/.vimrc"
+
 for x in $NHI1_HOME/bin/Nhi1* ; do
   alias $(basename $x)="$x"
 done
@@ -33,7 +35,7 @@ for x in thread:t nothread:n performance-thread:pt performance-nothread:pn; do
 done
 
 for x in libmsgque:l ccmsgque:x tclmsgque:c tests:t perlmsgque:p phpmsgque:h javamsgque:j \
-	  gomsgque:g doc:d example:e rubymsgque:r csmsgque:s pymsgque:y docs:d acmds:a
+	  gomsgque:g doc:d example:e rubymsgque:r csmsgque:s pymsgque:y docs:d acmds:a sqlite:q
 do
   IFS=:;set -- $x;unset IFS
   alias cdr$2="cd ../$1"

@@ -81,7 +81,7 @@ AC_PROG_CC_C99
 if test "x$ac_cv_prog_cc_c99" = "xno"; then AC_MSG_ERROR([require c99 mode to compile]); fi
 
 CFLAGS="-Wall -Wcast-align $CFLAGS"
-if test "$build_os" != "cygwin"; then CFLAGS="-fvisibility=hidden $CFLAGS"; fi
+if test "$build_os" != "mingw32"; then CFLAGS="-fvisibility=hidden $CFLAGS"; fi
 SC_ENABLE_THREADS
 
 #------------------------------------
@@ -126,7 +126,7 @@ AC_CHECK_FUNCS([signal])
 AC_CHECK_HEADERS([signal.h])
 AC_CHECK_FUNCS([strtoul strtoull strtof strtod])
 AC_CHECK_FUNCS([getline])
-if test "$build_os" = "cygwin"; then
+if test "$build_os" = "mingw32"; then
   LIBS="$LIBS -lws2_32"
   if test ! -f /cygdrive/c/WINDOWS/system32/ws2_32.dll; then
     AC_MSG_ERROR([unable to find library: /cygdrive/c/WINDOWS/system32/ws2_32.dll])
@@ -158,7 +158,7 @@ if test "$host_os" = "mingw32"; then
 else
   AC_MSG_RESULT([no])
   AC_DEFINE([MQ_IS_POSIX], [], [is this a POSIX like system (e.g. UNIX)])
-  if test "$host_os" != "cygwin"; then
+  if test "$host_os" != "mingw32"; then
     AC_DEFINE([MQ_HAVE_UDS], [], [are Unix-Domain-Socket available?])
   fi
   AC_SUBST([FILE_SEP], [/])

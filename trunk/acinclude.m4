@@ -65,7 +65,8 @@ AC_DEFUN([OT_WITH_PROG],[
       ])
     ])
   ],[
-    AC_MSG_RESULT($VARIABLE)
+    AC_MSG_RESULT([no])
+    VARIABLE=""
   ])
   pushdef([FLAG],[USE_]translit($1,[a-z],[A-Z]))
   AC_SUBST(FLAG, "$withval")

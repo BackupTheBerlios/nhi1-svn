@@ -14,6 +14,8 @@ set softtabstop=2
 set shiftwidth=2
 set modeline
 
+syntax on
+
 map <F12> <C-]>
 nnoremap <F11> :grep <C-R><C-W> *<CR>:cw<CR>
 
