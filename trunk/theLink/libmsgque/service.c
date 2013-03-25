@@ -290,9 +290,9 @@ MqProcessEvent (
       // ################ CHECK TO BE READABLE ##################
       if (once) {
 	switch (ret = pWaitOnEvent (context, MQ_SELECT_RECV, timeout)) {
-	  case MQ_OK:	  break;
+	  case MQ_OK:	    break;
 	  case MQ_CONTINUE: continue;
-	  case MQ_ERROR:	  goto error;
+	  case MQ_ERROR:    goto error;
 	}
       }
 

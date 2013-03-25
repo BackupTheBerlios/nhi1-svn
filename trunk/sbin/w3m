@@ -1,0 +1,2 @@
+export TERM=xterm
+exec w3m -M "$@"

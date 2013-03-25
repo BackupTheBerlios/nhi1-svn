@@ -22,6 +22,9 @@ alias sp=". ~/.profile"
 alias ea="vim ~/.alias"
 alias sa=". ~/.alias"
 
+alias ep="vim ~/.profile"
+alias sp=". ~/.profile"
+
 alias ev="vim ~/.vimrc"
 
 for x in $NHI1_HOME/bin/Nhi1* ; do

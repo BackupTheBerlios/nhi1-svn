@@ -10,6 +10,34 @@
 #:              please contact AUTHORS for additional information
 #:
 
+
+#	If one of the sublibraries contains non-C source, it is important
+#	that the appropriate linker be chosen.  One way to achieve this is to
+#	pretend that there is such a non-C file among the sources of the
+#	library, thus forcing `automake' to select the appropriate linker.
+#	Here is the top-level `Makefile' of our example updated to force C++
+#	linking.
+#	
+#	     SUBDIRS = sub1 sub2 ...
+#	     lib_LTLIBRARIES = libtop.la
+#	     libtop_la_SOURCES =
+#	     # Dummy C++ source to cause C++ linking.
+#	     nodist_EXTRA_libtop_la_SOURCES = dummy.cxx
+#	     libtop_la_LIBADD = \
+#	       sub1/libsub1.la \
+#	       sub2/libsub2.la \
+#	       ...
+#	
+#	   `EXTRA_*_SOURCES' variables are used to keep track of source files
+#	that might be compiled (this is mostly useful when doing conditional
+#	compilation using `AC_SUBST', *note Conditional Libtool Sources::), and
+#	the `nodist_' prefix means the listed sources are not to be distributed
+#	(*note Program and Library Variables::).  In effect the file
+#	`dummy.cxx' does not need to exist in the source tree.  Of course if
+#	you have some real source file to list in `libtop_la_SOURCES' there is
+#	no point in cheating with `nodist_EXTRA_libtop_la_SOURCES'.
+
+
 noinst_LTLIBRARIES = libtmp.la
 
 libtmp_la_SOURCES = buffer.cc cache.cc event.cc \

@@ -78,7 +78,7 @@ AM_PROG_AR
 GCC=yes
 AC_PROG_CXX
 AC_PROG_CC_C99
-if test "x$ac_cv_prog_cc_c99" = "xno"; then AC_MSG_ERROR([require c99 mode to compile]); fi
+if test "$ac_cv_prog_cc_c99" = "no"; then AC_MSG_ERROR([require c99 mode to compile]); fi
 
 CFLAGS="-Wall -Wcast-align $CFLAGS"
 if test "$build_os" != "cygwin"; then CFLAGS="-fvisibility=hidden $CFLAGS"; fi
@@ -97,6 +97,8 @@ AC_MSG_CHECKING(programs);echo
 AC_C_BIGENDIAN
 SC_ENABLE_SYMBOLS
 SC_WITH_TOOL_ROOT
+
+SC_ENABLE_CACHE
 
 SC_WITH_CXX
 SC_WITH_TCL

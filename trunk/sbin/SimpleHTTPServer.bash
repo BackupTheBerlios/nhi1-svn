@@ -24,11 +24,11 @@ case $1 in
   log)
     test -r /tmp/$id.log && tail -f /tmp/$id.log
   ;;
-  status)
+  check)
     test -r /tmp/$id.pid && ps -eaf | grep $(</tmp/$id.pid)
   ;;
   *)
-    echo "usage: $0 (start|stop|log/status)"
+    echo "usage: $0 (start|stop|log|check)"
   ;;
 esac
 

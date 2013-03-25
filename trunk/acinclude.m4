@@ -208,6 +208,36 @@ if (*p != *q) { return(1); }
 )
 
 #------------------------------------------------------------------------
+# SC_ENABLE_CACHE --
+#
+#       Specify if 'ccache' (compiler-cache) should be used to speedup
+#	compiling
+#
+# Arguments:
+#       none
+#
+#
+# Results:
+#
+#       Adds the following arguments to configure:
+#               --enable-symbols
+#
+#------------------------------------------------------------------------
+
+AC_DEFUN([SC_ENABLE_CACHE], [
+    AC_MSG_CHECKING([for build with compiler-cache])
+    AC_ARG_ENABLE(cache,
+	AS_HELP_STRING([--enable-cache], [build with compiler-cache]),,enable_cache=no
+    )
+    AC_MSG_RESULT($enable_cache)
+    if test "$enable_cache" = "yes" ; then
+      OT_REQUIRE_PROG([CCACHE],[ccache])
+      CC="$CCACHE $CC"
+      CXX="$CCACHE $CXX"
+    fi
+])
+
+#------------------------------------------------------------------------
 # SC_ENABLE_SYMBOLS --
 #
 #       Specify if debugging symbols should be used.
@@ -229,7 +259,7 @@ AC_DEFUN([SC_ENABLE_SYMBOLS], [
     AC_MSG_CHECKING([for build with symbols])
     AC_ARG_ENABLE(symbols,
 	AS_HELP_STRING([--enable-symbols], [build with debugging support]),
-	enable_symbols=yes, enable_symbols=no
+	enable_symbols=$enableval, enable_symbols=no
     )
     if test "x$enable_symbols" = "xyes"; then
       CFLAGS="-g $CFLAGS"
@@ -506,7 +536,7 @@ AC_DEFUN([SC_ENABLE_THREADS], [
   AC_MSG_CHECKING([for build with thread])
   AC_ARG_ENABLE(threads,
       AS_HELP_STRING([--enable-threads], [build with thread support]),
-      enable_threads=yes, enable_threads=no
+      enable_threads=$enableval, enable_threads=no
   )
   AC_MSG_RESULT($enable_threads)
   if test "$enable_threads" = "yes"; then

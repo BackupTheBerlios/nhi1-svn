@@ -53,7 +53,7 @@ G_HelpProc='Usage'
 G_Option local-data-file default
 G_Argument 'use-perf:Perf:0:use performance code:B'
 G_Argument 'use-threads:Thread:0:use thread code:B'
-for l in brain guard ; do
+for l in cache brain guard ; do
   G_Argument "$l:enable[$l]:disable:add '$l' feature support:D:enable:disable"
 done
 for l in cxx tcl perl python php ruby java csharp vb go ; do
