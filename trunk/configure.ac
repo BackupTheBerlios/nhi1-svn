@@ -81,7 +81,7 @@ AC_PROG_CC_C99
 if test "x$ac_cv_prog_cc_c99" = "xno"; then AC_MSG_ERROR([require c99 mode to compile]); fi
 
 CFLAGS="-Wall -Wcast-align $CFLAGS"
-if test "$build_os" != "mingw32"; then CFLAGS="-fvisibility=hidden $CFLAGS"; fi
+if test "$build_os" != "cygwin"; then CFLAGS="-fvisibility=hidden $CFLAGS"; fi
 SC_ENABLE_THREADS
 
 #------------------------------------
@@ -127,11 +127,17 @@ AC_CHECK_HEADERS([signal.h])
 AC_CHECK_FUNCS([strtoul strtoull strtof strtod])
 AC_CHECK_FUNCS([getline])
 if test "$build_os" = "mingw32"; then
-  LIBS="$LIBS -lws2_32"
+  AC_MSG_ERROR([as '--build=...' only cygwin is supported 
+  -> keep it unchanged if you are working in a cygwin toolchan
+to enable cross-compiling mode you have to specify
+  -> --host=x86_64-w64-mingw32])
+elif test "$build_os" = "cygwin"; then
+  WINLIBS="-lws2_32"
   if test ! -f /cygdrive/c/WINDOWS/system32/ws2_32.dll; then
     AC_MSG_ERROR([unable to find library: /cygdrive/c/WINDOWS/system32/ws2_32.dll])
   fi
 else
+  WINLIBS=""
   AC_CHECK_HEADERS([sys/filio.h])
   AC_SEARCH_LIBS([bind], [socket nsl])
   AC_SEARCH_LIBS([gethostbyname], [socket nsl])
@@ -139,6 +145,7 @@ else
   AC_CHECK_FUNCS([fork posix_spawn vfork execvp])
   AC_CHECK_FUNCS([socketpair])
 fi
+AC_SUBST([WINLIBS])
 
 #------------------------------------
 AC_MSG_CHECKING(define system environment settings);echo
@@ -148,7 +155,7 @@ TYPE_HUGE_VAL
 AX_CHECK_ALIGNED_ACCESS_REQUIRED
 
 AC_MSG_CHECKING([for windows build])
-if test "$host_os" = "mingw32"; then
+if test "$build_os" = "cygwin"; then
   AC_MSG_RESULT([yes])
   AC_DEFINE([MQ_IS_WIN32], [], [is this a WIN32 like system (e.g. WINDOWS)])
   AC_SUBST([FILE_SEP], [\\\\])
@@ -158,7 +165,7 @@ if test "$host_os" = "mingw32"; then
 else
   AC_MSG_RESULT([no])
   AC_DEFINE([MQ_IS_POSIX], [], [is this a POSIX like system (e.g. UNIX)])
-  if test "$host_os" != "mingw32"; then
+  if test "$build_os" != "cygwin"; then
     AC_DEFINE([MQ_HAVE_UDS], [], [are Unix-Domain-Socket available?])
   fi
   AC_SUBST([FILE_SEP], [/])

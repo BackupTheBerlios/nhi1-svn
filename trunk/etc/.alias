@@ -16,6 +16,9 @@ export NHI1_TOOL_ROOT="$HOME/ext/$MACHTYPE"
 alias ee="vim ~/.bashrc"
 alias se=". ~/.bashrc"
 
+alias ep="vim ~/.profile"
+alias sp=". ~/.profile"
+
 alias ea="vim ~/.alias"
 alias sa=". ~/.alias"
 

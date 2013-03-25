@@ -735,7 +735,7 @@ function save_local {
   [[ -f $SE_LENV && ! -h $SE_LENV && ! -w $SE_LENV ]] && \
     Error3 "Can't write file <$SE_LENV>"
   [[ -f $SE_LENV ]] && rm $SE_LENV
-  echo "# files created at: $(date)" > $SE_LENV
+  echo "# file created at: $(date)" > $SE_LENV
   declare -i i=0
   while (( i < SE_NOptions ))
   do
@@ -858,7 +858,7 @@ function G_Argument {
       Error "type 'D' require exact '2' additinal arguments like 'yes:no' or 'enable:disable'"
     fi
     # example: logic - enable=1 disable=0 (need in set_defaults)
-    declare -g $1=1 $2=0
+    eval "$1"=1 "$2"=0
     SE_INV[$2-$opt]=$SE_NOptions
     opt="$1-$opt"
   elif [[ $typ == *B* ]] ; then
@@ -945,7 +945,18 @@ function G_Shell {
   esac
 }
 
-. /dev/stdin
+
+if [[ "$OSTYPE" == 'cygwin' ]] ; then
+  . <( 
+	  while true; do
+		read line || break
+		#Print "$line\n"
+		echo "$line"
+	  done
+  )
+else
+  . /dev/stdin
+fi
 
 ##
 Debug "Setup local .ENV file" ###########################################################

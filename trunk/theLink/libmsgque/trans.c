@@ -100,7 +100,8 @@ pTransCreate (
   trans->context = context;
 #ifdef _DEBUG
   // this should be some kind of random
-  trans->shift = (MQ_HDL) ((((long)context>>7) + ((long)trans>>7) + ((long)MqThreadSelf()>>7) + (long) mq_getpid()) & 127);
+  // 13.03.22 AO: compile error w64 cast from pomter (64bit) to long (32bit) not allowed
+  trans->shift = (MQ_HDL) ((((MQ_WID)context>>7) + ((MQ_WID)trans>>7) + ((MQ_WID)MqThreadSelf()>>7) + (MQ_WID) mq_getpid()) & 127);
 #endif
 
   pCacheCreate ((CacheCF) pTransItemCreate, (CacheDF) pTransItemDelete, trans, &trans->transCache);

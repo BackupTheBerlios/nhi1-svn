@@ -42,7 +42,8 @@ export SVN_SSH="ssh -l aotto1968"
 export CCACHE_DIR="/build/$USER/Cache"
 if test "$OSTYPE" = "cygwin" ; then
   export CC="ccache x86_64-w64-mingw32-gcc"
-  export CXX="ccache x86_64-w64-mingw32-g++.exe" 
+  export CXX="ccache x86_64-w64-mingw32-g++"
+  export TERM=xterm
 else
   export CC="ccache gcc"
   export CXX="ccache g++"

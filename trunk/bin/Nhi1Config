@@ -59,9 +59,16 @@ done
 for l in cxx tcl perl python php ruby java csharp vb go ; do
   G_Argument "$l:with[$l]:without:add '$l' language support:DV:with:without"
 done
-
+#[[ "$OSTYPE" == 'cygwin' ]] && G_Argument 'win:win::cross-compiler:L:x86_64-w64-mingw32:i686-w64-mingw32'
 EOF
   )"
+
+# disable because "configure" compiler test crash then calkled from script :-(
+#[[ -n "$win" ]] && {
+#  opt+=--host=$win
+#  [[ -z "${CC:-}"  ]] && export CC="ccache $win-gcc"
+#  [[ -z "${CXX:-}" ]] && export CXX="ccache $win-g++"
+#}
 
 for l in ${!with[@]} ; do
   opt+=(--with-$l=${with[$l]})
@@ -93,5 +100,5 @@ fi
 
 rm -fr /tmp/libmsgque-install
 
-bash -norc $NHI1_HOME/configure --prefix=/tmp/libmsgque-install "${opt[@]}" ${@:-}
+exec bash -norc $NHI1_HOME/configure --prefix=/tmp/libmsgque-install "${opt[@]}" ${@:-}
 

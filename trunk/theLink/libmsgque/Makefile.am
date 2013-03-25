@@ -22,7 +22,7 @@ libtmps_la_SOURCES = buffer.c cache.c event.c log.c \
 
 libtmps_la_CFLAGS = -static -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS)
 libtmps_la_LDFLAGS = -static -no-undefined
-libtmps_la_LIBADD = $(builddir)/../sqlite/libtmps.la
+libtmps_la_LIBADD = $(builddir)/../sqlite/libtmps.la $(WINLIBS)
 
 # dynamic convinience library
 
@@ -34,7 +34,7 @@ libtmp_la_SOURCES = buffer.c cache.c event.c log.c \
 
 libtmp_la_CFLAGS = -shared -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS)
 libtmp_la_LDFLAGS = -shared -no-undefined
-libtmp_la_LIBADD = $(builddir)/../sqlite/libtmp.la
+libtmp_la_LIBADD = $(builddir)/../sqlite/libtmp.la $(WINLIBS)
 
 # ordinaray library
 
@@ -48,7 +48,7 @@ libmsgque_la_SOURCES = buffer.c cache.c event.c log.c \
 
 libmsgque_la_CFLAGS = -shared -DMQ_BUILD_LIBMSGQUE_DLL -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS)
 libmsgque_la_LDFLAGS = -shared -version-info @VERSION_INFO@ -no-undefined
-libmsgque_la_LIBADD = $(builddir)/../sqlite/libtmp.la
+libmsgque_la_LIBADD = $(builddir)/../sqlite/libtmp.la $(WINLIBS)
 
 include_HEADERS = msgque.h
 
