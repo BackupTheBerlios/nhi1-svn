@@ -135,11 +135,31 @@ to enable cross-compiling mode you have to specify
   -> --host=x86_64-w64-mingw32])
 elif test "$build_os" = "cygwin"; then
   WINLIBS="-lws2_32"
+    # FD_SET and select
+    # A number of FD_XXX macros are defined in the Winsock2.h header file for use 
+    # in porting applications to Windows from the UNIX environment. These macros 
+    # are used with the select and WSAPoll functions for porting applications to 
+    # Windows. The maximum number of sockets that a Windows Sockets application 
+    # can use is not affected by the manifest constant FD_SETSIZE. This value 
+    # defined in the Winsock2.h header file is used in constructing the FD_SET 
+    # structures used with select function. The default value in Winsock2.h is 64. 
+    # If an application is designed to be capable of working with more than 64 
+    # sockets using the select and WSAPoll functions, the implementor should 
+    # define the manifest FD_SETSIZE in every source file before including the 
+    # Winsock2.h header file. One way of doing this may be to include the 
+    # definition within the compiler options in the makefile. For example, 
+    # you could add "-DFD_SETSIZE=128" as an option to the compiler command line 
+    # for Microsoft C++. It must be emphasized that defining FD_SETSIZE as a 
+    # particular value has no effect on the actual number of sockets provided by 
+    # a Windows Sockets service provider. This value only affects the FD_XXX 
+    # macros used by the select and WSAPoll functions.
+  WINDEFS="-DFD_SETSIZE=1024"
   if test ! -f /cygdrive/c/WINDOWS/system32/ws2_32.dll; then
     AC_MSG_ERROR([unable to find library: /cygdrive/c/WINDOWS/system32/ws2_32.dll])
   fi
 else
   WINLIBS=""
+  WINDEFS=""
   AC_CHECK_HEADERS([sys/filio.h])
   AC_SEARCH_LIBS([bind], [socket nsl])
   AC_SEARCH_LIBS([gethostbyname], [socket nsl])
@@ -148,6 +168,7 @@ else
   AC_CHECK_FUNCS([socketpair])
 fi
 AC_SUBST([WINLIBS])
+AC_SUBST([WINDEFS])
 
 #------------------------------------
 AC_MSG_CHECKING(define system environment settings);echo

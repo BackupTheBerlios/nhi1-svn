@@ -20,7 +20,7 @@ libtmps_la_SOURCES = buffer.c cache.c event.c log.c \
     debug.h msgque_private.h sys_com.h main.h \
     service.c link.c factory.c sql.c
 
-libtmps_la_CFLAGS = -static -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS)
+libtmps_la_CFLAGS = -static -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS) $(WINDEFS)
 libtmps_la_LDFLAGS = -static -no-undefined
 libtmps_la_LIBADD = $(builddir)/../sqlite/libtmps.la $(WINLIBS)
 
@@ -32,7 +32,7 @@ libtmp_la_SOURCES = buffer.c cache.c event.c log.c \
     debug.h msgque_private.h sys_com.h main.h \
     service.c link.c factory.c sql.c
 
-libtmp_la_CFLAGS = -shared -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS)
+libtmp_la_CFLAGS = -shared -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS) $(WINDEFS)
 libtmp_la_LDFLAGS = -shared -no-undefined
 libtmp_la_LIBADD = $(builddir)/../sqlite/libtmp.la $(WINLIBS)
 
@@ -46,7 +46,7 @@ libmsgque_la_SOURCES = buffer.c cache.c event.c log.c \
     debug.h msgque_private.h sys_com.h main.h \
     service.c link.c factory.c sql.c
 
-libmsgque_la_CFLAGS = -shared -DMQ_BUILD_LIBMSGQUE_DLL -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS)
+libmsgque_la_CFLAGS = -shared -DMQ_BUILD_LIBMSGQUE_DLL -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS) $(WINDEFS)
 libmsgque_la_LDFLAGS = -shared -version-info @VERSION_INFO@ -no-undefined
 libmsgque_la_LIBADD = $(builddir)/../sqlite/libtmp.la $(WINLIBS)
 

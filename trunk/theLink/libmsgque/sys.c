@@ -512,6 +512,7 @@ static enum MqErrorE SysServerSpawn (
 
 
 #elif (defined(HAVE_FORK) || defined(HAVE_VFORK))  && defined(HAVE_EXECVP)
+
 //#if (defined(HAVE_FORK) || defined(HAVE_VFORK))  && defined(HAVE_EXECVP)
 
   // fork to create the child
@@ -533,24 +534,22 @@ static enum MqErrorE SysServerSpawn (
   goto ok;
 
 #else
-
-
   {
-  char buf[2048];
-  char *nbuf=buf;
+    char buf[2048];
+    char *nbuf=buf;
 
-  // build command-line
-  for (;*argv != '\0'; argv++) {
-    nbuf += sprintf(nbuf, "\"%s\" ", *argv);
-  }
+    // build command-line
+    for (;*argv != '\0'; argv++) {
+      nbuf += sprintf(nbuf, "\"%s\" ", *argv);
+    }
 
-  // start process
-  if (unlikely ((pid = _spawnlp (_P_NOWAIT, name, buf, NULL)) == -1)) {
-  //if (unlikely ((pid = _spawnlp (_P_DETACH, name, buf, NULL)) == -1)) {
-    //printC(strerror(errno))
-    goto error;
-  }
-  goto ok;
+    // start process
+    if (unlikely ((pid = _spawnlp (_P_NOWAIT, name, buf, NULL)) == -1)) {
+    //if (unlikely ((pid = _spawnlp (_P_DETACH, name, buf, NULL)) == -1)) {
+      //printC(strerror(errno))
+      goto error;
+    }
+    goto ok;
   }
 #endif
 

@@ -11,6 +11,7 @@
 #:              please contact AUTHORS for additional information
 #:
 
+set -x
 set -u
 
 # find top-level directory
@@ -37,10 +38,30 @@ fi
 set -x
 [[ ! -f $abs_top_dir/tags ]] && (
   cd $abs_top_dir
-  ctags $(find /usr/include -type f)
+  if test -n "${CC:-}" ; then
+    echo "" | $CC - -xc -v -E 2>&1 | awk '
+      BEGIN {
+	flag=0
+      }
+      $0 == "#include <...> search starts here:" {
+	flag=1; next
+      }
+      $0 == "End of search list." {
+	flag=0; next
+      }
+      {
+	if (flag) print $0
+      }
+    ' | while read path ; do
+      test -d "$path" && find "$path" -type f -name "*.h" | xargs ctags -a 
+    done
+  else
+    echo "unable to find compiler setup.... skip setup global-header tags file"
+
+  fi
 )
 
-cp $abs_top_dir/tags .
+test -f $abs_top_dir/tags && cp $abs_top_dir/tags .
 
 [[ $BASE != "libmsgque" && $BASE != "ccmsgque" ]] && {
   test -d $abs_top_srcdir/theLink/libmsgque && \

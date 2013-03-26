@@ -38,8 +38,10 @@ test -s ~/.alias && . ~/.alias || true
 
 # I use ccache for compiling
 export CCACHE_DIR="/build/$USER/Cache"
+export SVN_SSH="ssh -l aotto1968"
+export CTAGSFLAGS="--c-kinds=+p"
+
 if test "$OSTYPE" = "cygwin" ; then
   export TERM=xterm
 fi
-export CTAGSFLAGS="--c-kinds=+p"
 

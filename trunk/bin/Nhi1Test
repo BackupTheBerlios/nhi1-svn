@@ -186,8 +186,13 @@ lookup() {
       *)	EXE="";;
     esac
 
-    test -n "$EXE" && ret+=("$EXE")
-    ret+=("$CM1")
+    if test "$OSTYPE" = "cygwin" ; then
+      test -n "$EXE" && ret+=("$(cygpath -m "$EXE")")
+      test -n "$CM1" && ret+=("$(cygpath -m "$CM1")")
+    else
+      test -n "$EXE" && ret+=("$EXE")
+      test -n "$CM1" && ret+=("$CM1")
+    fi
     echo "${ret[@]}"
   fi
 }

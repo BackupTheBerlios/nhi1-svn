@@ -713,7 +713,7 @@ SysSocketPair (
     MQ_SOCK listener;
     socklen_t addrlen = sizeof(addr);
 
-    socks[0] = socks[1] = INVALID_SOCKET;
+    socks[0] = socks[1] = (int) INVALID_SOCKET;
     MqErrorCheck (SysSocket(context,AF_INET,SOCK_STREAM,0,&listener));
 
     memset(&addr, 0, sizeof(addr));
