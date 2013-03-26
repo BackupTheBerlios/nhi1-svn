@@ -10,9 +10,6 @@
 #:              please contact AUTHORS for additional information
 #:
 
-export NHI1_HOME=$(dirname $(dirname $(readlink -e ~/.alias)))
-export NHI1_TOOL_ROOT="$HOME/ext/$MACHTYPE"
-
 alias ee="vim ~/.bashrc"
 alias se=". ~/.bashrc"
 
@@ -26,10 +23,6 @@ alias ep="vim ~/.profile"
 alias sp=". ~/.profile"
 
 alias ev="vim ~/.vimrc"
-
-for x in $NHI1_HOME/bin/Nhi1* ; do
-  alias $(basename $x)="$x"
-done
 
 alias cdpn="cd ~/Project/NHI1"
 alias cdm="cd /build/$USER/Main"

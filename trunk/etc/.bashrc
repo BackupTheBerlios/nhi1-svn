@@ -43,5 +43,8 @@ export CTAGSFLAGS="--c-kinds=+p"
 
 if test "$OSTYPE" = "cygwin" ; then
   export TERM=xterm
-fi
+
+export NHI1_HOME=$(dirname $(dirname $(readlink -e ~/.bashrc)))
+export NHI1_TOOL_ROOT="$HOME/ext/$MACHTYPE"
+export PATH="$NHI1_HOME/bin:$PATH"
 
