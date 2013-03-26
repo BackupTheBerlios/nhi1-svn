@@ -100,6 +100,13 @@ SC_WITH_TOOL_ROOT
 
 SC_ENABLE_CACHE
 
+if test "$build_os" = "cygwin"; then
+  CYGPATH_M='cygpath -m'
+else
+  CYGPATH_M='echo'
+fi
+AC_SUBST([CYGPATH_M])
+
 SC_WITH_CXX
 SC_WITH_TCL
 SC_WITH_PYTHON

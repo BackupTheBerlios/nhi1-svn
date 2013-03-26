@@ -67,11 +67,13 @@ AC_DEFUN([OT_WITH_PROG],[
   ],[
     AC_MSG_RESULT([no])
     VARIABLE=""
+    withval=no
   ])
   pushdef([FLAG],[USE_]translit($1,[a-z],[A-Z]))
   AC_SUBST(FLAG, "$withval")
   AM_CONDITIONAL(FLAG, [test -n "$VARIABLE"])
   popdef([FLAG])
+  AC_SUBST(VARIABLE[_M], "$($CYGPATH_M "$VARIABLE" 2>/dev/null)")
 
   popdef([PATH_PROG])
   popdef([TYPE])
@@ -793,11 +795,20 @@ AC_DEFUN([SC_WITH_TCL], [
       for try in ${prim} ${prim}/tcl8.* ; do
         if test -f $try/tclConfig.sh; then
             AC_MSG_RESULT($try/tclConfig.sh)
-            . $try/tclConfig.sh
+	    if test "$OSTYPE" = "cygwin" ; then
+	      eval "$(
+		sed -e '
+		  # convert all drive letter (e.g. C:) into cygdrive names
+		  s,\([[a-zA-Z]]\):,/cygdrive/\L\1,g
+		  # erase windows line-end '\r'
+		  s,\r$,,
+		'  $try/tclConfig.sh
+	      )"
+	    else
+	      . $try/tclConfig.sh
+	    fi
             TCL_LIBS="$TCL_LIB_SPEC $TCL_LIBS"
             AC_SUBST(TCL_PACKAGE_PATH)
-	    TCL_INCLUDE_DIR="${TCL_INCLUDE_SPEC#-I}"
-            test -z "$TCL_INCLUDE_DIR" && TCL_INCLUDE_DIR="$try/../include"
 
             ## add support for tcl STUBS
             if test "$build_os" = "cygwin" ; then
@@ -810,14 +821,16 @@ AC_DEFUN([SC_WITH_TCL], [
                 fi
             fi
 
-            ## check if a public 'tcl.h' header file is available
-            if test ! -f "${TCL_INCLUDE_DIR}/tcl.h"; then
-                AC_MSG_ERROR([Could not find tcl.h in ${TCL_INCLUDE_DIR}])
-            fi
-
             ## check for empty TCL_INCLUDE_SPEC
-            test -z ${TCL_INCLUDE_SPEC} && TCL_INCLUDE_SPEC="-I${TCL_INCLUDE_DIR}"
-
+	    if test -z "${TCL_INCLUDE_SPEC}" ; then 
+	      TCL_INCLUDE_DIR="${TCL_INCLUDE_SPEC#-I}"
+	      test -z "$TCL_INCLUDE_DIR" && TCL_INCLUDE_DIR="$try/../include"
+	      ## check if a public 'tcl.h' header file is available
+	      if test ! -f "${TCL_INCLUDE_DIR}/tcl.h"; then
+		  AC_MSG_ERROR([Could not find tcl.h in ${TCL_INCLUDE_DIR}])
+	      fi
+	      TCL_INCLUDE_SPEC="-I${TCL_INCLUDE_DIR}"
+	    fi
             AC_SUBST(TCL_INCLUDE_SPEC)
             break 2
         fi

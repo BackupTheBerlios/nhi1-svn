@@ -12,14 +12,6 @@
 
 source ../../env.tcl
 
-if {![info exists env(PATH)]} {
-  set env(PATH) ""
-}
-
-if {![info exists env(LD_LIBRARY_PATH)]} {
-  set env(LD_LIBRARY_PATH) ""
-}
-
 set env(PATH)		    "[file join .. libmsgque .libs]$PATH_SEP$env(PATH)"
 set env(LD_LIBRARY_PATH)    "[file join .. libmsgque .libs]$PATH_SEP$env(LD_LIBRARY_PATH)"
 

@@ -310,7 +310,7 @@ case "$prefix" in
 esac
 
 # set local tcltest configuration file
-export TS_LIBRARY=$(lookup -silent library.tcl)
+export TS_LIBRARY="$($CYGPATH_M "$(lookup -silent library.tcl)")"
 if [[ -r "$TS_LIBRARY" ]] ; then
   echo "add: TS_LIBRARY=$PWD/library.tcl"
 else
