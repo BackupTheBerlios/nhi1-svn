@@ -46,10 +46,10 @@ static void
 ToolHelp ( const char * base  )
 {
     fprintf(stderr, "\n");
-    fprintf(stderr, "usage: %s [OPTION]... [ARGUMENT]...\n", base);
+    fprintf(stderr, "usage: %s [SUB-COMMAND]... [ARGUMENT]...\n", base);
     fprintf(stderr, "\n");
     fprintf(stderr, "  %s was designed to act like a filter for command-line\n", base);
-    fprintf(stderr, "  tasks with the basic sub-commands:\n");
+    fprintf(stderr, "  tasks with the basic SUB-COMMAND:\n");
     fprintf(stderr, "\n");
     fprintf(stderr, "  split - a Filter to split the stdin into libmsgque objects\n");
     fprintf(stderr, "  cut   - a Filter to cut libmsgque objects into columns\n");
@@ -91,7 +91,12 @@ main (
     MqFactoryAdd (MQ_ERROR_PANIC, "join",  JoinFactory,  NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
     // call the initial factory to initialize the "config"
-    ctx = MqFactoryNew (MQ_ERROR_PANIC, NULL, MqFactoryGetCalled(argv[1]));
+    ctx = MqFactoryNew (MQ_ERROR_IGNORE, NULL, MqFactoryGetCalled(argv[1]));
+
+    // check for useable factory
+    if (ctx == NULL) {
+      ToolHelp(MqSysBasename(argv[0], MQ_NO));
+    }
 
     // call entry point
     MqErrorCheck(MqLinkCreate(ctx, &largv));
