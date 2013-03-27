@@ -415,7 +415,7 @@ C> (client) use '-h' or '--help' for usage}
 
 test error-F8 {delete uds file} \
     -setup          { Setup 1 binary uds c.pipe.pipe } \
-    -constraints    {unix local} \
+    -constraints    {uds local} \
     -cleanup	    { Cleanup } \
     -body           {file delete $FILE} \
     -returnCodes    ok \
@@ -620,3 +620,5 @@ test error-X4 {Storage insert without a callback} \
 ##
 
 freeTests
+
+# vim: set syn=tcl:

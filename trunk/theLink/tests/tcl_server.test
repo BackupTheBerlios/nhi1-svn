@@ -258,13 +258,4 @@ test tcl-server-X7 {start tcl server with --daemon on thread enabled tcl} \
 
 freeTests
 
-
-
-
-
-
-
-
-
-
-
+# vim: set syn=tcl:

@@ -400,3 +400,4 @@ unset -nocomplain I B C S
 catch {file delete -force $testdb}
 freeTests
 
+# vim: set syn=tcl:

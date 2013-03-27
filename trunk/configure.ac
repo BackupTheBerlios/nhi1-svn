@@ -162,22 +162,27 @@ elif test "$host_os" = "mingw32"; then
   if test ! -f /cygdrive/c/WINDOWS/system32/ws2_32.dll; then
     AC_MSG_ERROR([unable to find library: /cygdrive/c/WINDOWS/system32/ws2_32.dll])
   fi
+  HAS_FORK=0
 else
   AC_CHECK_HEADERS([sys/filio.h])
   AC_SEARCH_LIBS([bind], [socket nsl])
   AC_SEARCH_LIBS([gethostbyname], [socket nsl])
   AC_SEARCH_LIBS([inet_aton], [socket nsl resolv])
-  AC_CHECK_FUNCS([fork posix_spawn vfork execvp])
+  AC_CHECK_FUNCS([posix_spawn vfork execvp])
   AC_CHECK_FUNCS([socketpair])
   WINLIBS=""
   if test "$build_os" = "cygwin" ; then
     WINDEFS="-DFD_SETSIZE=1024"
+    HAS_FORK=0
   else
+    AC_CHECK_FUNCS([fork])
     WINDEFS=""
+    HAS_FORK=1
   fi
 fi
 AC_SUBST([WINLIBS])
 AC_SUBST([WINDEFS])
+AC_SUBST([HAS_FORK])
 
 #------------------------------------
 AC_MSG_CHECKING(define system environment settings);echo
@@ -194,17 +199,22 @@ if test "$host_os" = "mingw32"; then
   AC_SUBST([PATH_SEP], [\;])
   AC_SUBST([MQ_IS], [WIN32])
   AM_CONDITIONAL([WIN32], [true])
+  HAS_UDS=0
 else
   AC_MSG_RESULT([no])
   AC_DEFINE([MQ_IS_POSIX], [], [is this a POSIX like system (e.g. UNIX)])
   if test "$build_os" != "cygwin"; then
     AC_DEFINE([MQ_HAVE_UDS], [], [are Unix-Domain-Socket available?])
+    HAS_UDS=1
+  else
+    HAS_UDS=0
   fi
   AC_SUBST([FILE_SEP], [/])
   AC_SUBST([PATH_SEP], [:])
   AC_SUBST([MQ_IS], [POSIX])
   AM_CONDITIONAL([WIN32], [false])
 fi
+AC_SUBST([HAS_UDS])
 
 AC_SUBST([path],[$PATH])
 AC_SUBST([ld_library_path],[$LD_LIBRARY_PATH])

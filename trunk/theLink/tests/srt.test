@@ -197,9 +197,4 @@ unset I B C S
 ##
 freeTests
 
-
-
-
-
-
-
+# vim: set syn=tcl:

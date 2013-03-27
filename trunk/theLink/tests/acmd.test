@@ -62,13 +62,4 @@ C> (split) use '-h' or '--help' for usage}
     
 freeTests
 
-
-
-
-
-
-
-
-
-
-
+# vim: set syn=tcl:

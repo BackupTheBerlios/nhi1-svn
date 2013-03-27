@@ -419,3 +419,4 @@ test trans-Y1 {try to connect a "not-created" link} \
 
 freeTests
 
+# vim: set syn=tcl:

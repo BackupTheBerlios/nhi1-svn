@@ -710,6 +710,15 @@ if {$::tcl_platform(platform) eq "windows"} {
   set env(COM_LST) [filter -not COM_LST uds]
 }
 
+# other's have some restrictions too :(
+if {!$HAS_UDS} {
+  set env(SRV_LST) [filter -not SRV_LST uds]
+  set env(COM_LST) [filter -not COM_LST uds]
+}
+if {!$HAS_FORK} {
+  set env(SRV_LST) [filter -not SRV_LST fork]
+}
+
 # without tcl thread support no tcl thread server
 if {[info exists ::tcl_platform(threaded)]} {
   set env(SRV_LST)   [filter -not SRV_LST tcl fork]

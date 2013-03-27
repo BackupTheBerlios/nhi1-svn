@@ -115,14 +115,4 @@ S> (server) found in function "MqLinkDefault" at file "link.c"}
 
 freeTests
 
-
-
-
-
-
-
-
-
-
-
-
+# vim: set syn=tcl:
