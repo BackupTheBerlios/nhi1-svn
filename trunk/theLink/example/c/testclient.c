@@ -102,14 +102,15 @@ int main (int argc, MQ_CST argv[])
   c101 = ctx;
 
   // do the tests
-  printf("%s\n", Get(c0));
-  printf("%s\n", Get(c00));
-  printf("%s\n", Get(c01));
-  printf("%s\n", Get(c000));
-  printf("%s\n", Get(c1));
-  printf("%s\n", Get(c10));
-  printf("%s\n", Get(c100));
-  printf("%s\n", Get(c101));
+  fprintf(stdout,"%s\n", Get(c0));
+  fprintf(stdout,"%s\n", Get(c00));
+  fprintf(stdout,"%s\n", Get(c01));
+  fprintf(stdout,"%s\n", Get(c000));
+  fprintf(stdout,"%s\n", Get(c1));
+  fprintf(stdout,"%s\n", Get(c10));
+  fprintf(stdout,"%s\n", Get(c100));
+  fprintf(stdout,"%s\n", Get(c101));
+  fflush(stdout);
 
   // do the cleanup
   MqContextDelete(&c0);

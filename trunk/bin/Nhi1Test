@@ -20,7 +20,7 @@ abs_top_builddir=$PWD
 while [[ ! -f "$abs_top_builddir/env.sh" && "$abs_top_builddir" != '/' ]] ; do 
   abs_top_builddir=$(dirname "$abs_top_builddir")
 done
-if [[ -r "$abs_top_builddir/env.sh" ]] ; then
+if [[ -r "${abs_top_builddir%/}/env.sh" ]] ; then
   . "$abs_top_builddir/env.sh"
 else
  echo "unable to find the 'env.sh' configuration file"
@@ -186,13 +186,8 @@ lookup() {
       *)	EXE="";;
     esac
 
-    if test "$OSTYPE" = "cygwin" ; then
-      test -n "$EXE" && ret+=("$(cygpath -m "$EXE")")
-      test -n "$CM1" && ret+=("$(cygpath -m "$CM1")")
-    else
-      test -n "$EXE" && ret+=("$EXE")
-      test -n "$CM1" && ret+=("$CM1")
-    fi
+    test -n "$EXE" && ret+=("$($CYGPATH_M "$EXE")")
+    test -n "$CM1" && ret+=("$($CYGPATH_M "$CM1")")
     echo "${ret[@]}"
   fi
 }

@@ -26,7 +26,8 @@ int main (int argc, MQ_CST argv[])
   MqSendD(ctx,22.3);
   MqSendEND_AND_WAIT(ctx, "MMUL", 10);
   MqErrorCheck (MqReadD(ctx, &d));
-  printf("%f\n", d);
+  fprintf(stdout,"%f\n", d);
+  fflush(stdout);
 error:
   MqExit(ctx);
 }

@@ -795,7 +795,7 @@ AC_DEFUN([SC_WITH_TCL], [
       for try in ${prim} ${prim}/tcl8.* ; do
         if test -f $try/tclConfig.sh; then
             AC_MSG_RESULT($try/tclConfig.sh)
-	    if test "$OSTYPE" = "cygwin" ; then
+	    if test "$build_os" = "cygwin" ; then
 	      eval "$(
 		sed -e '
 		  # convert all drive letter (e.g. C:) into cygdrive names
@@ -812,6 +812,17 @@ AC_DEFUN([SC_WITH_TCL], [
 
             ## add support for tcl STUBS
             if test "$build_os" = "cygwin" ; then
+		(
+		  # libtool BUG
+		  # copy 'tcl86.lib' to 'libtcl86.a'
+		  set -- $TCL_LIB_SPEC
+		  ld=${1#-L} ; # library directory
+		  ln=${2#-l} ; # library base-name
+		  if test ! -e $ld/lib$ln.dll.a ; then 
+		    cp $ld/$ln.lib $ld/lib$ln.dll.a
+		    AC_MSG_NOTICE([create import library '$ld/lib$ln.dll.a'])
+		  fi 
+		)
                 AC_SUBST([TCL_CFLAGS], [])
                 AC_SUBST([TCL_LIBADD], [${TCL_LIB_SPEC}])
             else

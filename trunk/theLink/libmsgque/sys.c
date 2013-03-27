@@ -517,9 +517,15 @@ static enum MqErrorE SysServerSpawn (
 
   // fork to create the child
 #if defined(HAVE_VFORK)
-  if (unlikely ((pid = vfork()) == -1)) goto error;
+  if (unlikely ((pid = vfork()) == -1)) {
+    err=errno;
+    goto error;
+  }
 #elif defined(HAVE_FORK)
-  if (unlikely ((pid = MqSysFork()) == -1)) goto error;
+  if (unlikely ((pid = MqSysFork()) == -1)) {
+    err=errno;
+    goto error;
+  }
 #else
   goto error;
 #endif
@@ -546,7 +552,7 @@ static enum MqErrorE SysServerSpawn (
     // start process
     if (unlikely ((pid = _spawnlp (_P_NOWAIT, name, buf, NULL)) == -1)) {
     //if (unlikely ((pid = _spawnlp (_P_DETACH, name, buf, NULL)) == -1)) {
-      //printC(strerror(errno))
+      err = errno;
       goto error;
     }
     goto ok;

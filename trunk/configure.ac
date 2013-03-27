@@ -100,7 +100,7 @@ SC_WITH_TOOL_ROOT
 
 SC_ENABLE_CACHE
 
-if test "$build_os" = "cygwin"; then
+if test "$host_os" = "mingw32"; then
   CYGPATH_M='cygpath -m'
 else
   CYGPATH_M='echo'
@@ -135,12 +135,10 @@ AC_CHECK_FUNCS([signal])
 AC_CHECK_HEADERS([signal.h])
 AC_CHECK_FUNCS([strtoul strtoull strtof strtod])
 AC_CHECK_FUNCS([getline])
-if test "$build_os" = "mingw32"; then
-  AC_MSG_ERROR([as '--build=...' only cygwin is supported 
-  -> keep it unchanged if you are working in a cygwin toolchan
-to enable cross-compiling mode you have to specify
-  -> --host=x86_64-w64-mingw32])
-elif test "$build_os" = "cygwin"; then
+
+if test "$build_os" = "mingw32" -a "$OSTYPE" = "cygwin" ; then
+  AC_MSG_ERROR([as '--build=...' you have chosen 'mingw32' but your calling shell is from 'cygwin'])
+elif test "$host_os" = "mingw32"; then
   WINLIBS="-lws2_32"
     # FD_SET and select
     # A number of FD_XXX macros are defined in the Winsock2.h header file for use 
@@ -165,14 +163,18 @@ elif test "$build_os" = "cygwin"; then
     AC_MSG_ERROR([unable to find library: /cygdrive/c/WINDOWS/system32/ws2_32.dll])
   fi
 else
-  WINLIBS=""
-  WINDEFS=""
   AC_CHECK_HEADERS([sys/filio.h])
   AC_SEARCH_LIBS([bind], [socket nsl])
   AC_SEARCH_LIBS([gethostbyname], [socket nsl])
   AC_SEARCH_LIBS([inet_aton], [socket nsl resolv])
   AC_CHECK_FUNCS([fork posix_spawn vfork execvp])
   AC_CHECK_FUNCS([socketpair])
+  WINLIBS=""
+  if test "$build_os" = "cygwin" ; then
+    WINDEFS="-DFD_SETSIZE=1024"
+  else
+    WINDEFS=""
+  fi
 fi
 AC_SUBST([WINLIBS])
 AC_SUBST([WINDEFS])
@@ -185,7 +187,7 @@ TYPE_HUGE_VAL
 AX_CHECK_ALIGNED_ACCESS_REQUIRED
 
 AC_MSG_CHECKING([for windows build])
-if test "$build_os" = "cygwin"; then
+if test "$host_os" = "mingw32"; then
   AC_MSG_RESULT([yes])
   AC_DEFINE([MQ_IS_WIN32], [], [is this a WIN32 like system (e.g. WINDOWS)])
   AC_SUBST([FILE_SEP], [\\\\])

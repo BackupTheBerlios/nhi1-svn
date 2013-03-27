@@ -12,6 +12,7 @@
 
 #include "msgque.h"
 #include "string.h"
+#include "debug.h"
 
 int main (int argc, MQ_CST argv[]) 
 {
@@ -24,7 +25,9 @@ int main (int argc, MQ_CST argv[])
   MqSendSTART(ctx);
   MqSendEND_AND_WAIT(ctx, "HLWO", 10);
   MqErrorCheck (MqReadC(ctx, &c));
-  printf("%s\n", c);
+  fprintf(stdout,"%s\n", c);
+  fflush(stdout);
+
 error:
   MqExit(ctx);
 }
