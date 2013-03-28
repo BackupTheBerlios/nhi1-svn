@@ -28,7 +28,7 @@ alias cdpn="cd ~/Project/NHI1"
 alias cdm="cd /build/$USER/Main"
 alias cds="cd ~/src"
 
-alias scr="exec ssh-agent screen -h 1000"
+alias scr="cd ~/Project/NHI1 && exec ssh-agent screen -h 1000"
 
 if test "$OSTYPE" = "cygwin" ; then
   for x in i686-pc-cygwin:c x86_64-w64-mingw32:m ; do

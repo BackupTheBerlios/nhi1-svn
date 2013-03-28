@@ -76,6 +76,7 @@ if {[Block 1]} {
 
 	## "--daemon" requires "fork" -> check if it is possible
 	if {[lsearch -exact $D "--daemon"] != -1} {
+	  if {!$HAS_FORK} continue
 	  if {$tcl_platform(platform) == "windows"} continue
 	  if {[string match "*java*"   $S]} continue
 	  if {[string match "*csharp*" $S]} continue

@@ -1,6 +1,6 @@
 #!/bin/bash
 #+
-#:  \file       bin/Nhi1Test
+#:  \file       bin/Nhi1Exec
 #:  \brief      \$Id$
 #:  
 #:  (C) 2009 - NHI - #1 - Project - Group
@@ -47,7 +47,7 @@ one of the suported programming language abd identifed by the file postfix:
 
 The general sytax is:
 
-  > Nhi1Test [options...] file.POSTFIX [options...] args...
+  > Nhi1Exec [options...] file.POSTFIX [options...] args...
 
 If the "file.POSTFIX" argument has NO absolute path the file is search in the 
 local, local-relative-in-source or example ... directory.
@@ -55,20 +55,20 @@ local, local-relative-in-source or example ... directory.
 example:
 
   1. invoke a single executable identified by the language postfix
-        > Nhi1Test path/to/myprog.(tcl|pl|php|rb|py|cs|vb|go|java|c|cc|test)
+        > Nhi1Exec path/to/myprog.(tcl|pl|php|rb|py|cs|vb|go|java|c|cc|test)
 
   2. invoke a test script to test the "python" and "perl" features
         > cd NHI1-X.X/theLink/tests
-        > Nhi1Test int.test --only-python-perl
+        > Nhi1Exec int.test --only-python-perl
 
   3. invoke all tests for language "go" using "threads" and only "binary" data
         > cd NHI1-X.X/theLink/tests
-        > Nhi1Test all.tcl --only-go --only-threads --only-binary
+        > Nhi1Exec all.tcl --only-go --only-threads --only-binary
 
   4. start "tcl" server from the example-directory using "tcp" and listing on 
      port "7777" and "spawn" for every new connection a new server
         > cd NHI1-X.X/theLink/tests
-        > Nhi1Test server.tcl --tcp --port 7777 --spawn
+        > Nhi1Exec server.tcl --tcp --port 7777 --spawn
 
   5. make all tests (not available for windows)
         > cd NHI1-X.X
@@ -78,9 +78,9 @@ Help is available with the following commands:
 
   1. test specific help
         > cd NHI1-X.X/theLink/tests
-        > Nhi1Test all.tcl --help
+        > Nhi1Exec all.tcl --help
      or
-        > Nhi1Test all.tcl --help-msgque
+        > Nhi1Exec all.tcl --help-msgque
 
   2. tcltest specific help
         > man tcltest
