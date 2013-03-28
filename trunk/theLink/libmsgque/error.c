@@ -386,7 +386,7 @@ MqErrorSetEXITP (
   return MqErrorSGenV(context,prefix,MQ_ERROR,MqMessageNum(MQ_ERROR_EXIT),MqMessageText[MQ_ERROR_EXIT]);
 }
 
-int
+bool
 MqErrorIsEXIT (
   struct MqS * const context
 )

@@ -392,7 +392,7 @@ MqSlaveGetMaster (
   return MqSlaveGetMasterI(context);
 }
 
-int
+bool
 MqSlaveIs (
   struct MqS const * const context
 )

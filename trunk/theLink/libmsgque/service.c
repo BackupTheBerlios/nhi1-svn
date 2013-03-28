@@ -55,12 +55,12 @@ MqServiceGetFilter2 (
   return ret;
 }
 
-int
+bool
 MqServiceIsTransaction (
   struct MqS const * const context
 )
 {
-  return context->link.transSId != 0;
+  return (context->link.transSId != 0);
 }
 
 MQ_CST 
