@@ -269,7 +269,7 @@ struct MqDumpS;
 /// 1 byte \b byte data-type
 typedef signed char MQ_BYT;
 /// 1 byte \b boolean data-type
-typedef unsigned char MQ_BOL;
+typedef bool MQ_BOL;
 /// 2 byte \b short data-type
 typedef signed short MQ_SRT;
 /// 4 byte \b integer data-type
@@ -1095,7 +1095,7 @@ MQ_DECL MqConfigSetDaemon (
  *  \context
  *  \return the <TT>(context->setup.isServer == MQ_YES)</TT> value
  */
-MQ_EXTERN bool MQ_DECL MqConfigGetIsServer (
+MQ_EXTERN MQ_BOL MQ_DECL MqConfigGetIsServer (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
@@ -1103,7 +1103,7 @@ MQ_EXTERN bool MQ_DECL MqConfigGetIsServer (
  *  \context
  *  \return the <TT>(context->config.isString == MQ_YES)</TT> value
  */
-MQ_EXTERN bool MQ_DECL MqConfigGetIsString (
+MQ_EXTERN MQ_BOL MQ_DECL MqConfigGetIsString (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
@@ -1111,7 +1111,7 @@ MQ_EXTERN bool MQ_DECL MqConfigGetIsString (
  *  \context
  *  \return the <TT>(context->config.isSilent == MQ_YES)</TT> value
  */
-MQ_EXTERN bool MQ_DECL MqConfigGetIsSilent (
+MQ_EXTERN MQ_BOL MQ_DECL MqConfigGetIsSilent (
   struct MqS const * const context
 ) __attribute__((nonnull));
 
@@ -2049,7 +2049,7 @@ MQ_EXTERN void MQ_DECL MqLinkDelete (
 /// .
 /// \ctx
 /// \return a boolean value, \yes or \no
-MQ_EXTERN bool MQ_DECL MqLinkIsConnected (
+MQ_EXTERN MQ_BOL MQ_DECL MqLinkIsConnected (
   struct MqS const * const ctx
 ) __attribute__((nonnull));
 
@@ -2072,7 +2072,7 @@ static mq_inline struct MqS * MqLinkGetParentI (
 /// \details A \e context is a \e parent-context if it was created with \RNSA{LinkCreate}
 /// \ctx
 /// \return a boolean value, \yes or \no
-MQ_EXTERN bool MQ_DECL MqLinkIsParent (
+MQ_EXTERN MQ_BOL MQ_DECL MqLinkIsParent (
   struct MqS const * const ctx
 ) __attribute__((nonnull));
 
@@ -2214,7 +2214,7 @@ MQ_EXTERN struct MqS  * const MQ_DECL MqServiceGetFilter2 (
 /// or can be \e without-transaction (return \no if the package was send with \RNSA{SendEND})
 /// \ctx
 /// \return a boolean value, \yes or \no
-MQ_EXTERN bool
+MQ_EXTERN MQ_BOL
 MQ_DECL MqServiceIsTransaction (
   struct MqS const * const ctx
 ) __attribute__((nonnull(1)));
@@ -3609,7 +3609,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorSetEXITP (
 /// } 
 /// \endcode
 /// \endif
-MQ_EXTERN bool MQ_DECL MqErrorIsEXIT (
+MQ_EXTERN MQ_BOL MQ_DECL MqErrorIsEXIT (
   struct MqS * const context
 );
 
@@ -4439,7 +4439,7 @@ static mq_inline struct MqS* MqSlaveGetMasterI (
 /// \brief is the \e context a \e slave-context ?
 /// \ctx
 /// \return a boolean value, \yes or \no
-MQ_EXTERN bool MQ_DECL MqSlaveIs (
+MQ_EXTERN MQ_BOL MQ_DECL MqSlaveIs (
   struct MqS const * const ctx
 ) __attribute__((nonnull));
 
