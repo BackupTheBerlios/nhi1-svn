@@ -129,8 +129,8 @@ test -f $abs_top_dir/tags && cp $abs_top_dir/tags .
 }
 
 [[ $BASE == "perlmsgque" || $BASE == "Net-PerlMsgque" ]] && {
-  if [[ ${WINDIR+set} == set ]] ; then
-    PERL_HOME=/cygdrive/c/Perl/
+  if [[ "$OSTYPE" == "cygwin" ]] ; then
+    PERL_HOME=/cygdrive/c/Perl64/
     PERL_API=$PERL_HOME
   else
     PERL_HOME=$HOME/src/perl-latest/

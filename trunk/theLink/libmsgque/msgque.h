@@ -140,10 +140,10 @@
 #include <time.h>
 #include <limits.h>
 #ifndef _MSC_VER
-#  include <unistd.h>
+# include <unistd.h>
+# include <stdbool.h>
 #endif
 #include <string.h>
-#include <stdbool.h>
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
 # include <WinSock2.h>
@@ -197,7 +197,7 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
-//  the source of libmsgque is direct used in external library
+// If the source of libmsgque is direct used in external library
 // (without dynamic linking) and this library should *not* export
 // the symbol's of libmsgque then the flag MQ_IGNORE_EXTERN have
 // to be set

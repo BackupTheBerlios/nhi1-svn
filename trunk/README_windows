@@ -10,6 +10,12 @@
 #:              please contact AUTHORS for additional information
 #:
 
+To build the winsowns libraries the cygwin build-environment is used
+and the following '--host=...' targets were tested:
+
+
+1) runn cygwin sshd using the development account and not the default cygwin account
+
 
 Only a build using the "mingw" cross-compiler embedded into the "cygwin"
 tool-chain is supported.

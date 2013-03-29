@@ -43,6 +43,24 @@ export CTAGSFLAGS="--c-kinds=+p"
 
 if test "$OSTYPE" = "cygwin" ; then
   export TERM=xterm
+  ## add missing system variables after login via ssh, need for compiling
+  if [ "$SSH_TTY" ]; then
+    pushd . >/dev/null
+    for __dir in \
+    /proc/registry/HKEY_LOCAL_MACHINE/SYSTEM/CurrentControlSet/Control/Session\ Manager/Environment \
+    /proc/registry/HKEY_CURRENT_USER/Environment
+    do
+      cd "$__dir"
+      for __var in *; do
+	__upper=${__var^^}
+	test -z "${!__upper}" && export $__var="$(<$__var)" >/dev/null 2>&1
+      done
+    done
+    unset __dir
+    unset __var
+    unset __upper
+    popd >/dev/null
+  fi
 fi
 
 export NHI1_HOME=$(dirname $(dirname $(readlink -e ~/.bashrc)))

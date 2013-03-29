@@ -326,10 +326,21 @@ S> (server) found in function "*MqLinkCreate" at file "link.c*"
 S> (server) found in function "*MqLinkDefault" at file "link.c*"}
 
     test error-4-($C|$S) {port with wrong service-name} \
-      -constraints  {tcp unix} \
+      -constraints  {tcp unix !cygwin} \
       -body         { Exec {*}[getServer $S] --tcp --port something_useless } \
       -match	    glob \
       -result       {CHILDSTATUS-1-S> (server) \[*SysGetAddrInfo] getaddrinfo -> ERRNO<-8> ERR<Servname not supported for ai_socktype>
+S> (server) found in function "*sTcpCreateAddrInfo" at file "tcp_io.c*"
+S> (server) found in function "*TcpCreate" at file "tcp_io.c*"
+S> (server) found in function "*pIoCreate" at file "io.c*"
+S> (server) found in function "*MqLinkCreate" at file "link.c*"
+S> (server) found in function "*MqLinkDefault" at file "link.c*"}
+
+    test error-4-($C|$S) {port with wrong service-name} \
+      -constraints  {tcp unix cygwin} \
+      -body         { Exec {*}[getServer $S] --tcp --port something_useless } \
+      -match	    glob \
+      -result       {CHILDSTATUS-9-S> (server) \[*SysGetAddrInfo] getaddrinfo -> ERRNO<9> ERR<servname not supported for ai_socktype>
 S> (server) found in function "*sTcpCreateAddrInfo" at file "tcp_io.c*"
 S> (server) found in function "*TcpCreate" at file "tcp_io.c*"
 S> (server) found in function "*pIoCreate" at file "io.c*"

@@ -10,5 +10,5 @@ WriteMakefile(
       (ABSTRACT_FROM  => 'lib/Net/PerlMsgque.pm', # retrieve abstract from module
        AUTHOR         => 'Andreas Otto <aotto1968@users.sourceforge.net>') : ()),
     LIBS              => [''], # e.g., '-lm'
-    DEFINE            => '-DMQ_IGNORE_EXTERN', # e.g., '-DHAVE_SOMETHING'
 );
+

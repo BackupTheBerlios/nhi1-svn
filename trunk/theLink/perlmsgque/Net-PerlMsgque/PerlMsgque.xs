@@ -303,79 +303,80 @@ static enum MqErrorE FactoryCreate (
   }
 #endif
 
-  dSP;
-  *contextP = NULL;
+  {
+    dSP;
+    *contextP = NULL;
 
-  ENTER;
-  SAVETMPS;
+    ENTER;
+    SAVETMPS;
 
-  PUSHMARK(SP);
+    PUSHMARK(SP);
 
-  XPUSHs((SV*)item->Create.data);
-  if (create != MQ_FACTORY_NEW_INIT) {
-    XPUSHs((SV*)tmpl->self);
-  }
-  PUTBACK;
-
-  count = call_method ("new", G_SCALAR|G_EVAL);
-
-  SPAGAIN;
-  if (SvTRUE(ERRSV)) {
-    goto error1;
-  } else if (count != 1) {
+    XPUSHs((SV*)item->Create.data);
     if (create != MQ_FACTORY_NEW_INIT) {
-      MqErrorC(tmpl, __func__, -1, "factory return more than one value!");
-    } else {
-      croak("factory return more than one value!");
+      XPUSHs((SV*)tmpl->self);
     }
-    return MQ_ERROR;  
+    PUTBACK;
+
+    count = call_method ("new", G_SCALAR|G_EVAL);
+
+    SPAGAIN;
+    if (SvTRUE(ERRSV)) {
+      goto error1;
+    } else if (count != 1) {
+      if (create != MQ_FACTORY_NEW_INIT) {
+	MqErrorC(tmpl, __func__, -1, "factory return more than one value!");
+      } else {
+	croak("factory return more than one value!");
+      }
+      return MQ_ERROR;  
+    }
+
+    mqctx = get_MqS_NO_ERROR(POPs);
+    if (mqctx == NULL) goto error2;
+
+    // check for MQ error
+    MqErrorCheck(MqErrorGetCode(mqctx));
+
+    if (create != MQ_FACTORY_NEW_INIT) {
+      MqSetupDup (mqctx, tmpl);
+    }
+
+    PUTBACK;
+    FREETMPS;
+    LEAVE;
+
+    *contextP = mqctx;
+    return ret;
+
+  error:
+    *contextP = NULL;
+    if (create != MQ_FACTORY_NEW_INIT) {
+      MqErrorCopy (tmpl, mqctx);
+      MqContextDelete (&mqctx);
+      return MqErrorStack(tmpl);
+    } else {
+      return MQ_ERROR;
+    }
+
+  error1:
+    *contextP = NULL;
+    if (create != MQ_FACTORY_NEW_INIT) {
+      return ProcError (aTHX_ tmpl, ERRSV);
+    } else {
+      croak(SvPV_nolen(ERRSV));
+      return MQ_ERROR;
+    }
+
+  error2:
+    *contextP = NULL;
+    if (create != MQ_FACTORY_NEW_INIT) {
+      return MqErrorC(tmpl, __func__, -1, "Factory return no MqS type");
+    } else {
+      croak("Factory return no MqS type");
+      return MQ_ERROR;
+    }
   }
-
-  mqctx = get_MqS_NO_ERROR(POPs);
-  if (mqctx == NULL) goto error2;
-
-  // check for MQ error
-  MqErrorCheck(MqErrorGetCode(mqctx));
-
-  if (create != MQ_FACTORY_NEW_INIT) {
-    MqSetupDup (mqctx, tmpl);
-  }
-
-  PUTBACK;
-  FREETMPS;
-  LEAVE;
-
-  *contextP = mqctx;
-  return ret;
-
-error:
-  *contextP = NULL;
-  if (create != MQ_FACTORY_NEW_INIT) {
-    MqErrorCopy (tmpl, mqctx);
-    MqContextDelete (&mqctx);
-    return MqErrorStack(tmpl);
-  } else {
-    return MQ_ERROR;
-  }
-
-error1:
-  *contextP = NULL;
-  if (create != MQ_FACTORY_NEW_INIT) {
-    return ProcError (aTHX_ tmpl, ERRSV);
-  } else {
-    croak(SvPV_nolen(ERRSV));
-    return MQ_ERROR;
-  }
-
-error2:
-  *contextP = NULL;
-  if (create != MQ_FACTORY_NEW_INIT) {
-    return MqErrorC(tmpl, __func__, -1, "Factory return no MqS type");
-  } else {
-    croak("Factory return no MqS type");
-    return MQ_ERROR;
-  }
-
 }
 
 static void FactoryDelete (
@@ -425,29 +426,28 @@ BOOT:
 
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqS
 
-void
+MqS*
 new(SV *MqS_class, ...)
   PREINIT:
     struct MqS * tmpl = NULL;
   PPCODE:
-    if (items == 2) {
-      tmpl = get_MqS(aTHX_ ST(1));
-    } else if (items != 1) {
+    RETVAL = NULL;
+    if (items < 1 || items > 2) {
       croak_xs_usage(cv, "?tmpl?");
-      XSRETURN(0);
-    }
-    if (!SvROK(MqS_class)) {
-      // called by a "class"
-      MqS *context = (MqS*) MqContextCreate(sizeof(struct PerlContextS), tmpl);
-      ST(0) = sv_newmortal();
-      sv_setref_pv(ST(0), SvPV_nolen(MqS_class), (void*)context);
-      context->threadData = PERL_GET_CONTEXT;
-      MqConfigSetSelf(context, SvREFCNT_inc(ST(0)));
-      MqConfigSetSetup(context, MqLinkDefault, NULL, MqLinkDefault, NULL, ProcessExit, ThreadExit);
     } else {
-      MqConfigReset (get_MqS (aTHX_ MqS_class));
+      if (items == 2) {
+	tmpl = get_MqS(aTHX_ ST(1));
+      }
+      if (!SvROK(MqS_class)) {
+	// called by a "class"
+	RETVAL = (MqS*) MqContextCreate(sizeof(struct PerlContextS), tmpl);
+	RETVAL->threadData = PERL_GET_CONTEXT;
+	MqConfigSetSelf(RETVAL, SvREFCNT_inc(ST(0)));
+	MqConfigSetSetup(RETVAL, MqLinkDefault, NULL, MqLinkDefault, NULL, ProcessExit, ThreadExit);
+      } else {
+	MqConfigReset (get_MqS (aTHX_ MqS_class));
+      }
     }
-    XSRETURN(1);
 
 void
 DESTROY(SV *sv)
@@ -482,8 +482,8 @@ MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqFactoryS  PREFIX = MqFacto
 MqFactoryS*
 MqFactoryAdd(...)
   PREINIT:
-    MQ_CST ident;
-    MQ_PTR class;
+    MQ_CST ident = "";
+    MQ_PTR class = NULL;
   CODE:
     if (items < 1 || items > 2) {
       croak_xs_usage(cv, "?ident?, class");
@@ -502,8 +502,8 @@ MqFactoryAdd(...)
 MqFactoryS*
 MqFactoryDefault(...)
   PREINIT:
-    MQ_CST ident;
-    MQ_PTR class;
+    MQ_CST ident = "";
+    MQ_PTR class = NULL;
   CODE:
     if (items < 1 || items > 2) {
       croak_xs_usage(cv, "ident, ?class?");
@@ -528,7 +528,7 @@ MqFactoryGet(MQ_CST ident = NULL)
 MqFactoryS*
 MqFactoryGetCalled(MQ_CST ident = NULL)
 
-void
+MqS*
 MqFactoryNew(MqFactorySelf* factory)
   PREINIT:
     struct MqS * ctx = NULL;
@@ -536,10 +536,9 @@ MqFactoryNew(MqFactorySelf* factory)
     ctx = MqFactoryNew(MQ_ERROR_PRINT, NULL, factory);
     if (ctx == NULL) {
       croak("MqFactoryS exception");
-      XSRETURN(0);
+      RETVAL = NULL;
     } else {
-      ST(0) = (SV*)ctx->self;
-      XSRETURN(1);
+      RETVAL = ctx->self;
     }
 
 MqFactoryS*
@@ -603,14 +602,8 @@ MqProcessEvent(MqSelf* context, ...)
     }
     ErrorMqToPerlWithCheck (MqProcessEvent (context, timeout, wait));
 
-void
-LinkGetParent(MqSelf* context)
-  PREINIT:
-    MqS* parent;
-  PPCODE:
-    parent = (MqS*) MqLinkGetParent(context);
-    ST(0) = (parent != NULL? (SV*)parent->self : &PL_sv_undef);
-    XSRETURN(1);
+MqS*
+MqLinkGetParent (MqSelf* context)
 
 MQ_CST
 MqLinkGetTargetIdent (MqSelf* context)
@@ -698,7 +691,7 @@ MqConfigGetDebug (MqSelf* context)
 void
 MqConfigSetTimeout (MqSelf* context, int timeout)
 
-int
+MQ_TIME_T
 MqConfigGetTimeout (MqSelf* context)
 
 void
@@ -1027,14 +1020,13 @@ MqReadForward (MqSelf* context, MqS* ftr, MqDumpS* dump = NULL)
 MQ_NST
 MqServiceGetToken (MqSelf* context)
 
-void
+MqS*
 MqServiceGetFilter(MqSelf* context, MQ_SIZE id = 0)
   PREINIT:
     struct MqS * filter = NULL;
   PPCODE:
     ErrorMqToPerlWithCheck (MqServiceGetFilter (context, id, &filter));
-    ST(0) = (SV*)filter->self;
-    XSRETURN(1);
+    RETVAL = filter->self;
 
 bool
 MqServiceIsTransaction (MqSelf* context)
@@ -1107,7 +1099,7 @@ DictSet (MqSelf* context, MQ_CST key, SV* data)
       if (hash == NULL) {
 	hash = PERL_DATA = newHV();
       }
-      svP = hv_store(hash, key, strlen(key), SvREFCNT_inc(data), 0);
+      svP = hv_store(hash, key, (I32) strlen(key), SvREFCNT_inc(data), 0);
     }
     if (svP == NULL) {
       SvREFCNT_dec(data);
@@ -1123,7 +1115,7 @@ DictGet (MqSelf* context, MQ_CST key)
     SV** svP = NULL;
   CODE:
     if (PERL_DATA != NULL) {
-      svP = hv_fetch(PERL_DATA, key, strlen(key), 0);
+      svP = hv_fetch(PERL_DATA, key, (I32) strlen(key), 0);
     }
     RETVAL = SvREFCNT_inc(svP ? *svP : &PL_sv_undef);
   OUTPUT:
@@ -1135,7 +1127,7 @@ DictUnset (MqSelf* context, MQ_CST key)
     SV* sv = NULL;
   CODE:
     if (PERL_DATA != NULL) {
-      sv = hv_delete (PERL_DATA, key, strlen(key),0);
+      sv = hv_delete (PERL_DATA, key, (I32) strlen(key),0);
     }
     RETVAL = SvREFCNT_inc (sv ? sv : &PL_sv_undef);
   OUTPUT:
@@ -1144,10 +1136,10 @@ DictUnset (MqSelf* context, MQ_CST key)
 bool
 DictExists (MqSelf* context, MQ_CST key)
   PREINIT:
-    bool exists = FALSE;
+    bool exists = (bool) FALSE;
   CODE:
     if (PERL_DATA != NULL) {
-      exists = hv_exists (PERL_DATA, key, strlen(key));
+      exists = hv_exists (PERL_DATA, key, (I32) strlen(key));
     }
     RETVAL = exists;
   OUTPUT:
@@ -1233,23 +1225,11 @@ MqSlaveDelete (MqSelf* context, MQ_SIZE id)
   CODE:
     ErrorMqToPerlWithCheck (MqSlaveDelete(context, id));
 
-void
+MqS*
 MqSlaveGet (MqSelf* context, MQ_SIZE id)
-  PREINIT:
-    MqS* slave;
-  PPCODE:
-    slave = (MqS*) MqSlaveGet(context,id);
-    ST(0) = (slave ? (SV*)slave->self : &PL_sv_undef);
-    XSRETURN(1);
 
-void
-SlaveGetMaster(MqSelf* context)
-  PREINIT:
-    MqS* master;
-  PPCODE:
-    master = (MqS*) MqSlaveGetMaster(context);
-    ST(0) = (master ? (SV*)master->self : &PL_sv_undef);
-    XSRETURN(1);
+MqS*
+MqSlaveGetMaster (MqSelf* context)
 
 bool
 MqSlaveIs (MqSelf* context)

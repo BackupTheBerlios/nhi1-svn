@@ -994,6 +994,7 @@ configure {*}$::args
 testConstraint local [expr {$env(USE_REMOTE) ? no : yes}]
 testConstraint use_remote $env(USE_REMOTE)
 testConstraint filter [expr {$env(TS_FILTER) ne "NO"}]
+testConstraint cygwin [expr {$build_os == "cygwin"}]
 
 ##
 ## -----------------------------------------------------------------------

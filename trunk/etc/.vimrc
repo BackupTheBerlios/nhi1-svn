@@ -13,7 +13,7 @@ set background=dark
 set softtabstop=2
 set shiftwidth=2
 set modeline
-set mouse=n
+" set mouse=n
 set autoindent
 
 syntax on
@@ -31,5 +31,11 @@ if has("autocmd")
     \   exe "normal g`\"" |
     \ endif
 
+  " set syntax highlight for file-types used in this project
+  autocmd BufNewFile,BufRead *.xs   set filetype=c
+  autocmd BufNewFile,BufRead *.test set filetype=tcl
 endif " has("autocmd")
+
+
+
 
