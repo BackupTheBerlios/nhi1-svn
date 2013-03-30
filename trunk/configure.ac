@@ -117,6 +117,7 @@ SC_WITH_JAVA
 SC_WITH_CSHARP
 SC_WITH_VB
 SC_WITH_GO
+SC_WITH_WINSDK
 
 SC_ENABLE_BRAIN
 SC_ENABLE_GUARD
@@ -223,7 +224,7 @@ AC_SUBST([abs_top_builddir_m], "$($CYGPATH_M "$ac_pwd")")
 case $srcdir in
   .)  # We are building in place.
     my_abs_top_srcdir=$ac_pwd ;;
-  [\\/]* | ?:[\\/]* )  # Absolute name.
+  [[\\/]]* | ?:{[\\/]]* )  # Absolute name.
     my_abs_top_srcdir=$srcdir ;;
   *) # Relative name.
     my_abs_top_srcdir=$ac_pwd/$srcdir ;;

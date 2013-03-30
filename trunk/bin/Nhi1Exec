@@ -144,18 +144,18 @@ lookup() {
     if [[ ! -e  "$CMDDIR/$CM1" && ! -e  "$CMDDIR/$CM2" ]] ; then
       # look into the example directories
       case "$lng" in
-	tcl)      CMDDIR="$abs_top_srcdir/theLink/example/tcl";;
-	test)     CMDDIR="$abs_top_srcdir/theLink/tests";;
-	java)     CMDDIR="$abs_top_builddir/theLink/example/java";;
-	py)	  CMDDIR="$abs_top_srcdir/theLink/example/python";;
-	pl)	  CMDDIR="$abs_top_srcdir/theLink/example/perl";;
-	rb)	  CMDDIR="$abs_top_srcdir/theLink/example/ruby";;
-	php)      CMDDIR="$abs_top_srcdir/theLink/example/php";;
-	cs|exe)	  CMDDIR="$abs_top_builddir/theLink/example/csharp";;
-	vb)	  CMDDIR="$abs_top_builddir/theLink/example/vb";;
-	go)	  CMDDIR="$abs_top_builddir/theLink/example/go";;
-	cc)	  CMDDIR="$abs_top_builddir/theLink/example/cc";;
-	c)	  CMDDIR="$abs_top_builddir/theLink/example/c";;
+	tcl)      CMDDIR="$abs_top_srcdir_m/theLink/example/tcl";;
+	test)     CMDDIR="$abs_top_srcdir_m/theLink/tests";;
+	java)     CMDDIR="$abs_top_builddir_m/theLink/example/java";;
+	py)	  CMDDIR="$abs_top_srcdir_m/theLink/example/python";;
+	pl)	  CMDDIR="$abs_top_srcdir_m/theLink/example/perl";;
+	rb)	  CMDDIR="$abs_top_srcdir_m/theLink/example/ruby";;
+	php)      CMDDIR="$abs_top_srcdir_m/theLink/example/php";;
+	cs|exe)	  CMDDIR="$abs_top_builddir_m/theLink/example/csharp";;
+	vb)	  CMDDIR="$abs_top_builddir_m/theLink/example/vb";;
+	go)	  CMDDIR="$abs_top_builddir_m/theLink/example/go";;
+	cc)	  CMDDIR="$abs_top_builddir_m/theLink/example/cc";;
+	c)	  CMDDIR="$abs_top_builddir_m/theLink/example/c";;
       esac
     fi
   fi
@@ -176,7 +176,7 @@ lookup() {
       tcl|test) EXE="${TCLSH:-tclsh}";;
       java)	EXE="${JAVA:-java}"; CMD="${CMD%.*}";;
       py)	EXE="${PYTHON:-python}";;
-      pl)	EXE="${PERL:-perl} -I$abs_top_srcdir/theLink/example/perl";;
+      pl)	EXE="${PERL:-perl}";;
       rb)	EXE="${RUBY:-ruby}";;
       php)	EXE="${PHP:-php}";;
       cs|exe)   EXE="${MONO:-mono}"; CMD="${CMD%.*}.exe";;
@@ -186,8 +186,8 @@ lookup() {
       *)	EXE="";;
     esac
 
-    test -n "$EXE" && ret+=("$($CYGPATH_M "$EXE")")
-    test -n "$CM1" && ret+=("$($CYGPATH_M "$CM1")")
+    test -n "$EXE" && ret+=("$EXE")
+    test -n "$CM1" && ret+=("$CM1")
     echo "${ret[@]}"
   fi
 }

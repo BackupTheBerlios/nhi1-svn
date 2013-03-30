@@ -776,6 +776,34 @@ AC_DEFUN([SC_WITH_PERL], [
 ])
 
 #------------------------------------------------------------------------
+# SC_WITH_WINSDK --
+#
+#       Specify the windows SDK SetEnv.cmd
+#
+# Arguments:
+#       none
+#
+# Results:
+#
+#------------------------------------------------------------------------
+
+AC_DEFUN([SC_WITH_WINSDK], [
+  if test "$host_os" = "mingw32" -a -n "$PERL" ; then
+    OT_WITH_PROG(winsdk, SDK_SETENV, [SetEnv.cmd], [script 'SetEnv.cmd'])
+    if test -z "$SDK_SETENV" ; then
+      AC_MSG_ERROR([a Windows SDK is required])
+    else
+      case "$host_cpu" in
+	*86)  SDK_CPU='/x86';;
+	ia64) SDK_CPU='/ia64';;
+	*64)  SDK_CPU='/x64';;
+      esac
+      AC_SUBST([SDK_CPU])
+    fi
+  fi
+])
+
+#------------------------------------------------------------------------
 # SC_WITH_TCL --
 #
 #       Specify if TCL support is needed

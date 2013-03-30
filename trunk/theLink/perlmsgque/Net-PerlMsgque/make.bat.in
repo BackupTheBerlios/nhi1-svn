@@ -1,13 +1,11 @@
-@ECHO OFF
-
-@ECHO ON
-::call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /Debug /x64 /win7 2>NUL
-call "@winsdk@" /Debug /x64 /win7 2>NUL
-@ECHO OFF
 
 set MAKE=
 set MAKEFLAGS=
 
 @ECHO ON
+
+call "@SDK_SETENV@" @SDK_DEBUG@ @SDK_CPU@ 2>NUL
+
 nmake.exe %~1
+
 @ECHO OFF

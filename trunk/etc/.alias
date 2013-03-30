@@ -28,7 +28,7 @@ alias cdpn="cd ~/Project/NHI1"
 alias cdm="cd /build/$USER/Main"
 alias cds="cd ~/src"
 
-alias scr="cd ~/Project/NHI1 && exec ssh-agent screen -U -h 1000"
+alias scr="cd ~/Project/NHI1 && exec ssh-agent screen -h 1000"
 alias lgdu="export LANG=de_DE.UTF-8"
 alias lgd="export LANG=de_DE"
 alias vimc="vim ~/Project/NHI1/configure.ac"

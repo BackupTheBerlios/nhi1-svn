@@ -1,13 +1,12 @@
 
 @ECHO ON
-:: call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /Debug /x64 /win7 2>NUL
-call "@winsdk@" @SDK_DEBUG@ /x64 /win7 2>NUL
+
+call "@SDK_SETENV@" @SDK_DEBUG@ @SDK_CPU@ 2>NUL
 
 @PERL_M@ Makefile.PL PREFIX="@prefix_m@" @PERL_DEBUG@ ^
   INC="-Wall -I. -I@abs_top_builddir_m@ -I@abs_top_srcdir_m@/theLink/libmsgque" ^
-  OBJECT="$(O_FILES) @abs_top_builddir_m@/theLink/libmsgque/.libs/libmsgque.dll.a @abs_top_builddir_m@/theLink/sqlite/.libs/libtmp.a" ^
+  OBJECT="$(O_FILES) @abs_top_builddir_m@/theLink/libmsgque/.libs/libmsgque.dll.a" ^
   DEFINE="-DPIC -DDLL_EXPORT"
+
 @ECHO OFF
-
-
 
