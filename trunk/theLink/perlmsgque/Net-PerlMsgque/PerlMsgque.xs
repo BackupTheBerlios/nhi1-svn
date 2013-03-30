@@ -426,11 +426,11 @@ BOOT:
 
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqS
 
-MqS*
+MqSelf*
 new(SV *MqS_class, ...)
   PREINIT:
     struct MqS * tmpl = NULL;
-  PPCODE:
+  CODE:
     RETVAL = NULL;
     if (items < 1 || items > 2) {
       croak_xs_usage(cv, "?tmpl?");
@@ -448,6 +448,8 @@ new(SV *MqS_class, ...)
 	MqConfigReset (get_MqS (aTHX_ MqS_class));
       }
     }
+  OUTPUT:
+    RETVAL
 
 void
 DESTROY(SV *sv)
@@ -530,16 +532,13 @@ MqFactoryGetCalled(MQ_CST ident = NULL)
 
 MqS*
 MqFactoryNew(MqFactorySelf* factory)
-  PREINIT:
-    struct MqS * ctx = NULL;
-  PPCODE:
-    ctx = MqFactoryNew(MQ_ERROR_PRINT, NULL, factory);
-    if (ctx == NULL) {
+  CODE:
+    RETVAL = MqFactoryNew(MQ_ERROR_PRINT, NULL, factory);
+    if (RETVAL == NULL) {
       croak("MqFactoryS exception");
-      RETVAL = NULL;
-    } else {
-      RETVAL = ctx->self;
     }
+  OUTPUT:
+    RETVAL
 
 MqFactoryS*
 MqFactoryCopy(MqFactorySelf* factory, MQ_CST ident)
@@ -1022,11 +1021,10 @@ MqServiceGetToken (MqSelf* context)
 
 MqS*
 MqServiceGetFilter(MqSelf* context, MQ_SIZE id = 0)
-  PREINIT:
-    struct MqS * filter = NULL;
-  PPCODE:
-    ErrorMqToPerlWithCheck (MqServiceGetFilter (context, id, &filter));
-    RETVAL = filter->self;
+  CODE:
+    ErrorMqToPerlWithCheck (MqServiceGetFilter (context, id, &RETVAL));
+  OUTPUT:
+    RETVAL
 
 bool
 MqServiceIsTransaction (MqSelf* context)

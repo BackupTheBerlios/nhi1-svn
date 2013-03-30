@@ -222,7 +222,8 @@ if (*p != *q) { return(1); }
 # Results:
 #
 #       Adds the following arguments to configure:
-#               --enable-symbols
+#               --enable-cache
+#       Add prefix "ccache" to $CC and $CXX
 #
 #------------------------------------------------------------------------
 
@@ -269,7 +270,11 @@ AC_DEFUN([SC_ENABLE_SYMBOLS], [
       AC_SUBST([VB_DEBUG], [-debug:full])
       AC_SUBST([JAVA_DEBUG], [-g])
       AC_SUBST([CSHARP_DEBUG], ['-debug -define:_DEBUG'])
+      AC_SUBST([PERL_DEBUG], ['OPTIMIZE="-g"'])
+      AC_SUBST([SDK_DEBUG], ['/Debug'])
     else
+      AC_SUBST([PERL_DEBUG], ['OPTIMIZE="-o"'])
+      AC_SUBST([SDK_DEBUG], ['/Release'])
       CFLAGS="-O3 $CFLAGS"
       CPPFLAGS="-DNDEBUG $CPPFLAGS"
     fi

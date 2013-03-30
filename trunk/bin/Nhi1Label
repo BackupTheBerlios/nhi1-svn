@@ -14,16 +14,16 @@
 set LHOME [file normalize [file join [file dirname $argv0] ..]]
 
 array set LABELUSE {
-    .				{ ChangeLog .sh INSTALL .sh COPYING .sh NEWS .sh AUTHORS .sh configure.in .sh 
+    .				{ ChangeLog .sh INSTALL .sh COPYING .sh NEWS .sh AUTHORS .sh configure.ac .sh 
 				  mqconfig.h.in .c THANKS .sh env.sh.in .sh env.tcl.in .sh README_windows .sh }
     ./theLink/tclmsgque		{ tclmsgque.tcl.in .sh }
     ./theLink/msgqueforphp	{ php.ini.in .phpini }
     ./theLink/acmds		{ aexec .tcl .README.acmds .sh }
     ./win			{ README.win .sh }
     ./performance		{ env.sh.in .sh }
-    ./bin			{ Nhi1Label .sh Nhi1Config .sh rcBuild .sh Nhi1BuildLanguage .sh Nhi1Test .sh 
+    ./bin			{ Nhi1Label .sh Nhi1Config .sh rcBuild .sh Nhi1BuildLanguage .sh Nhi1Exec .sh 
 				  Nhi1Docs .sh Nhi1Tags .sh }
-    ./sbin			{ LbMain .sh log .sh SetupEnv .sh }
+    ./sbin			{ LbMain .sh log .sh SetupEnv .sh w3m .sh }
     ./etc			{ .alias .sh .bashrc .sh .vimrc .vim }
     ./theLink/gomsgque    	{ MakeGoMsgque.inc.in .sh }
     ./theLink/gomsgque/src/gomsgque { gomsgque.go.in .go }
@@ -111,7 +111,7 @@ config.h*       config.status  EXPERIMENTAL     ltmain.sh     mkinstalldirs     
 				    tags .IDEEN config.out INSTALL out.log env.sh .IMPORTANT .CLEAN env.tcl
 				    discheck.out msgqueforphp *.bak mqconfig.h.in~ *.log .PUT_HTML
 				    .GREP_FOR_SOURCE_CODE .PHP.info build_test html .ToDo
-				    ar-lib
+				    ar-lib *.sw*
 				}
 }
 

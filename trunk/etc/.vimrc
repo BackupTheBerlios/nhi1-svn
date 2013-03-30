@@ -14,7 +14,7 @@ set softtabstop=2
 set shiftwidth=2
 set modeline
 " set mouse=n
-set autoindent
+" set autoindent
 
 syntax on
 

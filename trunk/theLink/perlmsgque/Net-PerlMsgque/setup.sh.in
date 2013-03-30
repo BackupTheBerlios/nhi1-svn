@@ -1,0 +1,5 @@
+
+@PERL@ Makefile.PL PREFIX='@prefix@' @PERL_DEBUG@ CC='@CC@' LD='@CC@' NM='@NM@' AR='@AR@' \
+  INC='-Wall -I. -I@abs_top_builddir@ -I@abs_top_srcdir@/theLink/libmsgque' \
+  OBJECT='$(O_FILES) @abs_top_builddir@/theLink/libmsgque/.libs/libtmp.a' \
+  DEFINE='-DMQ_IGNORE_EXTERN'

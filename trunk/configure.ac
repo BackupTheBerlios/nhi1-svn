@@ -1,5 +1,5 @@
 #+
-#:  \file       configure.in
+#:  \file       configure.ac
 #:  \brief      \$Id$
 #:  
 #:  (C) 2007 - NHI - #1 - Project - Group
@@ -216,6 +216,20 @@ else
 fi
 AC_SUBST([HAS_UDS])
 
+# create some windows style path names
+test "x$prefix" = xNONE && my_prefix=$ac_default_prefix
+AC_SUBST([prefix_m], "$($CYGPATH_M "$my_prefix")")
+AC_SUBST([abs_top_builddir_m], "$($CYGPATH_M "$ac_pwd")")
+case $srcdir in
+  .)  # We are building in place.
+    my_abs_top_srcdir=$ac_pwd ;;
+  [\\/]* | ?:[\\/]* )  # Absolute name.
+    my_abs_top_srcdir=$srcdir ;;
+  *) # Relative name.
+    my_abs_top_srcdir=$ac_pwd/$srcdir ;;
+esac
+AC_SUBST([abs_top_srcdir_m], "$($CYGPATH_M "$my_abs_top_srcdir")")
+
 AC_SUBST([path],[$PATH])
 AC_SUBST([ld_library_path],[$LD_LIBRARY_PATH])
 
@@ -230,13 +244,15 @@ AC_CONFIG_FILES([Makefile tests/Makefile
 		    theLink/csmsgque/Makefile theLink/example/csharp/Makefile
 		      theLink/msgqueforphp/Makefile theLink/example/php/Makefile theLink/msgqueforphp/php.ini
 			theLink/perlmsgque/Makefile theLink/example/perl/Makefile
-			  theLink/rubymsgque/Makefile theLink/example/ruby/Makefile
-			    theLink/gomsgque/Makefile theLink/example/go/Makefile theLink/gomsgque/src/gomsgque/gomsgque.go
-			      theLink/example/vb/Makefile
-				performance/Makefile performance/build_performance_env.sh performance/performance.sh
-				  theBrain/Makefile theBrain/abrain/Makefile theBrain/atrans/Makefile
-				    theBrain/tests/Makefile
-				      theGuard/Makefile theGuard/aguard/Makefile theGuard/tests/Makefile ])
+			  theLink/perlmsgque/Net-PerlMsgque/setup.sh theLink/perlmsgque/Net-PerlMsgque/setup.bat 
+			  theLink/perlmsgque/Net-PerlMsgque/make.bat
+			    theLink/rubymsgque/Makefile theLink/example/ruby/Makefile
+			      theLink/gomsgque/Makefile theLink/example/go/Makefile theLink/gomsgque/src/gomsgque/gomsgque.go
+				theLink/example/vb/Makefile
+				  performance/Makefile performance/build_performance_env.sh performance/performance.sh
+				    theBrain/Makefile theBrain/abrain/Makefile theBrain/atrans/Makefile
+				      theBrain/tests/Makefile
+					theGuard/Makefile theGuard/aguard/Makefile theGuard/tests/Makefile ])
 
 AC_OUTPUT
 

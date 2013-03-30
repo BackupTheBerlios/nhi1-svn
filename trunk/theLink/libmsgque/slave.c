@@ -392,7 +392,7 @@ MqSlaveGetMaster (
   return MqSlaveGetMasterI(context);
 }
 
-bool
+MQ_BOL
 MqSlaveIs (
   struct MqS const * const context
 )

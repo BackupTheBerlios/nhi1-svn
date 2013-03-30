@@ -13,51 +13,33 @@
 if USE_PERL
 
 if WIN32
-setup = cmd.exe /E:ON /V:ON /T:0E /C call Net-PerlMsgque/setup.bat
-make = cmd.exe /E:ON /V:ON /C call Net-PerlMsgque/make.bat
+setup = cmd.exe /E:ON /V:ON /T:0E /C call setup.bat
+make = cmd.exe /E:ON /V:ON /C call make.bat
 else
-setup = $(shell) Net-PerlMsgque/setup.sh
-make = $(shell) Net-PerlMsgque/make.sh
+setup = $(SHELL) setup.sh
+make = $(MAKE)
 endif
-
-os_abs_top_builddir = $(shell $(CYGPATH_M) $(abs_top_builddir))
-os_abs_srcdir = $(shell $(CYGPATH_M) $(abs_srcdir))
-os_abs_builddir = $(shell $(CYGPATH_M) $(abs_builddir))
-os_prefix = $(shell $(CYGPATH_M) $(prefix))
-os_perl = $(shell $(CYGPATH_M) @PERL@)
-os_builddir = $(shell $(CYGPATH_M) $(builddir))
 
 PERLMAKEFILE  =	Net-PerlMsgque/Makefile
-PERLCONFIG    =	  PREFIX="$(os_prefix)" \
-		  INC="-Wall -I. -I$(os_abs_top_builddir) -I$(os_abs_srcdir)/../libmsgque" \
-		  OBJECT="\$$(O_FILES) $(os_abs_builddir)/../libmsgque/.libs/libtmp*.o $(os_abs_builddir)/../sqlite/.libs/libtmp*.o"
-
-if DEBUG
-PERLCONFIG    += OPTIMIZE=-g
-endif
-
-PERLCONFIG    += DEFINE="-DMQ_IGNORE_EXTERN"
 
 $(abs_builddir)/Net-PerlMsgque/%: $(abs_srcdir)/Net-PerlMsgque/%
 	if test -d $(dir $@) ; then true; else mkdir -p $(dir $@); fi
 	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then cp -r $< $@; else true; fi
 
-
-$(PERLMAKEFILE): $(subst $(abs_srcdir), $(abs_builddir), $(wildcard $(abs_srcdir)/Net-PerlMsgque/*)) Makefile.am
-	$(setup) $(os_perl) $(os_prefix) $(os_abs_top_builddir) $(os_abs_srcdir) $(os_abs_builddir)
-	
+$(PERLMAKEFILE): $(subst $(abs_srcdir), $(abs_builddir), $(wildcard $(abs_srcdir)/Net-PerlMsgque/*))
+	cd Net-PerlMsgque && $(setup)
 	
 all-local: $(PERLMAKEFILE) 
-	if test -f $(PERLMAKEFILE); then $(make); else true; fi
+	cd Net-PerlMsgque && $(make)
 
 clean-local:
-	if test -f $(PERLMAKEFILE); then $(make) clean; else true; fi
+	if test -f $(PERLMAKEFILE); then cd Net-PerlMsgque && $(make) clean ; else true; fi
 
 install-exec-local:
-	$(MAKE) -C  $(builddir)/Net-PerlMsgque $(AM_MAKEFLAGS) DESTDIR="$(DESTDIR)" install
+	if test -f $(PERLMAKEFILE); then cd Net-PerlMsgque && $(make) DESTDIR="$(DESTDIR)" install ; else true; fi
 
 uninstall-local:
-	$(MAKE) -C  $(builddir)/Net-PerlMsgque $(AM_MAKEFLAGS) DESTDIR="$(DESTDIR)" uninstall
+	if test -f $(PERLMAKEFILE); then cd Net-PerlMsgque && $(make) DESTDIR="$(DESTDIR)" uninstall ; else true; fi
 
 distclean-local:
 	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then rm -fr Net-PerlMsgque; else true; fi
@@ -69,12 +51,13 @@ EXTRA_DIST = \
 	Net-PerlMsgque/PerlMsgque.xs \
 	Net-PerlMsgque/lib/Net/PerlMsgque.pm \
 	Net-PerlMsgque/Makefile.PL \
-	Net-PerlMsgque/Makefile.PL.win \
 	Net-PerlMsgque/README \
 	Net-PerlMsgque/t/Net-PerlMsgque.t \
 	Net-PerlMsgque/Changes \
 	Net-PerlMsgque/MANIFEST \
 	Net-PerlMsgque/typemap \
 	Net-PerlMsgque/compile.bat \
-	Net-PerlMsgque/make.bat
+	Net-PerlMsgque/setup.bat.in \
+	Net-PerlMsgque/setup.sh.in \
+	Net-PerlMsgque/make.bat.in
 

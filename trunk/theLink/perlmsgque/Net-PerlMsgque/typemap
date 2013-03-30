@@ -54,7 +54,7 @@ T_NPV
 
 OUTPUT
 T_MqS
-        sv_setref_pv($arg, \"Net::PerlMsgque::MqS\", (void*)$var);
+	$arg = ($var == NULL ? (SV*) $var->self : &PL_sv_undef);
 
 T_MqSelf
         sv_setref_pv($arg, \"Net::PerlMsgque::MqS\", (void*)$var);
