@@ -426,30 +426,33 @@ BOOT:
 
 MODULE = Net::PerlMsgque PACKAGE = Net::PerlMsgque::MqS
 
-MqSelf*
+void
 new(SV *MqS_class, ...)
   PREINIT:
-    struct MqS * tmpl = NULL;
-  CODE:
-    RETVAL = NULL;
-    if (items < 1 || items > 2) {
+    MqS * ctx  = NULL;
+    MqS * tmpl = NULL;
+  PPCODE:
+    if (items == 2) {
+      tmpl = get_MqS(aTHX_ ST(1));
+    } else if (items != 1) {
       croak_xs_usage(cv, "?tmpl?");
-    } else {
-      if (items == 2) {
-	tmpl = get_MqS(aTHX_ ST(1));
-      }
-      if (!SvROK(MqS_class)) {
-	// called by a "class"
-	RETVAL = (MqS*) MqContextCreate(sizeof(struct PerlContextS), tmpl);
-	RETVAL->threadData = PERL_GET_CONTEXT;
-	MqConfigSetSelf(RETVAL, SvREFCNT_inc(ST(0)));
-	MqConfigSetSetup(RETVAL, MqLinkDefault, NULL, MqLinkDefault, NULL, ProcessExit, ThreadExit);
-      } else {
-	MqConfigReset (get_MqS (aTHX_ MqS_class));
-      }
+      XSRETURN(0);
     }
-  OUTPUT:
-    RETVAL
+    if (!SvROK(MqS_class)) {
+      // called by a "class"
+      ctx = (MqS*) MqContextCreate(sizeof(struct PerlContextS), tmpl);
+      ST(0) = sv_newmortal();
+      sv_setref_pv(ST(0), SvPV_nolen(MqS_class), (void*)ctx);
+      ctx->threadData = PERL_GET_CONTEXT;
+      MqConfigSetSelf(ctx, SvREFCNT_inc(ST(0)));
+      MqConfigSetSetup(ctx, MqLinkDefault, NULL, MqLinkDefault, NULL, ProcessExit, ThreadExit);
+    } else {
+      // called by a "object"
+      ctx = get_MqS (aTHX_ MqS_class);
+      ST(0) = (SV*) ctx->self;
+      MqConfigReset (ctx);
+    }
+    XSRETURN(1);
 
 void
 DESTROY(SV *sv)
@@ -530,15 +533,19 @@ MqFactoryGet(MQ_CST ident = NULL)
 MqFactoryS*
 MqFactoryGetCalled(MQ_CST ident = NULL)
 
-MqS*
+void
 MqFactoryNew(MqFactorySelf* factory)
-  CODE:
-    RETVAL = MqFactoryNew(MQ_ERROR_PRINT, NULL, factory);
-    if (RETVAL == NULL) {
+  PREINIT:
+    struct MqS * ctx = NULL;
+  PPCODE:
+    ctx = MqFactoryNew(MQ_ERROR_PRINT, NULL, factory);
+    if (ctx == NULL) {
       croak("MqFactoryS exception");
+      XSRETURN(0);
+    } else {
+      ST(0) = (SV*)ctx->self;
+      XSRETURN(1);
     }
-  OUTPUT:
-    RETVAL
 
 MqFactoryS*
 MqFactoryCopy(MqFactorySelf* factory, MQ_CST ident)
@@ -601,8 +608,14 @@ MqProcessEvent(MqSelf* context, ...)
     }
     ErrorMqToPerlWithCheck (MqProcessEvent (context, timeout, wait));
 
-MqS*
-MqLinkGetParent (MqSelf* context)
+void
+LinkGetParent(MqSelf* context)
+  PREINIT:
+    MqS* parent;
+  PPCODE:
+    parent = (MqS*) MqLinkGetParent(context);
+    ST(0) = (parent != NULL? (SV*)parent->self : &PL_sv_undef);
+    XSRETURN(1);
 
 MQ_CST
 MqLinkGetTargetIdent (MqSelf* context)
@@ -1019,12 +1032,14 @@ MqReadForward (MqSelf* context, MqS* ftr, MqDumpS* dump = NULL)
 MQ_NST
 MqServiceGetToken (MqSelf* context)
 
-MqS*
+void
 MqServiceGetFilter(MqSelf* context, MQ_SIZE id = 0)
-  CODE:
-    ErrorMqToPerlWithCheck (MqServiceGetFilter (context, id, &RETVAL));
-  OUTPUT:
-    RETVAL
+  PREINIT:
+    struct MqS * filter = NULL;
+  PPCODE:
+    ErrorMqToPerlWithCheck (MqServiceGetFilter (context, id, &filter));
+    ST(0) = (SV*)filter->self;
+    XSRETURN(1);
 
 bool
 MqServiceIsTransaction (MqSelf* context)
@@ -1223,11 +1238,23 @@ MqSlaveDelete (MqSelf* context, MQ_SIZE id)
   CODE:
     ErrorMqToPerlWithCheck (MqSlaveDelete(context, id));
 
-MqS*
+void
 MqSlaveGet (MqSelf* context, MQ_SIZE id)
+  PREINIT:
+    MqS* slave;
+  PPCODE:
+    slave = (MqS*) MqSlaveGet(context,id);
+    ST(0) = (slave ? (SV*)slave->self : &PL_sv_undef);
+    XSRETURN(1);
 
-MqS*
-MqSlaveGetMaster (MqSelf* context)
+void
+SlaveGetMaster(MqSelf* context)
+  PREINIT:
+    MqS* master;
+  PPCODE:
+    master = (MqS*) MqSlaveGetMaster(context);
+    ST(0) = (master ? (SV*)master->self : &PL_sv_undef);
+    XSRETURN(1);
 
 bool
 MqSlaveIs (MqSelf* context)

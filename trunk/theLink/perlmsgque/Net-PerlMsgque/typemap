@@ -53,11 +53,9 @@ T_NPV
 
 
 OUTPUT
-T_MqS
-	$arg = ($var == NULL ? (SV*) $var->self : &PL_sv_undef);
-
-T_MqSelf
-        sv_setref_pv($arg, \"Net::PerlMsgque::MqS\", (void*)$var);
+# never define 'T_MqS' as output because a RETVAL will be automatic
+# defined as 'mortal' and so the 'context->self' value will be
+# destroyed.
 
 T_MqBufferS
         sv_setref_pv($arg, \"Net::PerlMsgque::MqBufferS\", (void*)$var);
