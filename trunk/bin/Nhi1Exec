@@ -158,6 +158,8 @@ lookup() {
 	c)	  CMDDIR="$abs_top_builddir_m/theLink/example/c";;
       esac
     fi
+  else
+    CMDDIR="$($CYGPATH_M "$CMDDIR")"
   fi
 
   if [[ -r "$CMDDIR/$CM1" ]] ; then

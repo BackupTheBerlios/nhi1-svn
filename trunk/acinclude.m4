@@ -270,14 +270,15 @@ AC_DEFUN([SC_ENABLE_SYMBOLS], [
       AC_SUBST([VB_DEBUG], [-debug:full])
       AC_SUBST([JAVA_DEBUG], [-g])
       AC_SUBST([CSHARP_DEBUG], ['-debug -define:_DEBUG'])
-      AC_SUBST([PERL_DEBUG], ['OPTIMIZE="-g"'])
-      AC_SUBST([SDK_DEBUG], ['/Debug'])
+      test "$host_os" = "mingw32" && PERL_DEBUG='OPTIMIZE="/DEBUG"'   || PERL_DEBUG='OPTIMIZE="-g"'
+      AC_SUBST([SDK_DEBUG], ['Debug'])
     else
-      AC_SUBST([PERL_DEBUG], ['OPTIMIZE="-o"'])
-      AC_SUBST([SDK_DEBUG], ['/Release'])
+      test "$host_os" = "mingw32" && PERL_DEBUG='OPTIMIZE="/RELEASE"' || PERL_DEBUG='OPTIMIZE="-O"'
+      AC_SUBST([SDK_DEBUG], ['Release'])
       CFLAGS="-O3 $CFLAGS"
       CPPFLAGS="-DNDEBUG $CPPFLAGS"
     fi
+    AC_SUBST([PERL_DEBUG])
     AM_CONDITIONAL([DEBUG], [test "$enable_symbols" = "yes"])
     AC_MSG_RESULT($symbol)
 ])
@@ -794,9 +795,9 @@ AC_DEFUN([SC_WITH_WINSDK], [
       AC_MSG_ERROR([a Windows SDK is required])
     else
       case "$host_cpu" in
-	*86)  SDK_CPU='/x86';;
-	ia64) SDK_CPU='/ia64';;
-	*64)  SDK_CPU='/x64';;
+	*86)  SDK_CPU='x86';;
+	ia64) SDK_CPU='ia64';;
+	*64)  SDK_CPU='x64';;
       esac
       AC_SUBST([SDK_CPU])
     fi

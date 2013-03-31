@@ -1,13 +1,8 @@
-
+@ECHO OFF
 set MAKE=
 set MAKEFLAGS=
-
 cd %1 & shift
-
 @ECHO ON
-
-call "@SDK_SETENV@" @SDK_DEBUG@ @SDK_CPU@ 2>NUL
-
+call "@SDK_SETENV@" /@SDK_DEBUG@ /@SDK_CPU@ 2>NUL
 nmake.exe %~1 %~2 %~3
-
 @ECHO OFF
