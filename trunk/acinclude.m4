@@ -43,7 +43,7 @@ AC_DEFUN([OT_WITH_PROG],[
   AC_ARG_VAR(VARIABLE,absolute path to 'ID' TYPE)
 
   AC_MSG_CHECKING(for build with: ID);
-  AC_ARG_WITH(ID,AS_HELP_STRING([--with-ID[[[=PATH]]]],[absolute path to 'ID' TYPE]), [
+  AC_ARG_WITH(ID,AS_HELP_STRING([--with-ID?=PATH?],[absolute path to 'ID' TYPE]), [
     AS_IF([test "$withval" != yes -a "$withval" != no],[
       VARIABLE="$withval"
       withval='yes'
@@ -800,6 +800,8 @@ AC_DEFUN([SC_WITH_WINSDK], [
       esac
       AC_SUBST([SDK_CPU])
     fi
+  else
+    AM_CONDITIONAL(USE_WINSDK, [false])
   fi
 ])
 

@@ -802,7 +802,7 @@ error:
 /*                                                                           */
 /*****************************************************************************/
 
-MQ_BOL
+bool
 MqConfigGetIsServer (
   struct MqS const * const context
 )
@@ -810,7 +810,7 @@ MqConfigGetIsServer (
   return MQ_IS_SERVER(context);
 }
 
-MQ_BOL
+bool
 MqConfigGetIsString (
   struct MqS const * const context
 )
@@ -818,7 +818,7 @@ MqConfigGetIsString (
   return (context->config.isString == MQ_YES);
 }
 
-MQ_BOL
+bool
 MqConfigGetIsSilent (
   struct MqS const * const context
 )

@@ -251,7 +251,7 @@ G_HelpProc='Usage'
 G_Option break-on-non-option
 G_Argument 'prefix:prefix:no:prefix test with:L:no:vg:gdb:ddd:kdbg:lc:sr:st:sp:mdb'
 G_Argument 'lookup:lookup:no:lookup a test-script:B'
-G_Argument 'remote:remote::add --tcp --port 7777 --thread to the argument(s)'
+G_Argument 'remote:remote:no:add "--tcp --port 7777 --thread" to the argument(s):B'
 
 EOF
   )"
@@ -263,9 +263,10 @@ if [[ "$lookup" == 'yes' ]] ; then
   exit
 fi
 
-[[ $1 == "-ur" ]] && {
+if [[ "$remote" == 'yes' ]] ; then
   set -- "$@" --tcp --port 7777 --thread
-}
+fi
+
 case "$prefix" in
   vg) 
     PREFIX=$PREFIX_vg

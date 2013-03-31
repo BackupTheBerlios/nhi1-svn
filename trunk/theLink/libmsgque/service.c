@@ -55,7 +55,7 @@ MqServiceGetFilter2 (
   return ret;
 }
 
-MQ_BOL
+bool
 MqServiceIsTransaction (
   struct MqS const * const context
 )

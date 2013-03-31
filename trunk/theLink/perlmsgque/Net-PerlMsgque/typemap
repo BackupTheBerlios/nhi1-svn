@@ -87,4 +87,4 @@ T_MqSException
         sv_setref_pv($arg, \"Net::PerlMsgque::MqSException\", (void*)$var);
 
 T_NPV
-	sv_setpvn((SV*)$arg, $var, strlen($var));
+	sv_setpvn((SV*)$arg, $var, ($var?strlen($var):0));

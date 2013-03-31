@@ -245,8 +245,7 @@ AC_CONFIG_FILES([Makefile tests/Makefile
 		    theLink/csmsgque/Makefile theLink/example/csharp/Makefile
 		      theLink/msgqueforphp/Makefile theLink/example/php/Makefile theLink/msgqueforphp/php.ini
 			theLink/perlmsgque/Makefile theLink/example/perl/Makefile
-			  theLink/perlmsgque/Net-PerlMsgque/setup.sh theLink/perlmsgque/Net-PerlMsgque/setup.bat 
-			  theLink/perlmsgque/Net-PerlMsgque/make.bat
+			  theLink/perlmsgque/setup.sh theLink/perlmsgque/setup.bat theLink/perlmsgque/make.bat
 			    theLink/rubymsgque/Makefile theLink/example/ruby/Makefile
 			      theLink/gomsgque/Makefile theLink/example/go/Makefile theLink/gomsgque/src/gomsgque/gomsgque.go
 				theLink/example/vb/Makefile
