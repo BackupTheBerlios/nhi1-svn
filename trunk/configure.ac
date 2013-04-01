@@ -100,13 +100,14 @@ SC_WITH_TOOL_ROOT
 
 SC_ENABLE_CACHE
 
-if test "$host_os" = "mingw32"; then
+if test "$build_os" = "cygwin"; then
   CYGPATH_M='cygpath -m'
 else
   CYGPATH_M='echo'
 fi
 AC_SUBST([CYGPATH_M])
 
+SC_WITH_WINSDK
 SC_WITH_CXX
 SC_WITH_TCL
 SC_WITH_PYTHON
@@ -117,7 +118,6 @@ SC_WITH_JAVA
 SC_WITH_CSHARP
 SC_WITH_VB
 SC_WITH_GO
-SC_WITH_WINSDK
 
 SC_ENABLE_BRAIN
 SC_ENABLE_GUARD
@@ -234,7 +234,7 @@ AC_SUBST([abs_top_srcdir_m], "$($CYGPATH_M "$my_abs_top_srcdir")")
 AC_SUBST([path],[$PATH])
 AC_SUBST([ld_library_path],[$LD_LIBRARY_PATH])
 
-AC_CONFIG_FILES([Makefile tests/Makefile
+AC_CONFIG_FILES([Makefile tests/Makefile sbin/winsdk.bat
       theLink/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile theLink/tests/Makefile 
 	theLink/docs/Makefile bin/Makefile sbin/Makefile etc/Makefile
 	  theLink/libmsgque/Makefile theLink/example/c/Makefile
@@ -245,14 +245,13 @@ AC_CONFIG_FILES([Makefile tests/Makefile
 		    theLink/csmsgque/Makefile theLink/example/csharp/Makefile
 		      theLink/msgqueforphp/Makefile theLink/example/php/Makefile theLink/msgqueforphp/php.ini
 			theLink/perlmsgque/Makefile theLink/example/perl/Makefile
-			  theLink/perlmsgque/setup.sh theLink/perlmsgque/setup.bat theLink/perlmsgque/make.bat theLink/perlmsgque/lib.bat
-			    theLink/rubymsgque/Makefile theLink/example/ruby/Makefile
-			      theLink/gomsgque/Makefile theLink/example/go/Makefile theLink/gomsgque/src/gomsgque/gomsgque.go
-				theLink/example/vb/Makefile
-				  performance/Makefile performance/build_performance_env.sh performance/performance.sh
-				    theBrain/Makefile theBrain/abrain/Makefile theBrain/atrans/Makefile
-				      theBrain/tests/Makefile
-					theGuard/Makefile theGuard/aguard/Makefile theGuard/tests/Makefile ])
+			  theLink/rubymsgque/Makefile theLink/example/ruby/Makefile
+			    theLink/gomsgque/Makefile theLink/example/go/Makefile theLink/gomsgque/src/gomsgque/gomsgque.go
+			      theLink/example/vb/Makefile
+				performance/Makefile performance/build_performance_env.sh performance/performance.sh
+				  theBrain/Makefile theBrain/abrain/Makefile theBrain/atrans/Makefile
+				    theBrain/tests/Makefile
+				      theGuard/Makefile theGuard/aguard/Makefile theGuard/tests/Makefile ])
 
 AC_OUTPUT
 

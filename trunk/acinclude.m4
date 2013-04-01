@@ -33,6 +33,32 @@ AC_DEFUN([OT_REQUIRE_PROG],[
     popdef([VARIABLE])
 ])
 
+#------------------------------------------------------------------------
+# OT_WITH_PROG --
+#
+#       check if PROG is avialble:
+#	1. check for --with/without-ID[=PATH] option
+#	2. if PATH is available use the PATH
+#	3. if PATH is NOT available search for EXECUTABLE
+#	4. if EXECUTABLE is NOT found raise an error
+#
+# Arguments:
+#       ID .......... identifier
+#	VARIABLE .... variable to set with absolute path of PROG
+#		      or EMPTY if NOT required or NOT found.
+#	EXECUTABLE .. LIST if possible executable names
+#       TYPE ........ type of the executable like script, runtime or binary
+#       PATH_PROG ... search path for PROG
+#
+# Results:
+#
+#       1. Adds the --enable-ID[=PATH] argument to configure
+#       2. set VARIABLE to PATH or empty
+#       3. set VARIABLE_M to native (windows) path or empty
+#       4. add the USE_ID (with upper-chars) as 'automake' conditional
+#
+#------------------------------------------------------------------------
+
 AC_DEFUN([OT_WITH_PROG],[
   pushdef([ID],$1)
   pushdef([VARIABLE],$2)
@@ -271,13 +297,14 @@ AC_DEFUN([SC_ENABLE_SYMBOLS], [
       AC_SUBST([JAVA_DEBUG], [-g])
       AC_SUBST([CSHARP_DEBUG], ['-debug -define:_DEBUG'])
       test "$host_os" = "mingw32" && PERL_DEBUG='OPTIMIZE="/DEBUG"'   || PERL_DEBUG='OPTIMIZE="-g"'
-      AC_SUBST([SDK_DEBUG], ['Debug'])
+      SDK_DEBUG='DEBUG'
     else
-      test "$host_os" = "mingw32" && PERL_DEBUG='OPTIMIZE="/RELEASE"' || PERL_DEBUG='OPTIMIZE="-O"'
-      AC_SUBST([SDK_DEBUG], ['Release'])
       CFLAGS="-O3 $CFLAGS"
       CPPFLAGS="-DNDEBUG $CPPFLAGS"
+      test "$host_os" = "mingw32" && PERL_DEBUG='OPTIMIZE="/RELEASE"' || PERL_DEBUG='OPTIMIZE="-O"'
+      SDK_DEBUG='Release'
     fi
+    AC_SUBST([SDK_DEBUG])
     AC_SUBST([PERL_DEBUG])
     AM_CONDITIONAL([DEBUG], [test "$enable_symbols" = "yes"])
     AC_MSG_RESULT($symbol)
@@ -774,6 +801,9 @@ AC_DEFUN([SC_WITH_GO], [
 
 AC_DEFUN([SC_WITH_PERL], [
   OT_WITH_PROG(perl, PERL, perl, interpreter)
+  if test "$host_os" = 'cygwin' -a -z "$SDK_SETENV" ; then
+    AC_MSG_ERROR([for a 'Windows-Perl' build the 'Windows-SDK' is required])
+  fi
 ])
 
 #------------------------------------------------------------------------
@@ -785,25 +815,31 @@ AC_DEFUN([SC_WITH_PERL], [
 #       none
 #
 # Results:
+#	1. add the '--with-winsdk[=PATH]' option
+#	2. set the SDK_EXEC and SDK_CPU substitution
+#	3. set the SDK_SETENV to a PATH or empty
+#	4. set USE_WINSDK automake conditional
 #
 #------------------------------------------------------------------------
 
 AC_DEFUN([SC_WITH_WINSDK], [
-  if test "$host_os" = "mingw32" -a -n "$PERL" ; then
+  SDK_EXEC=''
+  SDK_CPU=''
+  if test "$build_os" = "cygwin"; then
     OT_WITH_PROG(winsdk, SDK_SETENV, [SetEnv.cmd], [script 'SetEnv.cmd'])
-    if test -z "$SDK_SETENV" ; then
-      AC_MSG_ERROR([a Windows SDK is required])
-    else
+    if test -n "$SDK_SETENV" ; then
       case "$host_cpu" in
 	*86)  SDK_CPU='x86';;
 	ia64) SDK_CPU='ia64';;
 	*64)  SDK_CPU='x64';;
       esac
-      AC_SUBST([SDK_CPU])
+      SDK_EXEC="cmd.exe /E:ON /V:ON /C call \"$($CYGPATH_M $ac_pwd)/sbin/winsdk.bat\""
     fi
   else
     AM_CONDITIONAL(USE_WINSDK, [false])
   fi
+  AC_SUBST([SDK_EXEC])
+  AC_SUBST([SDK_CPU])
 ])
 
 #------------------------------------------------------------------------

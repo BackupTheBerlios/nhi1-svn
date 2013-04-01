@@ -14,18 +14,25 @@ if USE_PERL
 
 SUFFIXES =
 
-if WIN32
-setup = cmd.exe /E:ON /V:ON /T:0E /C call setup.bat Net-PerlMsgque
-make = cmd.exe /E:ON /V:ON /C call make.bat Net-PerlMsgque
-lib = cmd.exe /E:ON /V:ON /C call lib.bat Net-PerlMsgque
-PERLIMPLIB = Net-PerlMsgque/libmsgque.dll.lib
+if USE_WINSDK
+setup = cd Net-PerlMsgque && $(SDK_EXEC)
+make = cd Net-PerlMsgque && $(SDK_EXEC) nmake.exe
+PERL_OPTS = 
+PERL_OBJECT = OBJECT="\$$(O_FILES) @abs_top_builddir_m@/theLink/libmsgque/.libs/libmsgque.dll.lib"
+PERL_DEFINE = DEFINE="-DPIC -DDLL_EXPORT"
 else
-setup = $(SHELL) setup.sh Net-PerlMsgque
+setup = cd Net-PerlMsgque &&
 make = $(MAKE) -C Net-PerlMsgque
-PERLIMPLIB =
+PERL_OPTS = CC='@CC@' LD='@CC@' AR='@AR@'
+PERL_OBJECT = OBJECT="\$$(O_FILES) @abs_top_builddir@/theLink/libmsgque/.libs/libtmp.a"
+PERL_DEFINE = DEFINE="-DMQ_IGNORE_EXTERN"
 endif
 
 PERLMAKEFILE  =	Net-PerlMsgque/Makefile
+
+setup += @PERL_M@ Makefile.PL PREFIX="@prefix_m@" $(PERL_DEBUG) $(PERL_OPTS) \
+  INC="-Wall -I. -I@abs_top_builddir_m@ -I@abs_top_srcdir_m@/theLink/libmsgque" \
+    $(PERL_OBJECT) $(PERL_DEFINE)
 
 $(abs_builddir)/Net-PerlMsgque:
 	mkdir Net-PerlMsgque
@@ -33,16 +40,13 @@ $(abs_builddir)/Net-PerlMsgque:
 $(abs_builddir)/Net-PerlMsgque/%: $(abs_srcdir)/Net-PerlMsgque/% | $(abs_builddir)/Net-PerlMsgque
 	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then cp -r $< $@; else true; fi
 
-$(PERLMAKEFILE): $(subst $(abs_srcdir), $(abs_builddir), $(wildcard $(abs_srcdir)/Net-PerlMsgque/*)) Makefile setup.bat setup.sh
+$(PERLMAKEFILE): $(subst $(abs_srcdir), $(abs_builddir), $(wildcard $(abs_srcdir)/Net-PerlMsgque/*)) Makefile
 	$(setup)
 
-if WIN32
-$(PERLIMPLIB): $(abs_top_builddir)/theLink/libmsgque/.libs/libmsgque-22.def lib.bat | $(abs_builddir)/Net-PerlMsgque
-	$(lib)
-endif
-	
-all-local: $(PERLMAKEFILE) $(PERLIMPLIB) make.bat
+Net-PerlMsgque/PerlMsgque.obj: $(PERLMAKEFILE)
 	$(make)
+
+all-local: Net-PerlMsgque/PerlMsgque.obj
 
 clean-local:
 	if test -f $(PERLMAKEFILE); then $(make) clean ; else true; fi

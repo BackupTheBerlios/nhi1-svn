@@ -9,6 +9,5 @@ WriteMakefile(
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM  => 'lib/Net/PerlMsgque.pm', # retrieve abstract from module
        AUTHOR         => 'Andreas Otto <aotto1968@users.sourceforge.net>') : ()),
-    LIBS              => [''], # e.g., '-lm'
 );
 

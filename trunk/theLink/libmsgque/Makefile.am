@@ -47,9 +47,17 @@ libmsgque_la_SOURCES = buffer.c cache.c event.c log.c \
     service.c link.c factory.c sql.c
 
 libmsgque_la_CFLAGS = -shared -DMQ_BUILD_LIBMSGQUE_DLL -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS) $(WINDEFS)
-libmsgque_la_LDFLAGS = -shared -version-info @VERSION_INFO@ -no-undefined -Xlinker --output-def -Xlinker .libs/libmsgque-22.def
+libmsgque_la_LDFLAGS = -shared -version-info @VERSION_INFO@ -no-undefined -Xlinker --output-def -Xlinker .libs/libmsgque.dll.def
 libmsgque_la_LIBADD = $(builddir)/../sqlite/libtmp.la $(WINLIBS)
 
 include_HEADERS = msgque.h
 
 html-local: libtmp.la libtmps.la
+
+if USE_WINSDK
+sdklibdir = $(libdir)
+sdklib_DATA = .libs/libmsgque.dll.lib .libs/libmsgque.dll.exp
+
+.libs/libmsgque.dll.lib .libs/libmsgque.dll.exp: libmsgque.la
+	cd .libs && $(SDK_EXEC) lib.exe /MACHINE:@SDK_CPU@ /DEF:libmsgque.dll.def /VERBOSE /NAME:$(shell basename .libs/libmsgque-*.dll)
+endif
