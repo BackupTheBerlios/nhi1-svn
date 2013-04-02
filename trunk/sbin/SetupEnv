@@ -253,7 +253,7 @@ function set_defaults {
   declare I=$1
   declare D=$2
   declare A=${3:-yes}
-  ## special bei tables, _*_ wird expandiert
+  ## special bei tables, _*_ will be evaluated
   if [[ "$D" == _*_ ]] ; then
     D="$(eval_command $D)"
     [[ $? != 0 ]] && Error "[FKT] set_defaults"
@@ -265,29 +265,29 @@ function set_defaults {
     IFS='|'; tmpl=(${SE_List[$I]}); unset IFS
     if [[ "${SE_Type[$I]}" == *B* ]] ; then
       case "$D" in
-	'0') D='no';;
-	'1') D='yes';;
+		'0') D='no';;
+		'1') D='yes';;
       esac
     elif [[ "${SE_Type[$I]}" == *D* ]] ; then
       if [[ -z "${!D:-}" || -z "${!A:-}" ]] ; then
-	if [[ "${SE_Type[$I]}" == *V* ]] ; then
-	  if [[ -z "${!A:-}" ]] ; then
-	    D="$A"
-	  fi
-	else
-	  Error "[FKT] set_defaults: the option '${SE_Options[$I]}' of type 'D' only accept argument 'yes|no' and not '$A'"
-	fi
+		if [[ "${SE_Type[$I]}" == *V* ]] ; then
+		  if [[ -z "${!A:-}" ]] ; then
+			D="$A"
+		  fi
+		else
+		  Error "[FKT] set_defaults: the option '${SE_Options[$I]}' of type 'D' only accept argument 'yes|no' and not '$A'"
+		fi
       else
-	# bool: 1^1=0^0=0 ...
-	D="${bool[${!D}^${!A}]}"
+		# bool: 1^1=0^0=0 ...
+		D="${bool[${!D}^${!A}]}"
       fi
     elif [[ "${SE_Type[$I]}" == *L* ]] ; then
       declare -i max=${#tmpl[*]}
       for ((idx=0; idx<max; idx++)) ; do
-	[[ "$D" == "${tmpl[$idx]}" ]] && break
+		[[ "$D" == "${tmpl[$idx]}" ]] && break
       done
       if (( idx >= max )) ; then
-	Error "[FKT] set_defaults: the option '${SE_Options[$I]}' of type 'L' only accept value '${SE_List[$I]}' and not '$D'"
+		Error "[FKT] set_defaults: the option '${SE_Options[$I]}' of type 'L' only accept value '${SE_List[$I]}' and not '$D'"
       fi
     fi
   fi
@@ -813,7 +813,7 @@ declare -i  SE_NLOptions=0
 declare -i  SE_NDescriptions=0
 declare -a  SE_Options[30]
 declare -a  SE_Variables[30]
-declare -a  SE_Defaults[30]			## Hält die Ergebnisse der Variablen
+declare -a  SE_Defaults[30]			## final valued of the variable
 declare -a  SE_Descriptions[30]
 declare -a  SE_System[30]			## System Variable
 declare -a  SE_Type[30]
