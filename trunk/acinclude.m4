@@ -824,6 +824,9 @@ AC_DEFUN([SC_WITH_PERL], [
 
 AC_DEFUN([SC_WITH_WINSDK], [
   SDK_EXEC=''
+  SDK_CL=''
+  SDK_LINK=''
+  SDK_LIB=''
   SDK_CPU=''
   if test "$build_os" = "cygwin"; then
     OT_WITH_PROG(winsdk, SDK_SETENV, [SetEnv.cmd], [script 'SetEnv.cmd'])
@@ -833,12 +836,18 @@ AC_DEFUN([SC_WITH_WINSDK], [
 	ia64) SDK_CPU='ia64';;
 	*64)  SDK_CPU='x64';;
       esac
-      SDK_EXEC="cmd.exe /E:ON /V:ON /C call \"$($CYGPATH_M $ac_pwd)/sbin/winsdk.bat\""
+      SDK_EXEC="cmd.exe /E:ON /V:ON /C call $($CYGPATH_M $ac_pwd)/sbin/winsdk.bat"
+      SDK_CL="cmd.exe /E:ON /V:ON /C call $($CYGPATH_M $ac_pwd)/sbin/wincl.bat"
+      SDK_LINK="cmd.exe /E:ON /V:ON /C call $($CYGPATH_M $ac_pwd)/sbin/winlink.bat"
+      SDK_LIB="cmd.exe /E:ON /V:ON /C call $($CYGPATH_M $ac_pwd)/sbin/winlib.bat"
     fi
   else
     AM_CONDITIONAL(USE_WINSDK, [false])
   fi
   AC_SUBST([SDK_EXEC])
+  AC_SUBST([SDK_CL])
+  AC_SUBST([SDK_LINK])
+  AC_SUBST([SDK_LIB])
   AC_SUBST([SDK_CPU])
 ])
 

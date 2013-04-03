@@ -13,6 +13,10 @@
 #ifndef MAIN_H
 #   define MAIN_H
 
+# if defined(_MSC_VER)
+#   define _CRT_SECURE_NO_WARNINGS
+# endif
+
 #   include "mqconfig.h"
 
 #   define MQ_PRIVATE
@@ -25,6 +29,9 @@
 
 #   include <stdlib.h>
 #if defined(MQ_IS_WIN32)
+#   undef socklen_t
+// socklen defined as "int" in "Ws2tcpip.h" at "sys_com.h" required for
+// freeaddrinfo...getaddrinfo...gai_strerror
 #   define  socklen_t int
 #elif defined(__CYGWIN__)
 #   include <sys/socket.h>
@@ -433,7 +440,7 @@ struct pTokenS* pTokenCreate (struct MqS * const);
 void pTokenDelete ( register struct pTokenS ** const) __attribute__((nonnull));
 enum MqErrorE pTokenCheckSystem ( struct pTokenS const * const);
 enum MqErrorE pTokenInvoke ( struct pTokenS const * const);
-int pTokenCheck ( struct pTokenS const * const, MQ_CST const);
+bool pTokenCheck ( struct pTokenS const * const, MQ_CST const);
 enum MqErrorE pTokenAddHdl ( struct pTokenS const * const, MQ_CST const, struct MqCallbackS);
 enum MqErrorE pTokenDelHdl ( struct pTokenS const * const, MQ_CST const);
 void pTokenMark ( struct MqS * const, MqMarkF);

@@ -633,7 +633,7 @@ error:
 /*                                                                           */
 /*****************************************************************************/
 
-int
+bool
 pTokenCheck (
   struct pTokenS const * const token,
   MQ_CST const str

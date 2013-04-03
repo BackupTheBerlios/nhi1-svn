@@ -20,7 +20,7 @@ BEGIN_C_DECLS
 /// \brief everything \e io need for local storage
 struct MqEventS {
   fd_set fdset;			///< used in 'select'
-  int fdmax;			///< the maximum file-handle in \e fdset
+  MQ_SOCK fdmax;		///< the maximum file-handle in \e fdset
   struct MqS ** DataL;		///< list of #MqS objects
   MQ_SIZE DataLNum;		///< size of \e DataL
   MQ_SIZE DataLCur;		///< first free position in \e DataL, <TT>DataLCur <= DataLNum</TT>

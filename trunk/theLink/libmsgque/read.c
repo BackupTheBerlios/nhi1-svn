@@ -1079,7 +1079,7 @@ MqReadN (
     bcur.B += lsize+1;
     buf->cur = bcur;
     *out = bstart.B;
-    *len = bcur.B-bstart.B;
+    *len = (MQ_SIZE) (bcur.B-bstart.B);
     read->canUndo = MQ_YES;
     return MQ_OK;
   }

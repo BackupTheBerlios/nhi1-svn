@@ -50,7 +50,7 @@
 /* ####################################################################### */
 
 # define __attribute__(dummy)
-# define pid_t int
+# define pid_t intptr_t
 # define mode_t int
 # define __func__ __FUNCTION__
 # define va_copy(a,b) a = b
@@ -62,6 +62,24 @@
 # define MQ_STDCALL __stdcall
 # define MQ_CDECL __cdecl
 # define mq_inline __inline
+# define strtof (MQ_FLT)strtod
+
+# if !defined(__BOOL_DEFINED)
+#   define bool int
+#   define HAS_BOOL 1
+# endif
+
+/* from: http://stackoverflow.com/questions/7475282/huge-valf-undefined-under-windows */
+# if defined(_WIN32) && !defined(HUGE_VALF)
+#   if defined(__cplusplus)
+      static float _X_huge_valf = std::numeric_limits<float>::infinity();
+#     define HUGE_VALF _X_huge_valf
+#   else
+      /* assumes Windows on a LE IEEE754 platform */
+      static union { unsigned int x; float y; } _X_huge_valf = { 0x7f800000 };
+#     define HUGE_VALF (_X_huge_valf.y)
+#   endif /* __cplusplus */
+# endif /* defined(WIN32) && !defined(HUGE_VALF) */
 
 #else      
 
@@ -330,6 +348,7 @@ typedef struct MqBufferLS *MQ_BFL;
 /// Context pointer data-type
 typedef struct MqS *MQ_CTX;
 /// \brief data type for a socket handle
+/// \attention need signed integer to allow "-" logic like "delsock = (sock < 0 ? -sock : sock);"
 typedef MQ_INT  MQ_SOCK;
 
 /*****************************************************************************/
@@ -2232,7 +2251,7 @@ MQ_EXTERN MQ_TOK MQ_DECL MqServiceGetToken (
 /// \ctx
 /// \token
 /// \return a boolean value, \yes or \no
-MQ_EXTERN MQ_BOL MQ_DECL MqServiceCheckToken (
+MQ_EXTERN bool MQ_DECL MqServiceCheckToken (
   struct MqS const * const ctx,
   MQ_TOK const token
 ) __attribute__((nonnull(1)));

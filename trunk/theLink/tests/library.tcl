@@ -130,7 +130,7 @@ set env(LIB) [join $MONO_PATH $PATH_SEP]
 
 ## setup PERL search path
 set env(PERL5LIB) [file nativename [file join $linkbuilddir perlmsgque Net-PerlMsgque blib lib]]
-append env(PERL5LIB) ":[file nativename [file join $linksrcdir example perl]]"
+append env(PERL5LIB) "$PATH_SEP[file nativename [file join $linksrcdir example perl]]"
 
 ## setup LIBRARY search path
 if {![info exists env(LD_LIBRARY_PATH)]} {

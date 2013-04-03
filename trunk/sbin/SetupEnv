@@ -173,7 +173,7 @@ function print_env {
 # check: Nhi1Exec startup.test --full-testing --only-go -match 'startup-1.2-(1|binary|uds|go.uds.spawn|--file FILE --timeout 20)'
   case $G_ShellType in
     1)	echo "???"		    ;;
-    2)	IFS=":";echo "t='$*';IFS=:;set -- \$t;unset IFS t";unset IFS;;
+    2)	IFS="|";echo "t='$*';IFS='|';set -- \$t;unset IFS t";unset IFS;;
     3)	echo "set argv [list $@];"  ;;
   esac
 }

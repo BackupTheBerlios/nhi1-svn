@@ -169,7 +169,7 @@ pBufferLSplitAlfa (
     while (argP < endP) {
       if ((*argP)->type == MQ_STRT && *((*argP)->cur.C) == MQ_ALFA) {
         struct MqBufferS ** tmpP = argP;
-	idx = in->cursize - (endP - argP);
+	idx = (in->cursize - (MQ_SIZE) (endP - argP));
 	MqBufferDelete(tmpP);
 	break;
       }
@@ -420,7 +420,7 @@ MqBufferLCheckOptionO (
   *var = MQ_NO;
   if (unlikely(bufL == NULL || bufL->cursize == 0)) return MQ_OK;
   index = 0;
-  len = strlen(opt);
+  len = (MQ_SIZE) strlen(opt);
   while ((index = MqBufferLSearchC (bufL, opt, len, index)) != -1) {
     *var = MQ_YES;
     MqBufferLDeleteItem (context, bufL, index, 1, MQ_YES);
@@ -451,7 +451,7 @@ sBufferLCheckOptionA (
   MQ_SIZE len;
   if (unlikely(bufL == NULL || bufL->cursize == 0)) return MQ_OK;
   index = 0;
-  len = strlen(opt);
+  len = (MQ_SIZE) strlen(opt);
   while ((index = MqBufferLSearchC (bufL, opt, len, index)) != -1) {
     MqBufferLDeleteItem (context, bufL, index, 1, MQ_YES);
     if (likely (bufL->cursize) && likely (index < bufL->cursize)) {
@@ -548,7 +548,7 @@ MqBufferLCheckOptionC (
   if (!bufL) return MQ_OK;
 
   index = 0;
-  len = strlen(opt);
+  len = (MQ_SIZE) strlen(opt);
 
   while ((index = MqBufferLSearchC (bufL, opt, len, index)) != -1) {
     MqBufferLDeleteItem (context, bufL, index, 1, MQ_YES);
@@ -583,7 +583,7 @@ MqBufferLCheckOptionU (
   if (!bufL) return MQ_OK;
 
   index = 0;
-  len = strlen(opt);
+  len = (MQ_SIZE) strlen(opt);
 
   while ((index = MqBufferLSearchC (bufL, opt, len, index)) != -1) {
     MqBufferLDeleteItem (context, bufL, index, 1, MQ_YES);
@@ -672,7 +672,7 @@ MqBufferLSearchC (
     register struct MqBufferS const * const val = *arg;
     if (val->cursize == len && val->type == MQ_STRT) {
       if (!strcmp (val->cur.C, str)) {
-        return bufL->cursize - (end - arg);
+        return bufL->cursize - (MQ_SIZE) (end - arg);
       }
     }
     arg++;
@@ -693,11 +693,11 @@ pBufferLExtractOptions (
   // find first option
   for ( ; arg < end && !pMqCheckOpt(*arg); arg++) {
   }
-  bufL->cursize -= (end-arg);
+  bufL->cursize -= (MQ_SIZE) (end-arg);
   bufL->cur = bufL->data + bufL->cursize;
 
   // move values from bufL to ret
-  ret = MqBufferLCreate(end-arg);
+  ret = MqBufferLCreate((MQ_SIZE) (end-arg));
   {
     struct MqBufferS ** retarg = ret->data;
     for ( ; arg < end ; arg++, retarg++) {
@@ -792,7 +792,7 @@ MqBufferLLogS (
   } else {
     MQ_BUF buf = (context ? context->temp : MqBufferCreate (MQ_ERROR_PANIC, 100));
     int i;
-    int relsize = bufL->cur - bufL->data;
+    int relsize = (MQ_SIZE) (bufL->cur - bufL->data);
     MqLogV (context, func, 0, ">>>> MqBufferLS (%s:%p) (dataP=%p|curP=%p|relsize=%i|cursize=%i|check=%s)\n", varname, (void*) bufL, 
       (void*) bufL->data, (void*) bufL->cur, relsize, bufL->cursize, (relsize == bufL->cursize ? "OK" : "CUR-ERROR"));
     for (i = 0; i < bufL->cursize; i++) {

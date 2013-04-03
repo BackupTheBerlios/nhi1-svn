@@ -89,7 +89,7 @@ static struct pFactorySpaceS {
 static MQ_STR sFactoryStrDup (
   MQ_CST s
 ) {
-  MQ_STR result = (MQ_STR) sqlite3_malloc (strlen(s) + 1);
+  MQ_STR result = (MQ_STR) sqlite3_malloc ((MQ_SIZE)strlen(s) + 1);
   if (result == NULL)
     return NULL;
   strcpy(result, s);

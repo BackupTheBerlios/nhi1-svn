@@ -996,7 +996,7 @@ MqBufferSetC (
   MQ_CST const in
 )
 {
-  MQ_SIZE len = strlen(in);
+  MQ_SIZE len = (MQ_SIZE) strlen(in);
   pBufferNewSize (buf, len);
   // reset the cur pointer to the start of the buffer
   buf->cur.B = buf->data;
@@ -1128,7 +1128,7 @@ MqBufferAppendC (
   MQ_CST const str
 )
 {
-  MQ_SIZE len = strlen (str);
+  MQ_SIZE len = (MQ_SIZE) strlen (str);
   pBufferAddSize (buf, len);
   buf->cur.B = buf->data + buf->cursize;
   strcpy (buf->cur.C, str);
@@ -1207,7 +1207,7 @@ MqBufferPush (
   MQ_CST const str
 )
 {
-  MQ_INT const len = strlen (str);
+  const MQ_SIZE len = (MQ_SIZE) strlen (str);
   pBufferAddSize (buf, len);
   strcpy (buf->cur.C, str);
   buf->cursize += len;
@@ -1221,7 +1221,7 @@ MqBufferPop (
   MQ_CST const str
 )
 {
-  MQ_INT const len = strlen (str);
+  const MQ_SIZE len = (MQ_SIZE) strlen (str);
   buf->cursize -= len;
   buf->cur.B -= len;
   *buf->cur.B = '\0';

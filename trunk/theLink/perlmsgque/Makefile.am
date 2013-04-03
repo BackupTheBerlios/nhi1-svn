@@ -43,7 +43,7 @@ $(abs_builddir)/Net-PerlMsgque/%: $(abs_srcdir)/Net-PerlMsgque/% | $(abs_builddi
 $(PERLMAKEFILE): $(subst $(abs_srcdir), $(abs_builddir), $(wildcard $(abs_srcdir)/Net-PerlMsgque/*)) Makefile
 	$(setup)
 
-Net-PerlMsgque/PerlMsgque.obj: $(PERLMAKEFILE)
+Net-PerlMsgque/PerlMsgque.obj: $(PERLMAKEFILE) $(srcdir)/../libmsgque/debug.h $(srcdir)/../libmsgque/msgque.h
 	$(make)
 
 all-local: Net-PerlMsgque/PerlMsgque.obj

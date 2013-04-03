@@ -1,0 +1,6 @@
+@ECHO OFF
+set MAKE=
+set MAKEFLAGS=
+call "@SDK_SETENV@" /@SDK_DEBUG@ /@SDK_CPU@ 2>NUL
+@ECHO ON
+link.exe /NOLOGO /OUT:%1 /dll /SUBSYSTEM:CONSOLE /nologo /nodefaultlib /@SDK_DEBUG@ /opt:ref,icf /ltcg  /machine:@SDK_CPU@ %~2 %3 %4 %5

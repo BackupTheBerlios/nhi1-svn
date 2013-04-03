@@ -17,7 +17,9 @@
 # if defined(HAVE_PTHREAD)
 #  include <pthread.h>
 typedef pthread_t mqthread_t;
-# else
+# elif defined(_MSC_VER)
+typedef uintptr_t mqthread_t;
+#else
 typedef unsigned long mqthread_t;
 # endif
 #endif // MQ_HAS_THREAD

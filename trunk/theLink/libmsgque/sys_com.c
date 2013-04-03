@@ -154,7 +154,7 @@ SysAccept (
      MQ_SOCK *client            
 ) {
 next:
-  if (unlikely ((*client = accept (server, addr, addrlen)) == INVALID_SOCKET)) {
+  if (unlikely ((*client = (MQ_SOCK) accept (server, addr, addrlen)) == INVALID_SOCKET)) {
     if (sSysGetErrorNum == WIN32_WSA (EWOULDBLOCK))
       goto next;
     return sSysMqErrorMsg (context, __func__, "accept");
@@ -262,7 +262,7 @@ SysSocket (
      int protocol,
      MQ_SOCK *sock              
 ) {
-  if (unlikely ((*sock = socket (domain, type, protocol)) == INVALID_SOCKET)) {
+  if (unlikely ((*sock = (MQ_SOCK) socket (domain, type, protocol)) == INVALID_SOCKET)) {
     return sSysMqErrorMsg (context, __func__, "socket");
   }
   return MQ_OK;
@@ -290,7 +290,7 @@ SysBind (
      const struct sockaddr *my_addr,
      const socklen_t addrlen
 ) {
-  MQ_INT num = context->config.io.timeout;
+  MQ_INT num = (MQ_INT) context->config.io.timeout;
   while (1) {
     if (unlikely (bind (socket, my_addr, addrlen) == SOCKET_ERROR)) {
       enum MqErrorE ret = MQ_OK;

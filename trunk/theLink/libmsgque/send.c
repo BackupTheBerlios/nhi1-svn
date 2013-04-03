@@ -172,7 +172,7 @@ sSendLen (
   *ist++ = BUFFER_CHAR;
 
   buf->numItems++;
-  buf->cursize = (ist - buf->data);
+  buf->cursize = (MQ_SIZE) (ist - buf->data);
   buf->cur.B = ist;
 }
 
@@ -210,7 +210,7 @@ sSendA1 (
 	ist->c1	= BUFFER_CHAR;
 	buf->numItems++;
 	buf->cur.B += sizeof(*ist);
-	buf->cursize = (buf->cur.B - buf->data);
+	buf->cursize = (MQ_SIZE) (buf->cur.B - buf->data);
     }
     return MQ_OK;
   }
@@ -259,7 +259,7 @@ sSendA2 (
 	ist->c1	= BUFFER_CHAR;
 	buf->numItems++;
 	buf->cur.B += sizeof(*ist);
-	buf->cursize = (buf->cur.B - buf->data);
+	buf->cursize = (MQ_SIZE) (buf->cur.B - buf->data);
     }
     return MQ_OK;
   }
@@ -312,7 +312,7 @@ sSendA4 (
 	ist->c1	= BUFFER_CHAR;
 	buf->numItems++;
 	buf->cur.B += sizeof(*ist);
-	buf->cursize = (buf->cur.B - buf->data);
+	buf->cursize = (MQ_SIZE) (buf->cur.B - buf->data);
     }
     return MQ_OK;
   }
@@ -365,7 +365,7 @@ sSendA8 (
 	ist->c1	= BUFFER_CHAR;
 	buf->numItems++;
 	buf->cur.B += sizeof(*ist);
-	buf->cursize = (buf->cur.B - buf->data);
+	buf->cursize = (MQ_SIZE) (buf->cur.B - buf->data);
     }
     return MQ_OK;
   }
@@ -471,7 +471,7 @@ MqSendC (
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
     register struct MqBufferS * buf = context->link.send->buf;
-    MQ_SIZE len = (in?strlen(in):0);
+    MQ_SIZE len = (MQ_SIZE) (in?strlen(in):0);
     pBufferAddSize (buf, BUFFER_P2_PRENUM+len);
     buf->cur.B += BUFFER_P2_PRENUM;
     memcpy (buf->cur.C, in, len);

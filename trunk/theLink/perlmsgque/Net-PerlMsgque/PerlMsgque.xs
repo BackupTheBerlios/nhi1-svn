@@ -302,7 +302,6 @@ static enum MqErrorE FactoryCreate (
     perl_clone ((PerlInterpreter*)tmpl->threadData, CLONEf_CLONE_HOST);
   }
 #endif
-
   {
     dSP;
     *contextP = NULL;

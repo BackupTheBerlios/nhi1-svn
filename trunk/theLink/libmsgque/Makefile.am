@@ -10,58 +10,68 @@
 #:              please contact AUTHORS for additional information
 #:
 
-noinst_LTLIBRARIES = libtmps.la libtmp.la
-
-# static convinience library
-
-libtmps_la_SOURCES = buffer.c cache.c event.c log.c \
+C_FILES = buffer.c cache.c event.c log.c \
     send.c swap.c sys_com.c token.c uds_io.c bufferL.c error.c generic_io.c \
     io.c msgque.c read.c sys.c tcp_io.c pipe_io.c trans.c slave.c config.c \
-    debug.h msgque_private.h sys_com.h main.h \
     service.c link.c factory.c sql.c
 
-libtmps_la_CFLAGS = -static -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS) $(WINDEFS)
-libtmps_la_LDFLAGS = -static -no-undefined
-libtmps_la_LIBADD = $(builddir)/../sqlite/libtmps.la $(WINLIBS)
+H_FILES = debug.h msgque_private.h sys_com.h main.h
 
-# dynamic convinience library
+SOURCES = $(C_FILES) $(H_FILES)
 
-libtmp_la_SOURCES = buffer.c cache.c event.c log.c \
-    send.c swap.c sys_com.c token.c uds_io.c bufferL.c error.c generic_io.c \
-    io.c msgque.c read.c sys.c tcp_io.c pipe_io.c trans.c slave.c config.c \
-    debug.h msgque_private.h sys_com.h main.h \
-    service.c link.c factory.c sql.c
+.libs:
+	mkdir .libs
 
-libtmp_la_CFLAGS = -shared -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS) $(WINDEFS)
-libtmp_la_LDFLAGS = -shared -no-undefined
-libtmp_la_LIBADD = $(builddir)/../sqlite/libtmp.la $(WINLIBS)
-
-# ordinaray library
-
-lib_LTLIBRARIES = libmsgque.la
-
-libmsgque_la_SOURCES = buffer.c cache.c event.c log.c \
-    send.c swap.c sys_com.c token.c uds_io.c bufferL.c error.c generic_io.c \
-    io.c msgque.c read.c sys.c tcp_io.c pipe_io.c trans.c slave.c config.c \
-    debug.h msgque_private.h sys_com.h main.h \
-    service.c link.c factory.c sql.c
-
-libmsgque_la_CFLAGS = -shared -DMQ_BUILD_LIBMSGQUE_DLL -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS) $(WINDEFS)
-libmsgque_la_LDFLAGS = -shared -version-info @VERSION_INFO@ -no-undefined
-libmsgque_la_LIBADD = $(builddir)/../sqlite/libtmp.la $(WINLIBS)
+#noinst_LTLIBRARIES = libtmps.la libtmp.la
+#
+## static convinience library
+#
+#libtmps_la_SOURCES = $(SOURCES)
+#
+#libtmps_la_CFLAGS = -static -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS) $(WINDEFS)
+#libtmps_la_LDFLAGS = -static -no-undefined
+#libtmps_la_LIBADD = $(builddir)/../sqlite/libtmps.la $(WINLIBS)
+#
+## dynamic convinience library
+#
+#libtmp_la_SOURCES = $(SOURCES)
+#
+#libtmp_la_CFLAGS = -shared -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS) $(WINDEFS)
+#libtmp_la_LDFLAGS = -shared -no-undefined
+#libtmp_la_LIBADD = $(builddir)/../sqlite/libtmp.la $(WINLIBS)
+#
+## ordinaray library
+#
+#lib_LTLIBRARIES = libmsgque.la
+#
+#libmsgque_la_SOURCES = $(SOURCES)
+#
+#libmsgque_la_CFLAGS = -shared -DMQ_BUILD_LIBMSGQUE_DLL -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS) $(WINDEFS)
+#libmsgque_la_LDFLAGS = -shared -version-info @VERSION_INFO@ -no-undefined
+#libmsgque_la_LIBADD = $(builddir)/../sqlite/libtmp.la $(WINLIBS)
+#
+#if USE_WINSDK
+#libmsgque_la_LDFLAGS += -Xlinker --output-def -Xlinker .libs/libmsgque.dll.def
+#endif
+#
+#include_HEADERS = msgque.h
+#
+#html-local: libtmp.la libtmps.la
 
 if USE_WINSDK
-libmsgque_la_LDFLAGS += -Xlinker --output-def -Xlinker .libs/libmsgque.dll.def
-endif
 
-include_HEADERS = msgque.h
+#sdklibdir = $(libdir)
+#sdklib_DATA = .libs/libmsgque.dll.lib .libs/libmsgque.dll.exp
+#
+#.libs/libmsgque.dll.lib .libs/libmsgque.dll.exp: libmsgque.la
+#	$(SDK_EXEC) lib.exe /MACHINE:@SDK_CPU@ /DEF:.libs/libmsgque.dll.def /VERBOSE /NAME:$(shell basename .libs/libmsgque-*.dll)
 
-html-local: libtmp.la libtmps.la
+.libs/%.obj: %.c | .libs
+	$(SDK_CL) "-I../.. -I$(abs_top_srcdir_m)/theLink/sqlite" "$(shell $(CYGPATH_M) $<)"
 
-if USE_WINSDK
-sdklibdir = $(libdir)
-sdklib_DATA = .libs/libmsgque.dll.lib .libs/libmsgque.dll.exp
+.libs/libmsgque.dll: $(patsubst %.c,.libs/%.obj, $(C_FILES)) | .libs
+	$(SDK_LINK) "$@" "$^" ws2_32.lib ../sqlite/.libs/libtmp.lib
 
-.libs/libmsgque.dll.lib .libs/libmsgque.dll.exp: libmsgque.la
-	cd .libs && $(SDK_EXEC) lib.exe /MACHINE:@SDK_CPU@ /DEF:libmsgque.dll.def /VERBOSE /NAME:$(shell basename .libs/libmsgque-*.dll)
+all-local: .libs/libmsgque.dll
+
 endif

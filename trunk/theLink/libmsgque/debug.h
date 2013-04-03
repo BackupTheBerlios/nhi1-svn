@@ -28,6 +28,15 @@
 # include <pthread.h>
 #endif
 
+#define NX(s) fprintf(stderr, "%s(%s:%d:%d) -> %s \n", __func__, __FILE__, __LINE__, mq_getpid(), #s);fflush(stderr);
+
+#define N0 NX(00000000000000000)
+#define N1 NX(11111111111111111)
+#define N2 NX(22222222222222222)
+#define N3 NX(33333333333333333)
+#define N4 NX(44444444444444444)
+#define N5 NX(55555555555555555)
+
 #if defined (MQ_HAS_THREAD)
 # if defined(HAVE_PTHREAD) /* unix thread */
 #  define MqThreadSelf() pthread_self()

@@ -168,7 +168,7 @@ TcpServer (
   register struct TcpS * const tcp
 )
 {
-  GenericServer (tcp->generiC, tcp->remoteaddr->ai_addr, tcp->remoteaddr->ai_addrlen);
+  GenericServer (tcp->generiC, tcp->remoteaddr->ai_addr, (socklen_t) tcp->remoteaddr->ai_addrlen);
   return MqErrorStack (MQ_CONTEXT_S);
 }
 
@@ -182,12 +182,12 @@ TcpConnect (
 
   // create my socket adress
   if (tcp->localaddr) {
-    MqErrorCheck (GenericBind (tcp->generiC, tcp->localaddr->ai_addr, tcp->localaddr->ai_addrlen));
+    MqErrorCheck (GenericBind (tcp->generiC, tcp->localaddr->ai_addr, (socklen_t) tcp->localaddr->ai_addrlen));
   }
 
   // do the connect
   MqErrorCheck (GenericConnect
-    (tcp->generiC, tcp->remoteaddr->ai_addr, tcp->remoteaddr->ai_addrlen, tcp->io->config->timeout));
+    (tcp->generiC, tcp->remoteaddr->ai_addr, (socklen_t) tcp->remoteaddr->ai_addrlen, tcp->io->config->timeout));
 
   // get the setup !after! connection
   addrLen = sizeof(addr);

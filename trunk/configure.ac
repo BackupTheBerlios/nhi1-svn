@@ -218,7 +218,11 @@ fi
 AC_SUBST([HAS_UDS])
 
 # create some windows style path names
-test "x$prefix" = xNONE && my_prefix=$ac_default_prefix
+if test "x$prefix" = xNONE ; then
+  my_prefix=$ac_default_prefix
+else
+  my_prefix=$prefix
+fi
 AC_SUBST([prefix_m], "$($CYGPATH_M "$my_prefix")")
 AC_SUBST([abs_top_builddir_m], "$($CYGPATH_M "$ac_pwd")")
 case $srcdir in
@@ -234,7 +238,7 @@ AC_SUBST([abs_top_srcdir_m], "$($CYGPATH_M "$my_abs_top_srcdir")")
 AC_SUBST([path],[$PATH])
 AC_SUBST([ld_library_path],[$LD_LIBRARY_PATH])
 
-AC_CONFIG_FILES([Makefile tests/Makefile sbin/winsdk.bat
+AC_CONFIG_FILES([Makefile tests/Makefile sbin/winsdk.bat sbin/wincl.bat sbin/winlink.bat sbin/winlib.bat
       theLink/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile theLink/tests/Makefile 
 	theLink/docs/Makefile bin/Makefile sbin/Makefile etc/Makefile
 	  theLink/libmsgque/Makefile theLink/example/c/Makefile

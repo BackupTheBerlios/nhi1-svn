@@ -57,7 +57,7 @@
 #  define mqthread_ret_NULL 0
 #  if defined(_MANAGED)
 //   MS switch "/clr" is active
-#    define mqthread_stdcall
+#    define mqthread_stdcall __clrcall 
 #  else
 #    define mqthread_stdcall __stdcall
 #  endif
@@ -403,9 +403,9 @@ static enum MqErrorE SysServerThread (
 {
 #if defined(MQ_HAS_THREAD)
   mqthread_t threadId;
-#if defined(HAVE_PTHREAD)
+# if defined(HAVE_PTHREAD)
   int ret;
-#endif
+# endif
 
   // fill thread data
   struct MqSysServerThreadMainS * argP = (struct MqSysServerThreadMainS *) MqSysMalloc(MQ_ERROR_PANIC,sizeof(*argP));
@@ -421,7 +421,7 @@ static enum MqErrorE SysServerThread (
   // after a "thread" no "fork" is possible
   MqConfigSetIgnoreFork (context, MQ_YES);
 
-#if defined(HAVE_PTHREAD)
+# if defined(HAVE_PTHREAD)
 
   // thread attributes
   pthread_attr_t attr;
@@ -444,7 +444,7 @@ static enum MqErrorE SysServerThread (
     goto error;
   }
 
-#else
+# else
 
   if (unlikely ( (threadId = _beginthreadex(NULL, 0, sSysServerThreadInit, argP, 0, NULL)) == 0)) {
     MqErrorDbV (MQ_ERROR_CAN_NOT_START_SERVER, name);
@@ -452,7 +452,7 @@ static enum MqErrorE SysServerThread (
     goto error;
   }
 
-#endif
+# endif
 
   // save tid
   (*idP).val = (MQ_IDNT)threadId;
@@ -792,7 +792,7 @@ static MQ_PTR sys_calloc (
 static MQ_STR sys_strdup (
   MQ_CST s
 ) {
-  MQ_STR result = (MQ_STR) (*MqLal.SysMalloc) (strlen(s) + 1);
+  MQ_STR result = (MQ_STR) (*MqLal.SysMalloc) ((MQ_SIZE)strlen(s) + 1);
   if (result == (MQ_STR)0)
     return (MQ_STR)0;
   strcpy(result, s);

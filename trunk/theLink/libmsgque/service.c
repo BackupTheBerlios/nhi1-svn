@@ -71,7 +71,7 @@ MqServiceGetToken (
   return (context->link.srvT != NULL? pTokenGetCurrent(context->link.srvT) : NULL);
 }
 
-MQ_BOL
+bool
 MqServiceCheckToken(
   struct MqS const * const context,
   MQ_TOK const token
