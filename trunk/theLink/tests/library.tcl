@@ -726,6 +726,11 @@ if {[info exists ::tcl_platform(threaded)]} {
   set env(SRV_LST)   [filter -not SRV_LST tcl thread]
 }
 
+# perl on windows without thread support
+if {$::tcl_platform(platform) eq "windows"} {
+  set env(SRV_LST)   [filter -not SRV_LST perl thread]
+}
+
 # without --enable-java no java
 if {!$USE_JAVA} {
   set env(SRV_LST) [filter -not SRV_LST java]

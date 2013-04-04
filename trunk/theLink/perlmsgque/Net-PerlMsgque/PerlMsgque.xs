@@ -299,7 +299,7 @@ static enum MqErrorE FactoryCreate (
 
 #ifdef MQ_HAS_THREAD
   if (create == MQ_FACTORY_NEW_THREAD) {
-    perl_clone ((PerlInterpreter*)tmpl->threadData, CLONEf_COPY_STACKS & CLONEf_CLONE_HOST);
+    perl_clone ((PerlInterpreter*)tmpl->threadData, CLONEf_CLONE_HOST);
   }
 #endif
   {
@@ -443,6 +443,10 @@ new(SV *MqS_class, ...)
       ST(0) = sv_newmortal();
       sv_setref_pv(ST(0), SvPV_nolen(MqS_class), (void*)ctx);
       ctx->threadData = PERL_GET_CONTEXT;
+#if defined(MQ_IS_WIN32)
+      // no way to perl attach to a thread on windows.
+      MqConfigSetIgnoreThread(ctx,MQ_YES);
+#endif
       MqConfigSetSelf(ctx, SvREFCNT_inc(ST(0)));
       MqConfigSetSetup(ctx, MqLinkDefault, NULL, MqLinkDefault, NULL, ProcessExit, ThreadExit);
     } else {

@@ -64,18 +64,16 @@ if USE_WINSDK
 
 VPATH += :$(srcdir)/../sqlite
 
-#sdklibdir = $(libdir)
-#sdklib_DATA = .libs/libmsgque.dll.lib .libs/libmsgque.dll.exp
-#
-#.libs/libmsgque.dll.lib .libs/libmsgque.dll.exp: libmsgque.la
-#	$(SDK_EXEC) lib.exe /MACHINE:@SDK_CPU@ /DEF:.libs/libmsgque.dll.def /VERBOSE /NAME:$(shell basename .libs/libmsgque-*.dll)
-
 .libs/%.obj: %.c | .libs
 	$(SDK_CL) "-I../.. -I$(abs_top_srcdir_m)/theLink/sqlite" "$(shell $(CYGPATH_M) $<)"
 
-.libs/libmsgque.dll: $(patsubst %.c,.libs/%.obj, $(notdir $(C_FILES))) | .libs
+.libs/libmsgque.dll .libs/libmsgque.exp .libs/libmsgque.lib .libs/libmsgque.pdb: $(patsubst %.c,.libs/%.obj, $(notdir $(C_FILES))) | .libs
 	$(SDK_LINK) "$@" "$^" ws2_32.lib
 
-all-local: .libs/libmsgque.dll
+sdklibdir = $(libdir)
+sdklib_DATA = .libs/libmsgque.exp .libs/libmsgque.lib
+
+sdkbindir = $(bindir)
+sdkbin_DATA = .libs/libmsgque.dll .libs/libmsgque.pdb
 
 endif

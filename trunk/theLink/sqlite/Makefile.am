@@ -10,3 +10,4 @@
 #:              please contact AUTHORS for additional information
 #:
 
+EXTRA_DIST = config.h Makefile.in  sqlite3.c  sqlite3.h  sqlite3ext.h
