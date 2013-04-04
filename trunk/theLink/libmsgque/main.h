@@ -440,7 +440,7 @@ struct pTokenS* pTokenCreate (struct MqS * const);
 void pTokenDelete ( register struct pTokenS ** const) __attribute__((nonnull));
 enum MqErrorE pTokenCheckSystem ( struct pTokenS const * const);
 enum MqErrorE pTokenInvoke ( struct pTokenS const * const);
-bool pTokenCheck ( struct pTokenS const * const, MQ_CST const);
+mq_bool pTokenCheck ( struct pTokenS const * const, MQ_CST const);
 enum MqErrorE pTokenAddHdl ( struct pTokenS const * const, MQ_CST const, struct MqCallbackS);
 enum MqErrorE pTokenDelHdl ( struct pTokenS const * const, MQ_CST const);
 void pTokenMark ( struct MqS * const, MqMarkF);

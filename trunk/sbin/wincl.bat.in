@@ -2,5 +2,20 @@
 set MAKE=
 set MAKEFLAGS=
 call "@SDK_SETENV@" /@SDK_DEBUG@ /@SDK_CPU@ 2>NUL
+IF /I @SDK_DEBUG@==Release SET EXTRA_FLAGS=/DNDEBUG
+REM NDEBUG -> used for assert
+REM /NOLOGO -> no logo, less visual pollution
+REM /c -> Compiles without linking.
+REM /Fo -> Specifies an object (.obj) file name or directory to be used instead of the default.
+REM /MD -> Causes your application to use the multithread- and DLL-specific version of the run-time library
+REM /Zi -> Produces a program database (PDB)
+REM /GL -> Whole Program Optimization
+REM /GF -> Eliminate Duplicate Strings
+REM /Ox -> Uses maximum optimization (/Ob2gity /Gs).
+REM /fp:precise -> Specify Floating-Point Behavior (default)
+REM /DMQ_BUILD_LIBMSGQUE_DLL /DPIC /DDLL_EXPORT -> from me.
+
+REM cl.exe /nologo /c /W3 /wd4711 /I. %~1 /Fo.libs/ /GF /GL /Ox /MD /Zi /@SDK_DEBUG@ %EXTRA_FLAGS% /DNO_STRICT /fp:precise /DMQ_BUILD_LIBMSGQUE_DLL /DPIC /DDLL_EXPORT %2 %3 %4 %5 %6 %7 %8 %9
+
 @ECHO ON
-cl.exe /c /Wall /I. %~1 /nologo /Fo.libs/ /GF /W3 /MD /Zi /@SDK_DEBUG@ /DNDEBUG /Ox /GL /fp:precise /DWIN32 /D_CONSOLE /DNO_STRICT /DWIN64 /DCONSERVATIVE /MD /Zi /DNDEBUG /Ox /GL /fp:precise /DMQ_BUILD_LIBMSGQUE_DLL /DPIC /DDLL_EXPORT %2 %3 %4 %5 %6 %7 %8 %9
+cl.exe /nologo /c /W3 /wd4711 /I. %~1 /Fo.libs/ /GF /GL /Ox /MD /Zi /@SDK_DEBUG@ %EXTRA_FLAGS% /DNO_STRICT /fp:precise /DMQ_BUILD_LIBMSGQUE_DLL /DPIC /DDLL_EXPORT %2 %3 %4 %5 %6 %7 %8 %9

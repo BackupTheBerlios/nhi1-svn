@@ -297,7 +297,7 @@ AC_DEFUN([SC_ENABLE_SYMBOLS], [
       AC_SUBST([JAVA_DEBUG], [-g])
       AC_SUBST([CSHARP_DEBUG], ['-debug -define:_DEBUG'])
       test "$host_os" = "mingw32" && PERL_DEBUG='OPTIMIZE="/DEBUG"'   || PERL_DEBUG='OPTIMIZE="-g"'
-      SDK_DEBUG='DEBUG'
+      SDK_DEBUG='Debug'
     else
       CFLAGS="-O3 $CFLAGS"
       CPPFLAGS="-DNDEBUG $CPPFLAGS"

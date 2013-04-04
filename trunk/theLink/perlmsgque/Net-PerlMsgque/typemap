@@ -22,6 +22,7 @@ MQ_STR		T_PV
 MQ_SIZE		T_IV
 MQ_TIME_T	T_IV
 MQ_NST          T_NPV
+mq_bool		T_IV
 
 INPUT
 T_MqS

@@ -732,10 +732,9 @@ SysSocketPair (
 	MqErrorCheck (SysCloseSocket(context,__func__,MQ_NO,&listener));
         return MQ_OK;
     } while (0);
-    return sSysMqErrorMsg (context, __func__, "socketpair");
 
 error:
-  MqErrorCheck (SysCloseSocket(MQ_ERROR_IGNORE,__func__,MQ_NO,&listener));
+  SysCloseSocket(MQ_ERROR_IGNORE,__func__,MQ_NO,&listener);
   return MqErrorStack (context);
 #endif
 }

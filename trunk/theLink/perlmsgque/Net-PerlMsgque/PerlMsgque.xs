@@ -299,7 +299,7 @@ static enum MqErrorE FactoryCreate (
 
 #ifdef MQ_HAS_THREAD
   if (create == MQ_FACTORY_NEW_THREAD) {
-    perl_clone ((PerlInterpreter*)tmpl->threadData, CLONEf_CLONE_HOST);
+    perl_clone ((PerlInterpreter*)tmpl->threadData, CLONEf_COPY_STACKS & CLONEf_CLONE_HOST);
   }
 #endif
   {
@@ -565,7 +565,7 @@ MqErrorSetEXIT(MqSelf* context)
   CODE:
     ErrorMqToPerlWithCheck(MqErrorSetEXIT(context))
 
-bool
+mq_bool
 MqErrorIsEXIT(MqSelf* context)
 
 void
@@ -619,10 +619,10 @@ LinkGetParent(MqSelf* context)
 MQ_CST
 MqLinkGetTargetIdent (MqSelf* context)
 
-bool
+mq_bool
 MqLinkIsConnected (MqSelf* context)
 
-bool
+mq_bool
 MqLinkIsParent (MqSelf* context)
 
 int
@@ -769,24 +769,24 @@ void
 MqConfigSetDaemon (MqSelf* context, MQ_CST pidfile)
 
 void
-MqConfigSetIsSilent (MqSelf* context, bool isSilent)
+MqConfigSetIsSilent (MqSelf* context, MQ_BOL isSilent)
 
-bool
+mq_bool
 MqConfigGetIsSilent (MqSelf* context)
 
 void
-MqConfigSetIsString (MqSelf* context, bool isString)
+MqConfigSetIsString (MqSelf* context, MQ_BOL isString)
 
 void
-MqConfigSetIgnoreExit (MqSelf* context, bool ignoreExit)
+MqConfigSetIgnoreExit (MqSelf* context, MQ_BOL ignoreExit)
 
-bool
+mq_bool
 MqConfigGetIsString (MqSelf* context)
 
 void
-MqConfigSetIsServer (MqSelf* context, bool isServer)
+MqConfigSetIsServer (MqSelf* context, MQ_BOL isServer)
 
-bool
+mq_bool
 MqConfigGetIsServer (MqSelf* context)
 
 void
@@ -1040,7 +1040,7 @@ MqServiceGetFilter(MqSelf* context, MQ_SIZE id = 0)
     ST(0) = (SV*)filter->self;
     XSRETURN(1);
 
-bool
+mq_bool
 MqServiceIsTransaction (MqSelf* context)
     
 void
@@ -1157,7 +1157,7 @@ DictExists (MqSelf* context, MQ_CST key)
   OUTPUT:
     RETVAL
 
-bool
+mq_bool
 MqReadItemExists(MqSelf* context)
 
 MQ_SIZE
@@ -1255,7 +1255,7 @@ SlaveGetMaster(MqSelf* context)
     ST(0) = (master ? (SV*)master->self : &PL_sv_undef);
     XSRETURN(1);
 
-bool
+mq_bool
 MqSlaveIs (MqSelf* context)
 
 void

@@ -105,7 +105,7 @@ GenericServer (
   struct sockaddr mysockaddr; 
   socklen_t mysockaddrlen;
   // this is just a flag
-  struct MqIdS id;
+  struct MqIdS id = { MQ_ID_UNUSED, 0 };
   //const int serverStartup = (context->config.startAs != MQ_START_DEFAULT);
 
   // the parent server should "forget" his child's

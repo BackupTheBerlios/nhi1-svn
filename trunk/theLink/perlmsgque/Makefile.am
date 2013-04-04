@@ -18,7 +18,7 @@ if USE_WINSDK
 setup = cd Net-PerlMsgque && $(SDK_EXEC)
 make = cd Net-PerlMsgque && $(SDK_EXEC) nmake.exe
 PERL_OPTS = 
-PERL_OBJECT = OBJECT="\$$(O_FILES) @abs_top_builddir_m@/theLink/libmsgque/.libs/libmsgque.dll.lib"
+PERL_OBJECT = OBJECT="\$$(O_FILES) @abs_top_builddir_m@/theLink/libmsgque/.libs/libmsgque.lib"
 PERL_DEFINE = DEFINE="-DPIC -DDLL_EXPORT"
 else
 setup = cd Net-PerlMsgque &&
@@ -43,10 +43,10 @@ $(abs_builddir)/Net-PerlMsgque/%: $(abs_srcdir)/Net-PerlMsgque/% | $(abs_builddi
 $(PERLMAKEFILE): $(subst $(abs_srcdir), $(abs_builddir), $(wildcard $(abs_srcdir)/Net-PerlMsgque/*)) Makefile
 	$(setup)
 
-Net-PerlMsgque/PerlMsgque.obj: $(PERLMAKEFILE) $(srcdir)/../libmsgque/debug.h $(srcdir)/../libmsgque/msgque.h
+Net-PerlMsgque/blib/arch/auto/Net/PerlMsgque/PerlMsgque.dll: $(PERLMAKEFILE) ../libmsgque/debug.h ../libmsgque/msgque.h
 	$(make)
 
-all-local: Net-PerlMsgque/PerlMsgque.obj
+all-local: Net-PerlMsgque/blib/arch/auto/Net/PerlMsgque/PerlMsgque.dll
 
 clean-local:
 	if test -f $(PERLMAKEFILE); then $(make) clean ; else true; fi

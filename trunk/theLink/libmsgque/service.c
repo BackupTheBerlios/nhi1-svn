@@ -55,7 +55,7 @@ MqServiceGetFilter2 (
   return ret;
 }
 
-bool
+mq_bool
 MqServiceIsTransaction (
   struct MqS const * const context
 )
@@ -71,7 +71,7 @@ MqServiceGetToken (
   return (context->link.srvT != NULL? pTokenGetCurrent(context->link.srvT) : NULL);
 }
 
-bool
+mq_bool
 MqServiceCheckToken(
   struct MqS const * const context,
   MQ_TOK const token
