@@ -100,5 +100,5 @@ fi
 
 rm -fr /tmp/libmsgque-install
 
-exec bash -norc $NHI1_HOME/configure --prefix=/tmp/libmsgque-install "${opt[@]}" ${@:-}
+exec bash -norc $NHI1_HOME/configure "${opt[@]}" ${@:-}
 

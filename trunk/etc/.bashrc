@@ -36,10 +36,26 @@
 
 test -s ~/.alias && . ~/.alias || true
 
-# I use ccache for compiling
+# The CCACHE_DIR environment variable specifies where ccache will keep its cached compiler output. The default is
+# $HOME/.ccache.
 export CCACHE_DIR="/build/$USER/Cache"
+
+# If you set the environment variable CCACHE_HARDLINK then ccache will attempt to use hard links from the cache directory when
+# creating the compiler output rather than using a file copy. Using hard links may be slightly faster in some situations, but
+# can confuse programs like make that rely on modification times. Another thing to keep in mind is that if the resulting
+# object file is modified in any way, this corrupts the cached object file as well. Hard links are never made for compressed
+# cache files. This means that you should not set the CCACHE_COMPRESS variable if you want to use hard links.
+export CCACHE_HARDLINK=1
+
 export SVN_SSH="ssh -l aotto1968"
 export CTAGS="--c-kinds=+p --extra=+f"
+
+# If  this  environment  variable exists, it will be expected to contain a set of default options which are read when ctags
+# starts, after the configuration files listed in FILES, below, are read, but before any command  line  options  are  read.
+# Options  appearing  on  the command line will override options specified in this variable. Only options will be read from
+# this variable. Note that all white space in this variable is considered a separator, making  it  impossible  to  pass  an
+# option parameter containing an embedded space. If this is a problem, use a configuration file instead.
+export CTAGS="--c-kinds=+p"
 
 if test "$OSTYPE" = "cygwin" ; then
   export TERM=xterm

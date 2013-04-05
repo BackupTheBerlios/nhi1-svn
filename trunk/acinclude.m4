@@ -610,14 +610,14 @@ AC_DEFUN([SC_WITH_TOOL_ROOT], [
   OT_WITH_DIR([tool-root],[NHI1_TOOL_ROOT])
   OT_REQUIRE_PROG([PKG_CONFIG], [pkg-config])
   case "$enable_symbols:$enable_threads" in
-    yes:yes)  T="test"		;;
-    yes:no)   T="test/nothred"	;;
-    no:yes)   T="."		;;
-    no:no)    T="nothread"	;;
+    yes:yes)  T="/test"		;;
+    yes:no)   T="/test/nothred"	;;
+    no:yes)   T=""		;;
+    no:no)    T="/nothread"	;;
   esac
-  export PATH=$NHI1_TOOL_ROOT/$T/bin${PATH+:}${PATH:-}
-  export LD_LIBRARY_PATH=$NHI1_TOOL_ROOT/$T/lib${LD_LIBRARY_PATH+:}${LD_LIBRARY_PATH:-}
-  export PKG_CONFIG_PATH=$NHI1_TOOL_ROOT/$T/lib/pkgconfig${PKG_CONFIG_PATH+:}${PKG_CONFIG_PATH:-}
+  export PATH=$NHI1_TOOL_ROOT$T/bin${PATH+:}${PATH:-}
+  export LD_LIBRARY_PATH=$NHI1_TOOL_ROOT$T/lib${LD_LIBRARY_PATH+:}${LD_LIBRARY_PATH:-}
+  export PKG_CONFIG_PATH=$NHI1_TOOL_ROOT$T/lib/pkgconfig${PKG_CONFIG_PATH+:}${PKG_CONFIG_PATH:-}
   unset T
 ])
 

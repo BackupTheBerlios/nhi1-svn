@@ -16,6 +16,7 @@ AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([gnu tar-ustar no-dist-gzip dist-bzip2 -Wno-portability])
 #missing AM_EXTRA_RECURSIVE_TARGETS([perf])
 AC_CONFIG_HEADER([mqconfig.h])
+AC_PREFIX_DEFAULT([/opt/nhi1])
 
 # set libmsgque VERSION information also in:
 # > theLink/perlmsgque/Net-PerlMsgque/lib/Net/PerlMsgque.pm
