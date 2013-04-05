@@ -62,7 +62,7 @@ html-local: libtmp.la libtmps.la
 
 if USE_WINSDK
 
-VPATH += :$(srcdir)/../sqlite
+VPATH += $(srcdir)/../sqlite
 
 .libs/%.obj: %.c | .libs
 	$(SDK_CL) "-I../.. -I$(abs_top_srcdir_m)/theLink/sqlite" "$(shell $(CYGPATH_M) $<)"

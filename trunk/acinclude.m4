@@ -659,6 +659,9 @@ AC_DEFUN([SC_WITH_JAVA], [
 #       none
 #
 # Results:
+#	1. OT_WITH_PROG results
+#	2. PYTHON_CFLAGS
+#	3. PYTHON_LDFLAGS
 #
 #------------------------------------------------------------------------
 
@@ -669,7 +672,47 @@ AC_DEFUN([SC_WITH_PYTHON], [
       AC_SUBST([PYTHON_CFLAGS], [$($PKG_CONFIG --cflags python3)])
       AC_SUBST([PYTHON_LDFLAGS],[$($PKG_CONFIG --libs python3)])
     ],[
-      AC_MSG_ERROR([unable to find the package 'python3'])
+      AS_IF([test "$host_os" = "mingw32"], [
+	python_dir="$(AS_DIRNAME(["$PYTHON"]))"
+
+	python_include="$python_dir/include"
+	AS_IF([test -d "$python_include"], [
+	  AC_SUBST([PYTHON_CFLAGS], ["-I'$python_dir/include'"])
+	],[
+	  AC_MSG_ERROR([unable to find include directory '$python_include'])
+	])
+
+	python_libs="$python_dir/libs"
+	AS_IF([test -d "$python_libs"], [
+	  for python_lib in $python_libs/python*.lib ; do
+	    AS_IF([test -r "$python_lib"], [
+	      python_base="$(basename "$python_lib" .lib)"
+	      python_libtool_lib="$python_libs/lib$python_base.dll.a"
+	      # libtool require for windows build a import-library called "libXX.dll.a"
+	      AS_IF([test ! -e "$python_libtool_lib"], [ 
+		cp "$python_lib" "$python_libtool_lib"
+		AC_MSG_NOTICE([create import library '$python_libtool_lib'])
+	      ]) 
+	      cp "$python_lib" "$python_libs/lib$python_base.dll.a"
+	      AC_SUBST([PYTHON_LDFLAGS],["-L'$python_libs' -l'$python_base'"])
+	    ],[
+	      AC_MSG_ERROR([unable to read python lib file '$python_lib'])
+	    ])
+	    break
+	  done
+	],[
+	AC_MSG_ERROR([unable to find lib directory '$python_libs'])
+	])
+
+	AS_UNSET([python_dir])
+	AS_UNSET([python_include])
+	AS_UNSET([python_libs])
+	AS_UNSET([python_lib])
+	AS_UNSET([python_base])
+	AS_UNSET([python_base])
+      ],[
+	AC_MSG_ERROR([unable to find the package 'python3'])
+      ])
     ])
   ])
 ])
@@ -891,27 +934,28 @@ AC_DEFUN([SC_WITH_TCL], [
             TCL_LIBS="$TCL_LIB_SPEC $TCL_LIBS"
             AC_SUBST(TCL_PACKAGE_PATH)
 
-            ## add support for tcl STUBS
-            if test "$build_os" = "cygwin" ; then
+	    # libtool require for windows build a import-library called "libXX.dll.a"
+            AS_IF([test "$host_os" = "mingw32"], [
 		(
-		  # libtool BUG
 		  # copy 'tcl86.lib' to 'libtcl86.a'
 		  set -- $TCL_LIB_SPEC
 		  ld=${1#-L} ; # library directory
 		  ln=${2#-l} ; # library base-name
-		  if test ! -e $ld/lib$ln.dll.a ; then 
+		  AS_IF([test ! -e $ld/lib$ln.dll.a], [ 
 		    cp $ld/$ln.lib $ld/lib$ln.dll.a
 		    AC_MSG_NOTICE([create import library '$ld/lib$ln.dll.a'])
-		  fi 
+		  ]) 
 		)
-                AC_SUBST([TCL_CFLAGS], [])
-                AC_SUBST([TCL_LIBADD], [${TCL_LIB_SPEC}])
-            else
-                if test ${TCL_SUPPORTS_STUBS} ; then
-                    AC_SUBST([TCL_CFLAGS], [-DUSE_TCL_STUBS])
-                    AC_SUBST([TCL_LIBADD], [${TCL_STUB_LIB_SPEC}])
-                fi
-            fi
+            ])
+
+	    ## add support for tcl STUBS
+	    AS_IF([test ${TCL_SUPPORTS_STUBS}], [
+	      AC_SUBST([TCL_CFLAGS], [-DUSE_TCL_STUBS])
+	      AC_SUBST([TCL_LIBADD], [${TCL_STUB_LIB_SPEC}])
+	    ],[
+	      AC_SUBST([TCL_CFLAGS], [])
+	      AC_SUBST([TCL_LIBADD], [${TCL_LIB_SPEC}])
+	    ])
 
             ## check for empty TCL_INCLUDE_SPEC
 	    if test -z "${TCL_INCLUDE_SPEC}" ; then 

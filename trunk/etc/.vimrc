@@ -21,6 +21,10 @@ syntax on
 map <F12> <C-]>
 nnoremap <F11> :grep <C-R><C-W> *<CR>:cw<CR>
 
+" Alt-right/left to navigate forward/backward in the tags stack
+map <M-Left> <C-T>
+map <M-Right> <C-]>
+
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
   " When editing a file, always jump to the last known cursor position.
@@ -35,7 +39,4 @@ if has("autocmd")
   autocmd BufNewFile,BufRead *.xs   set filetype=c
   autocmd BufNewFile,BufRead *.test set filetype=tcl
 endif " has("autocmd")
-
-
-
 
