@@ -23,7 +23,7 @@ builddir_m = $(abs_top_builddir_m)/theLink/javamsgque
 JAVAH_H_FILES = javamsgque_MqS.h javamsgque_MqBufferS.h javamsgque_MqFactoryS.h javamsgque_MqDumpS.h \
 		  javamsgque_MqS_WAIT.h javamsgque_MqS_TIMEOUT.h javamsgque_MqS_START.h
 
-$(JAVAH_H_FILES): $(MQS_MAIN)
+javamsgque_MqS.h: $(MQS_MAIN)
 	"$(JAVAH)" -classpath . -force -jni javamsgque.MqS javamsgque.MqBufferS javamsgque.MqFactoryS javamsgque.MqDumpS
 
 pkglib_LTLIBRARIES = libjavamsgque.la
@@ -64,6 +64,8 @@ mqs_DATA = javamsgque.jar
 
 #####################################################################################
 ## end
+
+BUILT_SOURCES = javamsgque_MqS.h
 
 EXTRA_DIST = $(JAVA_FILES)
 

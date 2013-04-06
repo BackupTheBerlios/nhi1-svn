@@ -24,7 +24,7 @@ JAVA_FILES = $(srcdir)/*.java
 CLASS_FILES = $(patsubst $(srcdir)/%.java,example/%.class, $(JAVA_FILES))
 
 $(CLASS_FILES): $(JAVA_FILES) $(JAR_FILE)
-	"$(JAVAC)" -classpath "$(JAR_FILE)" $(JAVA_DEBUG) -d . -Xlint:unchecked "$(srcdir_m)/*.java"
+	"$(JAVAC)" -classpath "$(JAR_FILE)" $(JAVA_DEBUG) -d . -Xlint:unchecked $(srcdir_m)/*.java
 
 ##
 ## ==========================================================================

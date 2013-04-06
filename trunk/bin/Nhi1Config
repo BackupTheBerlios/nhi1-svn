@@ -39,7 +39,7 @@ declare -A with
 declare -A enable
 declare -a opt
 
-eval "$($NHI1_HOME/sbin/SetupEnv $0 $@ <<-'EOF'
+eval "$($NHI1_HOME/sbin/SetupEnv $0 "$@" <<-'EOF'
 G_Shell 'bash'
 # ---------------------------------------------------------------------
 G_Date='$Date$'
@@ -70,12 +70,12 @@ EOF
 #  [[ -z "${CXX:-}" ]] && export CXX="ccache $win-g++"
 #}
 
-for l in ${!with[@]} ; do
-  opt+=(--with-$l=${with[$l]})
+for l in "${!with[@]}" ; do
+  opt+=("--with-$l=${with[$l]}")
 done
 
-for l in ${!enable[@]} ; do
-  opt+=(--enable-$l=${enable[$l]})
+for l in "${!enable[@]}" ; do
+  opt+=("--enable-$l=${enable[$l]}")
 done
 
 if [[ $Perf == 'yes' ]] ; then
@@ -91,14 +91,15 @@ else
   fi
 fi
 
-[[ ${with[go]} == "1" && -f /etc/profile.d/go.sh ]] && {
+[[ "${with[go]}" == "1" && -f /etc/profile.d/go.sh ]] && {
   source /etc/profile.d/go.sh
 }
-[[ ${with[java]} == "1" && -f /etc/profile.d/alljava.sh ]] && {
+[[ "${with[java]}" == "1" && -f /etc/profile.d/alljava.sh ]] && {
   source /etc/profile.d/alljava.sh
 }
 
 rm -fr /tmp/libmsgque-install
 
+set -x
 exec bash -norc $NHI1_HOME/configure "${opt[@]}" ${@:-}
 
