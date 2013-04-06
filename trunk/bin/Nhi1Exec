@@ -141,9 +141,9 @@ lookup() {
   fi
   declare -a ret
   declare CMDDIR="$(mycygpath "$(cd "$(dirname -- "$1")";pwd)")"
-  declare CM1=$(basename -- "$1")
-  declare CM2=${CM1%.*}
-  declare lng=${CM1##*.}
+  declare CM1="$(basename -- "$1")"
+  declare CM2="${CM1%.*}"
+  declare lng="${CM1##*.}"
 
   # fix the CMD path
   if [[ ! -e "$CMDDIR/$CM1" && ! -e  "$CMDDIR/$CM2" ]] ; then
@@ -169,25 +169,28 @@ lookup() {
   fi
 
   if [[ -r "$CMDDIR/$CM1" ]] ; then
-    CM1="$CMDDIR/$CM1"
+    CMDDIR="$CMDDIR/"
+    CM1="$CM1"
   elif [[ -r "$CMDDIR/$CM2" ]] ; then
-    CM1="$CMDDIR/$CM2"
+    CMDDIR="$CMDDIR/"
+    CM1="$CM2"
   elif (( ! silent )) ; then
+    CMDDIR=""
     CM1="$1"
   fi
 
   if (( silent )) ; then
-    echo $CM1
+    echo "$CMDDIR$CM1"
   else 
     # find executable if CMD is a script-file
     case "$lng" in
       tcl|test) EXE="${TCLSH:-tclsh}";;
-      java)	EXE="${JAVA:-java}"; CMD="${CMD%.*}";;
+      java)	EXE="${JAVA:-java}"; CM1="${CM1%.*}";;
       py)	EXE="${PYTHON:-python}";;
       pl)	EXE="${PERL:-perl}";;
       rb)	EXE="${RUBY:-ruby}";;
       php)	EXE="${PHP:-php}";;
-      cs)	EXE="${MONO:-mono}"; CMD="${CMD%.*}.exe";;
+      cs)	EXE="${MONO:-mono}"; CM1="${CM1%.*}.exe";;
       go)	EXE=""; CM1="${CM1%.*}$EXT";;
       cc)	EXE=""; CM1="${CM1%.*}$EXT";;
       c)	EXE=""; CM1="${CM1%.*}$EXT";;
@@ -195,7 +198,7 @@ lookup() {
     esac
 
     test -n "$EXE" && ret+=("$EXE")
-    test -n "$CM1" && ret+=("$CM1")
+    test -n "$CM1" && ret+=("$CMDDIR$CM1")
     IFS=";";echo "${ret[*]}";unset IFS
   fi
 }
@@ -384,6 +387,7 @@ else
     if [[ "$POSTFIX" == "cat" ]] ; then
       exec $PREFIX "$EXE" "$@" 2>&1 | $POSTFIX
     else
+echo "CLASSPATH=$CLASSPATH"
       exec $PREFIX "$EXE" "$@"
     fi
   fi
