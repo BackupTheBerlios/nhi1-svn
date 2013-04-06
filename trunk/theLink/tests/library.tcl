@@ -332,14 +332,14 @@ proc getPostfix {srv} {
 
 if {![array exists TS_SERVER]} {
   array set TS_SERVER [list \
-    csharp  [list {*}$CLREXEC [file join $linkbuilddir example csharp server.exe]]	\
-    vb	    [list {*}$CLREXEC [file join $linkbuilddir example vb server.exe]]		\
-    python  [list {*}$PYTHON  [file join $linksrcdir example python server.py]]		\
-    ruby    [list {*}$RUBY    [file join $linksrcdir example ruby server.rb]]		\
-    java    [list {*}$JAVA    example.Server]						\
-    tcl	    [list {*}$TCLSH   [file join $linksrcdir example tcl server.tcl]]		\
-    perl    [list {*}$PERL -w [file join $linksrcdir example perl server.pl]]		\
-    php	    [list {*}$PHP     [file join $linksrcdir example php server.php]]		\
+    csharp  [list $CLREXEC [file join $linkbuilddir example csharp server.exe]]		\
+    vb	    [list $CLREXEC [file join $linkbuilddir example vb server.exe]]		\
+    python  [list $PYTHON  [file join $linksrcdir example python server.py]]		\
+    ruby    [list $RUBY    [file join $linksrcdir example ruby server.rb]]		\
+    java    [list $JAVA    example.Server]						\
+    tcl	    [list $TCLSH   [file join $linksrcdir example tcl server.tcl]]		\
+    perl    [list $PERL -w [file join $linksrcdir example perl server.pl]]		\
+    php	    [list $PHP     [file join $linksrcdir example php server.php]]		\
     go	    [file join $linkbuilddir example go server$::EXEEXT]			\
     jdb	    [list jdb	      Server]							\
     cc	    [file join $linkbuilddir example cc server$::EXEEXT]			\

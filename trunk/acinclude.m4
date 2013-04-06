@@ -630,6 +630,8 @@ AC_DEFUN([SC_WITH_TOOL_ROOT], [
 #       none
 #
 # Results:
+#	1. OT_WITH_PROG results
+#	2. JAVAC, JAVAH, JAR, JAVA_CPPFLAGS
 #
 #------------------------------------------------------------------------
 
@@ -638,11 +640,16 @@ AC_DEFUN([SC_WITH_JAVA], [
   AS_IF([test -n "$JAVA"], [
     OT_CHECK_THREAD([java])
     AC_ARG_VAR([JAVA_HOME],[Absolute path to to the JAVA home directory])
+    AS_IF([test -z "$JAVA_HOME"],[JAVA_HOME="$(AS_DIRNAME("$JAVA"))/.."])
     AC_SUBST([JAVA_HOME])
     dirs=()
+    save_IFS=$IFS
+    IFS='
+'
     for x in $(find "$JAVA_HOME/include" -type d); do
-      dirs+=("-I$x")
+      dirs+=("-I'$x'")
     done
+    IFS=$save_IFS
     AC_SUBST([JAVA_CPPFLAGS], [${dirs[[@]]}])
     OT_REQUIRE_PROG([JAVAC], [javac], [$JAVA_HOME/bin]) 
     OT_REQUIRE_PROG([JAVAH], [javah], [$JAVA_HOME/bin]) 
@@ -919,7 +926,7 @@ AC_DEFUN([SC_WITH_TCL], [
       for try in ${prim} ${prim}/tcl8.* ; do
         if test -f $try/tclConfig.sh; then
             AC_MSG_RESULT($try/tclConfig.sh)
-	    if test "$build_os" = "cygwin" ; then
+	    if test "$host_os" = "mingw32" ; then
 	      eval "$(
 		sed -e '
 		  # convert all drive letter (e.g. C:) into cygdrive names
@@ -936,24 +943,28 @@ AC_DEFUN([SC_WITH_TCL], [
 
 	    # libtool require for windows build a import-library called "libXX.dll.a"
             AS_IF([test "$host_os" = "mingw32"], [
-		(
-		  # copy 'tcl86.lib' to 'libtcl86.a'
-		  set -- $TCL_LIB_SPEC
-		  ld=${1#-L} ; # library directory
-		  ln=${2#-l} ; # library base-name
-		  AS_IF([test ! -e $ld/lib$ln.dll.a], [ 
-		    cp $ld/$ln.lib $ld/lib$ln.dll.a
-		    AC_MSG_NOTICE([create import library '$ld/lib$ln.dll.a'])
-		  ]) 
-		)
+	      # windoes libtool build seems not recognize the stubs interface.
+	      TCL_SUPPORTS_STUBS=0
+	      (
+		# copy 'tcl86.lib' to 'libtcl86.a'
+		set -- $TCL_LIB_SPEC
+		ld=${1#-L} ; # library directory
+		ln=${2#-l} ; # library base-name
+		AS_IF([test ! -e $ld/lib$ln.dll.a], [ 
+		  cp $ld/$ln.lib $ld/lib$ln.dll.a
+		  AC_MSG_NOTICE([create import library '$ld/lib$ln.dll.a' from '$ld/$ln.lib'])
+		]) 
+	      )
             ])
 
 	    ## add support for tcl STUBS
-	    AS_IF([test ${TCL_SUPPORTS_STUBS}], [
+	    AS_IF([test $TCL_SUPPORTS_STUBS -eq 1], [
+	      AC_MSG_NOTICE([using the 'stubs' interface... yes])
 	      AC_SUBST([TCL_CFLAGS], [-DUSE_TCL_STUBS])
 	      AC_SUBST([TCL_LIBADD], [${TCL_STUB_LIB_SPEC}])
 	    ],[
 	      AC_SUBST([TCL_CFLAGS], [])
+	      AC_MSG_NOTICE([using the 'stubs' interface... no])
 	      AC_SUBST([TCL_LIBADD], [${TCL_LIB_SPEC}])
 	    ])
 

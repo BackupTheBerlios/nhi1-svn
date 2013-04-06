@@ -10,56 +10,81 @@
 #:              please contact AUTHORS for additional information
 #:
 
-To build the winsowns libraries the cygwin build-environment is used
-and the following '--host=...' targets were tested:
+Quote-Of-The-Live:
+
+"Argh. I guess we have to extend the old joke: these days, Windows is a
+64-bit file-system redirection on top of a 32-bit patch to a 16-bit shell for
+an 8-bit operating system written for a 4-bit processor by a two-bit company
+without one bit of sense!"
+-> http://cygwin.com/ml/cygwin/2007-06/msg00163.html
+
+On Windows the 'cygwin' build environment is used to build cygwin and
+none cygwin binaries.
+
+The cygwin build is like a unix build and is not mentioned in this document.
+
+The non cygwin build or the windows native build are performed using the
+mingw cross-compiler of cygwin OR the winsdk compiler from Microsoft.
 
 
-1) runn cygwin sshd using the development account and not the default cygwin account
+a typical configuration command is:
+
+/path/to/NHI1/configure --enable-cache --enable-threads --enable-symbols \
+    --host=x86_64-w64-mingw32 --prefix=/cygpath/c/nhi1 \
+    --with-tcl=/cygdrive/c/Tcl/bin/tclsh86 \
+    --with-python=/cygdrive/c/Python32/python.exe \
+    --with-perl=/cygdrive/c/Perl64/bin/perl \
+    --with-winsdk="C:/Program Files/Microsoft SDKs/Windows/v7.1/Bin/SetEnv.cmd"
+
+* The tcl, perl and python binaries come from the active-state distribution.
+* The Windows-SDK comes from Microsoft
+
+The following libmsgque binaries are build and installed:
+
+  PREFIX/bin/libmsgque-22.dll ... mingw dll
+  PREFIX/bin/libmsgque.dll ...... msvc dll
+  PREFIX/bin/libmsgque.pdb ...... msvc dll debug information
+  PREFIX/include/msgque.h ....... public header file
+  PREFIX/lib/libmsgque.dll.a .... mingw import library
+  PREFIX/lib/libmsgque.la ....... libtool configuration library
+  PREFIX/lib/libmsgque.exp ...... msvc export library
+  PREFIX/lib/libmsgque.lib ...... msvc import library
+
+The Windows-SDK build using the following build-scripts
+  
+  TOP_BUILDDIR/sbin/wincl.bat ... cl.exe compiler wrapper
+  TOP_BUILDDIR/sbin/winlib.bat .. lib.exe archive-builder wrapper
+  TOP_BUILDDIR/sbin/winlink.bat . link.exe linker wrapper
+  TOP_BUILDDIR/sbin/winsdk.bat .. windows SDL shell
+
+Tne MinGW build was tested with the with:
+
+  x86_64-w64-mingw32 ............ creating 64bit windows binaries
+
+The following pitfalls are important:
+
+  1. if you try to use the ssh server from cygwin to login and compile
+     windows native binaries the ssh server have to run as the LOGIN
+     user. This mean only one development user per windows is possible.
+
+  2. libtool require a import library called libXX.dll.a but a typical 
+     msvc inport library is called XX.lib. The configure script will
+     create a copy of the import library in the SAME directory as the
+     original msvc import library was located.
+
+  3. the /Windows/System32 directory is mapped to /Windows/SysWOW64 for
+     32bit application like cygwin. Native 64bit dll's are hidden. use
+     /cygdrive/c/Windows/Sysnative diretory to get it.
+     
+
+  4. ref 2. works for tcl but NOT for python. some imcopabilities between
+     MinGW and msvc keep this problem open.
+
+  5. perl does only support the msvc build on windows.
 
 
-Only a build using the "mingw" cross-compiler embedded into the "cygwin"
-tool-chain is supported.
-
-Only the Languages "C", "C++", "Java", "C#", "VB.Net" and "Tcl" are
-supported.
-
-Environment
-===========
-
-The windows binaries are created using a laptop with i5 core and
-Windows 7 as OS.
-
-
-Build
-=====
-
-cd ./build_mingw
-bash ./RunConfigure.sh
-
-
-Tcl
-===
-
-1. tcl8.5.9-src.tar.gz
-2. cd tcl8.5.9/win
-
-#!/usr/bin/env bash
-
-export CC="ccache x86_64-w64-mingw32-gcc"
-export CXX="ccache x86_64-w64-mingw32-g++"
-export AR=x86_64-w64-mingw32-ar
-export RANLIB=x86_64-w64-mingw32-ranlib
-export RC=x86_64-w64-mingw32-windres
-export STRIP=x86_64-w64-mingw32-strip
-export NM=x86_64-w64-mingw32-nm
-export OBJDUMP=x86_64-w64-mingw32-objdump
-export DLLTOOL=x86_64-w64-mingw32-dlltool
-
-./configure   \
-        --prefix=/my/install/path \
-        --enable-symbols \
-        --enable-threads \
-| tee build.log
+OLD
+========================================================================
 
 
 Java

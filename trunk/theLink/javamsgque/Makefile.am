@@ -14,29 +14,27 @@ AM_JAVACFLAGS = -Xlint:unchecked
 JAVAROOT = $(builddir)
 SUFFIXES = .c .h .class .java .jar
 
+srcdir_m = $(abs_top_srcdir_m)/theLink/javamsgque
+builddir_m = $(abs_top_builddir_m)/theLink/javamsgque
+
 #####################################################################################
 ## public JNI
 
-JAVAH_FILES = javamsgque_MqS.h javamsgque_MqBufferS.h javamsgque_MqFactoryS.h javamsgque_MqDumpS.h
-JAVAH_EXTRA_FILES = javamsgque_MqS_WAIT.h javamsgque_MqS_TIMEOUT.h javamsgque_MqS_START.h
+JAVAH_H_FILES = javamsgque_MqS.h javamsgque_MqBufferS.h javamsgque_MqFactoryS.h javamsgque_MqDumpS.h \
+		  javamsgque_MqS_WAIT.h javamsgque_MqS_TIMEOUT.h javamsgque_MqS_START.h
 
-javamsgque_MqS.h: $(MQS_MAIN)
-	$(JAVAH) -classpath . -force -jni javamsgque.MqS
+$(JAVAH_H_FILES): $(MQS_MAIN)
+	"$(JAVAH)" -classpath . -force -jni javamsgque.MqS javamsgque.MqBufferS javamsgque.MqFactoryS javamsgque.MqDumpS
 
-javamsgque_MqBufferS.h: $(MQS_MAIN)
-	$(JAVAH) -classpath . -force -jni javamsgque.MqBufferS
-
-javamsgque_MqFactoryS.h: $(MQS_MAIN)
-	$(JAVAH) -classpath . -force -jni javamsgque.MqFactoryS
-
-javamsgque_MqDumpS.h: $(MQS_MAIN)
-	$(JAVAH) -classpath . -force -jni javamsgque.MqDumpS
+pkglib_LTLIBRARIES = libjavamsgque.la
 
 libjavamsgque_la_SOURCES =  context_java.c context_java.h \
 			    read_java.c send_java.c service_java.c \
 			    misc_java.c config_java.c slave_java.c \
 			    error_java.c link_java.c storage_java.c \
 			    MqBufferS_java.c MqFactoryS_java.c MqDumpS_java.c
+
+nodist_libjavamsgque_la_SOURCES = $(JAVAH_H_FILES)
 
 # use this if you want to link again the dynmic library libmsgque...
 libjavamsgque_la_CPPFLAGS = $(JAVA_CPPFLAGS)
@@ -56,12 +54,10 @@ JAVA_FILES = $(srcdir)/*.java
 MQS_MAIN = javamsgque/MqS.class
 
 $(MQS_MAIN): $(JAVA_FILES)
-	$(JAVAC) -classpath "$(top_builddir)$(FILE_SEP)javamsgque$(FILE_SEP)javamsgque.jar$(PATH_SEP)." $(JAVA_DEBUG) -d . -Xlint:unchecked $(srcdir)/*.java 
+	"$(JAVAC)" -classpath "$(builddir_m)/javamsgque.jar$(PATH_SEP)." $(JAVA_DEBUG) -d . -Xlint:unchecked $(srcdir_m)/*.java 
 
-if USE_JAVA
 javamsgque.jar: $(MQS_MAIN) Manifest.txt 
-	$(JAR) cfm "$@" Manifest.txt javamsgque/*.class
-endif
+	"$(JAR)" cfm "$@" Manifest.txt javamsgque/*.class
 
 mqsdir = $(pkglibdir)
 mqs_DATA = javamsgque.jar
@@ -69,8 +65,9 @@ mqs_DATA = javamsgque.jar
 #####################################################################################
 ## end
 
-pkglib_LTLIBRARIES = libjavamsgque.la
-BUILT_SOURCES = $(mqs_DATA) $(JAVAH_FILES)
 EXTRA_DIST = $(JAVA_FILES)
-CLEANFILES = $(BUILT_SOURCES) $(JAVAH_EXTRA_FILES) javamsgque/*.class
+
+clean-local:
+	-rm -fr javamsgque
+	-rm -f $(JAVAH_H_FILES) javamsgque.jar
 
