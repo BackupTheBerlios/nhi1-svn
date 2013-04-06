@@ -472,12 +472,13 @@ error:
 
 static enum MqErrorE SysServerSpawn (
   struct MqS * const context,
-  char * * argv,
+  char *const *argv,
   MQ_CST  name,
   struct MqIdS * idP
 )
 {
   pid_t pid;
+  MQ_STR cmd="SysServerSpawn";
   int err=0;
 
   // spawn setup !before! a spawn is created
@@ -489,13 +490,16 @@ static enum MqErrorE SysServerSpawn (
   {
     posix_spawnattr_t sa;
     if ((err=posix_spawnattr_init(&sa)) != 0) {
+      cmd="posix_spawnattr_init";
       goto error;
     }
     if (unlikely ((err=posix_spawnp(&pid, name, NULL, &sa, (char *const *) argv, __environ)) != 0)) {
       posix_spawnattr_destroy(&sa);
+      cmd="posix_spawnp";
       goto error;
     }
     if ((err=posix_spawnattr_destroy(&sa)) != 0) {
+      cmd="posix_spawnattr_destroy";
       goto error;
     }
   }
@@ -518,11 +522,13 @@ static enum MqErrorE SysServerSpawn (
   // fork to create the child
 #if defined(HAVE_VFORK)
   if (unlikely ((pid = vfork()) == -1)) {
+    cmd="vfork"
     err=errno;
     goto error;
   }
 #elif defined(HAVE_FORK)
   if (unlikely ((pid = MqSysFork()) == -1)) {
+    cmd="MqSysFork";
     err=errno;
     goto error;
   }
@@ -544,14 +550,20 @@ static enum MqErrorE SysServerSpawn (
     char buf[2048];
     char *nbuf=buf;
 
-    // build command-line
+    // build command-line, windows _spawnvp is NOT able to handle !! whitespace !!
+    // in path name argument
     for (;*argv != '\0'; argv++) {
       nbuf += sprintf(nbuf, "\"%s\" ", *argv);
     }
 
     // start process
+    // java on windows test-cases using tcltest seems not be able to spawn new processes
+    // unknown reason. command line works: 
+    // >NhiExec example.Server.java --tcp --port 7777 --spawn
+    errno=0;
     if (unlikely ((pid = _spawnlp (_P_NOWAIT, name, buf, NULL)) == -1)) {
-    //if (unlikely ((pid = _spawnlp (_P_DETACH, name, buf, NULL)) == -1)) {
+    //if (unlikely ((pid = _spawnvp (_P_NOWAIT, name, (const char *const *) argv)) == -1)) {
+      cmd="_spawnvp";
       err = errno;
       goto error;
     }
@@ -567,7 +579,7 @@ ok:
 error:
   MqErrorDbV (MQ_ERROR_CAN_NOT_START_SERVER, name);
   if (err != 0) {
-    MqErrorSysAppend (__func__, err);
+    MqErrorSAppendV(context, "can not '%s' -> [%i] ERR<%s>", cmd, err, strerror (err));
   }
   return MqErrorGetCodeI(context);
 }

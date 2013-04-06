@@ -48,6 +48,7 @@ if {[Block 1]} {
 
         lappend OPT {--silent}
 	lappend OPT {--debug 9 --silent}
+	#lappend OPT {--debug 9}
 
 	if {[testConstraint local]} {
 	  switch -exact $C {

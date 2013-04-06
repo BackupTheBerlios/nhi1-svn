@@ -497,6 +497,7 @@ rescan:
 		context->config.startAs == MQ_START_FORK)) {
 //printLC("fork")
 	    startType = MQ_START_SERVER_AS_FORK;
+	    MqDLogC(context,8,"PIPE: MQ_START_SERVER_AS_FORK\n");
 	    goto rescan;
 	  }
 #endif
@@ -507,6 +508,7 @@ rescan:
 		context->config.startAs == MQ_START_THREAD)) {
 //printLC("thread")
 	    startType = MQ_START_SERVER_AS_THREAD;
+	    MqDLogC(context,8,"PIPE: MQ_START_SERVER_AS_THREAD\n");
 #if defined(HAVE_PTHREAD)
 	    thread_status = PTHREAD_CREATE_JOINABLE;
 #endif
@@ -520,6 +522,7 @@ rescan:
 	}
 //printLC("spawn")
 	startType = MQ_START_SERVER_AS_SPAWN;
+	MqDLogC(context,8,"PIPE: MQ_START_SERVER_AS_SPAWN\n");
 	// only SPAWN need all arguments from MqInitBuf
 
 	//if (context->setup.factory && context->setup.factory->called && factory != NULL) {
@@ -657,7 +660,7 @@ rescan:
 	if (alfa2 == NULL && start_as_pipe != 1)
 	  alfa2 = MqBufferLDup (context->link.alfa);
 	// add 20 item's as additional space
-	argV = arg = (char **) MqSysMalloc (context, sizeof(*alfa1) * (
+	argV = arg = (char **) MqSysMalloc (context, sizeof(char*) * (
 	    (alfa1 != NULL ? alfa1->cursize : 0) + (alfa2 ? alfa2->cursize : 0) + 20 
 	));
 

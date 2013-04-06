@@ -140,7 +140,10 @@ lookup() {
     declare -i silent=0
   fi
   declare -a ret
-  declare CMDDIR="$(mycygpath "$(cd "$(dirname -- "$1")";pwd)")"
+  declare CMDDIR="$(dirname -- "$1")"
+  if test -d "$CMDDIR" ; then
+    CMDDIR="$(mycygpath "$(cd "$CMDDIR";pwd)")"
+  fi
   declare CM1="$(basename -- "$1")"
   declare CM2="${CM1%.*}"
   declare lng="${CM1##*.}"
@@ -387,7 +390,6 @@ else
     if [[ "$POSTFIX" == "cat" ]] ; then
       exec $PREFIX "$EXE" "$@" 2>&1 | $POSTFIX
     else
-echo "CLASSPATH=$CLASSPATH"
       exec $PREFIX "$EXE" "$@"
     fi
   fi

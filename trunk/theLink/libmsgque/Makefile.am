@@ -67,8 +67,10 @@ VPATH += $(srcdir)/../sqlite
 .libs/%.obj: %.c | .libs
 	$(SDK_CL) "-I../.. -I$(abs_top_srcdir_m)/theLink/sqlite" "$(shell $(CYGPATH_M) $<)"
 
-.libs/libmsgque.dll .libs/libmsgque.exp .libs/libmsgque.lib .libs/libmsgque.pdb: $(patsubst %.c,.libs/%.obj, $(notdir $(C_FILES))) | .libs
+.libs/libmsgque.dll: $(patsubst %.c,.libs/%.obj, $(notdir $(C_FILES))) | .libs
 	$(SDK_LINK) "$@" "$^" ws2_32.lib
+
+.libs/libmsgque.exp .libs/libmsgque.lib .libs/libmsgque.pdb: .libs/libmsgque.dll
 
 sdklibdir = $(libdir)
 sdklib_DATA = .libs/libmsgque.exp .libs/libmsgque.lib

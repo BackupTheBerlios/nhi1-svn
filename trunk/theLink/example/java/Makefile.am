@@ -21,9 +21,8 @@ srcdir_m = $(abs_top_srcdir_m)/theLink/example/java
 SUFFIXES = .java .class
 
 JAVA_FILES = $(srcdir)/*.java
-CLASS_FILES = $(patsubst $(srcdir)/%.java,example/%.class, $(JAVA_FILES))
 
-$(CLASS_FILES): $(JAVA_FILES) $(JAR_FILE)
+example/Server.class: $(JAVA_FILES) $(JAR_FILE)
 	"$(JAVAC)" -classpath "$(JAR_FILE)" $(JAVA_DEBUG) -d . -Xlint:unchecked $(srcdir_m)/*.java
 
 ##
@@ -33,7 +32,7 @@ $(CLASS_FILES): $(JAVA_FILES) $(JAR_FILE)
 
 EXTRA_DIST = $(JAVA_FILES)
 
-all-local: $(CLASS_FILES)
+all-local: example/Server.class
 
 clean-local:
 	-rm -fr example

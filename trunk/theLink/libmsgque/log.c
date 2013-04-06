@@ -152,6 +152,7 @@ MqLogC (
   MQ_CST const message
 )
 {
+  // MQ_ERROR_IS_POINTER to garantee a valid 'context'
   if (MQ_ERROR_IS_POINTER(context) && level > context->config.debug) {
     return;
   } else {
@@ -168,6 +169,7 @@ MqLogV (
   ...
 )
 {
+  // MQ_ERROR_IS_POINTER to garantee a valid 'context'
   if (MQ_ERROR_IS_POINTER(context) && level > context->config.debug) {
     return;
   } else {
@@ -187,6 +189,7 @@ MqLogVL (
   va_list ap
 )
 {
+  // MQ_ERROR_IS_POINTER to garantee a valid 'context'
   if (MQ_ERROR_IS_POINTER(context) && level > context->config.debug) {
     return;
   } else {

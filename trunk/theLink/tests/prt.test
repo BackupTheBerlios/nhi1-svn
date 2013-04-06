@@ -42,6 +42,16 @@ if {[info exists env(TS_LIBRARY)]} {
 
       SetConstraints $I $B $S
 
+      # 1) java has a problem to spawn new processes on windows
+      # error: "can not '_spawnvp' -> [34] ERR<Result too large>"
+      # this only happen if java ist used together with "tcltest"
+      # 2) if a process is created as a pipe than a "spawn" is done
+      # from tcl. after a "spawn" the new process is initialized
+      # to "apawn" as default. the CREATE2 will create a new sub-
+      # server as spawn ... this is the reason why a "pipe" is
+      # forbidden in this special test case.
+      if {[CheckConstraintsAND win java pipe]} continue
+
 ##
 ## -----------------------------------------------------------------------
 ## int

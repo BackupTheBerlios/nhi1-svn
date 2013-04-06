@@ -60,7 +60,7 @@ proc Print {args} {
 }
 
 proc Error {args} {
-  puts stderr "ERROR: $args"
+  puts stderr [concat "ERROR: " {*}$args]
   exit 1
 }
 
@@ -216,11 +216,10 @@ proc optSet {_argv opt def} {
 }
 
 proc getEnv {VAR} {
-    global env
-    if {[info exists env($VAR)]} {
-	return $env($VAR)
-    }
-    return ""
+  if {[catch {set ::env($VAR)} ret]} {
+    set ret ""
+  }
+  return $ret
 }
 
 proc lng2startInit {} {
@@ -449,15 +448,15 @@ proc getExampleExecutable {srv} {
     set RET $path
   } else {
     switch $lng {
-      python	{ lappend RET {*}$::PYTHON [file join $::linksrcdir example python $path.py] }
-      ruby	{ lappend RET {*}$::RUBY [file join $::linksrcdir example ruby $path.rb] }
-      perl	{ lappend RET {*}$::PERL [file join $::linksrcdir example perl $path.pl] }
-      php	{ lappend RET {*}$::PHP [file join $::linksrcdir example php $path.php] }
+      python	{ lappend RET $::PYTHON [file join $::linksrcdir example python $path.py] }
+      ruby	{ lappend RET $::RUBY [file join $::linksrcdir example ruby $path.rb] }
+      perl	{ lappend RET $::PERL [file join $::linksrcdir example perl $path.pl] }
+      php	{ lappend RET $::PHP [file join $::linksrcdir example php $path.php] }
       go	{ lappend RET [file join $::linkbuilddir example go $path$::EXEEXT] }
-      java	{ lappend RET {*}$::JAVA example.$path }
-      csharp	{ lappend RET {*}$::CLREXEC [file join $::linkbuilddir example csharp $path.exe] }
-      vb	{ lappend RET {*}$::CLREXEC [file join $::linkbuilddir example vb $path.exe] }
-      tcl	{ lappend RET {*}$::TCLSH [file join $::linksrcdir example tcl $srv] }
+      java	{ lappend RET $::JAVA example.$path }
+      csharp	{ lappend RET $::CLREXEC [file join $::linkbuilddir example csharp $path.exe] }
+      vb	{ lappend RET $::CLREXEC [file join $::linkbuilddir example vb $path.exe] }
+      tcl	{ lappend RET $::TCLSH [file join $::linksrcdir example tcl $srv] }
       cc	{ lappend RET [file join $::linkbuilddir example cc $path$::EXEEXT] }
       c		{ lappend RET [file join $::linkbuilddir example c $path$::EXEEXT] }
       *		{ Error "invalid example: $srv" }
@@ -551,6 +550,15 @@ proc MkUnique {list} {
     }
   }
   return $D
+}
+
+proc CheckConstraintsAND {args} {
+  foreach a $args {
+    if {![testConstraint $a]} {
+      return false
+    }
+  }
+  return true
 }
 
 proc SetConstraints {args} {
@@ -708,6 +716,8 @@ if {$::tcl_platform(platform) eq "windows"} {
   set env(SRV_LST) [filter -not SRV_LST uds]
   set env(SRV_LST) [filter -not SRV_LST fork]
   set env(COM_LST) [filter -not COM_LST uds]
+  # java on windows has problems to "spawn" test cases .. (unknown reason)
+  set env(SRV_LST) [filter -not SRV_LST java spawn]
 }
 
 # other's have some restrictions too :(
@@ -1045,8 +1055,8 @@ if {![tclmsgque support fork]} {
 
 # check if list has still data
 foreach l {SRV_LST COM_LST LNG_LST START_LST} {
-  if {![llength $env($l)]} {
-    Error "$l is empty"
+  if {[catch {set env($l)} _val] || ![llength $env($l)]} {
+    Error "$l is empty -> no data left for testing"
   }
 }
 

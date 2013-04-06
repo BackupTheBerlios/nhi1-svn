@@ -51,6 +51,10 @@ if {[Block 1]} {
       *spawn*	{ set STATUS_IS DUP-SPAWN-  }
     }
 
+    SetConstraints $I $B $S
+
+    # read explanation on prt.test for this restriction
+    if {[CheckConstraintsAND win java pipe]} continue
 
 ##
 ## -----------------------------------------------------------------------
@@ -63,8 +67,6 @@ if {[Block 1]} {
 Setup $I $B $C $S --setup-parent {
   Call $FH_LAST SendEND_AND_WAIT SND2 SendC CREATE SendI 0
 } --bgerror RET_BG
-
-SetConstraints $I $B $S
 
 # tests ----------------------------
 
@@ -333,13 +335,17 @@ if {[Block 3]} {
     # server-type: server server.tcl
     foreach S [filter SRV_LST $C] {
 
+      SetConstraints $I $B $S
+
+      # read explanation on prt.test for this restriction
+      if {[CheckConstraintsAND win java pipe]} continue
+
       # start the slave
       Setup $I $B $C $S --setup-parent {
 	Call $FH_LAST SendEND_AND_WAIT SND2 SendC CREATE SendI 0
 	Call $FH_LAST SendEND_AND_WAIT SND2 SendC CREATE SendI 1
 	Call $FH_LAST SendEND_AND_WAIT SND2 SendC CREATE SendI 2
       }
-      SetConstraints $I $B $S
 
       # do the test
       test slave-Y-0-($I|$B|$C|$S) {get/set on different slaves} \
@@ -415,6 +421,9 @@ if {[Block 4]} {
     foreach S [filter SRV_LST $C] {
 
       SetConstraints $I $B $S
+
+      # read explanation on prt.test for this restriction
+      if {[CheckConstraintsAND win java pipe]} continue
 
       # start the slave
       Setup $I $B $C $S --setup-parent {

@@ -356,6 +356,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 	  SlaveWorker(id, LIST.toArray(new String[0]));
 	} else if (s.equals("CREATE2")) {
 	  Client c = new Client();
+//System.out.print("ConfigGetStartAs=" + ConfigGetStartAs());
 	  c.LinkCreate(ConfigGetDebug(),ConfigGetStartAs());
 	  SlaveCreate(id, c);
 	} else if (s.equals("DELETE")) {

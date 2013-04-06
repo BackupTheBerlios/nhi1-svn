@@ -72,9 +72,6 @@ ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM1> <Num|1>
 ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
 [Ss]> (server-0) \[*pTokenInvoke] token <DUM2> not found}
 
-
-
-
 test trans-2-($I|$B|$C|$S) {send valid data} \
     -setup	    {
       set TMP	[MakeFile "START" tmp.txt]

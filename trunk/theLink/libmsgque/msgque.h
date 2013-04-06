@@ -4590,7 +4590,7 @@ struct MqLalS {
   /// \until }
   enum MqErrorE (*SysServerSpawn) (
     struct MqS * const	  context, 
-    char **		  argv, 
+    char *const	*	  argv, 
     MQ_CST		  name, 
     struct MqIdS *	  idP
   );

@@ -44,6 +44,9 @@ if {[info exists env(TS_LIBRARY)]} {
 
       SetConstraints $I $B $S
 
+      # read explanation on prt.test for this restriction
+      if {[CheckConstraintsAND win java pipe]} continue
+
 ##
 ## -----------------------------------------------------------------------
 ## int
