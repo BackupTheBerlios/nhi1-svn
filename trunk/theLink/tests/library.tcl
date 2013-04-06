@@ -553,12 +553,19 @@ proc MkUnique {list} {
 }
 
 proc CheckConstraintsAND {args} {
+  set fal false
+  set tru true
   foreach a $args {
+    if {"$a" == "-not"} {
+      set fal true
+      set tru false
+      continue
+    }
     if {![testConstraint $a]} {
-      return false
+      return $fal
     }
   }
-  return true
+  return $tru
 }
 
 proc SetConstraints {args} {
