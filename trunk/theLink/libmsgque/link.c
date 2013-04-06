@@ -807,7 +807,7 @@ MqLinkCreate (
     MqErrorReset(context);
 
     // write commandline arguments un debug-level '9'
-    if (MQ_ERROR_IS_POINTER(context) && 9 <= context->config.debug) {
+    if (argvP != NULL && MQ_ERROR_IS_POINTER(context) && 9 <= context->config.debug) {
       MqBufferLLogS(context, *argvP, __func__, "argv");
     }
 
