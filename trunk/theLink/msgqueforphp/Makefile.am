@@ -10,10 +10,15 @@
 #:              please contact AUTHORS for additional information
 #:
 
-if USE_PHP
-
 PHPMAKEFILE  =	MsgqueForPhp/Makefile
-PHPCONFIGURE    =  --with-MsgqueForPhp=$(abs_builddir)/../libmsgque
+
+PHPCONFIGURE	=  CC="$(CC)"
+
+PHPCONFIGURE    += --build=$(build)
+PHPCONFIGURE    += --host=$(host)
+PHPCONFIGURE    += --target=$(target)
+
+PHPCONFIGURE    += --with-MsgqueForPhp=$(abs_builddir)/../libmsgque
 PHPCONFIGURE    += --with-MsgqueForPhpSrc=$(abs_srcdir)/../libmsgque
 PHPCONFIGURE    += --with-php-config=$(PHPCONFIG)
 
@@ -42,24 +47,27 @@ PHPCONFIGURE    += --dvidir=$(dvidir)
 PHPCONFIGURE    += --pdfdir=$(pdfdir)
 PHPCONFIGURE    += --psdir=$(psdir)
 
-$(abs_builddir)/MsgqueForPhp/configure: 
-	if test ! -d MsgqueForPhp ; then cp -pr $(srcdir)/MsgqueForPhp . && chmod -R u+w MsgqueForPhp; else true; fi
-	cd MsgqueForPhp && $(PHPIZE)
+$(abs_builddir)/MsgqueForPhp:
+	mkdir MsgqueForPhp
 
-$(abs_builddir)/MsgqueForPhp/%: $(abs_srcdir)/MsgqueForPhp/%
-	if test -d $(dir $@) ; then true; else mkdir -p $(dir $@); fi
-	cp $< $@
+$(abs_builddir)/MsgqueForPhp/%: $(abs_srcdir)/MsgqueForPhp/% | $(abs_builddir)/MsgqueForPhp
+	cp -r $< $@
+
+$(abs_builddir)/MsgqueForPhp/configure: $(patsubst $(abs_srcdir)/%,$(abs_builddir)/%,$(wildcard $(abs_srcdir)/MsgqueForPhp/*)) | $(abs_builddir)/MsgqueForPhp
+	cd MsgqueForPhp && $(PHPIZE)
 
 $(abs_builddir)/$(PHPMAKEFILE): $(abs_builddir)/MsgqueForPhp/configure Makefile.am
 	cd MsgqueForPhp && ./configure $(PHPCONFIGURE)
 
-all-local: $(abs_builddir)/$(PHPMAKEFILE) $(wildcard $(abs_builddir)/MsgqueForPhp/*.[ch])
-	$(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS)
+all-local: $(abs_builddir)/$(PHPMAKEFILE)
+	$(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) MsgqueForPhp.la
 
 clean-local:
 	if test -f $(PHPMAKEFILE) ; then $(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) clean ; else true; fi
 
 install-exec-local:
+	$(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) 
+	mkdir -p "$(DESTDIR)/$(pkglibdir)"
 	cp MsgqueForPhp/modules/* "$(DESTDIR)/$(pkglibdir)"
 	echo "extension=\"$(pkglibdir)/MsgqueForPhp.so\"" > "$(DESTDIR)/$(pkglibdir)/php.ini"
 
@@ -67,11 +75,9 @@ uninstall-local:
 	rm -f "$(DESTDIR)/$(pkglibdir)"/MsgqueForPhp.*
 	rm -f "$(DESTDIR)/$(pkglibdir)/php.ini"
 
-distclean-local:
+mostlyclean-local:
 	if test -f $(PHPMAKEFILE) ; then $(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) distclean; else true; fi
 	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then rm -fr MsgqueForPhp; else true; fi
-
-endif
 
 EXTRA_DIST = \
 	MsgqueForPhp/.cvsignore \

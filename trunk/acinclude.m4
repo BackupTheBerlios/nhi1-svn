@@ -328,19 +328,19 @@ acx_pthread_ok=no
 # etcetera environment variables, and if threads linking works using
 # them:
 if test x"$PTHREAD_LIBS$PTHREAD_CFLAGS" != x; then
-        save_CFLAGS="$CFLAGS"
-        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
-        save_LIBS="$LIBS"
-        LIBS="$PTHREAD_LIBS $LIBS"
-        AC_MSG_CHECKING([for pthread_join in LIBS=$PTHREAD_LIBS with CFLAGS=$PTHREAD_CFLAGS])
-        AC_TRY_LINK_FUNC(pthread_join, acx_pthread_ok=yes)
-        AC_MSG_RESULT($acx_pthread_ok)
-        if test x"$acx_pthread_ok" = xno; then
-                PTHREAD_LIBS=""
-                PTHREAD_CFLAGS=""
-        fi
-        LIBS="$save_LIBS"
-        CFLAGS="$save_CFLAGS"
+  save_CFLAGS="$CFLAGS"
+  CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+  save_LIBS="$LIBS"
+  LIBS="$PTHREAD_LIBS $LIBS"
+  AC_MSG_CHECKING([for pthread_join in LIBS=$PTHREAD_LIBS with CFLAGS=$PTHREAD_CFLAGS])
+  AC_TRY_LINK_FUNC(pthread_join, acx_pthread_ok=yes)
+  AC_MSG_RESULT($acx_pthread_ok)
+  if test x"$acx_pthread_ok" = xno; then
+    PTHREAD_LIBS=""
+    PTHREAD_CFLAGS=""
+  fi
+  LIBS="$save_LIBS"
+  CFLAGS="$save_CFLAGS"
 fi
 
 # We must check for the threads library under a number of different
@@ -581,6 +581,7 @@ AC_DEFUN([SC_ENABLE_THREADS], [
       if test "$acx_pthread_ok" = "yes" ; then
 	LIBS="$PTHREAD_LIBS $LIBS"
 	CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+	CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
 	CC="$PTHREAD_CC"
 	#AX_TLS
       fi

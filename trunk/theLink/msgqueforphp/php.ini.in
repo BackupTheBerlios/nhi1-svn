@@ -10,6 +10,6 @@
 ;              please contact AUTHORS for additional information
 ;
 
-extension="@abs_builddir@/MsgqueForPhp/modules/MsgqueForPhp.so"
+extension="@abs_builddir@/MsgqueForPhp/.libs/MsgqueForPhp.so"
 
 

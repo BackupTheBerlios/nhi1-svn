@@ -38,9 +38,9 @@ nodist_libjavamsgque_la_SOURCES = $(JAVAH_H_FILES)
 
 # use this if you want to link again the dynmic library libmsgque...
 libjavamsgque_la_CPPFLAGS = $(JAVA_CPPFLAGS)
-libjavamsgque_la_CFLAGS = -shared -I$(srcdir)/../libmsgque -DMQ_IGNORE_EXTERN $(JAVA_CPPFLAGS)
+libjavamsgque_la_CFLAGS = -shared -I$(srcdir)/../libmsgque -DMQ_IGNORE_EXTERN
 libjavamsgque_la_LDFLAGS = -shared -module -avoid-version -no-undefined 
-libjavamsgque_la_LIBADD = ../libmsgque/libtmp.la
+libjavamsgque_la_LIBADD = ../libmsgque/libmsgque.la
 
 if WIN32
 libjavamsgque_la_LDFLAGS += -Wl,--add-stdcall-alias

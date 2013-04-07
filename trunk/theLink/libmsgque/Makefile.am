@@ -24,32 +24,14 @@ SOURCES = $(C_FILES) $(H_FILES)
 .libs:
 	mkdir .libs
 
-noinst_LTLIBRARIES = libtmps.la libtmp.la
-
-# static convinience library
-
-libtmps_la_SOURCES = $(SOURCES)
-
-libtmps_la_CFLAGS = -static -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS) $(WINDEFS)
-libtmps_la_LDFLAGS = -static -no-undefined
-libtmps_la_LIBADD = $(WINLIBS)
-
-# dynamic convinience library
-
-libtmp_la_SOURCES = $(SOURCES)
-
-libtmp_la_CFLAGS = -shared -DMQ_IGNORE_EXTERN -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS) $(WINDEFS)
-libtmp_la_LDFLAGS = -shared -no-undefined
-libtmp_la_LIBADD = $(WINLIBS)
-
 # ordinaray library
 
 lib_LTLIBRARIES = libmsgque.la
 
 libmsgque_la_SOURCES = $(SOURCES)
 
-libmsgque_la_CFLAGS = -shared -DMQ_BUILD_LIBMSGQUE_DLL -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS) $(WINDEFS)
-libmsgque_la_LDFLAGS = -shared -version-info @VERSION_INFO@ -no-undefined
+libmsgque_la_CFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS) $(WINDEFS)
+libmsgque_la_LDFLAGS = -version-info @VERSION_INFO@ -no-undefined
 libmsgque_la_LIBADD = $(WINLIBS)
 
 #if USE_WINSDK

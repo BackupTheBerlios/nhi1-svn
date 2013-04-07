@@ -10,13 +10,11 @@
 #:              please contact AUTHORS for additional information
 #:
 
-bin_PROGRAMS = abrain$(EXEEXT)
+bin_PROGRAMS = abrain
 
-CLEANFILES =
-
-abrain_SOURCES = abrain.c 
-abrain_CFLAGS = -static -I$(srcdir)/../../theLink/libmsgque -I$(srcdir)/../../theLink/sqlite \
-		      -DMQ_IGNORE_EXTERN
-
-abrain_LDADD = ../../theLink/libmsgque/libtmps.la
+abrain_SOURCES = abrain.c $(srcdir)/../../theLink/sqlite/sqlite3.c
+abrain_CPPFLAGS = -I$(srcdir)/../../theLink/libmsgque -I$(srcdir)/../../theLink/sqlite -DMQ_IGNORE_EXTERN
+abrain_CFLAGS = -static
+abrain_LDLAGS = -static
+abrain_LDADD = ../../theLink/libmsgque/libmsgque.la
 

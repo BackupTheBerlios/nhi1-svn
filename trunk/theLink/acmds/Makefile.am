@@ -48,8 +48,7 @@ html-local: $(HTMLFILES)
 CLEANFILES = $(HTMLFILES)
 
 atool_SOURCES = atool.c ajoin.c acut.c asort.c asplit.c optionL.c optionL.h
-atool_LDADD = -lm ../libmsgque/libtmp.la
-
-AM_CFLAGS = -I$(srcdir)/../libmsgque -DMQ_IGNORE_EXTERN
-
+atool_CFLAGS = -static -I$(srcdir)/../libmsgque -DMQ_IGNORE_EXTERN
+atool_LDFLAGS = -static
+atool_LDADD = ../libmsgque/libmsgque.la
 

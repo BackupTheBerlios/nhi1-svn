@@ -35,13 +35,13 @@ if test "$PHP_MSGQUEFORPHP" != "no"; then
     PHP_MSGQUEFORPHPSRC=../../libmsgque
   fi
 
-  EXTRA_LDFLAGS=${PHP_MSGQUEFORPHP}/libtmp.la
+  EXTRA_LDFLAGS=${PHP_MSGQUEFORPHP}/libmsgque.la
 
   dnl --with-MsgqueForPhpSrc -> add include path
   PHP_ADD_INCLUDE($PHP_MSGQUEFORPHPSRC)
   PHP_ADD_INCLUDE(../../..)
   dnl PHP_ADD_LIBPATH($PHP_MSGQUEFORPHP,1)
-  dnl PHP_ADD_LIBRARY(libtmp.la, 1, 1)
+  dnl PHP_ADD_LIBRARY(libmsgque.la, 1, 1)
  
   dnl PHP_SUBST(MSGQUEFORPHP_SHARED_LIBADD)
   dnl add extension 

@@ -38,24 +38,6 @@
 #	no point in cheating with `nodist_EXTRA_libtop_la_SOURCES'.
 
 
-noinst_LTLIBRARIES = libtmp.la
-
-libtmp_la_SOURCES = buffer.cc cache.cc event.cc \
-    log.cc send.cc swap.cc sys_com.cc \
-    token.cc uds_io.cc bufferL.cc error.cc \
-    generic_io.cc io.cc msgque.cc read.cc \
-    sys.cc tcp_io.cc pipe_io.cc trans.cc slave.cc config.cc \
-    service.cc factory.cc link.cc sql.cc \
-    \
-    ccmsgque.cc ccsend.cc ccmisc.cc ccservice.cc \
-    \
-    ccmsgque.h ccmsgque_private.h msgque.h debug.h main.h msgque_private.h sys_com.h 
-
-libtmp_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_IGNORE_EXTERN -I$(srcdir)/../sqlite
-libtmp_la_LDFLAGS = -no-undefined
-libtmp_la_LIBADD = $(builddir)/../sqlite/libtmp.la $(WINLIBS)
-
-
 # ordinary libraray
 
 lib_LTLIBRARIES = libccmsgque.la
@@ -67,13 +49,15 @@ libccmsgque_la_SOURCES = buffer.cc cache.cc event.cc \
     sys.cc tcp_io.cc pipe_io.cc trans.cc slave.cc config.cc \
     service.cc factory.cc link.cc sql.cc \
     \
+    ../sqlite/sqlite3.c \
+    \
     ccmsgque.cc ccsend.cc ccmisc.cc ccservice.cc \
     \
-    ccmsgque.h ccmsgque_private.h msgque.h debug.h main.h msgque_private.h sys_com.h 
+    ccmsgque.h ccmsgque_private.h
 
 
-libccmsgque_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL -I$(srcdir)/../sqlite
+libccmsgque_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL -I$(srcdir)/../libmsgque -I$(srcdir)/../sqlite
 libccmsgque_la_LDFLAGS = -version-info @VERSION_INFO@ -no-undefined
-libccmsgque_la_LIBADD = $(builddir)/../sqlite/libtmp.la $(WINLIBS)
+libccmsgque_la_LIBADD = $(WINLIBS)
 
 include_HEADERS = ccmsgque.h

@@ -12,10 +12,9 @@
 
 bin_PROGRAMS = atrans
 
-CLEANFILES =
-
 atrans_SOURCES = atrans.cc
-atrans_CPPFLAGS = -I$(srcdir)/../../theLink/ccmsgque -DMQ_IGNORE_EXTERN
-
-atrans_LDADD = ../../theLink/ccmsgque/libtmp.la
+atrans_CPPFLAGS = -I$(srcdir)/../../theLink/ccmsgque -I$(srcdir)/../../theLink/libmsgque -DMQ_IGNORE_EXTERN
+atrans_CFLAGS = -static
+atrans_LDFLAGS = -static
+atrans_LDADD = ../../theLink/ccmsgque/libccmsgque.la
 

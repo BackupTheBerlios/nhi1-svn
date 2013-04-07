@@ -22,6 +22,5 @@ rubymsgque_la_SOURCES =	msgque_ruby.h context_ruby.c read_ruby.c send_ruby.c err
 # use this if you want to include the libmsgque files into the rubymsgque libraray
 rubymsgque_la_CFLAGS = -shared -I$(srcdir)/../libmsgque $(RUBY_CFLAGS) -DMQ_IGNORE_EXTERN
 rubymsgque_la_LDFLAGS = -shared -module -avoid-version -no-undefined $(RUBY_LDFLAGS)
-rubymsgque_la_LIBADD = ../libmsgque/libtmp.la
-
+rubymsgque_la_LIBADD = ../libmsgque/libmsgque.la
 
