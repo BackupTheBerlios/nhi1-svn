@@ -24,8 +24,8 @@ else
 setup = cd Net-PerlMsgque &&
 make = $(MAKE) -C Net-PerlMsgque
 PERL_OPTS = CC='@CC@' LD='@CC@' AR='@AR@'
-PERL_OBJECT = OBJECT="\$$(O_FILES) @abs_top_builddir@/theLink/libmsgque/.libs/libtmp.a"
-PERL_DEFINE = DEFINE="-DMQ_IGNORE_EXTERN"
+PERL_OBJECT = LIBS="-L@abs_top_builddir_m@/theLink/libmsgque/.libs -lmsgque"
+PERL_DEFINE = DEFINE="-DPIC"
 endif
 
 PERLMAKEFILE  =	Net-PerlMsgque/Makefile
@@ -38,7 +38,7 @@ $(abs_builddir)/Net-PerlMsgque:
 	mkdir Net-PerlMsgque
 
 $(abs_builddir)/Net-PerlMsgque/%: $(abs_srcdir)/Net-PerlMsgque/% | $(abs_builddir)/Net-PerlMsgque
-	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then cp -r $< $@; else true; fi
+	cp -r $< $@
 
 $(PERLMAKEFILE): $(subst $(abs_srcdir), $(abs_builddir), $(wildcard $(abs_srcdir)/Net-PerlMsgque/*)) Makefile
 	$(setup)
@@ -57,7 +57,8 @@ install-exec-local:
 uninstall-local:
 	if test -f $(PERLMAKEFILE); then $(make) DESTDIR="$(DESTDIR)" uninstall ; else true; fi
 
-distclean-local:
+mostlyclean-local:
+	if test -f $(PERLMAKEFILE); then $(make) DESTDIR="$(DESTDIR)" realclean ; else true; fi
 	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then rm -fr Net-PerlMsgque; else true; fi
 
 endif
