@@ -34,10 +34,6 @@ libmsgque_la_CFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL -Wstrict-prototypes -I$(srcdir)/.
 libmsgque_la_LDFLAGS = -version-info @VERSION_INFO@ -no-undefined
 libmsgque_la_LIBADD = $(WINLIBS)
 
-#if USE_WINSDK
-#libmsgque_la_LDFLAGS += -Xlinker --output-def -Xlinker .libs/libmsgque.dll.def
-#endif
-
 include_HEADERS = msgque.h
 
 html-local: libtmp.la libtmps.la
@@ -46,8 +42,8 @@ if USE_WINSDK
 
 VPATH += $(srcdir)/../sqlite
 
-.libs/%.obj: %.c | .libs
-	$(SDK_CL) "-I../.. -I$(abs_top_srcdir_m)/theLink/sqlite" "$(shell $(CYGPATH_M) $<)"
+.libs/%.obj: %.c $(H_FILES) | .libs
+	$(SDK_CL) "-I../.. -I$(abs_top_srcdir_m)/theLink/sqlite" -DMQ_BUILD_LIBMSGQUE_DLL "$(shell $(CYGPATH_M) $<)"
 
 .libs/libmsgque.dll: $(patsubst %.c,.libs/%.obj, $(notdir $(C_FILES))) | .libs
 	$(SDK_LINK) "$@" "$^" ws2_32.lib

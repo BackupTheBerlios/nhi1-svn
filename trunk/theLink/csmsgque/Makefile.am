@@ -23,10 +23,8 @@ CSHARP_FILES = $(srcdir)/MqBufferS.cs $(srcdir)/MqDumpS.cs $(srcdir)/MqS.cs $(sr
 	  $(srcdir)/error.cs $(srcdir)/misc.cs $(srcdir)/read.cs $(srcdir)/service.cs $(srcdir)/config.cs \
 	    $(srcdir)/storage.cs
 
-if USE_CSHARP
 csmsgque.dll: $(CSHARP_FILES)
-	$(CSCOMP) $(CSHARP_OPT) -nologo -define:$(MQ_IS) $(CSHARP_DEBUG) -out:$@ -target:library `$(CYGPATH_W) $(CSHARP_FILES)`
-endif
+	$(CSCOMP) $(CSHARP_OPT) $@ '$(shell $(CYGPATH_W) $(CSHARP_FILES))'
 
 csharpdir = $(pkglibdir)
 csharp_DATA = csmsgque.dll

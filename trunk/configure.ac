@@ -199,7 +199,7 @@ if test "$host_os" = "mingw32"; then
   AC_DEFINE([MQ_IS_WIN32], [], [is this a WIN32 like system (e.g. WINDOWS)])
   AC_SUBST([FILE_SEP], [\\\\])
   AC_SUBST([PATH_SEP], [\;])
-  AC_SUBST([MQ_IS], [WIN32])
+  MQ_IS=WIN32
   AM_CONDITIONAL([WIN32], [true])
   HAS_UDS=0
 else
@@ -213,9 +213,10 @@ else
   fi
   AC_SUBST([FILE_SEP], [/])
   AC_SUBST([PATH_SEP], [:])
-  AC_SUBST([MQ_IS], [POSIX])
+  MQ_IS=POSIX
   AM_CONDITIONAL([WIN32], [false])
 fi
+AC_SUBST([MQ_IS])
 AC_SUBST([HAS_UDS])
 
 # create some windows style path names
@@ -239,7 +240,7 @@ AC_SUBST([abs_top_srcdir_m], "$($CYGPATH_M "$my_abs_top_srcdir")")
 AC_SUBST([path],[$PATH])
 AC_SUBST([ld_library_path],[$LD_LIBRARY_PATH])
 
-AC_CONFIG_FILES([Makefile tests/Makefile sbin/winsdk.bat sbin/wincl.bat sbin/winlink.bat sbin/winlib.bat
+AC_CONFIG_FILES([Makefile tests/Makefile sbin/winsdk.bat sbin/wincl.bat sbin/winlink.bat sbin/winlib.bat sbin/wincsc.bat
       theLink/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile theLink/tests/Makefile 
 	theLink/docs/Makefile bin/Makefile sbin/Makefile etc/Makefile
 	  theLink/libmsgque/Makefile theLink/example/c/Makefile

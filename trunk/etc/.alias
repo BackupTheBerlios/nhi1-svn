@@ -27,6 +27,7 @@ alias em="vim Makefile.am"
 
 alias ec="vim ~/Project/NHI1/configure.ac"
 alias ei="vim ~/Project/NHI1/acinclude.m4"
+alias eo="vim .OtConfig"
 
 alias cdpn="cd ~/Project/NHI1"
 alias cdm="cd /build/$USER/Main"

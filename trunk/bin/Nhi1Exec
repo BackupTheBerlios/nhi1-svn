@@ -193,10 +193,11 @@ lookup() {
       pl)	EXE="${PERL:-perl}";;
       rb)	EXE="${RUBY:-ruby}";;
       php)	EXE="${PHP:-php}";;
-      cs)	EXE="${MONO:-mono}"; CM1="${CM1%.*}.exe";;
+      cs)	EXE="${CLREXEC}"; CM1="${CM1%.*}.exe";;
       go)	EXE=""; CM1="${CM1%.*}$EXT";;
       cc)	EXE=""; CM1="${CM1%.*}$EXT";;
       c)	EXE=""; CM1="${CM1%.*}$EXT";;
+      bat)	EXE='cmd.exe;/E:ON;/V:ON;/C;call';;
       *)	EXE="";;
     esac
 

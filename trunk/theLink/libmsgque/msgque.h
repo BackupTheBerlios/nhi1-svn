@@ -213,6 +213,14 @@ BEGIN_C_DECLS
 /*                                                                           */
 /*****************************************************************************/
 
+// on windows using the 'native' conpiler 'cl.exe' we have to define some missing symbols
+#if defined(_MSC_VER) && defined(_DLL)
+# undef PIC
+# define PIC
+# undef DLL_EXPORT
+# define DLL_EXPORT
+#endif
+
 // If the source of libmsgque is direct used in external library
 // (without dynamic linking) and this library should *not* export
 // the symbol's of libmsgque then the flag MQ_IGNORE_EXTERN have

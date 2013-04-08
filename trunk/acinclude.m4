@@ -13,10 +13,19 @@ dnl
 AC_DEFUN([OT_CHECK_THREAD],[
   pushdef([ID],$1)
   AS_IF([test "$enable_threads" = no], [
-    AC_MSG_ERROR(ID require thread support)
+    AC_MSG_ERROR('ID' require '--enable-thread' support)
   ])
   popdef([ID])
 ])
+
+AC_DEFUN([OT_CHECK_SDK],[
+  pushdef([ID],$1)
+  AS_IF([test "$build_os" = 'cygwin' -a -z "$SDK_SETENV"], [
+    AC_MSG_ERROR('ID' require '--with-winsdk=...' support on windows)
+  ])
+  popdef([ID])
+])
+
 
 AC_DEFUN([OT_REQUIRE_PROG],[
     pushdef([VARIABLE],$1)
@@ -49,6 +58,7 @@ AC_DEFUN([OT_REQUIRE_PROG],[
 #	EXECUTABLE .. LIST if possible executable names
 #       TYPE ........ type of the executable like script, runtime or binary
 #       PATH_PROG ... search path for PROG
+#       DEFAULT ..... default for EXECUTABLE
 #
 # Results:
 #
@@ -64,7 +74,8 @@ AC_DEFUN([OT_WITH_PROG],[
   pushdef([VARIABLE],$2)
   pushdef([EXECUTABLE],$3)
   pushdef([TYPE],$4)
-  pushdef([PATH_PROG],$5)
+  pushdef([EXDEF],$5)
+  pushdef([PATH_PROG],$6)
 
   AC_ARG_VAR(VARIABLE,absolute path to 'ID' TYPE)
 
@@ -82,9 +93,14 @@ AC_DEFUN([OT_WITH_PROG],[
 	AS_IF([test -z "$VARIABLE"], [
 	  AC_MSG_RESULT(lookup)
 	  AC_PATH_PROGS([]VARIABLE[],[]EXECUTABLE[],[],[]PATH_PROG[])
+  	  AS_IF(test -n "EXDEF", [
+	    VARIABLE="EXDEF"
+	    AC_MSG_NOTICE(using default value... EXDEF)
+	  ])
 	  AS_IF([test -z "$VARIABLE"], [
 	    AC_MSG_ERROR(unable to find the tool 'ID' - exit)
 	  ])
+	  withval='yes'
 	],[
 	  AC_MSG_RESULT($VARIABLE)
 	])
@@ -97,11 +113,12 @@ AC_DEFUN([OT_WITH_PROG],[
   ])
   pushdef([FLAG],[USE_]translit($1,[a-z],[A-Z]))
   AC_SUBST(FLAG, "$withval")
-  AM_CONDITIONAL(FLAG, [test -n "$VARIABLE"])
+  AM_CONDITIONAL(FLAG, [test "$withval" == 'yes'])
   popdef([FLAG])
   AC_SUBST(VARIABLE[_M], "$($CYGPATH_M "$VARIABLE" 2>/dev/null)")
 
   popdef([PATH_PROG])
+  popdef([EXDEF])
   popdef([TYPE])
   popdef([EXECUTABLE])
   popdef([VARIABLE])
@@ -269,18 +286,17 @@ AC_DEFUN([SC_ENABLE_CACHE], [
 #------------------------------------------------------------------------
 # SC_ENABLE_SYMBOLS --
 #
-#       Specify if debugging symbols should be used.
+#       check if debugging symbols should be used.
 #
 # Arguments:
 #       none
 #
-#       Requires the following vars to be set in configure.in:
-#               CFLAGS
-#
 # Results:
 #
-#       Adds the following arguments to configure:
-#               --enable-symbols
+#   1. enable_symbols=yes/no
+#   2. variables: CFLAGS, CPPFLAGS
+#   3. subst: CSHARP_DEBUG SDK_DEBUG PERL_DEBUG VB_DEBUG JAVA_DEBUG
+#   
 #
 #------------------------------------------------------------------------
 
@@ -293,17 +309,23 @@ AC_DEFUN([SC_ENABLE_SYMBOLS], [
     if test "x$enable_symbols" = "xyes"; then
       CFLAGS="-g $CFLAGS"
       CPPFLAGS="-D_DEBUG $CPPFLAGS"
-      AC_SUBST([VB_DEBUG], [-debug:full])
-      AC_SUBST([JAVA_DEBUG], [-g])
-      AC_SUBST([CSHARP_DEBUG], ['-debug -define:_DEBUG'])
+      JAVA_DEBUG='-g'
+      VB_DEBUG='/debug:full /warnaserror /define:_DEBUG'
+      CSHARP_DEBUG='/debug:full /warnaserror /define:_DEBUG'
       test "$host_os" = "mingw32" && PERL_DEBUG='OPTIMIZE="/DEBUG"'   || PERL_DEBUG='OPTIMIZE="-g"'
       SDK_DEBUG='Debug'
     else
+      JAVA_DEBUG=''
+      CSHARP_DEBUG='/optimize'
+      VB_DEBUG='/optimize'
       CFLAGS="-O3 $CFLAGS"
       CPPFLAGS="-DNDEBUG $CPPFLAGS"
       test "$host_os" = "mingw32" && PERL_DEBUG='OPTIMIZE="/RELEASE"' || PERL_DEBUG='OPTIMIZE="-O"'
       SDK_DEBUG='Release'
     fi
+    AC_SUBST([JAVA_DEBUG])
+    AC_SUBST([VB_DEBUG])
+    AC_SUBST([CSHARP_DEBUG])
     AC_SUBST([SDK_DEBUG])
     AC_SUBST([PERL_DEBUG])
     AM_CONDITIONAL([DEBUG], [test "$enable_symbols" = "yes"])
@@ -738,26 +760,26 @@ AC_DEFUN([SC_WITH_PYTHON], [
 #------------------------------------------------------------------------
 
 AC_DEFUN([SC_WITH_CSHARP], [
-  OT_WITH_PROG(csharp, CSCOMP, [csc gmcs], compiler)
-  AS_IF([test -n "$CSCOMP"], [
-    OT_CHECK_THREAD([CSharp])
-    CSHARP_DEBUG=''
-    CSHARP_OPT=''
-    AS_IF([test "$host_os" = "mingw32"], [
-      CLREXEC=''
-      AS_IF([test "$enable_symbols" = no], [
-	CSHARP_DEBUG='-optimize'
-      ])
+  AS_IF([test "$build_os" = 'cygwin'], [
+    csDEFAULT="cmd.exe /E:ON /V:ON /C call $($CYGPATH_M $ac_pwd)/sbin/wincsc.bat"
+  ],[
+    csDEFAULT=""
+  ])
+
+  OT_WITH_PROG(csharp, CSCOMP, [csc gmcs], compiler, [$csDEFAULT])
+
+  AS_IF([test "$USE_CSHARP" = 'yes'], [
+    OT_CHECK_THREAD([csharp])
+    AS_IF([test "$build_os" = 'cygwin'], [
+      OT_CHECK_SDK([csharp])
     ],[
       AS_IF([$PKG_CONFIG --atleast-version 2.10.6 mono], [
 	OT_REQUIRE_PROG([CLREXEC], [mono])
       ],[
 	AC_MSG_ERROR([unable to find package 'momo' with minimal version 2.10.6])
       ])
-      CSHARP_OPT='-v'
+      AC_SUBST([CSHARP_OPT],[-v])
     ])
-    AC_SUBST([CSHARP_OPT])
-    AC_SUBST([CSHARP_DEBUG])
   ])
 ])
 
@@ -852,9 +874,9 @@ AC_DEFUN([SC_WITH_GO], [
 
 AC_DEFUN([SC_WITH_PERL], [
   OT_WITH_PROG(perl, PERL, perl, interpreter)
-  if test "$host_os" = 'cygwin' -a -z "$SDK_SETENV" ; then
-    AC_MSG_ERROR([for a 'Windows-Perl' build the 'Windows-SDK' is required])
-  fi
+  AS_IF([test "$USE_PERL" = 'yes'],[
+    OT_CHECK_SDK([perl])
+  ])
 ])
 
 #------------------------------------------------------------------------

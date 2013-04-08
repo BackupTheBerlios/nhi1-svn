@@ -11,5 +11,6 @@
 #:
 
 EXTRA_DIST =  $(srcdir)/*
- 
+
+all-local: $(patsubst $(srcdir)/%.in, %, $(wildcard $(srcdir)/*.in))
 

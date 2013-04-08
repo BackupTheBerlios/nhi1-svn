@@ -21,7 +21,7 @@ export LD_LIBRARY_PATH
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = theLink performance bin sbin etc tests
+SUBDIRS = bin sbin etc theLink performance tests
 if USE_BRAIN
 SUBDIRS += theBrain
 endif
@@ -75,4 +75,6 @@ install-files:
 
 #distclean-local:
 #	rm -rf html
+
+all-local: $(patsubst $(srcdir)/%.in, %, $(wildcard $(srcdir)/*.in))
 

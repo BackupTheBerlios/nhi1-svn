@@ -13,9 +13,6 @@ REM /GL -> Whole Program Optimization
 REM /GF -> Eliminate Duplicate Strings
 REM /Ox -> Uses maximum optimization (/Ob2gity /Gs).
 REM /fp:precise -> Specify Floating-Point Behavior (default)
-REM /DMQ_BUILD_LIBMSGQUE_DLL /DPIC /DDLL_EXPORT -> from me.
-
-REM cl.exe /nologo /c /W3 /wd4711 /I. %~1 /Fo.libs/ /GF /GL /Ox /MD /Zi /@SDK_DEBUG@ %EXTRA_FLAGS% /DNO_STRICT /fp:precise /DMQ_BUILD_LIBMSGQUE_DLL /DPIC /DDLL_EXPORT %2 %3 %4 %5 %6 %7 %8 %9
 
 @ECHO ON
-cl.exe /nologo /c /W3 /wd4711 /I. %~1 /Fo.libs/ /GF /GL /Ox /MD /Zi /@SDK_DEBUG@ %EXTRA_FLAGS% /DNO_STRICT /fp:precise /DMQ_BUILD_LIBMSGQUE_DLL /DPIC /DDLL_EXPORT %2 %3 %4 %5 %6 %7 %8 %9
+cl.exe /nologo /c /W3 /wd4711 /I. %~1 /Fo.libs/ /GF /GL /Ox /MD /Zi /@SDK_DEBUG@ %EXTRA_FLAGS% /DNO_STRICT /fp:precise %2 %3 %4 %5 %6 %7 %8 %9

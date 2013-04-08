@@ -18,21 +18,17 @@ if USE_WINSDK
 setup = cd Net-PerlMsgque && $(SDK_EXEC)
 make = cd Net-PerlMsgque && $(SDK_EXEC) nmake.exe
 PERL_OPTS = 
-PERL_OBJECT = OBJECT="\$$(O_FILES) @abs_top_builddir_m@/theLink/libmsgque/.libs/libmsgque.lib"
-PERL_DEFINE = DEFINE="-DPIC -DDLL_EXPORT"
 else
 setup = cd Net-PerlMsgque &&
-make = $(MAKE) -C Net-PerlMsgque
-PERL_OPTS = CC='@CC@' LD='@CC@' AR='@AR@'
-PERL_OBJECT = LIBS="-L@abs_top_builddir_m@/theLink/libmsgque/.libs -lmsgque"
-PERL_DEFINE = DEFINE="-DPIC"
+make = $(MAKE) -C Net-PerlMsgque DESTDIR="$(DESTDIR)"
+PERL_OPTS = CC='@CC@' LD='@CC@' AR='@AR@' DEFINE="-DPIC"
 endif
 
 PERLMAKEFILE  =	Net-PerlMsgque/Makefile
 
 setup += @PERL_M@ Makefile.PL PREFIX="@prefix_m@" $(PERL_DEBUG) $(PERL_OPTS) \
   INC="-Wall -I. -I@abs_top_builddir_m@ -I@abs_top_srcdir_m@/theLink/libmsgque" \
-    $(PERL_OBJECT) $(PERL_DEFINE)
+     LIBS="-L@abs_top_builddir_m@/theLink/libmsgque/.libs -lmsgque"
 
 $(abs_builddir)/Net-PerlMsgque:
 	mkdir Net-PerlMsgque
@@ -52,13 +48,13 @@ clean-local:
 	if test -f $(PERLMAKEFILE); then $(make) clean ; else true; fi
 
 install-exec-local:
-	if test -f $(PERLMAKEFILE); then $(make) DESTDIR="$(DESTDIR)" install ; else true; fi
+	if test -f $(PERLMAKEFILE); then $(make) install ; else true; fi
 
 uninstall-local:
-	if test -f $(PERLMAKEFILE); then $(make) DESTDIR="$(DESTDIR)" uninstall ; else true; fi
+	if test -f $(PERLMAKEFILE); then $(make) uninstall ; else true; fi
 
 mostlyclean-local:
-	if test -f $(PERLMAKEFILE); then $(make) DESTDIR="$(DESTDIR)" realclean ; else true; fi
+	if test -f $(PERLMAKEFILE); then $(make) realclean ; else true; fi
 	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then rm -fr Net-PerlMsgque; else true; fi
 
 endif
