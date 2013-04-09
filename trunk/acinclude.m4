@@ -806,6 +806,9 @@ AC_DEFUN([SC_WITH_VB], [
   unset vbDEFAULT
 
   AS_IF([test "$USE_VB" = "yes"], [
+    AS_IF([test "$build_os" != "cygwin"], [
+      AC_MSG_ERROR([VisualBasic requires a build on cygwin windows])
+    ])
     AS_IF([test "$USE_CSHARP" = "no"], [
       AC_MSG_ERROR([VisualBasic requires a '--with-csharp=...'])
     ])
