@@ -331,8 +331,6 @@ proc getPostfix {srv} {
 
 if {![array exists TS_SERVER]} {
   array set TS_SERVER [list \
-    csharp  [list $CLREXEC [file join $linkbuilddir example csharp server.exe]]		\
-    vb	    [list $CLREXEC [file join $linkbuilddir example vb server.exe]]		\
     python  [list $PYTHON  [file join $linksrcdir example python server.py]]		\
     ruby    [list $RUBY    [file join $linksrcdir example ruby server.rb]]		\
     java    [list $JAVA    example.Server]						\
@@ -344,6 +342,17 @@ if {![array exists TS_SERVER]} {
     cc	    [file join $linkbuilddir example cc server$::EXEEXT]			\
     c	    [file join $linkbuilddir example c server$::EXEEXT]				\
   ]
+  if { "$CLREXEC" == "" } {
+    array set TS_SERVER [list \
+      csharp  [list [file join $linkbuilddir example csharp server.exe]]		\
+      vb      [list [file join $linkbuilddir example vb server.exe]]			\
+    ]
+  } else {
+    array set TS_SERVER [list \
+      csharp  [list $CLREXEC [file join $linkbuilddir example csharp server.exe]]	\
+      vb      [list $CLREXEC [file join $linkbuilddir example vb server.exe]]		\
+    ]
+  }
 }
 
 proc getServer {srv} {
@@ -454,8 +463,11 @@ proc getExampleExecutable {srv} {
       php	{ lappend RET $::PHP [file join $::linksrcdir example php $path.php] }
       go	{ lappend RET [file join $::linkbuilddir example go $path$::EXEEXT] }
       java	{ lappend RET $::JAVA example.$path }
-      csharp	{ lappend RET $::CLREXEC [file join $::linkbuilddir example csharp $path.exe] }
-      vb	{ lappend RET $::CLREXEC [file join $::linkbuilddir example vb $path.exe] }
+      vb	-
+      csharp	{ 
+	if { "$::CLREXEC" != "" } { lappend RET $::CLREXEC }
+	lappend RET [file join $::linkbuilddir example $lng $path.exe] 
+      }
       tcl	{ lappend RET $::TCLSH [file join $::linksrcdir example tcl $srv] }
       cc	{ lappend RET [file join $::linkbuilddir example cc $path$::EXEEXT] }
       c		{ lappend RET [file join $::linkbuilddir example c $path$::EXEEXT] }

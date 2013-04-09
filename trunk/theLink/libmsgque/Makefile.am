@@ -16,7 +16,7 @@ C_FILES = buffer.c cache.c event.c log.c \
     service.c link.c factory.c sql.c \
     ../sqlite/sqlite3.c
 
-H_FILES = debug.h msgque_private.h sys_com.h main.h \
+H_FILES = msgque.h debug.h msgque_private.h sys_com.h main.h \
     ../sqlite/config.h ../sqlite/sqlite3.h ../sqlite/sqlite3ext.h
 
 SOURCES = $(C_FILES) $(H_FILES)

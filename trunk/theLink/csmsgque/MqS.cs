@@ -29,7 +29,6 @@ using System.Security.Permissions;
 [assembly:AssemblyVersionAttribute("5.4.*")]
 [assembly:ComVisible(false)]
 [assembly:CLSCompliantAttribute(true)]
-// [assembly:SecurityPermission(SecurityAction.RequestMinimum, UnmanagedCode = true)]
 
 /// \defgroup Mq_Cs_API Mq_Cs_API
 /// \brief \copybrief Mq_C_API
@@ -96,12 +95,7 @@ namespace csmsgque {
 
     private const CallingConvention MSGQUE_CC = CallingConvention.Cdecl;
     private const CharSet MSGQUE_CS = CharSet.Ansi;
-#if (POSIX)
     internal const string MSGQUE_DLL = "libmsgque";
-#endif
-#if (WIN32)
-    internal const string MSGQUE_DLL = "libmsgque-21";
-#endif
     private static string APP = Assembly.GetEntryAssembly().Location;
 
     internal IntPtr context;
