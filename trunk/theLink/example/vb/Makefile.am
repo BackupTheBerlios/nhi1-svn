@@ -18,62 +18,18 @@
 
 SUFFIXES = *.exe *.cs *.dll
 
-RULE_VB_EXE = $(VBCOMP) $(CSHARP_OPT) -nologo $(CSHARP_DEBUG) \
-		-reference:csmsgque.dll \
-		-out:$@ -target:exe `$(CYGPATH_W) "$<"`
 
 csmsgque.dll: ../../csmsgque/csmsgque.dll
-	cp ../../csmsgque/csmsgque.dll .
+	cp $< .
 
-manfilter.exe: $(srcdir)/manfilter.vb csmsgque.dll
-	$(RULE_VB_EXE)
-
-mulclient.exe: $(srcdir)/mulclient.vb csmsgque.dll
-	$(RULE_VB_EXE)
-
-mulserver.exe: $(srcdir)/mulserver.vb csmsgque.dll
-	$(RULE_VB_EXE)
-
-MyServer.exe: $(srcdir)/MyServer.vb csmsgque.dll
-	$(RULE_VB_EXE)
-
-MyClient.exe: $(srcdir)/MyClient.vb csmsgque.dll
-	$(RULE_VB_EXE)
-
-Filter1.exe: $(srcdir)/Filter1.vb csmsgque.dll
-	$(RULE_VB_EXE)
-
-Filter2.exe: $(srcdir)/Filter2.vb csmsgque.dll
-	$(RULE_VB_EXE)
-
-Filter3.exe: $(srcdir)/Filter3.vb csmsgque.dll
-	$(RULE_VB_EXE)
-
-Filter4.exe: $(srcdir)/Filter4.vb csmsgque.dll
-	$(RULE_VB_EXE)
-
-Filter5.exe: $(srcdir)/Filter5.vb csmsgque.dll
-	$(RULE_VB_EXE)
-
-Filter6.exe: $(srcdir)/Filter5.vb csmsgque.dll
-	$(RULE_VB_EXE)
-
-testclient.exe: $(srcdir)/testclient.vb csmsgque.dll
-	$(RULE_VB_EXE)
-
-testserver.exe: $(srcdir)/testserver.vb csmsgque.dll
-	$(RULE_VB_EXE)
-
-server.exe: $(srcdir)/server.vb csmsgque.dll
-	$(RULE_VB_EXE)
-
+%.exe: %.vb csmsgque.dll
 if WIN32
-BUILT_SOURCES = manfilter.exe mulclient.exe mulserver.exe MyServer.exe MyClient.exe \
-                  Filter1.exe Filter2.exe Filter3.exe Filter4.exe Filter5.exe \
-		    Filter6.exe testclient.exe testserver.exe server.exe
+	$(VBCOMP) $@ "-reference:csmsgque.dll -target:exe" '$(shell $(CYGPATH_W) "$<")'
 else
-BUILT_SOURCES =
+	$(VBCOMP) -nologo $(CSHARP_DEBUG) -reference:csmsgque.dll -out:$@ -target:exe $<
 endif
+
+all-local: $(patsubst $(srcdir)/%.vb, $(builddir)/%.exe, $(wildcard $(srcdir)/*.vb))
 
 ##
 ## ==========================================================================

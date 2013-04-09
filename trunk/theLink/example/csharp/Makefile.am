@@ -23,7 +23,7 @@ csmsgque.dll: ../../csmsgque/csmsgque.dll
 if WIN32
 	$(CSCOMP) $@ "-reference:csmsgque.dll -target:exe" '$(shell $(CYGPATH_W) "$<")'
 else
-	$(CSCOMP) $(CSHARP_OPT) -nologo $(CSHARP_DEBUG) -reference:csmsgque.dll -out:$@ -target:exe $<
+	$(CSCOMP) -nologo $(CSHARP_DEBUG) -reference:csmsgque.dll -out:$@ -target:exe $<
 endif
 
 all-local: $(patsubst $(srcdir)/%.cs, $(builddir)/%.exe, $(wildcard $(srcdir)/*.cs))

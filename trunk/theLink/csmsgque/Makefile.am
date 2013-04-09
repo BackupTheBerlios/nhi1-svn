@@ -27,7 +27,7 @@ csmsgque.dll: $(CSHARP_FILES)
 if WIN32
 	$(CSCOMP) $@ -target:library '$(shell $(CYGPATH_W) $(CSHARP_FILES))'
 else
-	$(CSCOMP) $(CSHARP_OPT) -nologo -define:$(MQ_IS) $(CSHARP_DEBUG) -out:$@ -target:library $(CSHARP_FILES)
+	$(CSCOMP) -nologo -define:$(MQ_IS) $(CSHARP_DEBUG) -out:$@ -target:library $(CSHARP_FILES)
 endif
 
 csharpdir = $(pkglibdir)

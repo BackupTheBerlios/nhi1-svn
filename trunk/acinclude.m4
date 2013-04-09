@@ -778,7 +778,6 @@ AC_DEFUN([SC_WITH_CSHARP], [
       ],[
 	AC_MSG_ERROR([unable to find package 'momo' with minimal version 2.10.6])
       ])
-      AC_SUBST([CSHARP_OPT],[-v])
     ])
   ])
 ])
