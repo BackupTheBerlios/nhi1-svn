@@ -3,4 +3,4 @@ set MAKE=
 set MAKEFLAGS=
 call "@SDK_SETENV@" /@SDK_DEBUG@ /@SDK_CPU@ 2>NUL
 @ECHO ON
-csc.exe /nologo /define:@MQ_IS@ @CSHARP_DEBUG@ /out:%1 %~2 %~3
+%1 /nologo /define:@MQ_IS@ @CSHARP_DEBUG@ /out:%2 %~3 %~4

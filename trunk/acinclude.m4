@@ -756,17 +756,19 @@ AC_DEFUN([SC_WITH_PYTHON], [
 #       none
 #
 # Results:
+#   1. output from 'OT_WITH_PROG:csharp'
+#   2. output from 'OT_REQUIRE_PROG:CLREXEC'
 #
 #------------------------------------------------------------------------
 
 AC_DEFUN([SC_WITH_CSHARP], [
   AS_IF([test "$build_os" = 'cygwin'], [
-    csDEFAULT="cmd.exe /E:ON /V:ON /C call $($CYGPATH_M $ac_pwd)/sbin/wincsc.bat"
+    csDEFAULT="cmd.exe /E:ON /V:ON /C call $($CYGPATH_M $ac_pwd)/sbin/wincrt.bat csc.exe"
   ],[
     csDEFAULT=""
   ])
-
-  OT_WITH_PROG(csharp, CSCOMP, [csc gmcs], compiler, [$csDEFAULT])
+  OT_WITH_PROG(csharp, CSCOMP, [gmcs csc], compiler, [$csDEFAULT])
+  unset csDEFAULT
 
   AS_IF([test "$USE_CSHARP" = 'yes'], [
     OT_CHECK_THREAD([csharp])
@@ -795,10 +797,17 @@ AC_DEFUN([SC_WITH_CSHARP], [
 #------------------------------------------------------------------------
 
 AC_DEFUN([SC_WITH_VB], [
-  OT_WITH_PROG(vb, VBCOMP, [vbnc vbc], compiler)
-  AS_IF([test -n "$VBCOMP"], [
-    AS_IF([test -z "$CSCOMP"], [
-      AC_MSG_ERROR([VisualBasic requires a C[#] build too])
+  AS_IF([test "$build_os" = 'cygwin'], [
+    vbDEFAULT="cmd.exe /E:ON /V:ON /C call $($CYGPATH_M $ac_pwd)/sbin/wincrt.bat vbc.exe"
+  ],[
+    vbDEFAULT=""
+  ])
+  OT_WITH_PROG(vb, VBCOMP, [vbnc vbc], compiler, [$vbDEFAULT])
+  unset vbDEFAULT
+
+  AS_IF([test "$USE_VB" = "yes"], [
+    AS_IF([test "$USE_CSHARP" = "no"], [
+      AC_MSG_ERROR([VisualBasic requires a '--with-csharp=...'])
     ])
   ])
 ])
