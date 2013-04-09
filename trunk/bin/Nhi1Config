@@ -51,8 +51,8 @@ G_Description='wrapper to setup the build-environment for the "nhi1-configure" s
 G_HelpProc='Usage'
 # -------------------------------------------------------------------
 G_Option local-data-file default
-G_Argument 'use-perf:Perf:0:use performance code:B'
-G_Argument 'use-threads:Thread:0:use thread code:B'
+G_Argument 'use-perf:Perf:0:create performance code:B'
+G_Argument 'use-threads:Thread:0:create thread code:B'
 for l in cache brain guard ; do
   G_Argument "$l:enable[$l]:disable:add '$l' feature support:D:enable:disable"
 done
@@ -85,9 +85,9 @@ if [[ $Perf == 'yes' ]] ; then
   fi
 else
   if [[ $Thread == 'yes' ]] ; then
-    opt+=(--enable-threads --enable-symbols)
+    opt+=(--enable-threads --enable-debug)
   else
-    opt+=(--enable-symbols)
+    opt+=(--enable-debug)
   fi
 fi
 

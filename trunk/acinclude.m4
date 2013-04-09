@@ -284,29 +284,29 @@ AC_DEFUN([SC_ENABLE_CACHE], [
 ])
 
 #------------------------------------------------------------------------
-# SC_ENABLE_SYMBOLS --
+# SC_ENABLE_DEBUG --
 #
-#       check if debugging symbols should be used.
+#       check if debugging should be used.
 #
 # Arguments:
 #       none
 #
 # Results:
 #
-#   1. enable_symbols=yes/no
+#   1. enable_debug=yes/no
 #   2. variables: CFLAGS, CPPFLAGS
 #   3. subst: CSHARP_DEBUG SDK_DEBUG PERL_DEBUG VB_DEBUG JAVA_DEBUG
 #   
 #
 #------------------------------------------------------------------------
 
-AC_DEFUN([SC_ENABLE_SYMBOLS], [
-    AC_MSG_CHECKING([for build with symbols])
-    AC_ARG_ENABLE(symbols,
-	AS_HELP_STRING([--enable-symbols], [build with debugging support]),
-	enable_symbols=$enableval, enable_symbols=no
+AC_DEFUN([SC_ENABLE_DEBUG], [
+    AC_MSG_CHECKING([for build with debug])
+    AC_ARG_ENABLE(debug,
+	AS_HELP_STRING([--enable-debug], [build with debugging support]),
+	enable_debug=$enableval, enable_debug=no
     )
-    if test "x$enable_symbols" = "xyes"; then
+    if test "x$enable_debug" = "xyes"; then
       CFLAGS="-g $CFLAGS"
       CPPFLAGS="-D_DEBUG $CPPFLAGS"
       JAVA_DEBUG='-g'
@@ -328,8 +328,8 @@ AC_DEFUN([SC_ENABLE_SYMBOLS], [
     AC_SUBST([CSHARP_DEBUG])
     AC_SUBST([SDK_DEBUG])
     AC_SUBST([PERL_DEBUG])
-    AM_CONDITIONAL([DEBUG], [test "$enable_symbols" = "yes"])
-    AC_MSG_RESULT($symbol)
+    AM_CONDITIONAL([DEBUG], [test "$enable_debug" = "yes"])
+    AC_MSG_RESULT($debug)
 ])
 
 #------------------------------------------------------------------------
@@ -632,7 +632,7 @@ AC_DEFUN([SC_ENABLE_THREADS], [
 AC_DEFUN([SC_WITH_TOOL_ROOT], [
   OT_WITH_DIR([tool-root],[NHI1_TOOL_ROOT])
   OT_REQUIRE_PROG([PKG_CONFIG], [pkg-config])
-  case "$enable_symbols:$enable_threads" in
+  case "$enable_debug:$enable_threads" in
     yes:yes)  T="/test"		;;
     yes:no)   T="/test/nothred"	;;
     no:yes)   T=""		;;
