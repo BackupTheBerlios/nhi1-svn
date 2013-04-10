@@ -23,7 +23,7 @@ $c10 = new MqS();
 $c100 = new MqS();
 $c101 = new MqS();
 ## setup object link
-$c0->LinkCreate("c0",    "--srvname", "s0",  "--debug", getenv('TS_DEBUG'), "@", split(" ", getenv('PHP')), $server);
+$c0->LinkCreate("c0",    "--srvname", "s0",  "--debug", getenv('TS_DEBUG'), "@", getenv('PHP'), "-c", getenv('PHPRC'),$server);
 $c00->LinkCreateChild($c0,  "c00",   "--name", "c00", "--srvname", "s00");
 $c01->LinkCreateChild($c0,  "c01",   "--name", "c01", "--srvname", "s01");
 $c000->LinkCreateChild($c00, "c000",  "--name", "c000", "--srvname", "s000");

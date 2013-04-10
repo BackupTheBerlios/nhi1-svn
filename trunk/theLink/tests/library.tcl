@@ -334,12 +334,13 @@ proc getPostfix {srv} {
 
 if {![array exists TS_SERVER]} {
   array set TS_SERVER [list \
-    python  [list $PYTHON  [file join $linksrcdir example python server.py]]		\
-    ruby    [list $RUBY    [file join $linksrcdir example ruby server.rb]]		\
-    java    [list $JAVA    example.Server]						\
-    tcl	    [list $TCLSH   [file join $linksrcdir example tcl server.tcl]]		\
-    perl    [list $PERL -w [file join $linksrcdir example perl server.pl]]		\
-    php	    [list $PHP     [file join $linksrcdir example php server.php]]		\
+    python  [list $PYTHON   [file join $linksrcdir example python server.py]]		\
+    ruby    [list $RUBY	    [file join $linksrcdir example ruby server.rb]]		\
+    java    [list $JAVA	    example.Server]						\
+    tcl	    [list $TCLSH    [file join $linksrcdir example tcl server.tcl]]		\
+    perl    [list $PERL -w  [file join $linksrcdir example perl server.pl]]		\
+    php	    [list $PHP -c   [file join $linkbuilddir msgqueforphp]			\
+			    [file join $linksrcdir example php server.php]]		\
     go	    [file join $linkbuilddir example go server$::EXEEXT]			\
     jdb	    [list jdb	      Server]							\
     cc	    [file join $linkbuilddir example cc server$::EXEEXT]			\
@@ -463,7 +464,8 @@ proc getExampleExecutable {srv} {
       python	{ lappend RET $::PYTHON [file join $::linksrcdir example python $path.py] }
       ruby	{ lappend RET $::RUBY [file join $::linksrcdir example ruby $path.rb] }
       perl	{ lappend RET $::PERL [file join $::linksrcdir example perl $path.pl] }
-      php	{ lappend RET $::PHP [file join $::linksrcdir example php $path.php] }
+      php	{ lappend RET $::PHP -c [file join $::linkbuilddir msgqueforphp] \
+			      [file join $::linksrcdir example php $path.php] }
       go	{ lappend RET [file join $::linkbuilddir example go $path$::EXEEXT] }
       java	{ lappend RET $::JAVA example.$path }
       vb	-

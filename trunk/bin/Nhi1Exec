@@ -197,7 +197,7 @@ lookup() {
       py)	EXE="${PYTHON:-python}";;
       pl)	EXE="${PERL:-perl}";;
       rb)	EXE="${RUBY:-ruby}";;
-      php)	EXE="${PHP:-php}";;
+      php)	EXE="${PHP:-php};-c;$abs_top_builddir_m/theLink/msgqueforphp";;
       cs)	EXE="${CLREXEC}"; CM1="${CM1%.*}.exe";;
       go)	EXE=""; CM1="${CM1%.*}$EXT";;
       cc)	EXE=""; CM1="${CM1%.*}$EXT";;
