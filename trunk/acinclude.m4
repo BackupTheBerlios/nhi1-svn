@@ -20,7 +20,7 @@ AC_DEFUN([OT_CHECK_THREAD],[
 
 AC_DEFUN([OT_CHECK_SDK],[
   pushdef([ID],$1)
-  AS_IF([test "$build_os" = 'cygwin' -a -z "$SDK_SETENV"], [
+  AS_IF([test "$host_os" = 'mingw32' -a -z "$SDK_SETENV"], [
     AC_MSG_ERROR('ID' require '--with-winsdk=...' support on windows)
   ])
   popdef([ID])
@@ -697,7 +697,8 @@ AC_DEFUN([SC_WITH_JAVA], [
 
 AC_DEFUN([SC_WITH_PYTHON], [
   OT_WITH_PROG(python, PYTHON, python3, interpreter)
-  AS_IF([test -n "$PYTHON"], [
+  AS_IF([test "$USE_PYTHON" = "yes"], [
+    OT_CHECK_SDK([python])
     AS_IF([$PKG_CONFIG --exists python3], [
       AC_SUBST([PYTHON_CFLAGS], [$($PKG_CONFIG --cflags python3)])
       AC_SUBST([PYTHON_LDFLAGS],[$($PKG_CONFIG --libs python3)])
@@ -707,7 +708,7 @@ AC_DEFUN([SC_WITH_PYTHON], [
 
 	python_include="$python_dir/include"
 	AS_IF([test -d "$python_include"], [
-	  AC_SUBST([PYTHON_CFLAGS], ["-I'$python_dir/include'"])
+	  AC_SUBST([PYTHON_CFLAGS], ["-I\"$($CYGPATH_M $python_dir/include)\""])
 	],[
 	  AC_MSG_ERROR([unable to find include directory '$python_include'])
 	])
@@ -724,7 +725,7 @@ AC_DEFUN([SC_WITH_PYTHON], [
 		AC_MSG_NOTICE([create import library '$python_libtool_lib'])
 	      ]) 
 	      cp "$python_lib" "$python_libs/lib$python_base.dll.a"
-	      AC_SUBST([PYTHON_LDFLAGS],["-L'$python_libs' -l'$python_base'"])
+	      AC_SUBST([PYTHON_LDFLAGS],["\"$($CYGPATH_M $python_libs)/$python_base.lib\""])
 	    ],[
 	      AC_MSG_ERROR([unable to read python lib file '$python_lib'])
 	    ])

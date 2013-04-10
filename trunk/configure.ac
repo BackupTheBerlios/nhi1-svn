@@ -194,46 +194,50 @@ TYPE_HUGE_VAL
 AX_CHECK_ALIGNED_ACCESS_REQUIRED
 
 AC_MSG_CHECKING([for windows build])
-if test "$host_os" = "mingw32"; then
+HAS_UDS=0
+AS_IF([test "$host_os" = "mingw32"], [
   AC_MSG_RESULT([yes])
   AC_DEFINE([MQ_IS_WIN32], [], [is this a WIN32 like system (e.g. WINDOWS)])
   AC_SUBST([FILE_SEP], [\\\\])
   AC_SUBST([PATH_SEP], [\;])
   MQ_IS=WIN32
-  AM_CONDITIONAL([WIN32], [true])
-  HAS_UDS=0
-else
+],[
   AC_MSG_RESULT([no])
   AC_DEFINE([MQ_IS_POSIX], [], [is this a POSIX like system (e.g. UNIX)])
   if test "$build_os" != "cygwin"; then
     AC_DEFINE([MQ_HAVE_UDS], [], [are Unix-Domain-Socket available?])
     HAS_UDS=1
-  else
-    HAS_UDS=0
   fi
   AC_SUBST([FILE_SEP], [/])
   AC_SUBST([PATH_SEP], [:])
   MQ_IS=POSIX
-  AM_CONDITIONAL([WIN32], [false])
-fi
+])
+AM_CONDITIONAL([WIN32], [test "$MQ_IS" = "WIN32"])
 AC_SUBST([MQ_IS])
 AC_SUBST([HAS_UDS])
 
+# windows mingw c++ cross-compiler created binaries require additional 
+# mingw-dll's in the search-path
+AS_IF([test "$USE_CXX" = "yes" -a "$host_os" = "mingw32"], [
+  AC_SUBST([MINGWDLL],["$($CXX -print-sysroot)/mingw/bin"])
+  AC_SUBST([MINGWDLL_m],["$($CYGPATH_M $MINGWDLL)"])
+])
+
 # create some windows style path names
-if test "x$prefix" = xNONE ; then
+AS_IF([test "$prefix" = "NONE"], [
   my_prefix=$ac_default_prefix
-else
+],[
   my_prefix=$prefix
-fi
+])
 AC_SUBST([prefix_m], "$($CYGPATH_M "$my_prefix")")
 AC_SUBST([abs_top_builddir_m], "$($CYGPATH_M "$ac_pwd")")
-case $srcdir in
+case "$srcdir" in
   .)  # We are building in place.
-    my_abs_top_srcdir=$ac_pwd ;;
+    my_abs_top_srcdir="$ac_pwd" ;;
   [[\\/]]* | ?:[[\\/]]* )  # Absolute name.
-    my_abs_top_srcdir=$srcdir ;;
+    my_abs_top_srcdir="$srcdir" ;;
   *) # Relative name.
-    my_abs_top_srcdir=$ac_pwd/$srcdir ;;
+    my_abs_top_srcdir="$ac_pwd/$srcdir" ;;
 esac
 AC_SUBST([abs_top_srcdir_m], "$($CYGPATH_M "$my_abs_top_srcdir")")
 

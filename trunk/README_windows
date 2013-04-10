@@ -29,11 +29,15 @@ mingw cross-compiler of cygwin OR the winsdk compiler from Microsoft.
 
 a typical configuration command is:
 
-/path/to/NHI1/configure --enable-cache --enable-threads --enable-symbols \
+/path/to/NHI1/configure --enable-cache --enable-threads --enable-debug \
     --host=x86_64-w64-mingw32 --prefix=/cygpath/c/nhi1 \
     --with-tcl=/cygdrive/c/Tcl/bin/tclsh86 \
     --with-python=/cygdrive/c/Python32/python.exe \
     --with-perl=/cygdrive/c/Perl64/bin/perl \
+    --with-java=/cygdrive/c/Program\ Files/Java/jdk1.7.0_17/bin/java.exe \
+    --with-cxx \
+    --with-csharp \
+    --with-vb \
     --with-winsdk="C:/Program Files/Microsoft SDKs/Windows/v7.1/Bin/SetEnv.cmd"
 
 * The tcl, perl and python binaries come from the active-state distribution.
@@ -41,21 +45,45 @@ a typical configuration command is:
 
 The following libmsgque binaries are build and installed:
 
-  PREFIX/bin/libmsgque-22.dll ... mingw dll
-  PREFIX/bin/libmsgque.dll ...... msvc dll
-  PREFIX/bin/libmsgque.pdb ...... msvc dll debug information
-  PREFIX/include/msgque.h ....... public header file
-  PREFIX/lib/libmsgque.dll.a .... mingw import library
-  PREFIX/lib/libmsgque.la ....... libtool configuration library
-  PREFIX/lib/libmsgque.exp ...... msvc export library
-  PREFIX/lib/libmsgque.lib ...... msvc import library
+  PREFIX/bin/atool.exe ............. a multi purpose tool
+
+  PREFIX/include/msgque.h .......... public c header file
+  PREFIX/bin/libmsgque-XX.dll ...... mingw c library
+  PREFIX/lib/libmsgque.dll.a ....... mingw c import library
+  PREFIX/lib/libmsgque.la .......... mingw libtool c configuration
+  PREFIX/bin/msgque.dll ............ msvc c library
+  PREFIX/lib/msgque.exp ............ msvc c export library
+  PREFIX/lib/msgque.lib ............ msvc c import library
+
+  PREFIX/include/ccmsgque.h ........ public c++ header file
+  PREFIX/bin/libccmsgque-XX.dll .... mingw c++ library
+  PREFIX/lib/libccmsgque.dll.a ..... mingw import library
+  PREFIX/lib/libccmsgque.la ........ mingw libtool c++ configuration
+  PREFIX/bin/ccmsgque.dll .......... msvc c++ library
+  PREFIX/lib/ccmsgque.exp .......... msvc c++ export library
+  PREFIX/lib/ccmsgque.lib .......... msvc c++ import library
+
+  PREFIX/lib/NHI1/csmsgque.dll ..... clr csharp interface library
+  PREFIX/bin/NHI1pymsgque.pyd ...... msvc python interface library
+
+  PREFIX/lib/NHI1/javamsgque.jar ... java interface package
+  PREFIX/lib/NHI1/javamsgque.dll ... mingw java interface library
+  PREFIX/lib/NHI1/javamsgque.dll.a . mingw java import library
+  PREFIX/lib/NHI1/javamsgque.la .... mingw libtool java configuration
+
+  PREFIX/lib/NHI1/pkgIndex.tcl ..... tcl interface index file
+  PREFIX/lib/NHI1/tclmsgque.dll .... mingw tcl interface library
+  PREFIX/lib/NHI1/tclmsgque.dll.a .. mingw tcl import library
+  PREFIX/lib/NHI1/tclmsgque.la ..... mingw libtool tcl configuration
+
 
 The Windows-SDK build using the following build-scripts
   
-  TOP_BUILDDIR/sbin/wincl.bat ... cl.exe compiler wrapper
-  TOP_BUILDDIR/sbin/winlib.bat .. lib.exe archive-builder wrapper
-  TOP_BUILDDIR/sbin/winlink.bat . link.exe linker wrapper
-  TOP_BUILDDIR/sbin/winsdk.bat .. windows SDL shell
+  TOP_BUILDDIR/sbin/wincl.bat ...... "cl" compiler wrapper
+  TOP_BUILDDIR/sbin/winclr.bat ..... "clr" compiler wrapper
+  TOP_BUILDDIR/sbin/winlib.bat ..... "lib" archive-builder wrapper
+  TOP_BUILDDIR/sbin/winlink.bat .... "link" linker wrapper
+  TOP_BUILDDIR/sbin/winsdk.bat ..... windows SDL shell
 
 Tne MinGW build was tested with the with:
 
@@ -76,9 +104,9 @@ The following pitfalls are important:
      32bit application like cygwin. Native 64bit dll's are hidden. use
      /cygdrive/c/Windows/Sysnative diretory to get it.
      
-
   4. ref 2. works for tcl but NOT for python. some imcopabilities between
-     MinGW and msvc keep this problem open.
+     MinGW and msvc keep this problem open. Use msvc to create native
+     python extension
 
   5. perl does only support the msvc build on windows.
 

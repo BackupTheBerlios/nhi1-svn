@@ -104,7 +104,7 @@ enum MqErrorE ListToMqBufferLS (
   if (argsO == NULL) {
     return MQ_OK;
   } else {
-    struct MqBufferLS * args = *argsP = MqBufferLCreate (PyList_GET_SIZE(argsO));
+    struct MqBufferLS * args = *argsP = MqBufferLCreate ((MQ_SIZE)PyList_GET_SIZE(argsO));
     PyObject *iterator = PyObject_GetIter(argsO);
     PyObject *item, *utf8;
 

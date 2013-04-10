@@ -15,9 +15,9 @@
 ## performance tools setup
 ##
 
-noinst_PROGRAMS = Filter1$(EXEEXT) mulserver$(EXEEXT) mulclient$(EXEEXT) manfilter$(EXEEXT) \
-      testserver$(EXEEXT) testclient$(EXEEXT) MyClient$(EXEEXT)  MyServer$(EXEEXT) Filter2$(EXEEXT) \
-	Filter3$(EXEEXT) Filter4$(EXEEXT) Filter5$(EXEEXT) Filter6$(EXEEXT) server$(EXEEXT)
+noinst_PROGRAMS = Filter1 mulserver mulclient manfilter \
+      testserver testclient MyClient  MyServer Filter2 \
+	Filter3 Filter4 Filter5 Filter6 server
 
 AM_CXXFLAGS = -static -I$(srcdir)/../../libmsgque -I$(srcdir)/../../ccmsgque -DMQ_IGNORE_EXTERN
 AM_LDFLAGS = -static

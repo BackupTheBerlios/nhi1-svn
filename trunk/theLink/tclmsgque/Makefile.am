@@ -27,7 +27,7 @@ tcl_DATA = .libs/pkgIndex.tcl
 
 # we need this 'pkgIndex.tcl' for testing only
 .libs/pkgIndex.tcl: tclmsgque.la
-	$(TCLSH) `$(CYGPATH_W) '$(srcdir)/.MAKE_INDEX.tcl'`
+	$(TCLSH) "$$($(CYGPATH_W) "$(srcdir)/.MAKE_INDEX.tcl")"
 
 #noinst_SCRIPTS = pkgIndex.tcl
 

@@ -68,6 +68,7 @@
 /* from: http://stackoverflow.com/questions/7475282/huge-valf-undefined-under-windows */
 # if defined(_WIN32) && !defined(HUGE_VALF)
 #   if defined(__cplusplus)
+#     include <limits>
       static float _X_huge_valf = std::numeric_limits<float>::infinity();
 #     define HUGE_VALF _X_huge_valf
 #   else

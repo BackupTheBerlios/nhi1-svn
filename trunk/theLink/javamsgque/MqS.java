@@ -22,11 +22,7 @@ package javamsgque;
 public class MqS {
 
   static {
-    try {
-      System.loadLibrary("javamsgque");
-    } catch (UnsatisfiedLinkError e) {
-      System.loadLibrary("libjavamsgque");
-    }
+    System.loadLibrary("javamsgque");
   }
 
   private long hdl;

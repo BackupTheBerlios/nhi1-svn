@@ -66,13 +66,9 @@ proc Error {args} {
 
 ## setup the path to find the !newly! created executable first
 lappend PATH [file nativename [file dirname [info nameofexecutable]]]
-lappend PATH [file nativename [file join $linkbuilddir javamsgque .libs]]
 lappend PATH [file nativename [file join $linkbuilddir csmsgque]]
 lappend PATH [file nativename [file join $linkbuilddir tests]]
 lappend PATH [file nativename [file join $linkbuilddir acmds]]
-lappend PATH [file nativename [file join $linkbuilddir libmsgque .libs]]
-lappend PATH [file nativename [file join $linkbuilddir ccmsgque .libs]]
-lappend PATH [file nativename [file join $linkbuilddir tclmsgque .libs]]
 lappend PATH [file nativename [file normalize .libs]]
 lappend PATH [file nativename [file normalize .]]
 
@@ -92,6 +88,26 @@ switch -exact $tcl_platform(platform) {
     }
 }
 set env(PATH) "[join $PATH $PATH_SEP]$PATH_SEP$env(PATH)"
+
+## setup LIBRARY search path
+if {![info exists env(LD_LIBRARY_PATH)]} {
+  set env(LD_LIBRARY_PATH) ""
+}
+set LIBRARY_PATH [list]
+lappend LIBRARY_PATH [file nativename [file join $linkbuilddir libmsgque .libs]]
+lappend LIBRARY_PATH [file nativename [file join $linkbuilddir ccmsgque .libs]]
+lappend LIBRARY_PATH [file nativename [file join $linkbuilddir javamsgque .libs]]
+lappend LIBRARY_PATH [file nativename [file join $linkbuilddir tclmsgque .libs]]
+lappend LIBRARY_PATH [file nativename [file join $linkbuilddir perlmsgque Net-PerlMsgque blib arch auto Net PerlMsgque]]
+
+if { "$host_os" == "mingw32" } {
+  lappend LIBRARY_PATH $MINGWDLL
+  set env(PATH) "[join $LIBRARY_PATH $PATH_SEP]$PATH_SEP$env(PATH)"
+} else {
+  set env(LD_LIBRARY_PATH) "[join $LIBRARY_PATH $PATH_SEP]$PATH_SEP$env(LD_LIBRARY_PATH)"
+}
+
+#puts $env(PATH)
 
 ## setup TCL path
 set TCLLIBPATH [list]
@@ -131,19 +147,6 @@ set env(LIB) [join $MONO_PATH $PATH_SEP]
 ## setup PERL search path
 set env(PERL5LIB) [file nativename [file join $linkbuilddir perlmsgque Net-PerlMsgque blib lib]]
 append env(PERL5LIB) "$PATH_SEP[file nativename [file join $linksrcdir example perl]]"
-
-## setup LIBRARY search path
-if {![info exists env(LD_LIBRARY_PATH)]} {
-  set env(LD_LIBRARY_PATH) ""
-}
-set LIBRARY_PATH [list]
-lappend LIBRARY_PATH [file nativename [file join $linkbuilddir libmsgque .libs]]
-lappend LIBRARY_PATH [file nativename [file join $linkbuilddir javamsgque .libs]]
-lappend LIBRARY_PATH [file nativename [file join $linkbuilddir tclmsgque .libs]]
-lappend LIBRARY_PATH [file nativename [file join $linkbuilddir perlmsgque Net-PerlMsgque blib arch auto Net PerlMsgque]]
-set env(LD_LIBRARY_PATH) "[join $LIBRARY_PATH $PATH_SEP]$PATH_SEP$env(LD_LIBRARY_PATH)"
-
-#puts $env(PATH)
 
 if {$tcl_platform(os) eq "FreeBSD"} {
     set WAIT 1000

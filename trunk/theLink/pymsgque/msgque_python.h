@@ -18,20 +18,7 @@
 // public visible names with package prefix
 #define NS(n)	pymsgque_ ## n
 
-// HAVE_DECLSPEC_DLL is defined in the "python" header files
-// DLL_EXPORTS is needed by "msgque.h"
-#if defined(HAVE_DECLSPEC_DLL) && !defined(DLL_EXPORTS)
-# define DLL_EXPORTS
-#endif
-
-#include "mqconfig.h"
 #include "msgque.h"
-
-#ifdef MQ_HAS_THREAD
-# include "pthread.h"
-#endif
-
-#define MQ_IS_POSIX
 #include "debug.h"
 
 #define MQ_CONTEXT_S context

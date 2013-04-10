@@ -118,9 +118,11 @@ The following tools are supported:
   kdbg: use debugger 'kdbg'
             > $PREFIX_kdbg
   sdk:  windows sdk command shell
-	    > $PREFIX_sdk
+            > $PREFIX_sdk
   windbg:  windows sdk debugger
-	    > $PREFIX_sdk
+            > $PREFIX_windbg
+  depends:  windows profiler
+            > $PREFIX_depends
 EOF
   exit 1
 }
@@ -188,7 +190,7 @@ lookup() {
     # find executable if CMD is a script-file
     case "$lng" in
       tcl|test) EXE="${TCLSH:-tclsh}";;
-      java)	EXE="${JAVA:-java}"; CM1="${CM1%.*}";;
+      java)	EXE="${JAVA:-java}"; CM1="example.${CM1%.*}";;
       py)	EXE="${PYTHON:-python}";;
       pl)	EXE="${PERL:-perl}";;
       rb)	EXE="${RUBY:-ruby}";;
@@ -228,6 +230,7 @@ PREFIX=""
 PREFIX_vg="valgrind;--trace-children=yes;--num-callers=36;--quiet"
 PREFIX_sdk=${SDK_EXEC// /;}
 PREFIX_windbg="$PREFIX_sdk;C:/Program Files/Debugging Tools for Windows (x64)/windbg.exe"
+PREFIX_depends="C:/Users/dev1usr/Desktop/depends/depends.exe;/pa:1"
 PREFIX_gdb="gdb;-d;../perlmsgque/Net*/;--tui;--args"
 PREFIX_ddd="ddd;--args"
 PREFIX_kdbg="/opt/kde3/bin/kdbg"
@@ -266,7 +269,7 @@ G_Description='frontend to run test-scripts'
 G_HelpProc='Usage'
 # -------------------------------------------------------------------
 G_Option break-on-non-option
-G_Argument 'prefix:prefix:no:prefix test with:L:no:vg:gdb:ddd:kdbg:lc:sr:st:sp:mdb:sdk:windbg'
+G_Argument 'prefix:prefix:no:prefix test with:L:no:vg:gdb:ddd:kdbg:lc:sr:st:sp:mdb:sdk:windbg:depends'
 G_Argument 'lookup:lookup:no:lookup a test-script:B'
 G_Argument 'remote:remote:no:add "--tcp --port 7777 --thread" to the argument(s):B'
 
@@ -296,6 +299,11 @@ case "$prefix" in
   ;;
   windbg) 
     PREFIX=$PREFIX_windbg
+    POSTFIX=''
+    TEE='no'
+  ;;
+  depends) 
+    PREFIX=$PREFIX_depends
     POSTFIX=''
     TEE='no'
   ;;

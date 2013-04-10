@@ -16,44 +16,42 @@ C_FILES = buffer.c cache.c event.c log.c \
     service.c link.c factory.c sql.c \
     ../sqlite/sqlite3.c
 
-H_FILES = msgque.h debug.h msgque_private.h sys_com.h main.h \
-    ../sqlite/config.h ../sqlite/sqlite3.h ../sqlite/sqlite3ext.h
-
-SOURCES = $(C_FILES) $(H_FILES)
-
-.libs:
-	mkdir .libs
-
-# ordinaray library
+H_FILES = msgque.h debug.h msgque_private.h sys_com.h main.h
 
 lib_LTLIBRARIES = libmsgque.la
 
-libmsgque_la_SOURCES = $(SOURCES)
+libmsgque_la_SOURCES = $(C_FILES) $(H_FILES)
 
-libmsgque_la_CFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL -Wstrict-prototypes -I$(srcdir)/../sqlite $(AM_CFLAGS) $(WINDEFS)
+libmsgque_la_CFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL -Wstrict-prototypes -I$(srcdir)/../sqlite $(WINDEFS)
 libmsgque_la_LDFLAGS = -version-info @VERSION_INFO@ -no-undefined
 libmsgque_la_LIBADD = $(WINLIBS)
 
 include_HEADERS = msgque.h
 
-html-local: libtmp.la libtmps.la
+## ===========================================================================================
+## windows with SDK
+##
 
 if USE_WINSDK
+
+.libs:
+	mkdir .libs
 
 VPATH += $(srcdir)/../sqlite
 
 .libs/%.obj: %.c $(H_FILES) | .libs
-	$(SDK_CL) "-I../.. -I$(abs_top_srcdir_m)/theLink/sqlite" -DMQ_BUILD_LIBMSGQUE_DLL "$(shell $(CYGPATH_M) $<)"
+	$(SDK_CL) -I../.. -I$(abs_top_srcdir_m)/theLink/sqlite -DMQ_BUILD_LIBMSGQUE_DLL "$(shell $(CYGPATH_M) $<)"
 
-.libs/libmsgque.dll: $(patsubst %.c,.libs/%.obj, $(notdir $(C_FILES))) | .libs
+.libs/msgque.dll: $(patsubst %.c,.libs/%.obj, $(notdir $(C_FILES))) | .libs
 	$(SDK_LINK) "$@" "$^" ws2_32.lib
 
-.libs/libmsgque.exp .libs/libmsgque.lib .libs/libmsgque.pdb: .libs/libmsgque.dll
+.libs/msgque.exp .libs/msgque.lib .libs/msgque.pdb: .libs/msgque.dll
 
 sdklibdir = $(libdir)
-sdklib_DATA = .libs/libmsgque.exp .libs/libmsgque.lib
+sdklib_DATA = .libs/msgque.exp .libs/msgque.lib
 
 sdkbindir = $(bindir)
-sdkbin_DATA = .libs/libmsgque.dll .libs/libmsgque.pdb
+sdkbin_DATA = .libs/msgque.dll .libs/msgque.pdb
 
 endif
+

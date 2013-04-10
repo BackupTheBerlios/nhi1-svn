@@ -36,11 +36,11 @@ PyObject* NS(ProcessEvent) (
   PyObject    *args
 )
 {
-  SETUP_context;
+  SETUP_context
   int timeout=MQ_TIMEOUT_DEFAULT;
   int wait=MQ_WAIT_NO;
   int val1, val2;
-  const int size = PyTuple_Size(args);
+  const int size = (int) PyTuple_Size(args);
 
   if (!PyArg_ParseTuple(args, "|ii:ProcessEvent", &val1, &val2)) { 
     return NULL;

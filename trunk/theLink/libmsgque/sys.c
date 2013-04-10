@@ -478,7 +478,7 @@ static enum MqErrorE SysServerSpawn (
 )
 {
   pid_t pid;
-  MQ_STR cmd="SysServerSpawn";
+  MQ_CST cmd="SysServerSpawn";
   int err=0;
 
   // spawn setup !before! a spawn is created

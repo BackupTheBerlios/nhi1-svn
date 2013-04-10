@@ -256,7 +256,7 @@ PyObject* NS(SendB) (
   if (!PyArg_ParseTuple(args, "O!:SendB", &PyByteArray_Type, &o)) {
     return NULL;
   }
-  ErrorMqToPythonWithCheck (MqSendB(context,(MQ_BIN)PyByteArray_AS_STRING(o),PyByteArray_GET_SIZE(o)));
+  ErrorMqToPythonWithCheck (MqSendB(context,(MQ_BIN)PyByteArray_AS_STRING(o),(MQ_SIZE)PyByteArray_GET_SIZE(o)));
   SETUP_RETURN
 }
 
@@ -270,7 +270,7 @@ PyObject* NS(SendN) (
   if (!PyArg_ParseTuple(args, "O!:SendN", &PyByteArray_Type, &o)) {
     return NULL;
   }
-  ErrorMqToPythonWithCheck (MqSendN(context,(MQ_BIN)PyByteArray_AS_STRING(o),PyByteArray_GET_SIZE(o)));
+  ErrorMqToPythonWithCheck (MqSendN(context,(MQ_BIN)PyByteArray_AS_STRING(o),(MQ_SIZE)PyByteArray_GET_SIZE(o)));
   SETUP_RETURN
 }
 

@@ -10,8 +10,6 @@
 #:              please contact AUTHORS for additional information
 #:
 
-if USE_PERL
-
 SUFFIXES =
 
 if USE_WINSDK
@@ -56,8 +54,6 @@ uninstall-local:
 mostlyclean-local:
 	if test -f $(PERLMAKEFILE); then $(make) realclean ; else true; fi
 	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then rm -fr Net-PerlMsgque; else true; fi
-
-endif
 
 EXTRA_DIST = \
 	Net-PerlMsgque/ppport.h \

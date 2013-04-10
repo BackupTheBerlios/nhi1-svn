@@ -95,7 +95,7 @@ namespace csmsgque {
 
     private const CallingConvention MSGQUE_CC = CallingConvention.Cdecl;
     private const CharSet MSGQUE_CS = CharSet.Ansi;
-    internal const string MSGQUE_DLL = "libmsgque";
+    internal const string MSGQUE_DLL = "msgque";
     private static string APP = Assembly.GetEntryAssembly().Location;
 
     internal IntPtr context;
