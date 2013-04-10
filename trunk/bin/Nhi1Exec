@@ -179,6 +179,9 @@ lookup() {
   elif [[ -r "$CMDDIR/$CM2" ]] ; then
     CMDDIR="$CMDDIR/"
     CM1="$CM2"
+  elif [[ -r "$CMDDIR/$CM2.exe" ]] ; then
+    CMDDIR="$CMDDIR/"
+    CM1="$CM2.exe"
   elif (( ! silent )) ; then
     CMDDIR=""
     CM1="$1"

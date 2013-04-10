@@ -62,7 +62,7 @@ func (this *MqS) LinkGetCtxId() int32 {
 }
 
 func (this *MqS) LinkIsParent() bool {
-  return bool(C.MqLinkIsParent((*_Ctype_struct_MqS)(this)) != 0)
+  return (bool)(C.MqLinkIsParent((*_Ctype_struct_MqS)(this)))
 }
 
 func (this *MqS) LinkGetParent() *MqS {
@@ -70,7 +70,7 @@ func (this *MqS) LinkGetParent() *MqS {
 }
 
 func (this *MqS) LinkIsConnected() bool {
-  return C.MqLinkIsConnected((*_Ctype_struct_MqS)(this)) != 0
+  return (bool)(C.MqLinkIsConnected((*_Ctype_struct_MqS)(this)))
 }
 
 func (this *MqS) LinkConnect() {

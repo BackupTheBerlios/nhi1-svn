@@ -28,9 +28,11 @@ export GOBIN
 #####################################################################################
 ## GO files
 
-$(abs_builddir)/src/gomsgque/%: $(abs_srcdir)/src/gomsgque/%
-	if test -d $(dir $@) ; then true; else mkdir -p $(dir $@); fi
-	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then cp $< $@; else true; fi
+$(abs_builddir)/src/gomsgque:
+	mkdir $@
+
+$(abs_builddir)/src/gomsgque/%: $(abs_srcdir)/src/gomsgque/% | $(abs_builddir)/src/gomsgque
+	cp $< $@
 
 all-local: $(subst $(abs_srcdir), $(abs_builddir), $(wildcard $(abs_srcdir)/src/gomsgque/*))
 	$(GO) install gomsgque

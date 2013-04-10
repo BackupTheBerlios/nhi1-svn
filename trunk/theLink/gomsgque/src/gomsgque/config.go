@@ -118,7 +118,7 @@ func (this *MqS) ConfigSetStorage(val string) {
 }
 
 func (this *MqS) ConfigGetIsSilent() bool {
-  return C.MqConfigGetIsSilent((*_Ctype_struct_MqS)(this)) == C.MQ_YES
+  return (bool)(C.MqConfigGetIsSilent((*_Ctype_struct_MqS)(this)))
 }
 
 func (this *MqS) ConfigSetIsSilent(val bool) {
@@ -142,7 +142,7 @@ func (this *MqS) ConfigSetIgnoreExit(val bool) {
 }
 
 func (this *MqS) ConfigGetIsString() bool {
-  return C.MqConfigGetIsString((*_Ctype_struct_MqS)(this)) == C.MQ_YES
+  return (bool)(C.MqConfigGetIsString((*_Ctype_struct_MqS)(this)))
 }
 
 func (this *MqS) ConfigSetIsString(val bool) {
@@ -156,7 +156,7 @@ func (this *MqS) ConfigSetIsString(val bool) {
 }
 
 func (this *MqS) ConfigGetIsServer() bool {
-  return C.MqConfigGetIsServer((*_Ctype_struct_MqS)(this)) == C.MQ_YES
+  return (bool)(C.MqConfigGetIsServer((*_Ctype_struct_MqS)(this)))
 }
 
 func (this *MqS) ConfigSetIsServer(val bool) {

@@ -86,7 +86,7 @@ func (this *MqS) ErrorSetEXIT() {
 }
 
 func (this *MqS) ErrorIsEXIT() bool {
-  return C.MqErrorIsEXIT((*_Ctype_struct_MqS)(this)) == C.MQ_YES
+  return (bool)(C.MqErrorIsEXIT((*_Ctype_struct_MqS)(this)))
 }
 
 func (this *MqS) ErrorReset() {

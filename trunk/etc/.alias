@@ -67,14 +67,12 @@ done
 for x in aguard:g tests:t
 do
   IFS=':';set -- $x;unset IFS
-  alias cdr$2="cd ../$1"
   alias cdg$2="cd theGuard/$1"
 done
 
 for x in abrain:b atrans:r tests:t
 do
   IFS=':';set -- $x;unset IFS
-  alias cdr$2="cd ../$1"
   alias cdb$2="cd theBrain/$1"
 done
 

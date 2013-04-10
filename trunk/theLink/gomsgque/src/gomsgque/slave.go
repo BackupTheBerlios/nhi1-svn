@@ -52,6 +52,6 @@ func (this *MqS) SlaveGetMaster() *MqS {
 }
 
 func (this *MqS) SlaveIs() bool {
-  return C.MqSlaveIs((*_Ctype_struct_MqS)(this)) == 1
+  return (bool)(C.MqSlaveIs((*_Ctype_struct_MqS)(this)))
 }
 
