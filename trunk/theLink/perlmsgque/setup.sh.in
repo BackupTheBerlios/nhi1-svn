@@ -1,7 +1,0 @@
-
-cd $1 && shift
-
-@PERL@ Makefile.PL PREFIX='@prefix_m@' @PERL_DEBUG@ CC='@CC@' LD='@CC@' AR='@AR@' \
-  INC='-Wall -I. -I@abs_top_builddir_m@ -I@abs_top_srcdir_m@/theLink/libmsgque' \
-  OBJECT='$(O_FILES) @abs_top_builddir_m@/theLink/libmsgque/.libs/libtmp.a' \
-  DEFINE='-DMQ_IGNORE_EXTERN'

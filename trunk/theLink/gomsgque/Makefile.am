@@ -10,11 +10,7 @@
 #:              please contact AUTHORS for additional information
 #:
 
-GO_FILES = src/gomsgque/*.go src/gomsgque/*.h src/gomsgque/*.c
-
 EXTRA_DIST = $(srcdir)/src/gomsgque/*.go $(srcdir)/src/gomsgque/*.h $(srcdir)/src/gomsgque/*.c
-
-if USE_GO
 
 #####################################################################################
 ## GO files
@@ -43,6 +39,4 @@ clean-local:
 
 distclean-local:
 	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then rm -fr src; else true; fi
-
-endif
 

@@ -1,4 +1,15 @@
 @ECHO OFF
+REM
+REM  \file       sbin/wincl.bat.in
+REM  \brief      \$Id$
+REM  
+REM  (C) 2013 - NHI - #1 - Project - Group
+REM  
+REM  \version    \$Rev$
+REM  \author     EMail: aotto1968 at users.berlios.de
+REM  \attention  this software has GPL permissions to copy
+REM              please contact AUTHORS for additional information
+REM
 set MAKE=
 set MAKEFLAGS=
 call "@SDK_SETENV@" /@SDK_DEBUG@ /@SDK_CPU@ 2>NUL

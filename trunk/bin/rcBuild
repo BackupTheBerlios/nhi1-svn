@@ -81,7 +81,7 @@ Usage() {
 
 	Usage: ${0##*/} {start|stop|status|restart|force-reload|reload|backup|install|uninstall|tobuild|tobak}
 
-	A tool to create an build-environment using an tempfs filesystem.
+	A tool to create an build-environment using a tempfs filesystem.
 
 	  The goal is to create a faster compile-edit-cyclus using the directories:
 
