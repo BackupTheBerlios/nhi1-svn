@@ -13,7 +13,7 @@
 bin_PROGRAMS = abrain
 
 abrain_SOURCES = abrain.c $(srcdir)/../../theLink/sqlite/sqlite3.c
-abrain_CPPFLAGS = -I$(srcdir)/../../theLink/libmsgque -I$(srcdir)/../../theLink/sqlite -DMQ_IGNORE_EXTERN
+abrain_CPPFLAGS = -I$(srcdir)/../../theLink/libmsgque -I$(srcdir)/../../theLink/sqlite -DMQ_IGNORE_EXTERN -D_HAVE_SQLITE_CONFIG_H
 abrain_CFLAGS = -static
 abrain_LDLAGS = -static
 abrain_LDADD = ../../theLink/libmsgque/libmsgque.la

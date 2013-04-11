@@ -22,7 +22,8 @@ lib_LTLIBRARIES = libmsgque.la
 
 libmsgque_la_SOURCES = $(C_FILES) $(H_FILES)
 
-libmsgque_la_CFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL -Wstrict-prototypes -I$(srcdir)/../sqlite $(WINDEFS)
+libmsgque_la_CPPFLAGS = -DMQ_BUILD_LIBMSGQUE_DLL -D_HAVE_SQLITE_CONFIG_H -I$(srcdir)/../sqlite $(WINDEFS)
+libmsgque_la_CFLAGS = -Wstrict-prototypes 
 libmsgque_la_LDFLAGS = -version-info @VERSION_INFO@ -no-undefined
 libmsgque_la_LIBADD = $(WINLIBS)
 
@@ -40,7 +41,7 @@ if USE_WINSDK
 VPATH += $(srcdir)/../sqlite
 
 .libs/%.obj: %.c $(H_FILES) | .libs
-	$(SDK_CL) -I../.. -I$(abs_top_srcdir_m)/theLink/sqlite -DMQ_BUILD_LIBMSGQUE_DLL "$(shell $(CYGPATH_M) $<)"
+	$(SDK_CL) -I../.. -I$(abs_top_srcdir_m)/theLink/sqlite -DMQ_BUILD_LIBMSGQUE_DLL -D_HAVE_SQLITE_CONFIG_H "$(shell $(CYGPATH_M) $<)"
 
 .libs/msgque.dll: $(patsubst %.c,.libs/%.obj, $(notdir $(C_FILES))) | .libs
 	$(SDK_LINK) "$@" "$^" ws2_32.lib

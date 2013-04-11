@@ -29,7 +29,7 @@ function Build # <thread|nothread> <config-arg>...
       cd @PACKAGE@-@PACKAGE_VERSION@
 
       ./bin/Nhi1Config +i +s -p --use-perf $@ \
-	--tool-root='@NHI1_TOOL_ROOT@' \
+	--with-tool-root='@NHI1_TOOL_ROOT@' --enable-cache \
 	--with-python --with-cxx --with-tcl --with-perl \
 	  --with-ruby --with-php --prefix="@abs_builddir@/$BUILD" || exit 1
 

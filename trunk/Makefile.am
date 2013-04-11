@@ -46,15 +46,9 @@ dist-hook:
 	rm -fr $(distdir)/html
 	cp -pr $(srcdir)/html $(distdir)
 
-DISTCHECK_CONFIGURE_FLAGS = --with-tool-root=$(NHI1_TOOL_ROOT) --enable-static --enable-tcl --enable-cxx \
-      --enable-python --enable-perl --enable-csharp --enable-java --enable-ruby \
-	  --enable-php --enable-go --enable-threads --enable-brain --enable-guard
-
-#DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-python --enable-threads --enable-guard --enable-brain
-
-#DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-threads
-
-#DISTCHECK_CONFIGURE_FLAGS = --enable-static --enable-tcl --enable-threads --enable-guard
+AM_DISTCHECK_CONFIGURE_FLAGS = --with-tool-root=$(NHI1_TOOL_ROOT) --enable-static --enable-threads --enable-cache \
+    --with-tcl --with-cxx --with-python --with-perl --with-csharp --with-java --with-ruby \
+	  --with-php --with-go --enable-brain --enable-guard
 
 # Darwin needs the DYLD_LIBRARY_PATH for "make check"
 # BSD make does !not! support the 'export' command

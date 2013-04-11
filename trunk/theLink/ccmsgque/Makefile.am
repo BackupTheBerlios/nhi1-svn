@@ -54,7 +54,7 @@ lib_LTLIBRARIES = libccmsgque.la
 
 libccmsgque_la_SOURCES = $(CC_FILES) $(C_FILES) $(H_FILES)
 
-libccmsgque_la_CXXFLAGS = -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL -I$(srcdir)/../libmsgque -I$(srcdir)/../sqlite $(WINDEFS)
+libccmsgque_la_CPPFLAGS = -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL -D_HAVE_SQLITE_CONFIG_H -I$(srcdir)/../libmsgque -I$(srcdir)/../sqlite $(WINDEFS)
 libccmsgque_la_LDFLAGS = -version-info @VERSION_INFO@ -no-undefined
 libccmsgque_la_LIBADD = $(WINLIBS)
 
@@ -75,7 +75,7 @@ VPATH += $(srcdir)/../sqlite
 	$(SDK_CL) -I../.. -I$(abs_top_srcdir_m)/theLink/libmsgque -I$(abs_top_srcdir_m)/theLink/sqlite -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL "-Tc$(shell $(CYGPATH_M) $<)"
 
 .libs/%.obj: %.cc $(H_FILES) | .libs
-	$(SDK_CL) -I../.. -I$(abs_top_srcdir_m)/theLink/libmsgque -I$(abs_top_srcdir_m)/theLink/sqlite -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL "-Tp$(shell $(CYGPATH_M) $<)"
+	$(SDK_CL) -I../.. -I$(abs_top_srcdir_m)/theLink/libmsgque -I$(abs_top_srcdir_m)/theLink/sqlite -DMQ_COMPILE_AS_CC -DMQ_BUILD_LIBMSGQUE_DLL -D_HAVE_SQLITE_CONFIG_H "-Tp$(shell $(CYGPATH_M) $<)"
 
 .libs/ccmsgque.dll: $(patsubst %.cc,.libs/%.obj, $(notdir $(CC_FILES))) $(patsubst %.c,.libs/%.obj, $(notdir $(C_FILES))) | .libs
 	$(SDK_LINK) "$@" "$^" ws2_32.lib

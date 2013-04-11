@@ -24,8 +24,6 @@ AC_PREFIX_DEFAULT([/opt/nhi1])
 AC_SUBST([LIBMSGQUE_VERSION], ["5.5"])
 AC_DEFINE([LIBMSGQUE_VERSION], ["5.5"], [version of the 'libmsgque' package])
 
-# set library VERSION information also in:
-# > theLink/csmsgque/MqS.cs
 #
 #  Updating library version information
 #  ====================================

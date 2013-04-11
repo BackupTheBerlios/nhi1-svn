@@ -15,5 +15,5 @@
 ## Main
 ##
 
-EXTRA_DIST = $(srcdir)/*.pl
+EXTRA_DIST = $(srcdir)/*.pl $(srcdir)/*.pm
 

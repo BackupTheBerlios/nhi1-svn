@@ -27,3 +27,11 @@ nothread: build_performance_env.sh
 perf: performance.sh thread nothread
 	$(SHELL) performance.sh $(arg)
 
+all-local:
+	@echo
+	@echo usage perf-tool
+	@echo
+	@echo "  thread ..... build thread code"
+	@echo "  nothread ... build no-thread code"
+	@echo "  perf ....... make the performance test"
+	@echo

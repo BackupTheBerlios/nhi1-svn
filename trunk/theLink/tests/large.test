@@ -37,6 +37,8 @@ set DAT2    ${DAT1}xy
 set DATU2   ${DATC}xy
 set DATL2   [string length $DAT2]
 
+#set oFH [open out.log w]
+
 ##
 ## -----------------------------------------------------------------------
 ## Master/Child + Binary yes/no
@@ -68,6 +70,9 @@ Setup $I $B $C $S
 test large-0-($I|$B|$C|$S) {large 0 binary data} \
     -body           {
         set ret [Echo1 $FH_LAST ECOU ReadC SendC $DAT0]
+#puts $oFH "large-1-($I|$B|$C|$S)"
+#puts $oFH [string length $ret]
+#puts $oFH [string range $ret 0 20000]
         list [string length $ret] [Helper $ret]
     } \
     -returnCodes    ok \
@@ -76,6 +81,9 @@ test large-0-($I|$B|$C|$S) {large 0 binary data} \
 test large-1-($I|$B|$C|$S) {large 1 binary data} \
     -body           {
         set ret [Echo1 $FH_LAST ECOU ReadC SendC $DAT1]
+#puts $oFH "large-1-($I|$B|$C|$S)"
+#puts $oFH [string length $ret]
+#puts $oFH [string range $ret 0 20000]
         list [string length $ret] [Helper $ret]
     } \
     -returnCodes    ok \
@@ -84,6 +92,9 @@ test large-1-($I|$B|$C|$S) {large 1 binary data} \
 test large-2-($I|$B|$C|$S) {large 2 binary data} \
     -body       {
 	set ret [Echo1 $FH_LAST ECOU ReadC SendC $DAT2]
+#puts $oFH "large-1-($I|$B|$C|$S)"
+#puts $oFH [string length $ret]
+#puts $oFH [string range $ret 0 20000]
 	list [string length $ret] [Helper $ret]
     } \
     -returnCodes    ok \
