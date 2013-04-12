@@ -31,10 +31,10 @@ $(abs_builddir)/src/gomsgque/%: $(abs_srcdir)/src/gomsgque/% | $(abs_builddir)/s
 	cp $< $@
 
 all-local: $(subst $(abs_srcdir), $(abs_builddir), $(wildcard $(abs_srcdir)/src/gomsgque/*))
-	$(GO) install gomsgque
+	test -n "$(GO)" && $(GO) install gomsgque
 
 clean-local: 
-	$(GO) clean
+	test -n "$(GO)" && $(GO) clean || true
 	rm -fr pkg
 
 distclean-local:

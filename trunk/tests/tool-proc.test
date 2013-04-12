@@ -18,8 +18,8 @@ if {[info exists env(TS_LIBRARY)]} {
 
 ## environment for all test-cases
 unset env(NHI1_TOOL_ROOT)
-set dir [makeDirectory tool-proc]
-exec tar -C $dir -xjf ../$PACKAGE-$PACKAGE_VERSION.tar.bz2 >&@stdout
+set dir [makeDirectory tool-proc-test-dir]
+exec tar -C $dir -xjf $pkg >&@stdout
 set env(NHI1_TOOL_ROOT) $NHI1_TOOL_ROOT
 
 test tool-proc-arg {check using '--with-tcl=PATH'} \
@@ -28,7 +28,7 @@ test tool-proc-arg {check using '--with-tcl=PATH'} \
     } \
     -body           {
       cd $dir/$PACKAGE-$PACKAGE_VERSION
-      exec bin/Nhi1Config +i +s +p --use-perf --with-tcl=$TCLSH
+      exec ./bin/Nhi1Config +i +s -p --use-perf --with-tcl=$TCLSH 2>&1
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -43,7 +43,7 @@ test tool-proc-with-environment {check using '--with-tcl' with tool-path from en
       unset env(TCLSH)
     } \
     -body           {
-      exec bin/Nhi1Config +i +s +p --use-perf --with-tcl
+      exec ./bin/Nhi1Config +i +s -p --use-perf --with-tcl 2>&1
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -58,7 +58,7 @@ test tool-proc-with-no {check using '--with-tcl=no'} \
       unset env(TCLSH)
     } \
     -body           {
-      exec bin/Nhi1Config +i +s +p --use-perf --with-tcl=no
+      exec ./bin/Nhi1Config +i +s -p --use-perf --with-tcl=no 2>&1
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -73,7 +73,7 @@ test tool-proc-without {check using '--without-tcl'} \
       unset env(TCLSH)
     } \
     -body           {
-      exec bin/Nhi1Config +i +s +p --use-perf --without-tcl
+      exec ./bin/Nhi1Config +i +s +p --use-perf --without-tcl 2>&1
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -84,7 +84,7 @@ test tool-proc-lookup {check using '--with-tcl' and tool-path lookup} \
       cd $dir/$PACKAGE-$PACKAGE_VERSION
     } \
     -body           {
-      exec bin/Nhi1Config +i +s +p --use-perf --with-tcl
+      exec ./bin/Nhi1Config +i +s +p --use-perf --with-tcl 2>&1
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -97,7 +97,7 @@ test tool-proc-lookup-yes {check using '--with-tcl=yes' and tool-path lookup} \
       cd $dir/$PACKAGE-$PACKAGE_VERSION
     } \
     -body           {
-      exec bin/Nhi1Config +i +s +p --use-perf --with-tcl=yes
+      exec ./bin/Nhi1Config +i +s +p --use-perf --with-tcl=yes 2>&1
     } \
     -returnCodes    ok \
     -match	    glob \
@@ -112,7 +112,7 @@ test tool-proc-lookup-not-found {check using '--with-php' and tool-path lookup} 
       unset env(NHI1_TOOL_ROOT)
     } \
     -body           {
-      exec bin/Nhi1Config +i +s +p --use-perf --with-php
+      exec ./bin/Nhi1Config +i +s +p --use-perf --with-php
     } \
     -returnCodes    error \
     -match	    glob \
@@ -122,4 +122,3 @@ test tool-proc-lookup-not-found {check using '--with-php' and tool-path lookup} 
 cleanupTests
 
 # vim: set syn=tcl:
-

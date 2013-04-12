@@ -19,7 +19,7 @@ if {[info exists env(TS_LIBRARY)]} {
 ## environment for all test-cases
 unset env(NHI1_TOOL_ROOT)
 set dir [makeDirectory tool-root]
-exec tar -C $dir -xjf ../$PACKAGE-$PACKAGE_VERSION.tar.bz2 >&@stdout
+exec tar -C $dir -xjf $pkg 2>&1
 
 test tool-root-no {check without using the 'tool-root' option} \
     -body           {
@@ -60,8 +60,8 @@ test tool-root-without {check without using 'tool-root'} \
 test tool-root {check with the 'tool-root' environmnet variable 'NHI1_TOOL_ROOT'} \
     -body           {
       cd $dir/$PACKAGE-$PACKAGE_VERSION
-      set env(NHI1_TOOL_ROOT) $NHI1_TOOL_ROOT
-      exec bin/Nhi1Config +i +s +p --use-perf
+      set env(NHI1_TOOL_ROOT) .
+      exec bin/Nhi1Config +i +s +p --use-perf 2>&1
       unset env(NHI1_TOOL_ROOT)
     } \
     -returnCodes    ok 

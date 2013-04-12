@@ -30,7 +30,7 @@ setup += @PERL_M@ Makefile.PL PREFIX="@prefix_m@" $(PERL_DEBUG) $(PERL_OPTS) \
 
 $(abs_builddir)/Net-PerlMsgque:
 	mkdir Net-PerlMsgque
-
+ 
 $(abs_builddir)/Net-PerlMsgque/%: $(abs_srcdir)/Net-PerlMsgque/% | $(abs_builddir)/Net-PerlMsgque
 	cp -r $< $@
 
@@ -49,11 +49,12 @@ install-exec-local:
 	if test -f $(PERLMAKEFILE); then $(make) install ; else true; fi
 
 uninstall-local:
-	if test -f $(PERLMAKEFILE); then $(make) uninstall ; else true; fi
+	rm -f $(DESTDIR)$(prefix)/man/man3/Net::PerlMsgque.3
+	rm -fr $(DESTDIR)$(libexecdir)/perl5
 
 mostlyclean-local:
 	if test -f $(PERLMAKEFILE); then $(make) realclean ; else true; fi
-	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then rm -fr Net-PerlMsgque; else true; fi
+	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then chmod -R u+w Net-PerlMsgque && rm -fr Net-PerlMsgque; else true; fi
 
 EXTRA_DIST = \
 	Net-PerlMsgque/ppport.h \

@@ -13,7 +13,12 @@ source ../env.tcl
 
 package require tcltest
 namespace import -force ::tcltest::*
-verbose {pass body error}
+verbose {start pass body error}
 
 set testdir [file normalize [file dirname [info script]]]
+set pkg [file join .. $PACKAGE-$PACKAGE_VERSION.tar.bz2]
+
+if {![file exists $pkg]} {
+  exec make -C .. dist
+}
 

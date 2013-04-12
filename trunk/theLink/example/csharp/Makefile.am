@@ -34,6 +34,6 @@ all-local: $(patsubst $(srcdir)/%.cs, $(builddir)/%.exe, $(wildcard $(srcdir)/*.
 ## Main
 ##
 
-CLEANFILES = *.exe *.mdb
+CLEANFILES = *.exe *.mdb *.dll
 EXTRA_DIST = $(srcdir)/*.cs
 

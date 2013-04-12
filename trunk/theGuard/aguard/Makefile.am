@@ -22,3 +22,5 @@ key.h: $(abs_top_srcdir)/sbin/KeyGen.tcl
 
 BUILT_SOURCES=key.h
 
+CLEANFILES=key.h
+

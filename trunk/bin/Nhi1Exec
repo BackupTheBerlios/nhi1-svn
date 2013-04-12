@@ -151,10 +151,10 @@ lookup() {
   declare lng="${CM1##*.}"
 
   # fix the CMD path
-  if [[ ! -e "$CMDDIR/$CM1" && ! -e  "$CMDDIR/$CM2" ]] ; then
+  if [[ ! -f "$CMDDIR/$CM1" && ! -f  "$CMDDIR/$CM2" ]] ; then
     # look for CMD in the same directory but in the source tree
     CMDDIR="$abs_top_srcdir_m/${CMDDIR#$abs_top_builddir_m/}"
-    if [[ ! -e  "$CMDDIR/$CM1" && ! -e  "$CMDDIR/$CM2" ]] ; then
+    if [[ ! -f  "$CMDDIR/$CM1" && ! -f  "$CMDDIR/$CM2" ]] ; then
       # look into the example directories
       case "$lng" in
 	tcl)      CMDDIR="$abs_top_srcdir_m/theLink/example/tcl";;
@@ -173,13 +173,13 @@ lookup() {
     fi
   fi
 
-  if [[ -r "$CMDDIR/$CM1" ]] ; then
+  if [[ -f "$CMDDIR/$CM1" ]] ; then
     CMDDIR="$CMDDIR/"
     CM1="$CM1"
-  elif [[ -r "$CMDDIR/$CM2" ]] ; then
+  elif [[ -f "$CMDDIR/$CM2" ]] ; then
     CMDDIR="$CMDDIR/"
     CM1="$CM2"
-  elif [[ -r "$CMDDIR/$CM2.exe" ]] ; then
+  elif [[ -f "$CMDDIR/$CM2.exe" ]] ; then
     CMDDIR="$CMDDIR/"
     CM1="$CM2.exe"
   elif (( ! silent )) ; then

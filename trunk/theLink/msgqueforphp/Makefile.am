@@ -72,12 +72,12 @@ install-exec-local:
 	echo "extension=\"$(pkglibdir)/MsgqueForPhp.so\"" > "$(DESTDIR)/$(pkglibdir)/php.ini"
 
 uninstall-local:
-	rm -f "$(DESTDIR)/$(pkglibdir)"/MsgqueForPhp.*
-	rm -f "$(DESTDIR)/$(pkglibdir)/php.ini"
+	rm -f "$(DESTDIR)$(pkglibdir)"/MsgqueForPhp.*
+	rm -f "$(DESTDIR)$(pkglibdir)/php.ini"
 
 mostlyclean-local:
 	if test -f $(PHPMAKEFILE) ; then $(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) distclean; else true; fi
-	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then rm -fr MsgqueForPhp; else true; fi
+	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then chmod -R u+w MsgqueForPhp && rm -fr MsgqueForPhp; else true; fi
 
 EXTRA_DIST = \
 	MsgqueForPhp/.cvsignore \
