@@ -23,10 +23,12 @@ if {![string is integer -strict $NUM] || $NUM <= 0} usage
 puts "#define KEY_LENGTH $NUM"
 puts "MQ_BINB KEY_DATA\[] = {"
 
-for {set i 0} {$i<$NUM} {incr i} {
+set i 0
+while {$i<$NUM} {
   puts -nonewline "  "
-  for {set y 0} {$y<20 && $i<$NUM} {incr y;incr i} {
+  for {set y 0} {$y<20 && $i<$NUM} {incr y} {
     puts -nonewline [format "0x%02x, " [expr {int(256 *rand())}]]
+    incr i
   }
   if {$i<$NUM} {
     puts ""
