@@ -12,7 +12,7 @@
 
 EXTRA_DIST = $(srcdir)/*.tcl $(srcdir)/*.test
 
-TESTS_ENVIRONMENT = $(abs_top_srcdir)/bin/Nhi1Exec --full-testing
+TESTS_ENVIRONMENT = $(abs_top_srcdir)/bin/Nhi1Exec --full-testing --only-c
 
 TESTS = $(abs_top_srcdir)/theLink/tests/all.tcl
 

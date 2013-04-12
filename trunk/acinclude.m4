@@ -10,6 +10,18 @@ dnl  \attention  this software has GPL permissions to copy
 dnl              please contact AUTHORS for additional information
 dnl
 
+AC_DEFUN([OT_CHECK_USE],[
+  pushdef([FROM],$1)
+  pushdef([ID],$2)
+  pushdef([FLAG],[USE_]translit($2,[a-z],[A-Z]))
+  AS_IF(test "$FLAG" = no, [
+    AC_MSG_ERROR('FROM' require '--with-ID' support)
+  ])
+  popdef([FLAG])
+  popdef([ID])
+  popdef([FROM])
+])
+
 AC_DEFUN([OT_CHECK_THREAD],[
   pushdef([ID],$1)
   AS_IF([test "$enable_threads" = no], [
@@ -154,6 +166,22 @@ AC_DEFUN([OT_WITH_DIR],[
   popdef([VARIABLE])
   popdef([ID])
 ])
+
+#------------------------------------------------------------------------
+# OT_ENABLE --
+#
+#       handle the --enable-XX switch
+#
+# Arguments:
+#       ID .......... identifier
+#	TXT ......... description test
+#
+# Results:
+#
+#       1. return "enable_ID" variable with 'yes' or 'no'
+#	2. make conditional "USE_ID" (with upper characters)
+#
+#------------------------------------------------------------------------
 
 AC_DEFUN([OT_ENABLE],[
   pushdef([ID],$1)
@@ -1080,6 +1108,9 @@ AC_DEFUN([SC_ENABLE_BRAIN], [
 
 AC_DEFUN([SC_ENABLE_GUARD], [
   OT_ENABLE([guard], [build theGuard, NHI1 encryption support])
+  AS_IF([test "$enable_guard" = "yes"],[
+    OT_CHECK_USE([guard],[tcl])
+  ])
 ])
 
 #------------------------------------------------------------------------

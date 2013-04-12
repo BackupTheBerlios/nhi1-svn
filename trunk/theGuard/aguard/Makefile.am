@@ -12,7 +12,13 @@
 
 bin_PROGRAMS = aguard
 
-aguard_SOURCES = aguard.c key.h
+aguard_SOURCES = aguard.c
+nodist_aguard_SOURCES = key.h
 aguard_CPPFLAGS = -I$(srcdir)/../../theLink/libmsgque -DMQ_IGNORE_EXTERN $(BRAIN_CPPFLAGS)
 aguard_LDADD = ../../theLink/libmsgque/libmsgque.la
+
+key.h: $(abs_top_srcdir)/sbin/KeyGen.tcl
+	$(TCLSH) $(abs_top_srcdir_m)/sbin/KeyGen.tcl > key.h
+
+BUILT_SOURCES=key.h
 

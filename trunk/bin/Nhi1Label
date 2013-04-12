@@ -98,7 +98,7 @@ config.h*       config.status  EXPERIMENTAL     ltmain.sh     mkinstalldirs     
 
     ./theGuard			{ Makefile.in Makefile }
     ./theGuard/tests		{ tags tmp.* Makefile.in Makefile .libs .deps *.o client *.sw* }
-    ./theGuard/aguard		{ *.sw* *.o *.la .libs .deps Makefile.in Makefile tags aguard }
+    ./theGuard/aguard		{ *.sw* *.o *.la .libs .deps Makefile.in Makefile tags aguard key.h }
 
     ./save			{ openfacts2.berlios.de }
 

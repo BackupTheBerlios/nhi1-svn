@@ -11,14 +11,15 @@
 #:              please contact AUTHORS for additional information
 #:
 
-proc usage {} {
+if {[llength $argv] > 1} {
   puts stderr "usage $::argv0 keyLength"
   exit 1
+} elseif {[llength $argv] == 1} {
+  set NUM [lindex $argv 0]
+  if {![string is integer -strict $NUM] || $NUM <= 0} usage
+} else {
+  set NUM [expr {10000 + int(2735 *rand())}]
 }
-
-if {[llength $argv] != 1} usage
-set NUM [lindex $argv 0]
-if {![string is integer -strict $NUM] || $NUM <= 0} usage
 
 puts "#define KEY_LENGTH $NUM"
 puts "MQ_BINB KEY_DATA\[] = {"
