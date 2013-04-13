@@ -1,12 +1,15 @@
-> nothread/NHI1-0.17/theLink/example/c/server --uds --file ./socket.uds --fork
-> nothread/NHI1-0.17/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:23549) [2013-02-13:07-42-29] [0-0-0-0x17cad98-main]: start: --------------------------------------
-C> (client:23549) [2013-02-13:07-42-29] [0-0-0-0x17cad98-statistics]:                      MqSendEND:   4.43e+05
-C> (client:23549) [2013-02-13:07-42-29] [0-0-0-0x17cad98-statistics]:         MqSendEND_AND_CALLBACK:   2.32e+05
-C> (client:23549) [2013-02-13:07-42-30] [0-0-0-0x17cad98-statistics]:             MqSendEND_AND_WAIT:   6.24e+04
-C> (client:23549) [2013-02-13:07-42-30] [0-0-0-0x17cad98-statistics]:               MqSendPERSISTENT:   7.84e+03
-C> (client:23549) [2013-02-13:07-42-31] [0-0-0-0x17cad98-statistics]:                  parent create:   3.31e+03
-C> (client:23549) [2013-02-13:07-42-31] [0-0-0-0x17cad98-statistics]:                  parent delete:   8.67e+03
-C> (client:23549) [2013-02-13:07-42-31] [0-0-0-0x17cad98-statistics]:                   child create:   1.25e+04
-C> (client:23549) [2013-02-13:07-42-31] [0-0-0-0x17cad98-statistics]:                   child delete:   4.32e+04
-C> (client:23549) [2013-02-13:07-42-31] [0-0-0-0x17cad98-main]: end: ----------------------------------------
+> server.c --uds --file ./socket.uds --fork
+> client.c --all --uds --file ./socket.uds
+using: /build/dev01/Main/performance-thread/performance/nothread/env.sh
+skip: TS_LIBRARY
+exec: [5] /build/dev01/Main/performance-thread/performance/nothread/theLink/example/c/client,--all,--uds,--file,./socket.uds
+C> (client:5007) [2013-04-13:15-12-08] [0-0-0-0x1c97e88-main]: start: --------------------------------------
+C> (client:5007) [2013-04-13:15-12-09] [0-0-0-0x1c97e88-statistics]:                      MqSendEND:   3.65e+05
+C> (client:5007) [2013-04-13:15-12-09] [0-0-0-0x1c97e88-statistics]:         MqSendEND_AND_CALLBACK:   2.22e+05
+C> (client:5007) [2013-04-13:15-12-10] [0-0-0-0x1c97e88-statistics]:             MqSendEND_AND_WAIT:   6.16e+04
+C> (client:5007) [2013-04-13:15-12-10] [0-0-0-0x1c97e88-statistics]:               MqSendPERSISTENT:   7.17e+03
+C> (client:5007) [2013-04-13:15-12-11] [0-0-0-0x1c97e88-statistics]:                  parent create:   3.26e+03
+C> (client:5007) [2013-04-13:15-12-11] [0-0-0-0x1c97e88-statistics]:                  parent delete:   5.92e+03
+C> (client:5007) [2013-04-13:15-12-11] [0-0-0-0x1c97e88-statistics]:                   child create:   1.16e+04
+C> (client:5007) [2013-04-13:15-12-11] [0-0-0-0x1c97e88-statistics]:                   child delete:   3.86e+04
+C> (client:5007) [2013-04-13:15-12-11] [0-0-0-0x1c97e88-main]: end: ----------------------------------------

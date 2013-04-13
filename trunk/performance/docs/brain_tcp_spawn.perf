@@ -1,3 +1,0 @@
-> nothread/NHI1-0.17/theBrain/abrain/abrain --tcp --host localhost --port 7803 --spawn
-> nothread/NHI1-0.17/theBrain/tests/client --all --tcp --host localhost --port 7803
-performance.sh: line 384: nothread/NHI1-0.17/theBrain/tests/client: No such file or directory

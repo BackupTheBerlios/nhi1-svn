@@ -1,12 +1,15 @@
-> RUBY nothread/NHI1-0.17/theLink/example/ruby/server.rb --tcp --host localhost --port 7790 --fork
-> nothread/NHI1-0.17/theLink/example/c/client --all --tcp --host localhost --port 7790
-C> (client:30286) [2013-02-13:07-45-44] [0-0-0-0x1bc7fb8-main]: start: --------------------------------------
-C> (client:30286) [2013-02-13:07-45-45] [0-0-0-0x1bc7fb8-statistics]:                      MqSendEND:   1.70e+05
-C> (client:30286) [2013-02-13:07-45-45] [0-0-0-0x1bc7fb8-statistics]:         MqSendEND_AND_CALLBACK:   1.07e+05
-C> (client:30286) [2013-02-13:07-45-47] [0-0-0-0x1bc7fb8-statistics]:             MqSendEND_AND_WAIT:   3.19e+04
-C> (client:30286) [2013-02-13:07-45-47] [0-0-0-0x1bc7fb8-statistics]:               MqSendPERSISTENT:   5.00e+01
-C> (client:30286) [2013-02-13:07-45-48] [0-0-0-0x1bc7fb8-statistics]:                  parent create:   1.01e+03
-C> (client:30286) [2013-02-13:07-45-48] [0-0-0-0x1bc7fb8-statistics]:                  parent delete:   6.16e+02
-C> (client:30286) [2013-02-13:07-45-48] [0-0-0-0x1bc7fb8-statistics]:                   child create:   5.83e+03
-C> (client:30286) [2013-02-13:07-45-48] [0-0-0-0x1bc7fb8-statistics]:                   child delete:   2.73e+04
-C> (client:30286) [2013-02-13:07-45-48] [0-0-0-0x1bc7fb8-main]: end: ----------------------------------------
+> server.rb --tcp --host localhost --port 7790 --fork
+> client.c --all --tcp --host localhost --port 7790
+using: /build/dev01/Main/performance-thread/performance/nothread/env.sh
+skip: TS_LIBRARY
+exec: [7] /build/dev01/Main/performance-thread/performance/nothread/theLink/example/c/client,--all,--tcp,--host,localhost,--port,7790
+C> (client:12725) [2013-04-13:15-16-39] [0-0-0-0x167c0a8-main]: start: --------------------------------------
+C> (client:12725) [2013-04-13:15-16-39] [0-0-0-0x167c0a8-statistics]:                      MqSendEND:   1.68e+05
+C> (client:12725) [2013-04-13:15-16-39] [0-0-0-0x167c0a8-statistics]:         MqSendEND_AND_CALLBACK:   1.05e+05
+C> (client:12725) [2013-04-13:15-16-41] [0-0-0-0x167c0a8-statistics]:             MqSendEND_AND_WAIT:   3.10e+04
+C> (client:12725) [2013-04-13:15-16-41] [0-0-0-0x167c0a8-statistics]:               MqSendPERSISTENT:   5.00e+01
+C> (client:12725) [2013-04-13:15-16-42] [0-0-0-0x167c0a8-statistics]:                  parent create:   9.64e+02
+C> (client:12725) [2013-04-13:15-16-43] [0-0-0-0x167c0a8-statistics]:                  parent delete:   5.63e+02
+C> (client:12725) [2013-04-13:15-16-43] [0-0-0-0x167c0a8-statistics]:                   child create:   5.76e+03
+C> (client:12725) [2013-04-13:15-16-43] [0-0-0-0x167c0a8-statistics]:                   child delete:   2.37e+04
+C> (client:12725) [2013-04-13:15-16-43] [0-0-0-0x167c0a8-main]: end: ----------------------------------------

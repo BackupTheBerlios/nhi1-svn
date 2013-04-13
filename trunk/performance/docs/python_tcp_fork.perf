@@ -1,12 +1,15 @@
-> PYTHON nothread/NHI1-0.17/theLink/example/python/server.py --tcp --host localhost --port 7788 --fork
-> nothread/NHI1-0.17/theLink/example/c/client --all --tcp --host localhost --port 7788
-C> (client:29602) [2013-02-13:07-45-07] [0-0-0-0x1727fb8-main]: start: --------------------------------------
-C> (client:29602) [2013-02-13:07-45-07] [0-0-0-0x1727fb8-statistics]:                      MqSendEND:   2.13e+05
-C> (client:29602) [2013-02-13:07-45-08] [0-0-0-0x1727fb8-statistics]:         MqSendEND_AND_CALLBACK:   9.57e+04
-C> (client:29602) [2013-02-13:07-45-09] [0-0-0-0x1727fb8-statistics]:             MqSendEND_AND_WAIT:   2.97e+04
-C> (client:29602) [2013-02-13:07-45-09] [0-0-0-0x1727fb8-statistics]:               MqSendPERSISTENT:   5.00e+01
-C> (client:29602) [2013-02-13:07-45-11] [0-0-0-0x1727fb8-statistics]:                  parent create:   9.65e+02
-C> (client:29602) [2013-02-13:07-45-11] [0-0-0-0x1727fb8-statistics]:                  parent delete:   2.35e+02
-C> (client:29602) [2013-02-13:07-45-11] [0-0-0-0x1727fb8-statistics]:                   child create:   6.60e+03
-C> (client:29602) [2013-02-13:07-45-11] [0-0-0-0x1727fb8-statistics]:                   child delete:   2.89e+04
-C> (client:29602) [2013-02-13:07-45-11] [0-0-0-0x1727fb8-main]: end: ----------------------------------------
+> server.py --tcp --host localhost --port 7788 --fork
+> client.c --all --tcp --host localhost --port 7788
+using: /build/dev01/Main/performance-thread/performance/nothread/env.sh
+skip: TS_LIBRARY
+exec: [7] /build/dev01/Main/performance-thread/performance/nothread/theLink/example/c/client,--all,--tcp,--host,localhost,--port,7788
+C> (client:11854) [2013-04-13:15-15-48] [0-0-0-0x22300a8-main]: start: --------------------------------------
+C> (client:11854) [2013-04-13:15-15-48] [0-0-0-0x22300a8-statistics]:                      MqSendEND:   2.07e+05
+C> (client:11854) [2013-04-13:15-15-49] [0-0-0-0x22300a8-statistics]:         MqSendEND_AND_CALLBACK:   8.67e+04
+C> (client:11854) [2013-04-13:15-15-51] [0-0-0-0x22300a8-statistics]:             MqSendEND_AND_WAIT:   2.84e+04
+C> (client:11854) [2013-04-13:15-15-51] [0-0-0-0x22300a8-statistics]:               MqSendPERSISTENT:   5.06e+01
+C> (client:11854) [2013-04-13:15-15-52] [0-0-0-0x22300a8-statistics]:                  parent create:   9.13e+02
+C> (client:11854) [2013-04-13:15-15-52] [0-0-0-0x22300a8-statistics]:                  parent delete:   1.73e+02
+C> (client:11854) [2013-04-13:15-15-53] [0-0-0-0x22300a8-statistics]:                   child create:   5.60e+03
+C> (client:11854) [2013-04-13:15-15-53] [0-0-0-0x22300a8-statistics]:                   child delete:   9.72e+03
+C> (client:11854) [2013-04-13:15-15-53] [0-0-0-0x22300a8-main]: end: ----------------------------------------

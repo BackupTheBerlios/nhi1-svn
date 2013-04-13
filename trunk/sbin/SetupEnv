@@ -558,71 +558,81 @@ function parse_commandline {
 ## step through the options
   while (( $# > 0 )) ; do
     ## Setup default options
-      case $1 in
-	-i) shift; let SE_INTERACTIV=1; continue ;;
-	+i) shift; let SE_INTERACTIV=0; continue ;;
-	-c) shift; Print "$clear"; continue ;;
-	-s) shift; let SE_SAVE=1; continue ;;
-	+s) shift; let SE_SAVE=0; continue ;;
-	-p) shift; let SE_PrintCfg=1; continue ;;
-	+p) shift; let SE_PrintCfg=0; continue ;;
-	-v) shift; Exit "$G_Date - $G_Revision"	; continue ;;
-	-h|--help) shift; let SE_HELP=1; continue ;;
-	--help-environment) shift; let SE_HELP=2; continue ;;
-	--help-setup) shift; let SE_HELP=3; continue ;;
-      esac
+	case $1 in
+	  -i) shift; let SE_INTERACTIV=1; continue ;;
+	  +i) shift; let SE_INTERACTIV=0; continue ;;
+	  -c) shift; Print "$clear"; continue ;;
+	  -s) shift; let SE_SAVE=1; continue ;;
+	  +s) shift; let SE_SAVE=0; continue ;;
+	  -p) shift; let SE_PrintCfg=1; continue ;;
+	  +p) shift; let SE_PrintCfg=0; continue ;;
+	  -v) shift; Exit "$G_Date - $G_Revision"	; continue ;;
+	  -h|--help) shift; let SE_HELP=1; continue ;;
+	  --help-environment) shift; let SE_HELP=2; continue ;;
+	  --help-setup) shift; let SE_HELP=3; continue ;;
+	esac
 
     ## Setup OptionString
-      arg="${1##*=}"
-      [[ "$arg" == "$1" ]] && arg=""
-      opt="${1%%=*}"
-      key="${opt##+(-|+)}"
-      idx=${SE_INV[$key]:--1}
+	arg="${1##*=}"
+	[[ "$arg" == "$1" ]] && arg=""
+	opt="${1%%=*}"
+	key="${opt##+(-|+)}"
+	idx=${SE_INV[$key]:--1}
+
+	## validate a "B" argument
+	if [[ ${SE_Type[$idx]} == *B* ]] ; then
+	  case "${arg:-unset}" in
+		yes)	arg=1;;
+		no)		arg=0;;
+		unset)	arg=1;;
+		*)		Error "a boolean option (B) ia allowd to have only a 'yes' or a 'no' argument";;
+	  esac
+	fi
 
     ## parse option-value
-      if (( idx != -1 )) ; then
-	if (( ${#key} > 1 )) ; then
-	  if [[ ${SE_Type[$idx]} == *B* ]] ; then
-	    if [[ "$opt" == "--$key" ]] ; then
-	      set_defaults $idx "yes"; shift 1
-	    elif [[ "$opt" == "++$key" ]] ; then
-	      set_defaults $idx "no"; shift 1
-	    fi
-	  elif [[ ${SE_Type[$idx]} == *D* ]] ; then
-	    set_defaults $idx "${key%%-*}" "$arg"; shift 1
+	if (( idx != -1 )) ; then
+	  if (( ${#key} > 1 )) ; then
+		if [[ ${SE_Type[$idx]} == *B* ]] ; then
+		  if [[ "$opt" == "--$key" ]] ; then
+			set_defaults $idx $arg; shift 1
+		  elif [[ "$opt" == "++$key" ]] ; then
+			set_defaults $idx $(( ! $arg )) ; shift 1
+		  fi
+		elif [[ ${SE_Type[$idx]} == *D* ]] ; then
+		  set_defaults $idx "${key%%-*}" "$arg"; shift 1
+		else
+		  if [[ "$opt" == "--$key" ]] ; then
+			if [[ -z "$arg" ]]; then
+		  set_defaults $idx "$2"; shift 2
+			else
+		  set_defaults $idx "$arg"; shift 1
+			fi
+		  fi
+		fi
 	  else
-	    if [[ "$opt" == "--$key" ]] ; then
-	      if [[ -z "$arg" ]]; then
-		set_defaults $idx "$2"; shift 2
-	      else
-		set_defaults $idx "$arg"; shift 1
-	      fi
-	    fi
+		if [[ ${SE_Type[$idx]} == *B* ]] ; then
+		  if [[ "$opt" == "-$key" ]] ; then
+			set_defaults $idx $arg; shift 1
+		  elif [[ "$opt" == "+$key" ]] ; then
+			set_defaults $idx $(( ! $arg )) ; shift 1
+		  fi
+		else
+		  if [[ "$opt" == "-$key" ]] ; then
+			if [[ -z "$arg" ]]; then
+			  set_defaults $idx "$2"; shift 2
+			else
+			  set_defaults $idx "$arg"; shift 1
+			fi
+		  fi
+		fi
 	  fi
 	else
-	  if [[ ${SE_Type[$idx]} == *B* ]] ; then
-	    if [[ "$opt" == "-$key" ]] ; then
-	      set_defaults $idx "yes"; shift 1
-	    elif [[ "$opt" == "+$key" ]] ; then
-	      set_defaults $idx "no"; shift 1
-	    fi
+	  if (( $SE_BrakeOnNonOption )) ; then
+		SE_Args=("$@"); break
 	  else
-	    if [[ "$opt" == "-$key" ]] ; then
-	      if [[ -z "$arg" ]]; then
-		set_defaults $idx "$2"; shift 2
-	      else
-		set_defaults $idx "$arg"; shift 1
-	      fi
-	    fi
+		SE_Args+=("$1"); shift 1
 	  fi
 	fi
-      else
-	if (( $SE_BrakeOnNonOption )) ; then
-	  SE_Args=("$@"); break
-	else
-	  SE_Args+=("$1"); shift 1
-	fi
-      fi
   done
 
   ## all remaining positional parameters are put out
@@ -1030,5 +1040,3 @@ print_var
 print_all_variables
 	
 exit 0
-# ----------------------------------------------------------------------
-# vim: shiftwidth=4 tabstop=4

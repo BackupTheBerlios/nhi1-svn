@@ -11,11 +11,6 @@
 #:              please contact AUTHORS for additional information
 #:
 
-## create: $PACKAGE-$PACKAGE_VERSION.tar.bz2
-if test ! -f '@abs_top_builddir@/@PACKAGE@-@PACKAGE_VERSION@.tar.bz2' ; then
-  (cd '@abs_top_builddir@' ; make dist) || exit 1
-fi
-
 ## config/build/install
 function Build # <thread|nothread> <config-arg>...
 {
@@ -24,24 +19,21 @@ function Build # <thread|nothread> <config-arg>...
     rm -fr $BUILD
     mkdir $BUILD
     cd $BUILD
-    tar -xjf '@abs_top_builddir@/@PACKAGE@-@PACKAGE_VERSION@.tar.bz2' || exit 1
     (
-      cd @PACKAGE@-@PACKAGE_VERSION@
-
-      ./bin/Nhi1Config +i +s -p --use-perf $@ \
-	--with-tool-root='@NHI1_TOOL_ROOT@' --enable-cache \
-	--with-python --with-cxx --with-tcl --with-perl \
-	  --with-ruby --with-php --prefix="@abs_builddir@/$BUILD" || exit 1
-
-      make || exit 1
+      set -x
+      @abs_top_srcdir@/bin/Nhi1Config +i +s -p --use-perf $@ \
+		--with-tool-root='@NHI1_TOOL_ROOT@' --enable-cache \
+		--with-python --with-cxx --with-tcl --with-perl \
+		--with-ruby --with-php --prefix="@abs_builddir@/$BUILD" || exit 1
+      make -l 5 -j 4 || exit 1
     ) || exit 1
   ) || exit 1
 }
 
 ## main
 if test "$1" = "thread" ; then
-  Build thread --use-threads --with-csharp --with-java --with-go
+  Build thread	 --use-threads=yes --with-csharp --with-java --with-go
 elif test "$1" = "nothread" ; then
-  Build nothread 
+  Build nothread --use-threads=no --without-csharp --without-java --without-go
 fi
 

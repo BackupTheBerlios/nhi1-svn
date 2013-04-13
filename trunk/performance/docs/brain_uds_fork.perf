@@ -1,3 +1,0 @@
-> nothread/NHI1-0.17/theBrain/abrain/abrain --uds --file ./socket.uds --fork
-> nothread/NHI1-0.17/theBrain/tests/client --all --uds --file ./socket.uds
-performance.sh: line 384: nothread/NHI1-0.17/theBrain/tests/client: No such file or directory

@@ -1,12 +1,15 @@
-> RUBY nothread/NHI1-0.17/theLink/example/ruby/server.rb --uds --file ./socket.uds --spawn
-> nothread/NHI1-0.17/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:31151) [2013-02-13:07-46-03] [0-0-0-0x1a03d98-main]: start: --------------------------------------
-C> (client:31151) [2013-02-13:07-46-04] [0-0-0-0x1a03d98-statistics]:                      MqSendEND:   1.88e+05
-C> (client:31151) [2013-02-13:07-46-04] [0-0-0-0x1a03d98-statistics]:         MqSendEND_AND_CALLBACK:   1.05e+05
-C> (client:31151) [2013-02-13:07-46-05] [0-0-0-0x1a03d98-statistics]:             MqSendEND_AND_WAIT:   5.04e+04
-C> (client:31151) [2013-02-13:07-46-05] [0-0-0-0x1a03d98-statistics]:               MqSendPERSISTENT:   6.86e+03
-C> (client:31151) [2013-02-13:07-46-08] [0-0-0-0x1a03d98-statistics]:                  parent create:   5.22e+01
-C> (client:31151) [2013-02-13:07-46-08] [0-0-0-0x1a03d98-statistics]:                  parent delete:   9.68e+02
-C> (client:31151) [2013-02-13:07-46-08] [0-0-0-0x1a03d98-statistics]:                   child create:   6.36e+03
-C> (client:31151) [2013-02-13:07-46-08] [0-0-0-0x1a03d98-statistics]:                   child delete:   3.96e+04
-C> (client:31151) [2013-02-13:07-46-08] [0-0-0-0x1a03d98-main]: end: ----------------------------------------
+> server.rb --uds --file ./socket.uds --spawn
+> client.c --all --uds --file ./socket.uds
+using: /build/dev01/Main/performance-thread/performance/nothread/env.sh
+skip: TS_LIBRARY
+exec: [5] /build/dev01/Main/performance-thread/performance/nothread/theLink/example/c/client,--all,--uds,--file,./socket.uds
+C> (client:13717) [2013-04-13:15-17-07] [0-0-0-0x23bde88-main]: start: --------------------------------------
+C> (client:13717) [2013-04-13:15-17-08] [0-0-0-0x23bde88-statistics]:                      MqSendEND:   1.84e+05
+C> (client:13717) [2013-04-13:15-17-08] [0-0-0-0x23bde88-statistics]:         MqSendEND_AND_CALLBACK:   1.03e+05
+C> (client:13717) [2013-04-13:15-17-09] [0-0-0-0x23bde88-statistics]:             MqSendEND_AND_WAIT:   5.00e+04
+C> (client:13717) [2013-04-13:15-17-09] [0-0-0-0x23bde88-statistics]:               MqSendPERSISTENT:   6.91e+03
+C> (client:13717) [2013-04-13:15-17-12] [0-0-0-0x23bde88-statistics]:                  parent create:   4.87e+01
+C> (client:13717) [2013-04-13:15-17-12] [0-0-0-0x23bde88-statistics]:                  parent delete:   9.07e+02
+C> (client:13717) [2013-04-13:15-17-12] [0-0-0-0x23bde88-statistics]:                   child create:   6.18e+03
+C> (client:13717) [2013-04-13:15-17-12] [0-0-0-0x23bde88-statistics]:                   child delete:   3.44e+04
+C> (client:13717) [2013-04-13:15-17-12] [0-0-0-0x23bde88-main]: end: ----------------------------------------

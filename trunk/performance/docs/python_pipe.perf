@@ -1,11 +1,14 @@
-> nothread/NHI1-0.17/theLink/example/c/client --all @ PYTHON nothread/NHI1-0.17/theLink/example/python/server.py
-C> (client:29475) [2013-02-13:07-44-57] [0-0-0-0x1a44ef8-main]: start: --------------------------------------
-C> (client:29475) [2013-02-13:07-44-57] [0-0-0-0x1a44ef8-statistics]:                      MqSendEND:   2.30e+05
-C> (client:29475) [2013-02-13:07-44-58] [0-0-0-0x1a44ef8-statistics]:         MqSendEND_AND_CALLBACK:   9.35e+04
-C> (client:29475) [2013-02-13:07-44-59] [0-0-0-0x1a44ef8-statistics]:             MqSendEND_AND_WAIT:   4.70e+04
-C> (client:29475) [2013-02-13:07-44-59] [0-0-0-0x1a44ef8-statistics]:               MqSendPERSISTENT:   7.07e+03
-C> (client:29475) [2013-02-13:07-45-04] [0-0-0-0x1a44ef8-statistics]:                  parent create:   2.31e+01
-C> (client:29475) [2013-02-13:07-45-05] [0-0-0-0x1a44ef8-statistics]:                  parent delete:   3.91e+02
-C> (client:29475) [2013-02-13:07-45-05] [0-0-0-0x1a44ef8-statistics]:                   child create:   7.30e+03
-C> (client:29475) [2013-02-13:07-45-05] [0-0-0-0x1a44ef8-statistics]:                   child delete:   3.94e+04
-C> (client:29475) [2013-02-13:07-45-05] [0-0-0-0x1a44ef8-main]: end: ----------------------------------------
+> client.c --all @ server.py
+using: /build/dev01/Main/performance-thread/performance/nothread/env.sh
+skip: TS_LIBRARY
+exec: [5] /build/dev01/Main/performance-thread/performance/nothread/theLink/example/c/client,--all,@,/home/dev01/ext/x86_64-suse-linux/nothread/bin/python3,/home/dev01/Project/NHI1/theLink/example/python/server.py
+C> (client:11694) [2013-04-13:15-15-35] [0-0-0-0x16a7fe8-main]: start: --------------------------------------
+C> (client:11694) [2013-04-13:15-15-35] [0-0-0-0x16a7fe8-statistics]:                      MqSendEND:   2.15e+05
+C> (client:11694) [2013-04-13:15-15-36] [0-0-0-0x16a7fe8-statistics]:         MqSendEND_AND_CALLBACK:   8.97e+04
+C> (client:11694) [2013-04-13:15-15-37] [0-0-0-0x16a7fe8-statistics]:             MqSendEND_AND_WAIT:   4.54e+04
+C> (client:11694) [2013-04-13:15-15-37] [0-0-0-0x16a7fe8-statistics]:               MqSendPERSISTENT:   7.02e+03
+C> (client:11694) [2013-04-13:15-15-42] [0-0-0-0x16a7fe8-statistics]:                  parent create:   2.26e+01
+C> (client:11694) [2013-04-13:15-15-43] [0-0-0-0x16a7fe8-statistics]:                  parent delete:   3.27e+02
+C> (client:11694) [2013-04-13:15-15-43] [0-0-0-0x16a7fe8-statistics]:                   child create:   7.03e+03
+C> (client:11694) [2013-04-13:15-15-43] [0-0-0-0x16a7fe8-statistics]:                   child delete:   2.21e+04
+C> (client:11694) [2013-04-13:15-15-43] [0-0-0-0x16a7fe8-main]: end: ----------------------------------------

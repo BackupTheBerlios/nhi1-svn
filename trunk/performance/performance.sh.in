@@ -24,11 +24,16 @@ NUM=" "
 
 if (( $# > 0 )) ; then 
   case "$1" in
-    -vg)  VG="valgrind --trace-children=yes" ; shift;;
+    -vg)  VG="--prefix=vg" ; shift;;
     -x)	  set -x; shift;;
     -v)	  set -v; shift;;
-    --help-tests) HT=yes; shift;;
+    -*)	  echo usage $0 -vb -x -v ...
+	  HT=yes
+	  shift
+    ;;
   esac
+else
+  set -- ALL
 fi
 
 ## setup the TOTAL - LINK perf
@@ -40,14 +45,14 @@ printf "$FSL" "   Tests from:    " "  send  " "  send  " "  send  " "  send  " "
 printf "$FSL" "$DATE"              "  END   " "CALLBACK" "  WAIT  " " PERSIS " " create  " " delete " " create " " delete " 1>&3
 printf "$FSL" -------------------   --------   --------   --------   --------   ---------   --------   --------   --------  1>&3
 
-## setup the TOTAL - BRAIN perf
-FSB=" %-20s | %-8s %-8s\n"
-FIB=" %-20s | %8s %8s\n"
-exec 4>'@abs_top_srcdir@/performance/docs/total_brain.perf'
-DATE=$(date +"%Y-%m-%d %H:%M:%S")
-printf "$FSB" "   Tests from:    " "        " "        " 1>&4
-printf "$FSB" "$DATE"              "  PUT   " "  GET   " 1>&4
-printf "$FSB" -------------------   --------   --------  1>&4
+### setup the TOTAL - BRAIN perf
+#FSB=" %-20s | %-8s %-8s\n"
+#FIB=" %-20s | %8s %8s\n"
+#exec 4>'@abs_top_srcdir@/performance/docs/total_brain.perf'
+#DATE=$(date +"%Y-%m-%d %H:%M:%S")
+#printf "$FSB" "   Tests from:    " "        " "        " 1>&4
+#printf "$FSB" "$DATE"              "  PUT   " "  GET   " 1>&4
+#printf "$FSB" -------------------   --------   --------  1>&4
 
 kill_parent=1
 sig_spec=-9
@@ -115,9 +120,13 @@ TotalLink() {
       vals[$IDX]=$V
       let IDX++
     done
-    printf "$FIL" "   ${!L}" ${vals[*]} 1>&3
+	if [[ "${vals[*]:-}" == "" ]] ; then
+	  echo "WARNING: no values available vor $F"
+	else
+	  printf "$FIL" "   ${!L}" ${vals[*]} 1>&3
+	fi
   else 
-    printf "$FIL" "   ${!L}" na. na. na. na. na. na. na. 1>&3
+    printf "$FIL" "   ${!L}" na. na. na. na. na. na. na. na. 1>&3
   fi
 }
 
@@ -210,14 +219,15 @@ php_pipe
 php_tcp_fork
 php_tcp_spawn
 php_uds_fork
-php_uds_spawn
-brain_pipe
-brain_tcp_fork
-brain_tcp_thread
-brain_tcp_spawn
-brain_uds_fork
-brain_uds_thread
-brain_uds_spawn"
+php_uds_spawn"
+
+#brain_pipe
+#brain_tcp_fork
+#brain_tcp_thread
+#brain_tcp_spawn
+#brain_uds_fork
+#brain_uds_thread
+#brain_uds_spawn
 
 #vb_pipe
 #vb_tcp_thread
@@ -232,7 +242,7 @@ brain_uds_spawn"
 
 #apply the commandline filter
 # read from target all targets able to be tested add vars like USE_TCL="yes or no"
-eval $(grep USE thread/@PACKAGE@-@PACKAGE_VERSION@/env.sh)
+eval $(grep USE thread/env.sh)
 # ALL mean averything
 [[ "$1" == "ALL" ]] && shift
 declare -a R
@@ -263,87 +273,28 @@ for SRV in ${R[@]:-}; do
   case $SRV in
     *thread* | *java* | *csharp* | *vb* | *go* )	
       DIR="thread"
-      LINK_DIR="thread/@PACKAGE@-@PACKAGE_VERSION@/theLink"
-      BRAIN_DIR="thread/@PACKAGE@-@PACKAGE_VERSION@/theBrain"
     ;;
     total)	
-      DIR=""
-      LINK_DIR=""
-      BRAIN_DIR=""
+      continue
     ;;
     *)	
       DIR="nothread"
-      LINK_DIR="nothread/@PACKAGE@-@PACKAGE_VERSION@/theLink"
-      BRAIN_DIR="nothread/@PACKAGE@-@PACKAGE_VERSION@/theBrain"
     ;;
   esac
 
   case $SRV in
-    *brain*)	
-      EXEC=''
-      SERVER="$BRAIN_DIR/abrain/abrain"
-      CLIENT="$BRAIN_DIR/tests/client"
-    ;;
-    *python*)	
-      EXEC='PYTHON'
-      SERVER="$LINK_DIR/example/python/server.py"	    
-      CLIENT="$LINK_DIR/example/c/client"
-    ;;
-    *ruby*)	
-      EXEC='RUBY'
-      SERVER="$LINK_DIR/example/ruby/server.rb"
-      CLIENT="$LINK_DIR/example/c/client"
-    ;;
-    *csharp*)	
-      EXEC='MONO'
-      SERVER="$LINK_DIR/example/csharp/server.exe"	    
-      CLIENT="$LINK_DIR/example/c/client"
-    ;;
-    *vb*)	
-      EXEC='MONO'
-      SERVER="$LINK_DIR/example/vb/vbserver.exe"	    
-      CLIENT="$LINK_DIR/example/c/client"
-    ;;
-    total)	
-      EXEC=''	    
-      SERVER=""	    
-      CLIENT=""
-    ;;
-    *java*)	
-      EXEC='JAVA'
-      SERVER="example.Server" 
-      CLIENT="$LINK_DIR/example/c/client"
-    ;;
-    *perl*)	
-      EXEC='PERL'
-      SERVER="$LINK_DIR/example/perl/server.pl" 
-      CLIENT="$LINK_DIR/example/c/client"
-    ;;
-    *php*)	
-      EXEC='PHP'
-      SERVER="$LINK_DIR/example/php/server.php" 
-      CLIENT="$LINK_DIR/example/c/client"
-    ;;
-    *tcl*)	
-      EXEC='TCLSH'
-      SERVER="$LINK_DIR/example/tcl/server.tcl" 
-      CLIENT="$LINK_DIR/example/c/client"
-    ;;
-    *go*)	
-      EXEC=''
-      SERVER="$LINK_DIR/example/go/server" 
-      CLIENT="$LINK_DIR/example/c/client"
-    ;;
-    *cc*)	
-      EXEC=''
-      SERVER="$LINK_DIR/example/cc/server" 
-      CLIENT="$LINK_DIR/example/c/client"
-    ;;
-    *c*)	
-      EXEC=''
-      SERVER="$LINK_DIR/example/c/server"
-      CLIENT="$LINK_DIR/example/c/client"
-    ;;
+    *brain*)  SERVER="abrain"	    ;;
+    *python*) SERVER="server.py"    ;;
+    *ruby*)	  SERVER="server.rb"    ;;
+    *csharp*) SERVER="server.cs"    ;;
+    *vb*)	  SERVER="vbserver.vb"  ;;
+    *java*)	  SERVER="Server.java"  ;;
+    *perl*)	  SERVER="server.pl"    ;;
+    *php*)	  SERVER="server.php"   ;;
+    *tcl*)	  SERVER="server.tcl"   ;;
+    *go*)	  SERVER="server.go"    ;;
+    *cc*)	  SERVER="server.cc"    ;;
+    *c*)	  SERVER="server.c"     ;;
     *)
       echo "ERROR invalid server '$SRV'" 1>&1
       exit 1
@@ -352,9 +303,9 @@ for SRV in ${R[@]:-}; do
 
   case $SRV in
     *pipe*)
-      CL="$VG$CLIENT${NUM}--all @ $EXEC${EXEC:+ }$SERVER"
+      CL="client.c${NUM}--all @ $SERVER"
       echo "> ${CL}" | tee "$outfile"
-      @SHELL@ $LINK_DIR/tests/exec.env $CL 2>&1 | tee -a "$outfile"
+      ( cd $DIR && @abs_top_srcdir@/bin/Nhi1Exec $VG $CL 2>&1 | tee -a "$outfile" )
       continue
     ;;
     *uds*)
@@ -371,17 +322,17 @@ for SRV in ${R[@]:-}; do
   case $SRV in
     *thread*)	START=thread;;
     *spawn*)	START=spawn;;
-    *fork*)	START=fork;;
+    *fork*)		START=fork;;
   esac
 
-  SV="$VG${VG:+ }$EXEC${EXEC:+ }$SERVER $COM_ARGS --$START"
-  CL="$VG${VG:+ }$CLIENT${NUM}--all $COM_ARGS"
+  SV="$SERVER $COM_ARGS --$START"
+  CL="client.c${NUM}--all $COM_ARGS"
   echo "> $SV" | tee "$outfile"
   echo "> $CL" | tee -a "$outfile"
-  @SHELL@ $LINK_DIR/tests/exec.env $SV 1>/dev/null 2>&1 &
+  (cd $DIR && @abs_top_srcdir@/bin/Nhi1Exec $VG $SV ) &
   PID=$! 
-  sleep 2
-  $CL 2>&1 | tee -a "$outfile"
+  sleep 5
+  ( cd $DIR && @abs_top_srcdir@/bin/Nhi1Exec $CL 2>&1 | tee -a "$outfile" )
   kill_children $PID
 
 done
@@ -392,11 +343,12 @@ for TST in pipe tcp_fork tcp_thread tcp_spawn uds_fork uds_thread uds_spawn; do
   for LNG in c cc csharp java go perl python ruby tcl php; do
     TotalLink ${LNG} ${TST}
   done
-  echo -e "\n $TST:" 1>&4
-  for LNG in brain; do
-    TotalBrain ${LNG} ${TST}
-  done
+#  echo -e "\n $TST:" 1>&4
+#  for LNG in brain; do
+#    TotalBrain ${LNG} ${TST}
+#  done
 done
+cat '@abs_top_srcdir@/performance/docs/total_link.perf'
 
 test -f socket.uds && rm socket.uds
 exit 0

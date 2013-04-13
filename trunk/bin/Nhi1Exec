@@ -21,6 +21,7 @@ while [[ ! -f "$abs_top_builddir/env.sh" && "$abs_top_builddir" != '/' ]] ; do
   abs_top_builddir=$(dirname "$abs_top_builddir")
 done
 if [[ -r "${abs_top_builddir%/}/env.sh" ]] ; then
+  echo "using: $abs_top_builddir/env.sh"
   . "$abs_top_builddir/env.sh"
 else
  echo "unable to find the 'env.sh' configuration file"

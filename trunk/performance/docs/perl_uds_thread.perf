@@ -1,12 +1,15 @@
-> PERL thread/NHI1-0.17/theLink/example/perl/server.pl --uds --file ./socket.uds --thread
-> thread/NHI1-0.17/theLink/example/c/client --all --uds --file ./socket.uds
-C> (client:1586:0x7fcf4a8df700) [2013-02-13:07-48-01] [0-0-0-0x19d8d98-main]: start: --------------------------------------
-C> (client:1586:0x7fcf4a8df700) [2013-02-13:07-48-02] [0-0-0-0x19d8d98-statistics]:                      MqSendEND:   1.54e+05
-C> (client:1586:0x7fcf4a8df700) [2013-02-13:07-48-02] [0-0-0-0x19d8d98-statistics]:         MqSendEND_AND_CALLBACK:   9.77e+04
-C> (client:1586:0x7fcf4a8df700) [2013-02-13:07-48-03] [0-0-0-0x19d8d98-statistics]:             MqSendEND_AND_WAIT:   4.82e+04
-C> (client:1586:0x7fcf4a8df700) [2013-02-13:07-48-03] [0-0-0-0x19d8d98-statistics]:               MqSendPERSISTENT:   6.83e+03
-C> (client:1586:0x7fcf4a8df700) [2013-02-13:07-48-05] [0-0-0-0x19d8d98-statistics]:                  parent create:   1.07e+02
-C> (client:1586:0x7fcf4a8df700) [2013-02-13:07-48-05] [0-0-0-0x19d8d98-statistics]:                  parent delete:   2.72e+03
-C> (client:1586:0x7fcf4a8df700) [2013-02-13:07-48-05] [0-0-0-0x19d8d98-statistics]:                   child create:   6.24e+03
-C> (client:1586:0x7fcf4a8df700) [2013-02-13:07-48-05] [0-0-0-0x19d8d98-statistics]:                   child delete:   3.91e+04
-C> (client:1586:0x7fcf4a8df700) [2013-02-13:07-48-05] [0-0-0-0x19d8d98-main]: end: ----------------------------------------
+> server.pl --uds --file ./socket.uds --thread
+> client.c --all --uds --file ./socket.uds
+using: /build/dev01/Main/performance-thread/performance/thread/env.sh
+skip: TS_LIBRARY
+exec: [5] /build/dev01/Main/performance-thread/performance/thread/theLink/example/c/client,--all,--uds,--file,./socket.uds
+C> (client:17033:0x7f2ee43cd700) [2013-04-13:15-19-37] [0-0-0-0xcdbe88-main]: start: --------------------------------------
+C> (client:17033:0x7f2ee43cd700) [2013-04-13:15-19-37] [0-0-0-0xcdbe88-statistics]:                      MqSendEND:   1.44e+05
+C> (client:17033:0x7f2ee43cd700) [2013-04-13:15-19-38] [0-0-0-0xcdbe88-statistics]:         MqSendEND_AND_CALLBACK:   8.91e+04
+C> (client:17033:0x7f2ee43cd700) [2013-04-13:15-19-39] [0-0-0-0xcdbe88-statistics]:             MqSendEND_AND_WAIT:   4.65e+04
+C> (client:17033:0x7f2ee43cd700) [2013-04-13:15-19-39] [0-0-0-0xcdbe88-statistics]:               MqSendPERSISTENT:   6.58e+03
+C> (client:17033:0x7f2ee43cd700) [2013-04-13:15-19-41] [0-0-0-0xcdbe88-statistics]:                  parent create:   1.06e+02
+C> (client:17033:0x7f2ee43cd700) [2013-04-13:15-19-41] [0-0-0-0xcdbe88-statistics]:                  parent delete:   2.41e+03
+C> (client:17033:0x7f2ee43cd700) [2013-04-13:15-19-41] [0-0-0-0xcdbe88-statistics]:                   child create:   6.12e+03
+C> (client:17033:0x7f2ee43cd700) [2013-04-13:15-19-41] [0-0-0-0xcdbe88-statistics]:                   child delete:   3.62e+04
+C> (client:17033:0x7f2ee43cd700) [2013-04-13:15-19-41] [0-0-0-0xcdbe88-main]: end: ----------------------------------------

@@ -24,10 +24,10 @@ thread: build_performance_env.sh
 nothread: build_performance_env.sh
 	$(SHELL) build_performance_env.sh nothread
 
-perf: performance.sh thread nothread
+perf: performance.sh | thread nothread
 	$(SHELL) performance.sh $(arg)
 
-all-local:
+all-local: performance.sh build_performance_env.sh
 	@echo
 	@echo usage perf-tool
 	@echo
