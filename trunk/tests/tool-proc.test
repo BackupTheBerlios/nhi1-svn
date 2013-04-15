@@ -16,109 +16,110 @@ if {[info exists env(TS_LIBRARY)]} {
   source [file join [file dirname [info script]] library.tcl]
 }
 
-## environment for all test-cases
-unset env(NHI1_TOOL_ROOT)
-set dir [makeDirectory tool-proc-test-dir]
-exec tar -C $dir -xjf $pkg >&@stdout
-set env(NHI1_TOOL_ROOT) $NHI1_TOOL_ROOT
-
 test tool-proc-arg {check using '--with-tcl=PATH'} \
-    -setup	    {
-      cd $dir/$PACKAGE-$PACKAGE_VERSION
-    } \
-    -body           {
-      cd $dir/$PACKAGE-$PACKAGE_VERSION
-      exec ./bin/Nhi1Config +i +s -p --use-perf --with-tcl=$TCLSH 2>&1
-    } \
-    -returnCodes    ok \
-    -match	    glob \
-    -result	    "*checking for build with: tcl... $TCLSH*"
+    -setup		  { 
+	  set env(NHI1_TOOL_ROOT) .
+	  set env(PATH) {/bin:/usr/bin} 
+	} \
+    -body         { configure --with-tcl=$TCLSH } \
+	-cleanup	  { 
+	  unset env(NHI1_TOOL_ROOT)
+	  set PATH $PATH 
+	} \
+    -returnCodes  ok \
+    -match		  glob \
+    -result		  "*checking for build with: tcl... $TCLSH*"
 
-test tool-proc-with-environment {check using '--with-tcl' with tool-path from env} \
-    -setup	    {
-      cd $dir/$PACKAGE-$PACKAGE_VERSION
-      set env(TCLSH) $TCLSH
-    } \
-    -cleanup	    {
-      unset env(TCLSH)
-    } \
-    -body           {
-      exec ./bin/Nhi1Config +i +s -p --use-perf --with-tcl 2>&1
-    } \
-    -returnCodes    ok \
-    -match	    glob \
-    -result	    "*checking for build with: tcl... $TCLSH*"
+test tool-proc-with-environment {check using '--with-tcl' with tool-path from TCLSH} \
+    -setup		  { 
+	  set env(TCLSH) $TCLSH
+	  set env(NHI1_TOOL_ROOT) .
+	  set env(PATH) {/bin:/usr/bin} 
+	} \
+    -body         { configure --with-tcl } \
+	-cleanup	  { 
+	  unset env(TCLSH) env(NHI1_TOOL_ROOT)
+	  set PATH $PATH 
+	} \
+    -returnCodes  ok \
+    -match		  glob \
+    -result		  "*checking for build with: tcl... $TCLSH*"
 
 test tool-proc-with-no {check using '--with-tcl=no'} \
-    -setup	    {
-      cd $dir/$PACKAGE-$PACKAGE_VERSION
-      set env(TCLSH) $TCLSH
-    } \
-    -cleanup	    {
-      unset env(TCLSH)
-    } \
-    -body           {
-      exec ./bin/Nhi1Config +i +s -p --use-perf --with-tcl=no 2>&1
-    } \
-    -returnCodes    ok \
-    -match	    glob \
-    -result	    "*checking for build with: tcl... no*"
+    -setup		  { 
+	  set env(TCLSH) $TCLSH
+	  set env(NHI1_TOOL_ROOT) $NHI1_TOOL_ROOT
+	} \
+    -body         { configure --with-tcl=no } \
+	-cleanup	  { 
+	  unset env(TCLSH) env(NHI1_TOOL_ROOT)
+	} \
+    -returnCodes  ok \
+    -match		  glob \
+    -result		  "*checking for build with: tcl... no*"
 
 test tool-proc-without {check using '--without-tcl'} \
-    -setup	    {
-      cd $dir/$PACKAGE-$PACKAGE_VERSION
-      set env(TCLSH) $TCLSH
-    } \
-    -cleanup	    {
-      unset env(TCLSH)
-    } \
-    -body           {
-      exec ./bin/Nhi1Config +i +s +p --use-perf --without-tcl 2>&1
-    } \
-    -returnCodes    ok \
-    -match	    glob \
-    -result	    "*checking for build with: tcl... no*"
+    -setup		  { 
+	  set env(TCLSH) $TCLSH
+	  set env(NHI1_TOOL_ROOT) $NHI1_TOOL_ROOT
+	} \
+    -body         { configure --without-tcl } \
+	-cleanup	  { 
+	  unset env(TCLSH) env(NHI1_TOOL_ROOT)
+	} \
+    -returnCodes  ok \
+    -match		  glob \
+    -result		  "*checking for build with: tcl... no*"
 
-test tool-proc-lookup {check using '--with-tcl' and tool-path lookup} \
-    -setup	    {
-      cd $dir/$PACKAGE-$PACKAGE_VERSION
-    } \
-    -body           {
-      exec ./bin/Nhi1Config +i +s +p --use-perf --with-tcl 2>&1
-    } \
-    -returnCodes    ok \
-    -match	    glob \
-    -result	    "*checking for build with: tcl... lookup*checking for tclsh8.6... $NHI1_TOOL_ROOT*[file tail $TCLSH]*"
+test tool-proc-lookup-1 {check using '--with-tcl' and tool-path lookup at NHI1_TOOL_ROOT} \
+    -setup		  { 
+	  set env(NHI1_TOOL_ROOT) $NHI1_TOOL_ROOT
+	} \
+    -body         { configure --with-tcl } \
+	-cleanup	  { 
+	  unset env(NHI1_TOOL_ROOT)
+	} \
+    -returnCodes  ok \
+    -match		  glob \
+    -result		  "*checking for build with: tcl... lookup*checking for tclsh8.6... $NHI1_TOOL_ROOT*[file tail $TCLSH]*"
 
-# "*checking for tclsh8.6... $TCLSH*"
+test tool-proc-lookup-2 {check using '--with-tcl' and tool-path lookup at TCLSH} \
+    -setup		  { 
+	  set env(TCLSH) $TCLSH
+	} \
+    -body         { configure --with-tcl } \
+	-cleanup	  { 
+	  unset env(TCLSH)
+	} \
+    -returnCodes  error \
+    -match		  glob \
+    -result		  {*configure: error: the option '--with-tool-root' or the environment variable 'NHI1_TOOL_ROOT' is required*}
 
 test tool-proc-lookup-yes {check using '--with-tcl=yes' and tool-path lookup} \
-    -setup	    {
-      cd $dir/$PACKAGE-$PACKAGE_VERSION
-    } \
-    -body           {
-      exec ./bin/Nhi1Config +i +s +p --use-perf --with-tcl=yes 2>&1
-    } \
-    -returnCodes    ok \
-    -match	    glob \
-    -result	    "*checking for build with: tcl... lookup*checking for tclsh8.6... $NHI1_TOOL_ROOT*[file tail $TCLSH]*"
+    -setup		  { 
+	  set env(NHI1_TOOL_ROOT) $NHI1_TOOL_ROOT
+	} \
+    -body         { configure --with-tcl=yes } \
+	-cleanup	  { 
+	  unset env(NHI1_TOOL_ROOT)
+	} \
+    -returnCodes  ok \
+    -match		  glob \
+    -result		  "*checking for build with: tcl... lookup*checking for tclsh8.6... $NHI1_TOOL_ROOT*[file tail $TCLSH]*"
 
 test tool-proc-lookup-not-found {check using '--with-php' and tool-path lookup} \
-    -setup	    {
-      cd $dir/$PACKAGE-$PACKAGE_VERSION
-      set env(NHI1_TOOL_ROOT) .
-    } \
-    -cleanup	    {
-      unset env(NHI1_TOOL_ROOT)
-    } \
-    -body           {
-      exec ./bin/Nhi1Config +i +s +p --use-perf --with-php
-    } \
-    -returnCodes    error \
-    -match	    glob \
-    -result	    "*configure: error: unable to find the tool 'php' - exit*"
-
+    -setup		  { 
+	  set env(NHI1_TOOL_ROOT) .  
+	  set env(PATH) {/bin:/usr/bin} 
+	} \
+    -body         { configure --with-php } \
+	-cleanup	  { 
+	  unset env(NHI1_TOOL_ROOT)
+	  set env(PATH) $PATH
+	} \
+    -returnCodes  error \
+    -match		  glob \
+    -result		  "*configure: error: unable to find the tool 'php' - exit*"
 
 cleanupTests
 
-# vim: set syn=tcl:

@@ -115,14 +115,16 @@ EOF
   exit
 }
 
-test "$1" = "-h" -o "$1" = "--help" && Usage
+cmd=${1:--h}
+
+test "$cmd" = "-h" -o "$cmd" = "--help" && Usage
 
 (( $UID != 0 )) && {
   echo "ERROR: run this command as root"
   exit 1
 }
 
-case "$1" in
+case "$cmd" in
     start)
 	echo -n "Starting rcBuild..."
 

@@ -329,12 +329,8 @@ AC_DEFUN([SC_ENABLE_CACHE], [
 #------------------------------------------------------------------------
 
 AC_DEFUN([SC_ENABLE_DEBUG], [
-    AC_MSG_CHECKING([for build with debug])
-    AC_ARG_ENABLE(debug,
-	AS_HELP_STRING([--enable-debug], [build with debugging support]),
-	enable_debug=$enableval, enable_debug=no
-    )
-    if test "x$enable_debug" = "xyes"; then
+	OT_ENABLE([debug], [build with debugging support])
+    if test "$enable_debug" = "yes"; then
       CFLAGS="-g $CFLAGS"
       CPPFLAGS="-D_DEBUG $CPPFLAGS"
       JAVA_DEBUG='-g'
@@ -357,7 +353,6 @@ AC_DEFUN([SC_ENABLE_DEBUG], [
     AC_SUBST([SDK_DEBUG])
     AC_SUBST([PERL_DEBUG])
     AM_CONDITIONAL([DEBUG], [test "$enable_debug" = "yes"])
-    AC_MSG_RESULT($debug)
 ])
 
 #------------------------------------------------------------------------
@@ -988,37 +983,37 @@ AC_DEFUN([SC_WITH_TCL], [
     for prim in $tclcnf; do
       for try in ${prim} ${prim}/tcl8.* ; do
         if test -f $try/tclConfig.sh; then
-            AC_MSG_RESULT($try/tclConfig.sh)
+		  AC_MSG_RESULT($try/tclConfig.sh)
 	    if test "$host_os" = "mingw32" ; then
 	      eval "$(
-		sed -e '
-		  # convert all drive letter (e.g. C:) into cygdrive names
-		  s,\([[a-zA-Z]]\):,/cygdrive/\L\1,g
-		  # erase windows line-end '\r'
-		  s,\r$,,
-		'  $try/tclConfig.sh
+			sed -e '
+			  # convert all drive letter (e.g. C:) into cygdrive names
+			  s,\([[a-zA-Z]]\):,/cygdrive/\L\1,g
+			  # erase windows line-end '\r'
+			  s,\r$,,
+			'  $try/tclConfig.sh
 	      )"
 	    else
 	      . $try/tclConfig.sh
 	    fi
-            TCL_LIBS="$TCL_LIB_SPEC $TCL_LIBS"
-            AC_SUBST(TCL_PACKAGE_PATH)
+		TCL_LIBS="$TCL_LIB_SPEC $TCL_LIBS"
+		AC_SUBST(TCL_PACKAGE_PATH)
 
 	    # libtool require for windows build a import-library called "libXX.dll.a"
-            AS_IF([test "$host_os" = "mingw32"], [
+		AS_IF([test "$host_os" = "mingw32"], [
 	      # windoes libtool build seems not recognize the stubs interface.
 	      TCL_SUPPORTS_STUBS=0
 	      (
-		# copy 'tcl86.lib' to 'libtcl86.a'
-		set -- $TCL_LIB_SPEC
-		ld=${1#-L} ; # library directory
-		ln=${2#-l} ; # library base-name
-		AS_IF([test ! -e $ld/lib$ln.dll.a], [ 
-		  cp $ld/$ln.lib $ld/lib$ln.dll.a
-		  AC_MSG_NOTICE([create import library '$ld/lib$ln.dll.a' from '$ld/$ln.lib'])
-		]) 
+			# copy 'tcl86.lib' to 'libtcl86.a'
+			set -- $TCL_LIB_SPEC
+			ld=${1#-L} ; # library directory
+			ln=${2#-l} ; # library base-name
+			AS_IF([test ! -e $ld/lib$ln.dll.a], [ 
+			  cp $ld/$ln.lib $ld/lib$ln.dll.a
+			  AC_MSG_NOTICE([create import library '$ld/lib$ln.dll.a' from '$ld/$ln.lib'])
+			]) 
 	      )
-            ])
+		])
 
 	    ## add support for tcl STUBS
 	    AS_IF([test $TCL_SUPPORTS_STUBS -eq 1], [
@@ -1031,7 +1026,7 @@ AC_DEFUN([SC_WITH_TCL], [
 	      AC_SUBST([TCL_LIBADD], [${TCL_LIB_SPEC}])
 	    ])
 
-            ## check for empty TCL_INCLUDE_SPEC
+		## check for empty TCL_INCLUDE_SPEC
 	    if test -z "${TCL_INCLUDE_SPEC}" ; then 
 	      TCL_INCLUDE_DIR="${TCL_INCLUDE_SPEC#-I}"
 	      test -z "$TCL_INCLUDE_DIR" && TCL_INCLUDE_DIR="$try/../include"
@@ -1041,15 +1036,15 @@ AC_DEFUN([SC_WITH_TCL], [
 	      fi
 	      TCL_INCLUDE_SPEC="-I${TCL_INCLUDE_DIR}"
 	    fi
-            AC_SUBST(TCL_INCLUDE_SPEC)
-            break 2
+		  AC_SUBST(TCL_INCLUDE_SPEC)
+		  break 2
         fi
       done
     done
 
     if test -z "$TCL_LIBS"; then
-        AC_MSG_RESULT([not found])
-        AC_MSG_ERROR([Could not find tclConfig.sh in any of '$tclcnf'])
+	  AC_MSG_RESULT([not found])
+	  AC_MSG_ERROR([Could not find tclConfig.sh in any of '$tclcnf'])
     fi
   ])
 ])

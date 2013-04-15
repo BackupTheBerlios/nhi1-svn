@@ -76,7 +76,7 @@ do
   alias cdb$2="cd theBrain/$1"
 done
 
-for x in performance:p theLink:l theGuard:g theBrain:b bin:i etc:e sbin:s
+for x in performance:p theLink:l theGuard:g theBrain:b bin:i etc:e sbin:s tests:t
 do
   IFS=':';set -- $x;unset IFS
   alias cd$2="cd $1"

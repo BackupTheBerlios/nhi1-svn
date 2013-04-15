@@ -16,9 +16,23 @@ namespace import -force ::tcltest::*
 verbose {start pass body error}
 
 set testdir [file normalize [file dirname [info script]]]
-set pkg [file join .. $PACKAGE-$PACKAGE_VERSION.tar.bz2]
 
-if {![file exists $pkg]} {
-  exec make -C .. dist
+unset -nocomplain env(NHI1_TOOL_ROOT)
+unset -nocomplain env(TCLSH)
+set dir [makeDirectory tool-root]
+set PATH $env(PATH)
+
+if { "$TCLSH" == "" } {
+  puts "ERROR: require '--with-tcl' build for testing"
+  exit 1
 }
 
+proc Nhi1Config {args} {
+  cd $::dir
+  exec [file join $::abs_top_srcdir bin Nhi1Config] +i +s -p {*}$args |& cat
+}
+
+proc configure {args} {
+  cd $::dir
+  exec [file join $::abs_top_srcdir configure] {*}$args |& cat
+}

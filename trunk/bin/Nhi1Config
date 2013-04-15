@@ -51,24 +51,15 @@ G_Description='wrapper to setup the build-environment for the "nhi1-configure" s
 G_HelpProc='Usage'
 # -------------------------------------------------------------------
 G_Option local-data-file default
-G_Argument 'use-perf:Perf:0:create performance code:B'
-G_Argument 'use-threads:Thread:0:create thread code:B'
-for l in cache brain guard ; do
+for l in static debug threads cache brain guard ; do
   G_Argument "$l:enable[$l]:disable:add '$l' feature support:D:enable:disable"
 done
 for l in cxx tcl perl python php ruby java csharp vb go ; do
   G_Argument "$l:with[$l]:without:add '$l' language support:DV:with:without"
 done
-#[[ "$OSTYPE" == 'cygwin' ]] && G_Argument 'win:win::cross-compiler:L:x86_64-w64-mingw32:i686-w64-mingw32'
+  #G_Argument "validate:validate::validate only do NOT run configure:B"
 EOF
   )"
-
-# disable because "configure" compiler test crash then calkled from script :-(
-#[[ -n "$win" ]] && {
-#  opt+=--host=$win
-#  [[ -z "${CC:-}"  ]] && export CC="ccache $win-gcc"
-#  [[ -z "${CXX:-}" ]] && export CXX="ccache $win-g++"
-#}
 
 for l in "${!with[@]}" ; do
   opt+=("--with-$l=${with[$l]}")
@@ -78,27 +69,12 @@ for l in "${!enable[@]}" ; do
   opt+=("--enable-$l=${enable[$l]}")
 done
 
-if [[ $Perf == 'yes' ]] ; then
-  opt+=(--enable-static)
-  if [[ $Thread == 'yes' ]] ; then
-    opt+=(--enable-threads)
-  fi
-else
-  if [[ $Thread == 'yes' ]] ; then
-    opt+=(--enable-threads --enable-debug)
-  else
-    opt+=(--enable-debug)
-  fi
-fi
-
 [[ "${with[go]}" == "1" && -f /etc/profile.d/go.sh ]] && {
   source /etc/profile.d/go.sh
 }
 [[ "${with[java]}" == "1" && -f /etc/profile.d/alljava.sh ]] && {
   source /etc/profile.d/alljava.sh
 }
-
-rm -fr /tmp/libmsgque-install
 
 set -x
 exec bash -norc $NHI1_HOME/configure "${opt[@]}" ${@:-}
