@@ -77,7 +77,9 @@ uninstall-local:
 
 mostlyclean-local:
 	if test -f $(PHPMAKEFILE) ; then $(MAKE) -C MsgqueForPhp $(AM_MAKEFLAGS) distclean; else true; fi
-	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then chmod -R u+w MsgqueForPhp && rm -fr MsgqueForPhp; else true; fi
+	if test -d MsgqueForPhp -a "$(abs_builddir)" != "$(abs_srcdir)" ; then \
+	  chmod -R u+w MsgqueForPhp && rm -fr MsgqueForPhp; else true; \
+	fi
 
 EXTRA_DIST = \
 	MsgqueForPhp/.cvsignore \

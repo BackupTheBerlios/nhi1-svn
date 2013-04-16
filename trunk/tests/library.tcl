@@ -9,6 +9,21 @@
 #:  \attention  this software has GPL permissions to copy
 #:              please contact AUTHORS for additional information
 #:
+
+#set tcl_traceExec 1
+
+#clean "--*" commandline options
+#required for: make check TESTS_ENVIRONMENT="/path/to/Nhi1Exec --only-c"
+set arg [list]
+foreach a $argv {
+  if {![string match "--*" $a]} {
+	lappend arg $a
+  }
+}
+set argc [llength $arg]
+set argv $arg
+unset arg a
+
 source ../env.tcl
 
 package require tcltest

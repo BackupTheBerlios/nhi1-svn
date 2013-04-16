@@ -109,65 +109,65 @@ for l in ${!lang[@]} ; do
 
     case "$l" in
       perl)
-	case "$t" in
-	  thread)		buildConf=(-Dusethreads -DEBUGGING=-g);;
-	  nothread)		buildConf=(-DEBUGGING=-g);;
-	  performance-thread)	buildConf=(-Dusethreads -DEBUGGING=none);;
-	  performance-nothread)	buildConf=(-DEBUGGING=none);;
-	esac
-	buildConf+=(-des -Dprefix="$prefix")
+		case "$t" in
+		  thread)		buildConf=(-Dusethreads -DEBUGGING=-g);;
+		  nothread)		buildConf=(-DEBUGGING=-g);;
+		  performance-thread)	buildConf=(-Dusethreads -DEBUGGING=none);;
+		  performance-nothread)	buildConf=(-DEBUGGING=none);;
+		esac
+		buildConf+=(-des -Dprefix="$prefix")
       ;;
       python)
-	case "$t" in
-	  thread)		buildConf=(--with-threads);;
-	  nothread)		buildConf=(--without-threads);;
-	  performance-thread)	buildConf=(--with-threads);;
-	  performance-nothread) buildConf=(--without-threads);;
-	esac
-	buildConf+=(--prefix="$prefix" --enable-shared)
+		case "$t" in
+		  thread)		buildConf=(--with-threads);;
+		  nothread)		buildConf=(--without-threads);;
+		  performance-thread)	buildConf=(--with-threads);;
+		  performance-nothread) buildConf=(--without-threads);;
+		esac
+		buildConf+=(--prefix="$prefix" --enable-shared)
       ;;
       php)
-	case "$t" in
-	  thread)		buildConf=(--enable-debug --with-tsrm-pthreads);;
-	  nothread)		buildConf=(--enable-debug --without-tsrm-pthreads);;
-	  performance-thread)	buildConf=(--with-tsrm-pthreads);;
-	  performance-nothread) buildConf=(--without-tsrm-pthreads);;
-	esac
-	buildConf+=(--prefix="$prefix")
+		case "$t" in
+		  thread)		buildConf=(--enable-debug --with-tsrm-pthreads);;
+		  nothread)		buildConf=(--enable-debug --without-tsrm-pthreads);;
+		  performance-thread)	buildConf=(--with-tsrm-pthreads);;
+		  performance-nothread) buildConf=(--without-tsrm-pthreads);;
+		esac
+		buildConf+=(--prefix="$prefix")
       ;;
       ruby)
-	case "$t" in
-	  thread)		buildConf=(--enable-debug-env --enable-pthread);;
-	  nothread)		buildConf=(--enable-debug-env --disable-pthread);;
-	  performance-thread)	buildConf=(--enable-pthread);;
-	  performance-nothread) buildConf=(--disable-pthread);;
-	esac
-	buildConf+=(--prefix="$prefix" --enable-shared)
+		case "$t" in
+		  thread)		buildConf=(--enable-debug-env --enable-pthread);;
+		  nothread)		buildConf=(--enable-debug-env --disable-pthread);;
+		  performance-thread)	buildConf=(--enable-pthread);;
+		  performance-nothread) buildConf=(--disable-pthread);;
+		esac
+		buildConf+=(--prefix="$prefix" --enable-shared)
       ;;
       tcl)
-	case "$t" in
-	  thread)		buildConf=(--enable-symbols --enable-threads);;
-	  nothread)		buildConf=(--enable-symbols --disable-threads);;
-	  performance-thread)	buildConf=(--enable-threads);;
-	  performance-nothread) buildConf=(--disable-threads);;
-	esac
-	buildConf+=(--prefix="$prefix")
+		case "$t" in
+		  thread)		buildConf=(--enable-symbols --enable-threads CPPFLAGS=-DTCL_COMPILE_DEBUG);;
+		  nothread)		buildConf=(--enable-symbols --disable-threads CPPFLAGS=-DTCL_COMPILE_DEBUG);;
+		  performance-thread)	buildConf=(--enable-threads);;
+		  performance-nothread) buildConf=(--disable-threads);;
+		esac
+		buildConf+=(--prefix="$prefix")
       ;;
       *)
-	Die "invalid language $1"
+		Die "invalid language $1"
       ;;
     esac
 
     (
       cd "$l-latest/$buildDir"
-      (( $clean )) && {
-	test -f Makefile && {
-	  make distclean || Die "unable to 'make distclean'"
-	}
-      }
-      test ! -f Makefile && {
-	bash -norc "$buildScript" "${buildConf[@]}" "$@" || Die "unable to configure"
-      }
+      if test "$clean" = "yes" ; then
+		test -f Makefile && {
+		  make distclean || Die "unable to 'make distclean'"
+		}
+      fi
+      if test ! -f Makefile ; then
+		bash -norc "$buildScript" "${buildConf[@]}" "$@" || Die "unable to configure"
+      fi
       make -j $Jobs || Die "unable to build"
       make install || Die "unable to install"
     )
@@ -177,4 +177,3 @@ done
 
 exit 0
 
-#vim: softtabstop=2 tabstop=8 shiftwidth=2

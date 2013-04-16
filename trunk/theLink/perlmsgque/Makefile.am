@@ -54,7 +54,9 @@ uninstall-local:
 
 mostlyclean-local:
 	if test -f $(PERLMAKEFILE); then $(make) realclean ; else true; fi
-	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then chmod -R u+w Net-PerlMsgque && rm -fr Net-PerlMsgque; else true; fi
+	if test -d Net-PerlMsgque -a "$(abs_builddir)" != "$(abs_srcdir)" ; then \
+		chmod -R u+w Net-PerlMsgque && rm -fr Net-PerlMsgque; else true; \
+	fi
 
 EXTRA_DIST = \
 	Net-PerlMsgque/ppport.h \

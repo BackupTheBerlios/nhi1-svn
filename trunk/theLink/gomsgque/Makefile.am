@@ -37,6 +37,8 @@ clean-local:
 	test -n "$(GO)" && $(GO) clean || true
 	rm -fr pkg
 
-distclean-local:
-	if test "$(abs_builddir)" != "$(abs_srcdir)" ; then rm -fr src; else true; fi
+mostlyclean-local:
+	if test -d src -a "$(abs_builddir)" != "$(abs_srcdir)" ; then \
+	  chmod -R u+w src && rm -fr src; else true; \
+	fi
 
