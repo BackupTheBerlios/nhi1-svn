@@ -48,8 +48,16 @@ G_Description='frontend to the mass distribution test'
 G_Option break-on-non-option
 G_Argument 'static:static:yes:test the static distribution:B'
 G_Argument 'only:only:*:restrict language to:L:*:c:cxx:tcl:perl:python:php:ruby:java:csharp:go'
+G_Argument 'clean:clean:no:clean all left-over data:B'
 EOF
   )"
+
+if test "$clean" = "yes" ; then
+  rm -f distcheck.*.log
+  chmod -R u+w ../test-*
+  rm -fr ../test-*
+  exit 0
+fi
 
 export PATH="/usr/local/bin:$PATH"
 
@@ -58,7 +66,7 @@ dist="$abs_top_builddir/$PACKAGE-$PACKAGE_VERSION.tar.bz2"
 
 # test cases
 
-declare -A threadLng=( \
+declare -A threadsLng=( \
   [yes]="c cxx tcl perl python php ruby java csharp go" \
   [no]="c cxx tcl perl python php ruby" \
 )
@@ -74,16 +82,16 @@ rm -f distcheck.*.log
 
 # DISTCHECK_CONFIGURE_FLAGS=--with-guard TESTS_ENVIRONMENT="/home/dev01/Project/NHI1/bin/Nhi1Exec --testing --only-c"
 
-for thread in yes no ; do
+for threads in yes no ; do
   for static in yes no; do
-	for threadL in ${threadLng[$thread]} ; do
+	for threadsL in ${threadsLng[$threads]} ; do
 	  for staticL in ${staticLng[$static]} ; do
-		if [[ "$threadL" == "$staticL" && "$threadL" == $only ]] ; then
-		  tests=($abs_top_srcdir/bin/Nhi1Exec --only-$threadL)
-		  flags=(--enable-thread=$thread --enable-static=$static)
-		  test "$threadL" != "c" && flags+=(--with-$staticL=yes)
+		if [[ "$threadsL" == "$staticL" && "$threadsL" == $only ]] ; then
+		  tests=($abs_top_srcdir/bin/Nhi1Exec --only-$threadsL)
+		  flags=(--enable-threads=$threads --enable-static=$static)
+		  test "$threadsL" != "c" && flags+=(--with-$staticL=yes)
 		  echo "run job $num: ${flags[*]}"
-		  IFS=',' ; sem --id "$$" -j+0 "$abs_top_srcdir/tests/TestJob.bash" $num $PACKAGE_VERSION "${flags[*]}" "${tests[*]}" ; unset IFS
+		  IFS=',' ; sem --id "$$" -j150% "$abs_top_srcdir/tests/TestJob.bash" $num $PACKAGE_VERSION "${flags[*]}" "${tests[*]}" ; unset IFS
 		  (( num+=1 ))
 		fi
 	  done
