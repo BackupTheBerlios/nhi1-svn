@@ -10,7 +10,7 @@
 "              please contact AUTHORS for additional information
 "
 set background=dark
-set tabstop=4
+set tabstop=8
 set softtabstop=2
 set shiftwidth=2
 set modeline

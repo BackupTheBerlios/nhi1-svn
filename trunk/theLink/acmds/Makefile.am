@@ -35,7 +35,7 @@ docs/msgque.help: docs $(srcdir)/aexec
 	$(top_srcdir)/bin/Nhi1Exec $(srcdir)/aexec.tcl --help-msgque 2>docs/msgque.help
 
 docs/tclmsgque.help: docs $(srcdir)/aexec
-	$(top_srcdir)/bin/Nhi1Exec $(srcdir)/aexec.tcl --help-tclmsgque 1>docs/tclmsgque.help
+	$(top_srcdir)/bin/Nhi1Exec $(srcdir)/aexec.tcl --help-tclmsgque 2>docs/tclmsgque.help
 
 bin_PROGRAMS = atool
 EXTRA_DIST = aexec

@@ -50,7 +50,7 @@ In addition the following software is also supported:
   - php    - http://php.net/downloads.php
   - go     - from the distribution
   - C#     - from the distribution
-  - java   - google: java download
+  - java   - openjdk from the distribution
 
 To build "NHI1" please follow the next steps:
 

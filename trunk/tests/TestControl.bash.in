@@ -15,19 +15,7 @@
 # The goal ist to make an complete-as-possible testsycle
 #
 
-# find env.sh config file
-abs_top_builddir=$PWD
-while [[ ! -f "$abs_top_builddir/env.sh" && "$abs_top_builddir" != '/' ]] ; do
-  abs_top_builddir=$(dirname "$abs_top_builddir")
-done
-if [[ -r "${abs_top_builddir%/}/env.sh" ]] ; then
-  echo "using: ${abs_top_builddir%/}/env.sh"
-  . "${abs_top_builddir%/}/env.sh"
-else
-  echo "unable to find the 'env.sh' configuration file"
-  echo "please build first and than use this tool in the build-tree"
-  exit
-fi
+. '@abs_top_builddir@/env.sh'
 
 ##
 ## =========================================================================
@@ -54,8 +42,11 @@ EOF
 
 if test "$clean" = "yes" ; then
   rm -f distcheck.*.log
-  chmod -R u+w ../test-*
-  rm -fr ../test-*
+  for f in ../test-* ; do
+	test ! -d $f && continue
+	chmod -R u+w $f
+	rm -fr $f
+  done
   exit 0
 fi
 

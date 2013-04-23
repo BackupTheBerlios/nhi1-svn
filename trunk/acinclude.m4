@@ -663,8 +663,10 @@ AC_DEFUN([SC_WITH_TOOL_ROOT], [
   esac
   export PATH=$NHI1_TOOL_ROOT$T/bin${PATH+:}${PATH:-}
   export LD_LIBRARY_PATH=$NHI1_TOOL_ROOT$T/lib${LD_LIBRARY_PATH+:}${LD_LIBRARY_PATH:-}
-  export PKG_CONFIG_PATH=$NHI1_TOOL_ROOT$T/lib/pkgconfig${PKG_CONFIG_PATH+:}${PKG_CONFIG_PATH:-}
-  unset T
+  for l in lib lib64 ; do
+    export PKG_CONFIG_PATH=$NHI1_TOOL_ROOT$T/$l/pkgconfig${PKG_CONFIG_PATH+:}${PKG_CONFIG_PATH:-}
+  done
+  unset T l
 ])
 
 #------------------------------------------------------------------------
@@ -686,20 +688,20 @@ AC_DEFUN([SC_WITH_JAVA], [
   AS_IF([test -n "$JAVA"], [
     OT_CHECK_THREAD([java])
     AC_ARG_VAR([JAVA_HOME],[Absolute path to to the JAVA home directory])
+    OT_REQUIRE_PROG([JAVAC], [javac]) 
+    OT_REQUIRE_PROG([JAVAH], [javah]) 
+    OT_REQUIRE_PROG([JAR],   [jar]) 
     AS_IF([test -z "$JAVA_HOME"],[JAVA_HOME="$(AS_DIRNAME("$JAVA"))/.."])
     AC_SUBST([JAVA_HOME])
     dirs=()
     save_IFS=$IFS
     IFS='
 '
-    for x in $(find "$JAVA_HOME/include" -type d); do
+    for x in $(find "$(dirname "$(dirname "$(readlink -f "$JAVAC")")")/include" -type d 2>/dev/null); do
       dirs+=("-I'$x'")
     done
     IFS=$save_IFS
     AC_SUBST([JAVA_CPPFLAGS], [${dirs[[@]]}])
-    OT_REQUIRE_PROG([JAVAC], [javac], [$JAVA_HOME/bin]) 
-    OT_REQUIRE_PROG([JAVAH], [javah], [$JAVA_HOME/bin]) 
-    OT_REQUIRE_PROG([JAR],   [jar],   [$JAVA_HOME/bin]) 
   ])
 ])
 
@@ -802,7 +804,7 @@ AC_DEFUN([SC_WITH_CSHARP], [
       AS_IF([$PKG_CONFIG --atleast-version 2.10.6 mono], [
 	OT_REQUIRE_PROG([CLREXEC], [mono])
       ],[
-	AC_MSG_ERROR([unable to find package 'momo' with minimal version 2.10.6])
+	AC_MSG_ERROR([unable to find package 'mono' with minimal version 2.10.6])
       ])
     ])
   ])

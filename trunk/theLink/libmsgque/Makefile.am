@@ -29,6 +29,8 @@ libmsgque_la_LIBADD = $(WINLIBS)
 
 include_HEADERS = msgque.h
 
+html-local: libmsgque.la
+
 ## ===========================================================================================
 ## windows with SDK
 ##
