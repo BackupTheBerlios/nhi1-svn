@@ -10,7 +10,7 @@
 #:              please contact AUTHORS for additional information
 #:
 
-EXTRA_DIST =  Nhi1Label rcBuild Nhi1BuildLanguage Nhi1Config Nhi1Exec Nhi1Docs
+EXTRA_DIST = Nhi1Label rcBuildFs Nhi1BuildLanguage Nhi1Config Nhi1Exec Nhi1Docs
 
 docs:
 	mkdir -p docs

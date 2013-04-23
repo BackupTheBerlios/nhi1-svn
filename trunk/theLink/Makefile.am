@@ -52,5 +52,7 @@ endif
 if USE_VB
 SUBDIRS += example/vb
 endif
-SUBDIRS += acmds docs
-#SUBDIRS += docs
+if USE_DOXYGEN
+SUBDIRS += docs
+endif
+SUBDIRS += acmds

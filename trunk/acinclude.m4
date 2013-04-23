@@ -173,13 +173,13 @@ AC_DEFUN([OT_WITH_DIR],[
 #       handle the --enable-XX switch
 #
 # Arguments:
-#       ID .......... identifier
-#	TXT ......... description test
+#		ID .......... identifier
+#		TXT ......... description test
 #
 # Results:
 #
-#       1. return "enable_ID" variable with 'yes' or 'no'
-#	2. make conditional "USE_ID" (with upper characters)
+#		1. return "enable_ID" variable with 'yes' or 'no'
+#		2. make conditional "USE_ID" (with upper characters)
 #
 #------------------------------------------------------------------------
 
@@ -1105,6 +1105,30 @@ AC_DEFUN([SC_ENABLE_GUARD], [
   OT_ENABLE([guard], [build theGuard, NHI1 encryption support])
   AS_IF([test "$enable_guard" = "yes"],[
     OT_CHECK_USE([guard],[tcl])
+  ])
+])
+
+#------------------------------------------------------------------------
+# SC_ENABLE_DOXYGEN --
+#
+#       Specify if doxygen documentation build is needed
+#
+# Arguments:
+#       none
+#
+# Results:
+#		1. shell variable: enable_doxygen=yes/no
+#		2. conditional: USE_DOXYGEN
+#		3. variable+substitute: DOXYGEN, DOXYPERL DOT
+#
+#------------------------------------------------------------------------
+
+AC_DEFUN([SC_ENABLE_DOXYGEN], [
+  OT_ENABLE([doxygen], [with doxygen documentation builder support])
+  AS_IF([test "$enable_doxygen" = "yes"],[
+	OT_REQUIRE_PROG([DOXYGEN],  [doxygen])
+	OT_REQUIRE_PROG([DOXYPERL], [perl])
+	AC_PATH_PROG([DOT],[dot])
   ])
 ])
 

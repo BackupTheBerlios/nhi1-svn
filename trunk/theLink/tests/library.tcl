@@ -733,8 +733,6 @@ if {![info exists env(SRV_LST)]} {
   }
 }
 
-set tcl_traceExec 1
-
 # windows has some restrictions :(
 if {$::tcl_platform(platform) eq "windows"} {
   set env(SRV_LST) [filter -not SRV_LST uds]

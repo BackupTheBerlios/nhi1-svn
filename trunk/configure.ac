@@ -120,13 +120,7 @@ SC_WITH_GO
 
 SC_ENABLE_BRAIN
 SC_ENABLE_GUARD
-
-#------------------------------------
-AC_MSG_CHECKING(for doxygen support);echo
-#------------------------------------
-OT_REQUIRE_PROG([DOXYGEN],  [doxygen])
-OT_REQUIRE_PROG([DOXYPERL], [perl])
-AC_PATH_PROG([DOT],[dot])
+SC_ENABLE_DOXYGEN
 
 #------------------------------------
 AC_MSG_CHECKING([for special portability support]);echo

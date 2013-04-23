@@ -51,11 +51,11 @@ G_Description='wrapper to setup the build-environment for the "nhi1-configure" s
 G_HelpProc='Usage'
 # -------------------------------------------------------------------
 G_Option local-data-file default
-for l in static debug threads cache brain guard ; do
-  G_Argument "$l:enable[$l]:disable:add '$l' feature support:D:enable:disable"
+for l in static debug threads cache brain guard doxygen ; do
+  G_Argument "$l:enable[$l]:disable:enable '$l' feature:D:enable:disable"
 done
 for l in cxx tcl perl python php ruby java csharp vb go ; do
-  G_Argument "$l:with[$l]:without:add '$l' language support:DV:with:without"
+  G_Argument "$l:with[$l]:without:with '$l' language support:DV:with:without"
 done
   #G_Argument "validate:validate::validate only do NOT run configure:B"
 EOF
