@@ -28,11 +28,11 @@ die() {
 
 pathExtension() {
   case "$1" in
-    thread)					echo "test";;
-    nothread)				echo "test/nothred";;
+    thread)		    echo "test";;
+    nothread)		    echo "test/nothred";;
     performance-thread)	    echo ".";;
     performance-nothread)   echo "nothread";;
-    *)						die "unknown pathExtension '$1'";;
+    *)			    die "unknown pathExtension '$1'";;
   esac
 }
 
@@ -106,6 +106,7 @@ fi
 
 for l in ${!lang[@]} ; do
   [[ ${lang[$l]} == 'no' ]] && continue
+  echo "language: $l"
 
   case "$l" in
     perl)   buildScript=./Configure;;
@@ -120,74 +121,87 @@ for l in ${!lang[@]} ; do
   for t in ${!use[@]} ; do
     [[ ${use[$t]} == 'no' ]] && continue
     prefix="$NHI1_TOOL_ROOT/$(pathExtension $t)" || die "invalid pathExtension '$t'"
+    echo "use: $t"
 
     case "$l" in
       perl)
-		case "$t" in
-		  thread)		buildConf=(-Dusethreads -DEBUGGING=-g);;
-		  nothread)		buildConf=(-DEBUGGING=-g);;
-		  performance-thread)	buildConf=(-Dusethreads -DEBUGGING=none);;
-		  performance-nothread)	buildConf=(-DEBUGGING=none);;
-		esac
-		buildConf+=(-des -Dprefix="$prefix")
+	case "$t" in
+	  thread)		buildConf=(-Dusethreads -DEBUGGING=-g);;
+	  nothread)		buildConf=(-DEBUGGING=-g);;
+	  performance-thread)	buildConf=(-Dusethreads -DEBUGGING=none);;
+	  performance-nothread)	buildConf=(-DEBUGGING=none);;
+	esac
+	buildConf+=(-des -Dprefix="$prefix")
       ;;
       python)
-		case "$t" in
-		  thread)		buildConf=(--with-threads);;
-		  nothread)		buildConf=(--without-threads);;
-		  performance-thread)	buildConf=(--with-threads);;
-		  performance-nothread) buildConf=(--without-threads);;
-		esac
-		buildConf+=(--prefix="$prefix" --enable-shared)
+	case "$t" in
+	  thread)		buildConf=(--with-threads);;
+	  nothread)		buildConf=(--without-threads);;
+	  performance-thread)	buildConf=(--with-threads);;
+	  performance-nothread) buildConf=(--without-threads);;
+	esac
+	buildConf+=(--prefix="$prefix" --enable-shared)
       ;;
       php)
-		case "$t" in
-		  thread)		buildConf=(--enable-debug --with-tsrm-pthreads);;
-		  nothread)		buildConf=(--enable-debug --without-tsrm-pthreads);;
-		  performance-thread)	buildConf=(--with-tsrm-pthreads);;
-		  performance-nothread) buildConf=(--without-tsrm-pthreads);;
-		esac
-		buildConf+=(--prefix="$prefix")
+	case "$t" in
+	  thread)		buildConf=(--enable-debug --with-tsrm-pthreads);;
+	  nothread)		buildConf=(--enable-debug --without-tsrm-pthreads);;
+	  performance-thread)	buildConf=(--with-tsrm-pthreads);;
+	  performance-nothread) buildConf=(--without-tsrm-pthreads);;
+	esac
+	buildConf+=(--prefix="$prefix")
       ;;
       ruby)
-		case "$t" in
-		  thread)		buildConf=(--enable-debug-env --enable-pthread);;
-		  nothread)		buildConf=(--enable-debug-env --disable-pthread);;
-		  performance-thread)	buildConf=(--enable-pthread);;
-		  performance-nothread) buildConf=(--disable-pthread);;
-		esac
-		buildConf+=(--prefix="$prefix" --enable-shared)
+	case "$t" in
+	  thread)		buildConf=(--enable-debug-env --enable-pthread);;
+	  nothread)		buildConf=(--enable-debug-env --disable-pthread);;
+	  performance-thread)	buildConf=(--enable-pthread);;
+	  performance-nothread) buildConf=(--disable-pthread);;
+	esac
+	buildConf+=(--prefix="$prefix" --enable-shared)
       ;;
       tcl)
-		case "$t" in
-		  thread)		buildConf=(--enable-symbols --enable-threads CPPFLAGS=-DTCL_COMPILE_DEBUG);;
-		  nothread)		buildConf=(--enable-symbols --disable-threads CPPFLAGS=-DTCL_COMPILE_DEBUG);;
-		  performance-thread)	buildConf=(--enable-threads);;
-		  performance-nothread) buildConf=(--disable-threads);;
-		esac
-		buildConf+=(--prefix="$prefix")
+	case "$t" in
+	  thread)		buildConf=(--enable-symbols --enable-threads CPPFLAGS=-DTCL_COMPILE_DEBUG);;
+	  nothread)		buildConf=(--enable-symbols --disable-threads CPPFLAGS=-DTCL_COMPILE_DEBUG);;
+	  performance-thread)	buildConf=(--enable-threads);;
+	  performance-nothread) buildConf=(--disable-threads);;
+	esac
+	buildConf+=(--prefix="$prefix")
       ;;
       *)
-		die "invalid language $1"
+	die "invalid language $1"
       ;;
     esac
 
+if false; then
     (
       cd "$l-latest/$buildDir"
       if test "$clean" = "yes" ; then
-		test -f Makefile && {
-		  make distclean || die "unable to 'make distclean'"
-		}
+	test -f Makefile && {
+	  make distclean || die "unable to 'make distclean'"
+	}
       fi
       if test ! -f Makefile ; then
-		bash -norc "$buildScript" "${buildConf[@]}" "$@" || die "unable to configure"
+	bash -norc "$buildScript" "${buildConf[@]}" "$@" || die "unable to configure"
       fi
       make -j $Jobs || die "unable to build"
       make install || die "unable to install"
     )
+fi
+
+    # post install correction script
+    case "$l" in
+      python)
+	if test -d $prefix/lib64/python*.*/lib-dynload -a \
+		  -f $prefix/lib/python*.*/platform.py -a \
+		    ! -d $prefix/lib/python*.*/lib-dynload ; then
+	  (cd $prefix/lib/python*.* && ln -fs ../../lib64/python*.*/lib-dynload .)
+	fi
+      ;;
+    esac
 
   done
 done
 
 exit 0
-

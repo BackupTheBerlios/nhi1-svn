@@ -661,10 +661,13 @@ AC_DEFUN([SC_WITH_TOOL_ROOT], [
     no:yes)   T=""		;;
     no:no)    T="/nothread"	;;
   esac
+  AC_SUBST([NHI1_TOOL_DIR],$NHI1_TOOL_ROOT$T)
   export PATH=$NHI1_TOOL_ROOT$T/bin${PATH+:}${PATH:-}
-  export LD_LIBRARY_PATH=$NHI1_TOOL_ROOT$T/lib${LD_LIBRARY_PATH+:}${LD_LIBRARY_PATH:-}
   for l in lib lib64 ; do
-    export PKG_CONFIG_PATH=$NHI1_TOOL_ROOT$T/$l/pkgconfig${PKG_CONFIG_PATH+:}${PKG_CONFIG_PATH:-}
+    if test -d $NHI1_TOOL_ROOT$T/$l ; then
+      export LD_LIBRARY_PATH=$NHI1_TOOL_ROOT$T/$l${LD_LIBRARY_PATH+:}${LD_LIBRARY_PATH:-}
+      export PKG_CONFIG_PATH=$NHI1_TOOL_ROOT$T/$l/pkgconfig${PKG_CONFIG_PATH+:}${PKG_CONFIG_PATH:-}
+    fi
   done
   unset T l
 ])

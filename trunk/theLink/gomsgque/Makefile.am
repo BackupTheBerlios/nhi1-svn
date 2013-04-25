@@ -10,7 +10,7 @@
 #:              please contact AUTHORS for additional information
 #:
 
-EXTRA_DIST = $(srcdir)/src/gomsgque/*.go $(srcdir)/src/gomsgque/*.h $(srcdir)/src/gomsgque/*.c
+EXTRA_DIST := $(wildcard $(srcdir)/src/gomsgque/*.go $(srcdir)/src/gomsgque/*.h $(srcdir)/src/gomsgque/*.c)
 
 #####################################################################################
 ## GO files
@@ -39,6 +39,6 @@ clean-local:
 
 mostlyclean-local:
 	if test -d src -a "$(abs_builddir)" != "$(abs_srcdir)" ; then \
-	  chmod -R u+w src && rm -fr src; else true; \
+	  chmod -R u+w src && rm -fr $(patsubst $(srcdir)/%,./%,$(EXTRA_DIST)) ./src/gomsgque/*.in; else true; \
 	fi
 

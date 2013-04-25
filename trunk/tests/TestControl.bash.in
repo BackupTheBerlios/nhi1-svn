@@ -34,7 +34,6 @@ G_Description='frontend to the mass distribution test'
 #G_HelpProc='Usage'
 # -------------------------------------------------------------------
 G_Option break-on-non-option
-G_Argument 'static:static:yes:test the static distribution:B'
 G_Argument 'only:only:*:restrict language to:L:*:c:cxx:tcl:perl:python:php:ruby:java:csharp:go'
 G_Argument 'clean:clean:no:clean all left-over data:B'
 EOF
@@ -75,18 +74,18 @@ rm -f distcheck.*.log
 
 for threads in yes no ; do
   for static in yes no; do
-	for threadsL in ${threadsLng[$threads]} ; do
-	  for staticL in ${staticLng[$static]} ; do
-		if [[ "$threadsL" == "$staticL" && "$threadsL" == $only ]] ; then
-		  tests=($abs_top_srcdir/bin/Nhi1Exec --only-$threadsL)
-		  flags=(--enable-threads=$threads --enable-static=$static)
-		  test "$threadsL" != "c" && flags+=(--with-$staticL=yes)
-		  echo "run job $num: ${flags[*]}"
-		  IFS=',' ; sem --id "$$" -j150% "$abs_top_srcdir/tests/TestJob.bash" $num $PACKAGE_VERSION "${flags[*]}" "${tests[*]}" ; unset IFS
-		  (( num+=1 ))
-		fi
-	  done
-	done
+    for threadsL in ${threadsLng[$threads]} ; do
+      for staticL in ${staticLng[$static]} ; do
+	if [[ "$threadsL" == "$staticL" && "$threadsL" == $only ]] ; then
+	  tests=($abs_top_srcdir/bin/Nhi1Exec --only-$threadsL)
+	  flags=(--enable-threads=$threads --enable-static=$static)
+	  test "$threadsL" != "c" && flags+=(--with-$staticL=yes)
+	  echo "run job $num: ${flags[*]}"
+	  IFS=',' ; sem --id "$$" -j150% "$abs_top_srcdir/tests/TestJob.bash" $num $PACKAGE_VERSION "${flags[*]}" "${tests[*]}" ; unset IFS
+	  (( num+=1 ))
+	fi
+      done
+    done
   done
 done
 
@@ -94,11 +93,11 @@ sem --id "$$" --wait
 
 for ((i=0;i<num;i++)) ; do
   if test -e ./distcheck.$i.log ; then
-	echo "test '$i' failed"
-	echo "====================================================="
-	head -2 ./distcheck.$i.log
-	echo "====================================================="
-	tail -10 ./distcheck.$i.log
+    echo "test '$i' failed"
+    echo "====================================================="
+    head -2 ./distcheck.$i.log
+    echo "====================================================="
+    tail -10 ./distcheck.$i.log
   fi
 done
 

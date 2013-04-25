@@ -238,22 +238,22 @@ AC_SUBST([ld_library_path],[$LD_LIBRARY_PATH])
 
 AC_CONFIG_FILES([Makefile tests/Makefile sbin/winsdk.bat sbin/wincl.bat sbin/winlink.bat sbin/winlib.bat sbin/wincrt.bat
   theLink/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile theLink/tests/Makefile 
-	theLink/docs/Makefile bin/Makefile sbin/Makefile etc/Makefile tests/TestControl.bash
-	  theLink/libmsgque/Makefile theLink/example/c/Makefile
-	    theLink/ccmsgque/Makefile theLink/example/cc/Makefile
-	      theLink/tclmsgque/Makefile theLink/example/tcl/Makefile env.sh env.tcl
-			theLink/javamsgque/Makefile theLink/example/java/Makefile theLink/javamsgque/Manifest.txt
-			  theLink/pymsgque/Makefile theLink/example/python/Makefile
-				theLink/csmsgque/Makefile theLink/example/csharp/Makefile
-				  theLink/msgqueforphp/Makefile theLink/example/php/Makefile theLink/msgqueforphp/php.ini
-					theLink/perlmsgque/Makefile theLink/example/perl/Makefile
-					  theLink/rubymsgque/Makefile theLink/example/ruby/Makefile
-						theLink/gomsgque/Makefile theLink/example/go/Makefile theLink/gomsgque/src/gomsgque/gomsgque.go
-						  theLink/example/vb/Makefile
-							performance/Makefile performance/build_performance_env.sh performance/performance.sh
-							  theBrain/Makefile theBrain/abrain/Makefile theBrain/atrans/Makefile
-								theBrain/tests/Makefile
-								  theGuard/Makefile theGuard/aguard/Makefile theGuard/tests/Makefile ])
+    theLink/docs/Makefile bin/Makefile sbin/Makefile etc/Makefile tests/TestControl.bash
+      theLink/libmsgque/Makefile theLink/example/c/Makefile
+	theLink/ccmsgque/Makefile theLink/example/cc/Makefile
+	  theLink/tclmsgque/Makefile theLink/example/tcl/Makefile env.sh env.tcl
+	    theLink/javamsgque/Makefile theLink/example/java/Makefile theLink/javamsgque/Manifest.txt
+	      theLink/pymsgque/Makefile theLink/example/python/Makefile
+		theLink/csmsgque/Makefile theLink/example/csharp/Makefile
+		  theLink/msgqueforphp/Makefile theLink/example/php/Makefile theLink/msgqueforphp/php.ini
+		    theLink/perlmsgque/Makefile theLink/example/perl/Makefile
+		      theLink/rubymsgque/Makefile theLink/example/ruby/Makefile
+			theLink/gomsgque/Makefile theLink/example/go/Makefile theLink/gomsgque/src/gomsgque/gomsgque.go
+			  theLink/example/vb/Makefile
+			    performance/Makefile performance/build_performance_env.sh performance/performance.sh
+			      theBrain/Makefile theBrain/abrain/Makefile theBrain/atrans/Makefile
+				theBrain/tests/Makefile
+				  theGuard/Makefile theGuard/aguard/Makefile theGuard/tests/Makefile ])
 
 AC_OUTPUT
 
