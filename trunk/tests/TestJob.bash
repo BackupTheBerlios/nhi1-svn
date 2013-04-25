@@ -27,13 +27,24 @@ echo "flags = $flags"
 echo "tests = $tests"
 echo "==========================================================================="
 
-if make -C .. distcheck PACKAGE=test-$num DISTCHECK_CONFIGURE_FLAGS="${flags[*]}" TESTS_ENVIRONMENT="${tests[*]}" ; then
-#if (( $num % 2 )) ; then
+clean() {
   chown -R u+w ../test-$num-$ver
   rm -fr ../test-$num-$ver
   rm -f  ../test-$num-$ver.tar.bz2
   exec 1>/dev/null 2>&1
   rm ./distcheck.$num.log
-fi
+}
+
+make -C .. distcheck PACKAGE=test-$num DISTCHECK_CONFIGURE_FLAGS="${flags[*]}" TESTS_ENVIRONMENT="${tests[*]}" || exit 1
+
+egrep "Failed\s+[1-9]" ./distcheck.$num.log 1>/dev/null && exit 1
+
+grep "Test files exiting with errors" ./distcheck.$num.log 1>/dev/null && exit 1
+
+chown -R u+w ../test-$num-$ver
+rm -fr ../test-$num-$ver
+rm -f  ../test-$num-$ver.tar.bz2
+exec 1>/dev/null 2>&1
+rm ./distcheck.$num.log
 
 exit 0

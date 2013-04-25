@@ -22,7 +22,7 @@ foreach a $argv {
 }
 set argc [llength $arg]
 set argv $arg
-unset arg a
+unset -nocomplain arg a
 
 source ../env.tcl
 

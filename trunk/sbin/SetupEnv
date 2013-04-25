@@ -955,14 +955,13 @@ function G_Shell {
   esac
 }
 
-
 if [[ "$OSTYPE" == 'cygwin' ]] ; then
   . <( 
-	  while true; do
-		read line || break
-		#Print "$line\n"
-		echo "$line"
-	  done
+    while true; do
+      read line || break
+      #Print "$line\n"
+      echo "$line"
+    done
   )
 else
   . /dev/stdin

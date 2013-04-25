@@ -21,62 +21,62 @@ set env(NHI1_TOOL_ROOT) $NHI1_TOOL_ROOT
 test bool-enable-configure {check using '--enable-debug'} \
     -body           { configure --enable-debug } \
     -returnCodes    ok \
-    -match			glob \
-    -result			{*checking for build with: debug... yes*}
+    -match	    glob \
+    -result	    {*checking for build with: debug... yes*}
 
 test bool-disable-configure {check using '--disable-debug'} \
     -body           { configure --disable-debug } \
     -returnCodes    ok \
-    -match			glob \
-    -result			{*checking for build with: debug... no*}
+    -match	    glob \
+    -result	    {*checking for build with: debug... no*}
 
 test bool-enable-yes-arg-configure {check using '--enable-debug=yes'} \
     -body           { configure --enable-debug=yes } \
     -returnCodes    ok \
-    -match			glob \
-    -result			{*checking for build with: debug... yes*}
+    -match	    glob \
+    -result	    {*checking for build with: debug... yes*}
 
 test bool-enable-no-arg-configure {check using '--enable-debug=no'} \
     -body           { configure --enable-debug=no } \
     -returnCodes    ok \
-    -match			glob \
-    -result			{*checking for build with: debug... no*}
+    -match	    glob \
+    -result	    {*checking for build with: debug... no*}
 
 test bool-enable-Nhi1Config {check using '--enable-debug'} \
     -body           { Nhi1Config --enable-debug --dummy } \
     -returnCodes    error \
-    -match			glob \
-    -result			{*add 'debug' feature support (enable|disable) * = enable*}
+    -match	    glob \
+    -result	    {*enable 'debug' feature (enable|disable) * = enable*}
 
 test bool-disable-Nhi1Config {check using '--disable-debug'} \
     -body           { Nhi1Config --disable-debug --dummy } \
     -returnCodes    error \
-    -match			glob \
-    -result			{*add 'debug' feature support (enable|disable) * = disable*}
+    -match	    glob \
+    -result	    {*enable 'debug' feature (enable|disable) * = disable*}
 
 test bool-enable-yes-arg-Nhi1Config {check using '--enable-debug=yes'} \
     -body           { Nhi1Config --enable-debug=yes --dummy } \
     -returnCodes    error \
-    -match			glob \
-    -result			{*add 'debug' feature support (enable|disable) * = enable*}
+    -match	    glob \
+    -result	    {*enable 'debug' feature (enable|disable) * = enable*}
 
 test bool-enable-no-arg-Nhi1Config {check using '--enable-debug=no'} \
     -body           { Nhi1Config --enable-debug=no --dummy } \
     -returnCodes    error \
-    -match			glob \
-    -result			{*add 'debug' feature support (enable|disable) * = disable*}
+    -match	    glob \
+    -result	    {*enable 'debug' feature (enable|disable) * = disable*}
 
 test bool-disable-yes-arg-Nhi1Config {check using '--disable-debug=yes'} \
     -body           { Nhi1Config --disable-debug=yes --dummy } \
     -returnCodes    error \
-    -match			glob \
-    -result			{*add 'debug' feature support (enable|disable) * = disable*}
+    -match	    glob \
+    -result	    {*enable 'debug' feature (enable|disable) * = disable*}
 
 test bool-disable-no-arg-Nhi1Config {check using '--disable-debug=no'} \
     -body           { Nhi1Config --disable-debug=no --dummy } \
     -returnCodes    error \
-    -match			glob \
-    -result			{*add 'debug' feature support (enable|disable) * = enable*}
+    -match	    glob \
+    -result	    {*enable 'debug' feature (enable|disable) * = enable*}
 
 cleanupTests
 
