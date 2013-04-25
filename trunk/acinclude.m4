@@ -40,18 +40,18 @@ AC_DEFUN([OT_CHECK_SDK],[
 
 
 AC_DEFUN([OT_REQUIRE_PROG],[
-    pushdef([VARIABLE],$1)
-    pushdef([EXECUTABLE],$2)
-    pushdef([PATH_PROG],$3)
+  pushdef([VARIABLE],$1)
+  pushdef([EXECUTABLE],$2)
+  pushdef([PATH_PROG],$3)
 
-    AC_PATH_PROG([]VARIABLE[],[]EXECUTABLE[],[no],[]PATH_PROG[])
-    AS_IF([test "$VARIABLE" = "no"], [
-      AC_MSG_ERROR([the tool ']EXECUTABLE[' is required - exit])
-    ])
+  AC_PATH_PROG([]VARIABLE[],[]EXECUTABLE[],[no],[]PATH_PROG[])
+  AS_IF([test "$VARIABLE" = "no"], [
+    AC_MSG_ERROR([the tool ']EXECUTABLE[' is required - exit])
+  ])
 
-    popdef([PATH_PROG])
-    popdef([EXECUTABLE])
-    popdef([VARIABLE])
+  popdef([PATH_PROG])
+  popdef([EXECUTABLE])
+  popdef([VARIABLE])
 ])
 
 #------------------------------------------------------------------------
@@ -691,10 +691,10 @@ AC_DEFUN([SC_WITH_JAVA], [
   AS_IF([test -n "$JAVA"], [
     OT_CHECK_THREAD([java])
     AC_ARG_VAR([JAVA_HOME],[Absolute path to to the JAVA home directory])
-    OT_REQUIRE_PROG([JAVAC], [javac]) 
-    OT_REQUIRE_PROG([JAVAH], [javah]) 
-    OT_REQUIRE_PROG([JAR],   [jar]) 
     AS_IF([test -z "$JAVA_HOME"],[JAVA_HOME="$(AS_DIRNAME("$JAVA"))/.."])
+    OT_REQUIRE_PROG([JAVAC], [javac], "$PATH:$JAVA_HOME/bin") 
+    OT_REQUIRE_PROG([JAVAH], [javah], "$PATH:$JAVA_HOME/bin") 
+    OT_REQUIRE_PROG([JAR],   [jar],   "$PATH:$JAVA_HOME/bin") 
     AC_SUBST([JAVA_HOME])
     dirs=()
     save_IFS=$IFS

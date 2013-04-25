@@ -30,8 +30,8 @@ The main development system is:
 
 The software-build was also tested on:
 
-	SuSE Linux 12.3 (64bit)
-	Windows 7
+    SuSE Linux 12.3 (64bit)
+    Windows 7
 
 The Build depends on the following tools:
 
@@ -96,6 +96,13 @@ switch into the top directory:
 (optional) recommend to update your local build tools with:
 (optional) 
 (optional)   > autoreconf
+(optional)
+(optional) If you run an other version of the libtool or the autoconf or if
+(optional) have done an repository checkout it is better to recreate your
+(optional) configuration environment with:
+(optional)   
+(optional)   > autoreconf -fvi
+(optional)   
 
 To configure the build run the "configure" script:
  

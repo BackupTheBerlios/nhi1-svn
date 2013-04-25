@@ -26,7 +26,7 @@ if USE_WINSDK
 	$(SDK_CL) -I$(abs_top_srcdir_m)/theLink/libmsgque $(PYTHON_CFLAGS) "$(shell $(CYGPATH_M) $<)"
 
 .libs/pymsgque.pyd: $(patsubst %.c,.libs/%.obj, $(notdir $(C_FILES))) | .libs
-	$(SDK_LINK) "$@" "$^" ../libmsgque/.libs/libmsgque.lib $(PYTHON_LDFLAGS)
+	$(SDK_LINK) "$@" "$^" ../libmsgque/.libs/msgque.lib $(PYTHON_LDFLAGS)
 
 sdkbindir = $(pkglibdir)
 sdkbin_DATA = .libs/pymsgque.pyd
@@ -38,7 +38,7 @@ else
 # cygwin was NOT sucessfull. Reason:
 # 1. dll at /cygdrive/c/Windows/Sysnative/python32.dll
 #    32bit cygwin get with /cygdrive/c/Windows/Sytem32 the
-#    /cygdrive/c//Windows/SysWOW64 directory
+#    /cygdrive/c/Windows/SysWOW64 directory
 # 2. the default export library /cygdrive/c/Python32/libs/python32.lib
 #    copied to /cygdrive/c/Python32/libs/libpython32.dll.a does NOT
 #    contail ALL required import-definition for exported data.
