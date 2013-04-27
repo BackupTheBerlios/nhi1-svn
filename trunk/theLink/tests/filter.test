@@ -26,10 +26,10 @@ SetConstraints all
 array set l2s [lng2startInit]
 
 set data1 [makeFile {xa:24:12345678987654321:5.78
-cg:89:98765432123456789:3.46} data1.[pid]]
+cg:89:98765432123456789:3.46} [pid].1.dat]
 
 set data2 [makeFile {-A-:-B-
--C-:-D-} data2.[pid]]
+-C-:-D-} [pid].2.dat]
 
 ##
 ## -----------------------------------------------------------------------
@@ -131,7 +131,7 @@ C> (split) use '-h' or '--help' for usage}
 
 test filter-9-$L-$C-$S {filter as Bg with choose first} \
     -setup	{  
-	set TMP	[MakeFile "START" tmp.txt]
+	set TMP	[MakeFile "START" [pid].txt]
 	set CON	[FindFreeConnection $L.$C.$S]
 	set SRV	[list {*}[getExample Filter5.$L F1] {*}$CON --$S @ F2 @ F3 @ {*}[getATool join] -d : ]
     } \

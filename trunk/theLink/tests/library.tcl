@@ -503,42 +503,36 @@ proc getExample {srv args} {
     return $RET
 }
 
-set portNUM [expr {int(rand()*30000)+10000}]
+set appID   [expr {(([pid] % 643) * 100) + 1025}]
+set portNUM $appID
 
 proc dummy_server {channel clientaddr clientport} {
   close $channel
 }
 
-proc FindFreePort {} {
+proc FindFreePort {{num 0}} {
   if {$::env(TS_PORT) ne "PORT"} {
-    return $::env(TS_PORT)
+    set port $::env(TS_PORT)
   } else {
-    return [incr ::portNUM]
+    set port [incr ::portNUM]
   }
+  return [expr {$port + $num}]
 }
 
 set CLEANUP_FILES [list]
-set fileNUM [expr {int(rand()*30000)+10000}]
+set fileNUM $appID
 
-proc FindFreeFile {{ext uds}} {
-  global env
-  ## check if a user set default is available
-  if {$ext eq "uds" && $env(TS_FILE) ne "FILE"} {
-    return $env(TS_FILE)
-  } elseif {$ext eq "pid" && $env(TS_PID) ne "PID"} {
-    return $env(TS_PID)
+proc FindFreeFile {{ext uds} {num 0}} {
+  if {$::env(TS_FILE) ne "FILE"} {
+    set FILE  $::env(TS_FILE).$num.$ext
+  } else {
+    set FILE  [file join . [incr ::fileNUM].$num.$ext]
   }
-  ## generate unique filename
-  global fileNUM CLEANUP_FILES
-  while true {
-    incr fileNUM
-    set FILE    [file join . ${fileNUM}.$ext]
-    if {![file exists $FILE]} break
-  }
-  lappend CLEANUP_FILES $FILE
+  lappend ::CLEANUP_FILES $FILE
   return $FILE
 }
 
+set conNUM 0
 proc FindFreeConnection {srv} {
   set RET [list]
   foreach {lng con sta} [split $srv .] break
@@ -547,10 +541,10 @@ proc FindFreeConnection {srv} {
       lappend RET --pipe
     }
     tcp	  {
-      lappend RET --tcp --port [FindFreePort]
+      lappend RET --tcp --port [FindFreePort [incr ::conNUM]]
     }
     uds	  {
-      lappend RET --uds --file [FindFreeFile]
+      lappend RET --uds --file [FindFreeFile uds [incr ::conNUM]]
     }
   }
   return $RET
@@ -559,12 +553,14 @@ proc FindFreeConnection {srv} {
 proc MkUnique {list} {
   set D [list]
   foreach d $list {
-    switch -exact -- $d {
-      FILE	{lappend D [FindFreeFile uds]}
-      PORT	{lappend D [FindFreePort]}
-      PID	{lappend D [FindFreeFile pid]}
-      default	{lappend D $d}
-    }
+    lappend D [ \
+      switch -exact -- $d { \
+	FILE	{FindFreeFile uds [incr ::conNUM]} \
+	PID	{FindFreeFile pid [incr ::conNUM]} \
+	PORT	{FindFreePort     [incr ::conNUM]} \
+	default	{set d} \
+      }
+    ]
   }
   return $D
 }
@@ -823,7 +819,7 @@ if {![info exists env(TS_DEBUG)]}	  { set env(TS_DEBUG)	      0		}
 if {![info exists env(TS_TIMEOUT)]}	  { set env(TS_TIMEOUT)	      20	}
 if {![info exists env(TS_SETUP)]}	  { set env(TS_SETUP)	      false	}
 if {![info exists env(TS_HOST)]}	  { set env(TS_HOST)	      localhost	}
-if {![info exists env(TS_PORT)]}	  { set env(TS_PORT)	      PORT	}
+if {![info exists env(TS_PORT)]}	  { set env(TS_PORT)	      $portNUM	}
 if {![info exists env(TS_FILE)]}	  { set env(TS_FILE)	      FILE	}
 if {![info exists env(TS_PID)]}		  { set env(TS_PID)	      PID	}
 if {![info exists env(TS_MAX)]}		  { set env(TS_MAX)	      -1	}
@@ -1164,41 +1160,48 @@ proc EchoL { ctx token args } {
 proc Start {mode isError id cl ident {clname ""} {srvname ""}} {
   global env FH FH_LAST Start_PREFIX
   if {$env(TS_SETUP)} { Print id cl }
-  if {[info exists FH($id)]} {
-    $FH($id) ConfigReset
-  } else {
-    set FH($id) [tclmsgque MqS]
-  }
-  $FH($id) ConfigSetDebug $env(TS_DEBUG)
-  $FH($id) ConfigSetTimeout $env(TS_TIMEOUT)
-  $FH($id) ConfigSetIsString [expr {$mode eq "string"}]
-  if {$ident != ""} {
-    $FH($id) FactoryCtxIdentSet $ident
-  }
-  if {$clname ne ""} {
-    $FH($id) ConfigSetName $clname
-  }
-  if {$srvname ne ""} {
-    $FH($id) ConfigSetSrvName $srvname
-  }
-  set ::ARG_LAST $cl
-  set ::ID_LAST $id
-  set FH_LAST $FH($id)
-  if {[info exists Start_PREFIX]} {
-    eval $Start_PREFIX
-  }
-  if {$isError} {
-    $FH_LAST {*}$cl
-  } else {
-    set NUM 0
-    while {[catch {$FH_LAST {*}$cl} ERROR]} {
+  set NUM 0
+  while true {
+    if {[info exists FH($id)]} {
+      $FH($id) ConfigReset
+    } else {
+      set FH($id) [tclmsgque MqS]
+    }
+
+# puts "Start -> FH($id) -> $FH($id)"
+
+    $FH($id) ConfigSetDebug $env(TS_DEBUG)
+    $FH($id) ConfigSetTimeout $env(TS_TIMEOUT)
+    $FH($id) ConfigSetIsString [expr {$mode eq "string"}]
+    if {$ident != ""} {
+      $FH($id) FactoryCtxIdentSet $ident
+    }
+    if {$clname ne ""} {
+      $FH($id) ConfigSetName $clname
+    }
+    if {$srvname ne ""} {
+      $FH($id) ConfigSetSrvName $srvname
+    }
+    set ::ARG_LAST $cl
+    set ::ID_LAST $id
+    set FH_LAST $FH($id)
+    if {[info exists Start_PREFIX]} {
+      eval $Start_PREFIX
+    }
+    if {$isError} {
+      $FH_LAST {*}$cl
+    } elseif {[catch {$FH_LAST {*}$cl} ERROR]} {
       puts "RETRY: $cl\n$ERROR"
       flush stdout
       catch {$FH_LAST LinkDelete}
       incr NUM
-      if {$NUM > 10} { error $ERROR }
+      if {$NUM > 10} {
+	error $ERROR
+      }
       after 1000
+      continue
     }
+    break
   }
   if {$env(TS_SETUP)} { puts "Start <-" }
 }
@@ -1416,7 +1419,7 @@ proc Example {config client server args} {
     switch -exact -- $com {
       tcp	{
 	set PORT    [getEnv TS_PORT]
-	if {$PORT eq "PORT"} {set PORT [FindFreePort]}
+	if {$PORT eq "PORT"}	{set PORT [FindFreePort]}
 	lappend comargs --port [optV args --port $PORT]
 
 	# set host for client and server

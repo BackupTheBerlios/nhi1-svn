@@ -51,7 +51,7 @@ if {[Block 1]} {
 
 test trans2-1-($I|$B|$C|$S) {send data with error} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp1.txt]
+      set TMP	[MakeFile "START" tmp1.[pid].txt]
       Setup $I $B $C $S --filter-server Filter6
       Echo0 $FH_LAST LOGF SendC $TMP
     } \
@@ -74,7 +74,7 @@ ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
 
 test trans2-2-($I|$B|$C|$S) {send valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp2.txt]
+      set TMP	[MakeFile "START" tmp2.[pid].txt]
       Setup $I $B $C $S --filter-server Filter6
       Echo0 $FH_LAST LOGF SendC $TMP
     } \
@@ -91,7 +91,7 @@ $J - HALLO"
 
 test trans2-3-($I|$B|$C|$S) {send error + valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp3.txt]
+      set TMP	[MakeFile "START" tmp3.[pid].txt]
       Setup $I $B $C $S --filter-server Filter6
       Echo0 $FH_LAST LOGF SendC $TMP
     } \
@@ -146,7 +146,7 @@ foreach I [getNum 3] {
 
   test trans2-X1-($I|$B|$S) {send error + valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmpX1.txt]
+      set TMP	[MakeFile "START" tmpX1.[pid].txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
@@ -180,7 +180,7 @@ $J - TTT3"
 
 test trans2-X2-($I|$B|$S) {send multiple error + valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmpX2.txt]
+      set TMP	[MakeFile "START" tmpX2.[pid].txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2 --timeout $env(TS_TIMEOUT)]
@@ -215,7 +215,7 @@ $J - TTT3"
 
 test trans2-X3-($I|$B|$S) {multiple filter with EOF error} \
     -setup	    {
-      set TMP	[MakeFile "START" tmpX3.txt]
+      set TMP	[MakeFile "START" tmpX3.[pid].txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set CON3	[FindFreeConnection $S]
@@ -252,7 +252,7 @@ $J - TTT3"
 
   test trans2-T0-($I|$B|$S) {send nothing} \
     -setup	    {
-      set TMP	[MakeFile "START" tmpT0.txt]
+      set TMP	[MakeFile "START" tmpT0.[pid].txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
@@ -285,7 +285,7 @@ $J - TTT3"
 
   test trans2-T1a-($I|$B|$S) {send valid data + transaction} \
     -setup	    {
-      set TMP	[MakeFile "START" tmpT1a.txt]
+      set TMP	[MakeFile "START" tmpT1a.[pid].txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
@@ -333,7 +333,7 @@ $J - TTT2"
 
   test trans2-T1b-($I|$B|$S) {send valid data + transaction} \
     -setup	    {
-      set TMP	[MakeFile "START" tmpT1b.txt]
+      set TMP	[MakeFile "START" tmpT1b.[pid].txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
@@ -382,7 +382,7 @@ $J - TTT2"
 
   test trans2-T1c-($I|$B|$S) {send valid data + transaction + SETU} \
     -setup	    {
-      set TMP	[MakeFile "START" tmpT1c.txt]
+      set TMP	[MakeFile "START" tmpT1c.[pid].txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
@@ -427,7 +427,7 @@ R=789"
 
   test trans2-T2a-($I|$B|$S) {send + transaction server error} \
     -setup	    {
-      set TMP	[MakeFile "START" tmpT2a.txt]
+      set TMP	[MakeFile "START" tmpT2a.[pid].txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
@@ -491,7 +491,7 @@ foreach I [getNum 3] {
 
 test trans2-X4-($I|$B|$S) {multiple filter with EOF error} \
     -setup	    {
-      set TMP	[MakeFile "START" tmpX4.txt]
+      set TMP	[MakeFile "START" tmpX4.[pid].txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set CON3	[FindFreeConnection $S]
@@ -538,7 +538,7 @@ foreach I [getNum 3] {
 
   test trans2-X5-($I|$B|$S) {send error + valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmpX5.txt]
+      set TMP	[MakeFile "START" tmpX5.[pid].txt]
     } \
     -body           {
       foreach {FIRST CTX} [Create $I [list @ {*}[getFilter Filter6.$S] @ {*}[getServer $S]]] break
@@ -565,7 +565,7 @@ $J - TTT3"
   test trans2-X6-($I|$B|$S) {send error + valid data} \
     -constraints    { unix } \
     -setup	    {
-      set TMP	[MakeFile "START" tmpX6.txt]
+      set TMP	[MakeFile "START" tmpX6.[pid].txt]
     } \
     -body           {
       foreach {FIRST CTX} [Create $I [list @ {*}[getFilter Filter6.$S] @ {*}[getServer $S]]] break
@@ -622,7 +622,7 @@ foreach I [getNum 3] {
     -constraints    {!thread} \
     -setup	    {
       Setup $I $B $C $S --server-arg {--storage ""}
-      set TMP	[MakeFile "START" tmpTE0.txt]
+      set TMP	[MakeFile "START" tmpTE0.[pid].txt]
       proc CB_OTTO {ctx} {
 	global TMP
 	set FH [open $TMP a]
@@ -656,11 +656,11 @@ foreach I [getNum 3] {
   test trans2-TE1-($I|$B|$C|$S) {send OK} \
     -constraints    {!thread} \
     -setup	    {
-      set testdb [makeFile {} testdb.TE1]
+      set testdb [makeFile {} testdb.1.[pid].dat]
       set joundb [makeFile {} ${testdb}-journal]
       file delete -force $testdb $joundb
       Setup $I $B $C $S --filter-server Filter6 --server-arg [list --storage $testdb]
-      set TMP	[MakeFile "START" tmpTE1.txt]
+      set TMP	[MakeFile "START" tmpTE1.[pid].txt]
       proc CB_OTTO {ctx} {
 	global TMP
 	set FH [open $TMP a]
@@ -688,11 +688,11 @@ foreach I [getNum 3] {
   test trans2-TE2-($I|$B|$C|$S) {kill filter + no connect} \
     -constraints    {!thread} \
     -setup	    {
-      set testdb [makeFile {} testdb.TE2]
+      set testdb [makeFile {} testdb.2.[pid].dat]
       set joundb [makeFile {} ${testdb}-journal]
       file delete -force $testdb $joundb
       Setup $I $B $C $S --filter-server Filter6 --server-arg [list --storage $testdb]
-      set TMP	[MakeFile "START" tmpTE1.txt]
+      set TMP	[MakeFile "START" tmpTE1.[pid].txt]
       proc CB_OTTO {ctx} {
 	global TMP
 	set FH [open $TMP a]
@@ -722,11 +722,11 @@ foreach I [getNum 3] {
   test trans2-TE3-($I|$B|$C|$S) {kill filter + connect} \
     -constraints    {!thread} \
     -setup	    {
-      set testdb [makeFile {} testdb.TE3]
+      set testdb [makeFile {} testdb.3.[pid].dat]
       set joundb [makeFile {} ${testdb}-journal]
       file delete -force $testdb $joundb
       Setup $I $B $C $S --filter-server Filter6 --filter-args [list --storage $testdb]
-      set TMP	[MakeFile "START" tmpTE1.txt]
+      set TMP	[MakeFile "START" tmpTE1.[pid].txt]
       proc CB_OTTO {ctx} {
 	global TMP
 	set FH [open $TMP a]

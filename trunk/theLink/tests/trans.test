@@ -51,7 +51,7 @@ if {[Block 1]} {
 
 test trans-1-($I|$B|$C|$S) {send data with error} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" [pid].txt]
       Setup $I $B $C $S --filter-server Filter4
       Echo0 $FH_LAST LOGF SendC $TMP
     } \
@@ -74,7 +74,7 @@ ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
 
 test trans-2-($I|$B|$C|$S) {send valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" [pid].txt]
       Setup $I $B $C $S --filter-server Filter4
       Echo0 $FH_LAST LOGF SendC $TMP
     } \
@@ -91,7 +91,7 @@ $J - HALLO"
 
 test trans-3-($I|$B|$C|$S) {send error + valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" [pid].txt]
       Setup $I $B $C $S --filter-server Filter4
       Echo0 $FH_LAST LOGF SendC $TMP
     } \
@@ -159,7 +159,7 @@ foreach I [getNum 3] {
 
   test trans-X1-($I|$B|$S) {send error + valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" [pid].txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2]
@@ -193,7 +193,7 @@ $J - T3"
 
 test trans-X2-($I|$B|$S) {send multiple error + valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" [pid].txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set SRV	[list {*}[getServer $S] {*}$CON2 --timeout $env(TS_TIMEOUT)]
@@ -230,7 +230,7 @@ $J - T3"
 
 test trans-X3-($I|$B|$S) {multiple filter with EOF error} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" [pid].txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set CON3	[FindFreeConnection $S]
@@ -283,7 +283,7 @@ foreach I [getNum 3] {
 
 test trans-X4-($I|$B|$S) {multiple filter with EOF error} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" [pid].txt]
       set CON1	[FindFreeConnection $S]
       set CON2	[FindFreeConnection $S]
       set CON3	[FindFreeConnection $S]
@@ -331,7 +331,7 @@ foreach I [getNum 3] {
 
   test trans-X5-($I|$B|$S) {send error + valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" [pid].txt]
     } \
     -body           {
       foreach {FIRST CTX} [Create $I [list @ {*}[getFilter Filter4.$S] @ {*}[getServer $S]]] break
@@ -358,7 +358,7 @@ $J - T3"
   test trans-X6-($I|$B|$S) {send error + valid data} \
     -constraints    { unix } \
     -setup	    {
-      set TMP	[MakeFile "START" tmp.txt]
+      set TMP	[MakeFile "START" [pid].txt]
     } \
     -body           {
       foreach {FIRST CTX} [Create $I [list @ {*}[getFilter Filter4.$S] @ {*}[getServer $S]]] break

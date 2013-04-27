@@ -141,13 +141,13 @@ set tclserver [makeFile {
     $srv ErrorSet
   }
   $srv Exit
-} tclserver.[pid]]
+} tclserver.[pid].dat]
 
 
 test tcl-server-X3 {server with defined UDS handle normal startup} \
     -constraints    {local uds} \
     -setup	    {   
-	set UDS [FindFreeFile uds]
+	set UDS [FindFreeFile]
 	catch {exec $TCLSH $tclserver --uds --file $UDS --spawn >&@stdout &} PID
 	set ctx [tclmsgque MqS]
     } \
@@ -165,7 +165,7 @@ test tcl-server-X3 {server with defined UDS handle normal startup} \
 test tcl-server-X4 {server with defined UDS handle problem startup} \
     -constraints    {local uds} \
     -setup	{
-	set UDS [FindFreeFile uds]
+	set UDS [FindFreeFile]
 	set tclsubserver [makeFile [subst {
 	  package require TclMsgque
 	  proc ServerSetup {ctx} {}
@@ -184,7 +184,7 @@ test tcl-server-X4 {server with defined UDS handle problem startup} \
 	    }
 	    \$srv Exit
 	  }
-	}] tclsubserver.[pid]]
+	}] tclsubserver.[pid].dat]
 	catch {exec $TCLSH $tclsubserver >&@stdout &} PID
 	set ctx [tclmsgque MqS]
     } \
@@ -219,7 +219,7 @@ test tcl-server-X5 {server with defined TCP handle problem startup} \
 	    \$srv ErrorSet
 	  }
 	  \$srv Exit
-	}] tclsubserver.[pid]]
+	}] tclsubserver.[pid].dat]
 	catch {exec $TCLSH $tclsubserver >&@stdout &} PID
 	set ctx [tclmsgque MqS]
     } \
@@ -244,7 +244,7 @@ test tcl-server-X6 {start tcl server with --fork on thread enabled tcl} \
 test tcl-server-X7 {start tcl server with --daemon on thread enabled tcl} \
     -constraints    {thread} \
     -body       {
-	Exec {*}[getServer tcl] --tcp --port [FindFreePort] --daemon [FindFreeFile pid]
+	Exec {*}[getServer tcl] --tcp --port [FindFreePort] --daemon [FindFreeFile pid]]
     } \
     -match	glob \
     -result	{CHILDSTATUS-222-S> (server) \[MqConfigSetDaemon] for the 'current' setup the option '--daemon' is forbidden*}

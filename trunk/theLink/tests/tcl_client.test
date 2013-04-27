@@ -425,7 +425,7 @@ set tclserver [makeFile {
       $srv ErrorSet
     }
     $srv Exit
-} tclserver.[pid]]
+} tclserver.[pid].dat]
 
 test tcl-client-Y-InitServerSetup "tclmsgque MqS ConfigSetServerSetup -> Error " \
     -body           {

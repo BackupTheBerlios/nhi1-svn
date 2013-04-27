@@ -30,10 +30,10 @@ proc myText {s e str} {
 }
 
 set data1 [makeFile {xa:24:12345678987654321:5.78
-cg:89:98765432123456789:3.46} data1.[pid]]
+cg:89:98765432123456789:3.46} [pid].1.dat]
 
 set data2 [makeFile {vb:0:987654321:7.77
-g:4444:66666666666:0.1} data2.[pid]]
+g:4444:66666666666:0.1} [pid].2.dat]
 
 test asplit-1 {split without server} \
     -body   { Exec cat $data1 | {*}[getATool split] -d : } \

@@ -49,7 +49,7 @@ test example-1 {check the example 1 from the tclmsgque man page} \
 	    }
 	    $srv Exit
 	    exit 0
-	} manserver.[pid]]
+	} manserver.[pid].dat]
 	set manclient [makeFile {
 	    package require TclMsgque
 	    set MyCTX [tclmsgque MqS]
@@ -60,7 +60,7 @@ test example-1 {check the example 1 from the tclmsgque man page} \
 	    puts [$MyCTX ReadC]
 	    rename $MyCTX ""
 	    exit 0
-	} manclient.[pid]]
+	} manclient.[pid].dat]
     } \
     -body { 
       Exec $TCLSH $manclient $manserver 
@@ -117,15 +117,15 @@ test example-hlft-1-($S) {hello world example with Filter3} \
 ##
 
 set data1 [makeFile {1:2:3
-a:b:c} data1.[pid]]
+a:b:c} [pid].1.dat]
 
 set data2 [makeFile {nobody 10 euro
 manager 1000 dollar
-worker 100 pound} data2.[pid]]
+worker 100 pound} [pid].2.dat]
 
 set data3 [makeFile {nobody 10
 manager 1000
-worker 100} data3.[pid]]
+worker 100} [pid].3.dat]
 
 foreach S [getEnv SRV_LST] {
 

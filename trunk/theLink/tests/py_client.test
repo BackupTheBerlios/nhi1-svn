@@ -44,7 +44,7 @@ except Exception as e:
   srv.ErrorSet()
 finally:
   srv.Delete()
-	} client.[pid]]
+	} pyclient.1.[pid].dat]
     } \
     -body	  {
 	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
@@ -71,7 +71,7 @@ except Exception:
   srv.ErrorSet()
 finally:
   srv.Delete()
-	} client.[pid]]
+	} pyclient.2.[pid].dat]
     } \
     -body	  {
 	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
@@ -96,7 +96,7 @@ except:
   srv.ErrorSet()
 finally:
   srv.Exit()
-	} client.[pid]]
+	} pyclient.3.[pid].dat]
     } \
     -body	  {
 	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
@@ -121,7 +121,7 @@ except:
   srv.ErrorSet()
 finally:
   srv.Exit()
-	} client.[pid]]
+	} pyclient.4.[pid].dat]
     } \
     -body	  {
 	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
@@ -138,7 +138,7 @@ import pymsgque
 srv = pymsgque.MqS()
 srv.ErrorSet()
 srv.Exit()
-	} client.[pid]]
+	} pyclient.5.[pid].dat]
     } \
     -body	  {
 	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
@@ -156,7 +156,7 @@ srv = pymsgque.MqS()
 srv.LinkCreate(sys.argv)
 srv.ErrorSet()
 srv.Exit()
-	} client.[pid]]
+	} pyclient.6.[pid].dat]
     } \
     -body	  {
 	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]

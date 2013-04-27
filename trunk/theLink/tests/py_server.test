@@ -92,9 +92,9 @@ except:
   srv.ErrorSet()
 finally:
   srv.Exit()
-	}] pyserver.[pid]]
+	}] pyserver.[pid].dat]
 	## start
-	set UDS [FindFreeFile uds]
+	set UDS [FindFreeFile]
 	Bg @stdout $PYTHON $pyserver --debug $env(TS_DEBUG) --uds --file $UDS --spawn
     } \
     -cleanup	{

@@ -23,7 +23,7 @@ if {[info exists env(TS_LIBRARY)]} {
 
 #set tcl_traceExec 1
 
-set testdb [makeFile {} storageFile]
+set testdb [makeFile {} storageFile.[pid].dat]
 file delete -force $testdb
 set storageFiles [list "#memdb#" ]
 set storageFiles [list "#memdb#" "#tmpdb#" $testdb]
