@@ -33,7 +33,7 @@ G_Source='$URL: svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk/bin/Nhi1Config
 G_Description='frontend to the mass distribution test'
 #G_HelpProc='Usage'
 # -------------------------------------------------------------------
-G_Option break-on-non-option
+G_Option error-on-non-option
 G_Argument 'action:action::choose action:L:analyze:test:clean'
 G_Argument 'only:only:*:restrict language to:L:*:c:cxx:tcl:perl:python:php:ruby:java:csharp:go'
 EOF
@@ -67,6 +67,7 @@ case $action in
     declare -a tests
     declare -a flags
     declare -i num=0
+    declare -i port=5000
 
     rm -f distcheck.*.log
 
@@ -77,7 +78,7 @@ case $action in
 	for threadsL in ${threadsLng[$threads]} ; do
 	  for staticL in ${staticLng[$static]} ; do
 	    if [[ "$threadsL" == "$staticL" && "$threadsL" == $only ]] ; then
-	      tests=($abs_top_srcdir/bin/Nhi1Exec --only-$threadsL)
+	      tests=($abs_top_srcdir/bin/Nhi1Exec --only-$threadsL --port $((port++)))
 	      flags=(--enable-threads=$threads --enable-static=$static)
 	      test "$threadsL" != "c" && flags+=(--with-$staticL=yes)
 	      echo "run job $num: ${flags[*]}"
@@ -93,54 +94,58 @@ case $action in
   ;;
   analyze)
     for f in ./distcheck.*.log ; do
-      if test -e $f ; then
-	echo -e "\n\n\ntest '$f' failed"
-	echo "====================================================="
-	head -2 $f
-	echo "tail -10..."
-	tail -10 $f
-	echo "Failed..."
-	egrep "Failed\s+[1-9]" $f
-	echo;echo
-	awk -F "@@@@@@@@@" '
-	  BEGIN {
-	    flag=0
-	  }
-	  /---- errorInfo.*TIMEOUT/ {
-	    flag = 2
+      case "$only" in
+	"*")  PAT=".*"	  ;;
+	*)    PAT="--only-$only" ;;
+      esac
+      test ! -e $f && continue
+      awk -v LNG="$PAT" -F '@@@@' 'NR == 1 && $0 ~ LNG {exit 1}' $f && continue
+      echo -e "\n\n\ntest '$f' failed"
+      echo "====================================================="
+      head -2 $f
+      echo "tail -10..."
+      tail -10 $f
+      echo "Failed..."
+      egrep "Failed\s+[1-9]" $f
+      echo;echo
+      awk -F "@@@@@@@@@" '
+	BEGIN {
+	  flag=0
+	}
+	/---- errorInfo.*TIMEOUT/ {
+	  flag = 2
+	  next
+	}
+	/FAILED/ {
+	  if (flag == 0) {
+	    flag = 1
+	    len = 0
+	    delete lst
+	  } else if (flag == 1) {
+	    flag = 0
+	    for (n=0;n<=len;n++) {
+	      print(lst[n])
+	    }
+	    print
+	    print ""
+	    print ""
+	    next
+	  } else if (flag == 2) {
+	    flag = 0
+	    print(lst[0])
+	    print("TIMEOUT")
+	    print
+	    print ""
+	    print ""
 	    next
 	  }
-	  /FAILED/ {
-	    if (flag == 0) {
-	      flag = 1
-	      len = 0
-	      delete lst
-	    } else if (flag == 1) {
-	      flag = 0
-	      for (n=1;n<=len;n++) {
-		print(lst[n])
-	      }
-	      print
-	      print ""
-	      print ""
-	      next
-	    } else if (flag == 2) {
-	      flag = 0
-	      print(lst[0])
-	      print("TIMEOUT")
-	      print
-	      print ""
-	      print ""
-	      next
-	    }
-	  }
-	  flag == 1 {
-	    lst[len++] = $1
-	  }
-	' $f
-	echo "File errors..."
-	grep -A 10 "Test files exiting with errors" $f
-      fi
+	}
+	flag == 1 {
+	  lst[len++] = $1
+	}
+      ' $f
+      echo "File errors..."
+      grep -A 10 "Test files exiting with errors" $f
     done
   ;;
 esac

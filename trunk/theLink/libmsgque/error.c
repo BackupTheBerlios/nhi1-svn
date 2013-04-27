@@ -176,8 +176,8 @@ MqErrorSGenV (
   ...
 )
 {
-  va_list ap;
   if (context != MQ_ERROR_IGNORE) {
+    va_list ap;
     va_start (ap, fmt);
     MqErrorSGenVL (context, prefix, errcode, errnum, fmt, ap);
     va_end (ap);

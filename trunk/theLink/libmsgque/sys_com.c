@@ -262,8 +262,24 @@ SysSocket (
      int protocol,
      MQ_SOCK *sock              
 ) {
+  int oldflags;
   if (unlikely ((*sock = (MQ_SOCK) socket (domain, type, protocol)) == INVALID_SOCKET)) {
     return sSysMqErrorMsg (context, __func__, "socket");
+  }
+
+  //  This FD_CLOEXEC is required in trans.test using fixed --port test:
+  //  > Nhi1Exec trans.test --full-testing --only-c --only-tcp --port 5678 --only-spawn \
+  //	-only-num 1 --block-1 -match "trans-[14]-*" --debug 9
+  //  without FD_CLOEXEC on server socket the client of "trans-2" connects to the spawed child
+  //  of the previous killed server "Filter4" and receive immideatly an socket shutdown request.
+  if (MQ_IS_SERVER(context)) {
+    if (unlikely ((oldflags = fcntl (*sock, F_GETFD, 0)) == -1)) {
+      return sSysMqErrorMsg (context, __func__, "fcntl F_GETFD");
+    }
+    oldflags |= FD_CLOEXEC;
+    if (unlikely (fcntl (*sock, F_SETFD, oldflags) == -1)) {
+      return sSysMqErrorMsg (context, __func__, "fcntl F_SETFD");
+    }
   }
   return MQ_OK;
 }

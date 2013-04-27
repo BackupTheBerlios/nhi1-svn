@@ -634,7 +634,7 @@ NS(MqS_Init) (
 
     // create tcl command
     mqctx->threadData = (MQ_PTR)interp;
-    MqBufferSetV(buf, "<MqS-%p>", tclctx);
+    MqBufferSetV(buf, "<MqS-%p>", mqctx);
     tclctx->command = Tcl_CreateObjCommand (interp, buf->cur.C, NS(MqS_Cmd), tclctx, NS(MqS_Free));
     mqctx->self = (void*) Tcl_NewStringObj(buf->cur.C,-1);
     Tcl_IncrRefCount(SELF);

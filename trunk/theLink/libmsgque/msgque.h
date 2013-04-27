@@ -3489,8 +3489,8 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqErrorC (
 );
 
 /// \brief customized edition of #MqErrorSGenV
-#define MqErrorV(error,prefix,errnum,format,...) \
-    MqErrorSGenV(error,prefix,MQ_ERROR,errnum,format, __VA_ARGS__)
+#define MqErrorV(context,prefix,errnum,format,...) \
+    MqErrorSGenV(context,prefix,MQ_ERROR,errnum,format, __VA_ARGS__)
 
 /*****************************************************************************/
 /*                                                                           */

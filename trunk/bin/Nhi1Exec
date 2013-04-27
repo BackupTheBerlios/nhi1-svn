@@ -369,7 +369,7 @@ while (( $# )) ; do
 	TEE="${TEE:-yes}"
 	POSTFIX="${POSTFIX:-cat}"
       fi
-      id=$(basename -- "${PWD%/*}")_$(basename -- "${1%.*}")
+      id=$(basename -- "${1%.*}")
       # "" need for white-space-path
       IFS=";";cmdline+=( $(lookup "$1") ) || exit;unset IFS
       (( ${#args[@]} )) && cmdline+=( "${args[@]:-}" )
@@ -392,9 +392,9 @@ IFS=";"
 
 if [[ $TEE == "yes" ]] ; then
   if [[ $PREFIX == *kdbg* ]] ; then
-    exec $PREFIX "$EXE" -a "$@" 2>&1 | $POSTFIX | tee /tmp/$id.log
+    exec $PREFIX "$EXE" -a "$@" 2>&1 | $POSTFIX | tee ./$id.res
   else
-    exec $PREFIX "$EXE" "$@" 2>&1 | $POSTFIX | tee /tmp/$id.log
+    exec $PREFIX "$EXE" "$@" 2>&1 | $POSTFIX | tee ./$id.res
   fi
 else
   if [[ $PREFIX == *kdbg* ]] ; then

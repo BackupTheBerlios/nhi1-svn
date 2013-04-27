@@ -206,12 +206,12 @@ pEventCheck (
   }
 
 /*
-  MqLogData(context, "select");
+  //MqLogData(context, "select");
   if (MQ_IS_CLIENT(context)) {
     int i;
     for (i=0; i<=event->fdmax; i++) {
       if (FD_ISSET(i,&fds))
-        MqDLogV(context,0,"sock<%i>, set<YES>\n", i);
+        MqDLogV(context,0,"event<%p> sock<%i>, set<YES>\n", event, i);
     }
   }
 */
@@ -391,7 +391,7 @@ pEventDel (
         !context ||			// no "context" data
         !context->link.io ||		// no "io" data
         !context->link.io->event ||	// no "event" data
-        MQ_IS_CHILD(context )		// we only delete PARENT from the event-list
+        MQ_IS_CHILD(context)		// we only delete PARENT from the event-list
      ) return;
 
   event = context->link.io->event;
@@ -434,7 +434,19 @@ rescan:
   }
 
   // report status back
-  MqDLogV(context,4,"sock<%i> DataLCur<%i>\n", delsock, event->DataLCur);
+  MqDLogV(context,4,"TLS-Id<%p> sock<%i> DataLCur<%i>\n", event, delsock, event->DataLCur);
+
+/*
+  MqLogData(context, "select");
+  if (MQ_IS_CLIENT(context)) {
+    int i;
+    for (i=0; i<=event->fdmax; i++) {
+      if (FD_ISSET(i,&event->fdset))
+        MqDLogV(context,0,"event<%p> sock<%i>, set<YES>\n", event, i);
+    }
+  }
+*/
+
 }
 
 /// get the msgque object from a socket

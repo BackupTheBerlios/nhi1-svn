@@ -12,12 +12,14 @@
 
 EXTRA_DIST = README.tests massclient.bash $(srcdir)/*.tcl $(srcdir)/*.test
 
-TESTS_ENVIRONMENT = egrep -A 10 "(Failed\s+[1-9]|Test files exiting with errors)"
+TESTS_ENVIRONMENT = ! grep -E -A 10 "(Failed\s+[1-9]|Test files exiting with errors)"
+TESTS := $(patsubst $(srcdir)/%.test,%.res,$(wildcard $(srcdir)/*.test))
 
-$(builddir)/%.res: $(srcdir)/%.test
-	echo $(abs_top_srcdir)/bin/Nhi1Exec $< --full-testing $(MY_TEST_ARGS)
-
-TESTS := $(abs_patsubst $(srcdir)/%.test,$(builddir)/%.res,$(wildcard $(srcdir)/*.test))
+./%.res: $(srcdir)/%.test
+	$(abs_top_srcdir)/bin/Nhi1Exec $< --full-testing $(MY_TEST_ARGS)
 
 CLEANFILES = *.res *.uds *.txt *.dat *.pid
+
+all-local:
+	@echo $(TESTS)
 

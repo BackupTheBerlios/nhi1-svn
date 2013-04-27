@@ -234,7 +234,7 @@ GenericConnect (
 )
 {
   struct MqS * const context = MQ_CONTEXT_S;
-  //int status = 1;
+  //int status = 0;
 
   // 1. config socket
   MqErrorCheck (SysSetAsync (context, generiC->sock));

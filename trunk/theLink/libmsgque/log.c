@@ -67,25 +67,20 @@ pLogHEX (
 }
 
 #define MQ_USE_DATE_TIME_LOGGING
+#define TIME_BUF_SIZE 50
 
 #if defined(MQ_USE_DATE_TIME_LOGGING)
 static MQ_CST 
 sLogTime (
-  char * TIME
+  char * time
 )
 {
-  struct tm *t;
   struct timeval tv;
-  time_t time;
-
-  MqSysGetTimeOfDay(NULL, &tv, NULL);
-  time = tv.tv_sec;
-  t = localtime (&time);
-  sprintf (TIME, "[%4d-%02d-%02d:%02d-%02d-%02d]", t->tm_year + 1900,
-           t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec);
-  TIME[21] = '\0';
-
-  return TIME;
+  *time = '\0';
+  MqErrorCheck (MqSysGetTimeOfDay(MQ_ERROR_IGNORE, &tv, NULL));
+  mq_snprintf (time, TIME_BUF_SIZE, "[%lu:%lu]", tv.tv_sec, tv.tv_usec);
+error:
+  return time;
 }
 #else
 #   define sLogTime(dummy) ""
@@ -115,7 +110,7 @@ sLogVL (
   va_list ap,
   FILE *channel
 ) {
-  char	time_buf[50];
+  char	time_buf[TIME_BUF_SIZE];
   char	header[400];
 
   if (channel == NULL) return;
@@ -125,13 +120,9 @@ sLogVL (
     MQ_CST name = StringOrUnknown(context->config.name);
     if (context->config.isSilent) return;
     t = (MQ_IS_SERVER (context) ? (MQ_IS_CHILD (context) ? 's' : 'S') : (MQ_IS_CHILD (context) ? 'c' : 'C'));
-#if defined(MQ_HAS_THREAD)
-    mq_snprintf (header, 400, "%c> (%s:%i:%p) %s [%i-%i-%i-%p-%s]: %s", t, name, mq_getpid(), (void*) MqThreadSelfP(), 
-	sLogTime (time_buf), level, context->link.ctxId, context->refCount, (void*) context, proc, fmt);
-#else
-    mq_snprintf (header, 400, "%c> (%s:%i) %s [%i-%i-%i-%p-%s]: %s", t, name, mq_getpid(),
-	sLogTime (time_buf), level, context->link.ctxId, context->refCount, (void*) context, proc, fmt);
-#endif
+    mq_snprintf (header, 400, "%c> (%s:%i:%p) %s [%c-%i-%i-%i-%p-%s]: %s", t, name, mq_getpid(), (void*) MqThreadSelfP(), 
+	sLogTime (time_buf), (context->config.isString ? 'S' : 'B'), level, context->link.ctxId, context->refCount, 
+	  (void*) context, proc, fmt);
   } else {
     mq_snprintf (header, 400, "X> %s [%i-%s]: %s", sLogTime (time_buf), level, proc, fmt);
   }
