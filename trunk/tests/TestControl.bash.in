@@ -82,7 +82,7 @@ case $action in
 	      flags=(--enable-threads=$threads --enable-static=$static)
 	      test "$threadsL" != "c" && flags+=(--with-$staticL=yes)
 	      echo "run job $num: ${flags[*]}"
-	      IFS=',' ; sem --id "$$" -j150% "$abs_top_srcdir/tests/TestJob.bash" $num $PACKAGE_VERSION "${flags[*]}" "${tests[*]}" ; unset IFS
+	      IFS=',' ; sem --id "$$" -j100% "$abs_top_srcdir/tests/TestJob.bash" $num $PACKAGE_VERSION "${flags[*]}" "${tests[*]}" ; unset IFS
 	      (( num+=1 ))
 	    fi
 	  done

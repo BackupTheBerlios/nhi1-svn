@@ -34,7 +34,7 @@ set testdir [file normalize [file dirname [info script]]]
 
 unset -nocomplain env(NHI1_TOOL_ROOT)
 unset -nocomplain env(TCLSH)
-set dir [makeDirectory tool-root]
+set dir [makeDirectory tool-root-[pid]]
 set PATH $env(PATH)
 
 if { "$TCLSH" == "" } {

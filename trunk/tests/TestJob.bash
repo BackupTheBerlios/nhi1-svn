@@ -35,7 +35,7 @@ clean() {
   rm ./distcheck.$num.log
 }
 
-make -C .. distcheck PACKAGE=test-$num DISTCHECK_CONFIGURE_FLAGS="${flags[*]}" TESTS_ENVIRONMENT="${tests[*]}" || exit 1
+make -j 4 -C .. distcheck PACKAGE=test-$num DISTCHECK_CONFIGURE_FLAGS="${flags[*]}" MY_TEST_ARGS="${tests[*]}" || exit 1
 
 egrep "Failed\s+[1-9]" ./distcheck.$num.log 1>/dev/null && exit 1
 

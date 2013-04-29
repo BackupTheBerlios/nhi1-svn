@@ -12,9 +12,13 @@
 
 EXTRA_DIST = $(srcdir)/*.test $(srcdir)/*.tcl
 
-TESTS_ENVIRONMENT = $(abs_top_srcdir)/bin/Nhi1Exec
-
-TESTS = $(abs_top_srcdir)/theLink/tests/all.tcl
-
 all-local: TestControl.bash
+
+TESTS_ENVIRONMENT = ! grep -E -A 10 "(Failed\s+[1-9]|Test files exiting with errors)"
+TESTS := $(patsubst $(srcdir)/%.test,%.res,$(wildcard $(srcdir)/*.test))
+
+./%.res: $(srcdir)/%.test
+	$(abs_top_srcdir)/bin/Nhi1Exec $< 
+
+CLEANFILES = *.res *.uds *.txt *.dat *.pid
 
