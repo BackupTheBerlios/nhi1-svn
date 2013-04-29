@@ -10,8 +10,9 @@
 #:              please contact AUTHORS for additional information
 #:
 
-#set tcl_traceExec 2
+set self [file rootname [file tail $self]]
 
+#set tcl_traceExec 2
 if {![info exists env(TS_LIBRARY)]} {
   set env(TS_LIBRARY) [info script]
 }
@@ -65,12 +66,14 @@ proc Error {args} {
 }
 
 ## setup the path to find the !newly! created executable first
-lappend PATH [file nativename [file dirname [info nameofexecutable]]]
-lappend PATH [file nativename [file join $linkbuilddir csmsgque]]
-lappend PATH [file nativename [file join $linkbuilddir tests]]
-lappend PATH [file nativename [file join $linkbuilddir acmds]]
-lappend PATH [file nativename [file normalize .libs]]
-lappend PATH [file nativename [file normalize .]]
+set PATH [list \
+  [file nativename [file dirname [info nameofexecutable]]] \
+  [file nativename [file join $linkbuilddir csmsgque]] \
+  [file nativename [file join $linkbuilddir tests]] \
+  [file nativename [file join $linkbuilddir acmds]] \
+  [file nativename [file normalize .libs]] \
+  [file nativename [file normalize .]] \
+]
 
 switch -exact $tcl_platform(platform) {
     windows { 
@@ -93,12 +96,13 @@ set env(PATH) "[join $PATH $PATH_SEP]$PATH_SEP$env(PATH)"
 if {![info exists env(LD_LIBRARY_PATH)]} {
   set env(LD_LIBRARY_PATH) ""
 }
-set LIBRARY_PATH [list]
-lappend LIBRARY_PATH [file nativename [file join $linkbuilddir libmsgque .libs]]
-lappend LIBRARY_PATH [file nativename [file join $linkbuilddir ccmsgque .libs]]
-lappend LIBRARY_PATH [file nativename [file join $linkbuilddir javamsgque .libs]]
-lappend LIBRARY_PATH [file nativename [file join $linkbuilddir tclmsgque .libs]]
-lappend LIBRARY_PATH [file nativename [file join $linkbuilddir perlmsgque Net-PerlMsgque blib arch auto Net PerlMsgque]]
+set LIBRARY_PATH [list \
+  [file nativename [file join $linkbuilddir libmsgque .libs]] \
+  [file nativename [file join $linkbuilddir ccmsgque .libs]] \
+  [file nativename [file join $linkbuilddir javamsgque .libs]] \
+  [file nativename [file join $linkbuilddir tclmsgque .libs]] \
+  [file nativename [file join $linkbuilddir perlmsgque Net-PerlMsgque blib arch auto Net PerlMsgque]] \
+]
 
 if { "$host_os" == "mingw32" } {
   lappend LIBRARY_PATH $MINGWDLL
@@ -264,7 +268,7 @@ proc filter {VAR args} {
   foreach e [getEnv $VAR] {
     set RESULT 0
     foreach f $args {
-      incr RESULT [regexp "$f" $e]
+      incr RESULT [regexp "\\m$f\\M" $e]
     }
     if {$OR} {
       if {$NOT} {
@@ -503,7 +507,8 @@ proc getExample {srv args} {
     return $RET
 }
 
-set appID   [expr {(([pid] % 643) * 100) + 1025}]
+set appID   [expr {(([pid] % 64) * 1000) + 1025 + int(srand([pid])*900)}]
+
 set portNUM $appID
 
 proc dummy_server {channel clientaddr clientport} {
@@ -512,11 +517,12 @@ proc dummy_server {channel clientaddr clientport} {
 
 proc FindFreePort {{num 0}} {
   if {$::env(TS_PORT) ne "PORT"} {
-    set port $::env(TS_PORT)
+    set port [expr {$::env(TS_PORT) + $num}]
   } else {
     set port [incr ::portNUM]
   }
-  return [expr {$port + $num}]
+#puts "$::self: $port"
+  return $port
 }
 
 set CLEANUP_FILES [list]
@@ -526,7 +532,7 @@ proc FindFreeFile {{ext uds} {num 0}} {
   if {$::env(TS_FILE) ne "FILE"} {
     set FILE  $::env(TS_FILE).$num.$ext
   } else {
-    set FILE  [file join . [incr ::fileNUM].$num.$ext]
+    set FILE  [file join . $::self.[incr ::fileNUM].$ext]
   }
   lappend ::CLEANUP_FILES $FILE
   return $FILE
@@ -915,14 +921,11 @@ while {true} {
     {^--only(-c|-tcl|-java|-csharp|-vb|-python|-ruby|-perl|-php|-go|-cc|-vb)+$} {
       set T		  [lrange [split $arg -] 3 end]
       set env(LNG_LST)	  $T
-      # "c" matches multiple targets -> add word border definition
-      set IDX		  [lsearch -exact $T c]
-      if {$IDX != -1}	  { set T [lreplace $T $IDX $IDX "\\mc\\M"] }
       set env(SRV_LST)	  [filter -or SRV_LST {*}$T]
     }
     {^--only(-uds|-pipe|-tcp)+$} {
       set T		  [lrange [split $arg -] 3 end]
-      set env(COM_LST)	  {*}$T
+      set env(COM_LST)	  $T
       set env(SRV_LST)	  [filter -or SRV_LST {*}$T]
     }
     {^--only(-fork|-thread|-spawn|-pipe)+$} {
@@ -958,20 +961,19 @@ while {true} {
       puts ""
       puts " testing ARRAGEMENTS"
       puts "  LANG = c|cc|tcl|java|python|ruby|csharp|perl|php|go|vb"
-      puts "  ........................................... programming-language"
-      puts "  COM  = pipe|uds|tcp ....................... communication-layer"
-      puts "  TYPE = string|binary ...................... package-type"
-      puts "  MODE = fork|thread|spawn .................. startup-mode"
-      puts "  CHECK = valgrind|leakcheck ................ check code"
+      puts "  ...................................... programming-language"
+      puts "  TYPE = string|binary ................. package-type"
+      puts "  COM  = pipe|uds|tcp .................. communication-layer"
+      puts "  MODE = fork|thread|spawn ............. startup-mode"
+      puts "  CHECK = valgrind|leakcheck ........... check-code-mode"
       puts ""
       puts " testing OPTIONS"
-      puts "  --only-TYPE ...... only use 'package-type' for testing"
-      puts "  --only-COM ....... only use 'communication-layer' for testing"
-      puts "  --only-LANG ...... only use 'programming-language' for testing"
-      puts "  --only-MODE ...... only use 'startup-mode' for server+pipe starup"
-      puts "  --use-MODE ....... use 'startup-mode' for server startup"
-      puts "  --use-CHECK ...... use 'valgrind check' for server startup"
+      puts "  --only-LANG-?* ... use 'programming-language(s)' for testing"
+      puts "  --only-TYPE-?* ... use 'package-type(s)' for testing"
+      puts "  --only-COM-?* .... use 'communication-layer(s)' for testing"
+      puts "  --only-MODE-?* ... use 'startup-mode(s)' for starup"
       puts ""
+      puts "  --use-CHECK ...... use 'valgrind check' for server startup"
       puts "  --only-num # ..... test only with parent/child number #"
       puts "  --use-remote ..... use remote server for tcp/udp connection"
       puts "  --use-valgrind|leakcheck.... check code with valgrind"
@@ -979,7 +981,7 @@ while {true} {
       puts "  --debug # ........ set debug level between 0 and 9"
       puts "  --host STR ....... use host as TCP/IP connection host"
       puts "  --port # or STR .. use port as TCP/IP connection port"
-      puts "  --file STR ....... use file as Unix Domain Socket connection file"
+      puts "  --file STR ....... use file as Unix Domain Socket connection"
       puts "  --pid STR ........ use file as --daemon pid file"
       puts "  --server LANG.COM(.MODE) ... only use this server"
       puts "  --setup .......... print additional setup information"
@@ -1237,7 +1239,8 @@ proc Setup {num mode com server args} {
   unset -nocomplain SERVER_OUTPUT
 
   ## 1. setup variables
-  lappend comargs --$com
+  set scomargs --$com
+  set ccomargs [list]
   # replase all FILE, PORT and PID placeholder
   set args [MkUnique $args]
 
@@ -1263,17 +1266,15 @@ proc Setup {num mode com server args} {
     ## ...
     switch -exact -- $com {
       tcp	{
-	set PORT    [getEnv TS_PORT]
-	if {$PORT eq "PORT"} {set PORT [FindFreePort]}
-	lappend comargs --port [optV args --port $PORT]
+	set PORT  [FindFreePort 0]
+	lappend scomargs --port    [optV args --port $PORT]
 
 	# set host for client and server
-	lappend comargs --host [optV args --host [getEnv TS_HOST]]
+	lappend scomargs --host [optV args --host [getEnv TS_HOST]]
       }
       uds	{
-	set FILE    [getEnv TS_FILE]
-	if {$FILE eq "FILE"} {set FILE [FindFreeFile]}
-	lappend comargs --file [optV args --file $FILE]
+	set FILE  [FindFreeFile]
+	lappend scomargs --file [optV args --file $FILE]
       }
     }
     lappend sargs {*}$args
@@ -1283,9 +1284,9 @@ proc Setup {num mode com server args} {
     if {!$env(USE_REMOTE)} {
       if {$filter_server ne "NO"} {
 	set sl [list {*}[getFilter $filter_server.$server] {*}$filter_args {*}$DAEMON]
-	lappend sl --name fs {*}$comargs @ {*}[getServerOnly $server] {*}$sargs
+	lappend sl --name fs {*}$scomargs @ {*}[getServerOnly $server] {*}$sargs
       } else {
-	set sl [list {*}[getServer $server] {*}$DAEMON {*}$sargs {*}$comargs]
+	set sl [list {*}[getServer $server] {*}$DAEMON {*}$sargs {*}$scomargs]
       }
       if {$env(TS_SETUP)} {
 	puts "Setup: start server"
@@ -1304,13 +1305,13 @@ proc Setup {num mode com server args} {
 
     ## prepare parent arguments
     if {$filter_client ne "NO"} {
-      set cl [list LinkCreate {*}$cargs @ {*}[getFilter $filter_client.$server] {*}$filter_args --name fc @ {*}$comargs]
+      set cl [list LinkCreate {*}$cargs @ {*}[getFilter $filter_client.$server] {*}$filter_args --name fc @ {*}$scomargs {*}$ccomargs]
     } else {
-      set cl [list LinkCreate {*}$cargs {*}$comargs]
+      set cl [list LinkCreate {*}$cargs {*}$scomargs {*}$ccomargs]
     }
     if {$com eq "pipe"} { 
       if {$filter_server ne "NO"} {
-	lappend cl @ {*}[getFilter $filter_server.$server] {*}$filter_args --name fs {*}$comargs
+	lappend cl @ {*}[getFilter $filter_server.$server] {*}$filter_args --name fs {*}$scomargs {*}$ccomargs
 	if {$serverSilent} { lappend cl --silent }
 	lappend cl @ {*}[getServerOnly $server] {*}$sargs
       } else {
@@ -1405,7 +1406,9 @@ proc Example {config client server args} {
   set filter [optV args --filter NO]
 
   ## 1. setup variables
-  lappend comargs --$com
+  set scomargs --$com
+  set ccomargs [list]
+
   # replase all FILE, PORT and PID placeholder
   set args [MkUnique $args]
 
@@ -1418,17 +1421,15 @@ proc Example {config client server args} {
     ## ...
     switch -exact -- $com {
       tcp	{
-	set PORT    [getEnv TS_PORT]
-	if {$PORT eq "PORT"}	{set PORT [FindFreePort]}
-	lappend comargs --port [optV args --port $PORT]
+	set PORT  [FindFreePort 0]
+	lappend scomargs --port	  [optV args --port $PORT]
 
 	# set host for client and server
-	lappend comargs --host [optV args --host [getEnv TS_HOST]]
+	lappend scomargs --host [optV args --host [getEnv TS_HOST]]
       }
       uds	{
-	set FILE    [getEnv TS_FILE]
-	if {$FILE eq "FILE"} {set FILE [FindFreeFile]}
-	lappend comargs --file [optV args --file $FILE]
+	set FILE  [FindFreeFile]
+	lappend scomargs --file [optV args --file $FILE]
       }
     }
     lappend sargs {*}$args
@@ -1436,9 +1437,9 @@ proc Example {config client server args} {
     set sargs [MkUnique $sargs]
     if {!$env(USE_REMOTE)} {
       if {$filter ne "NO"} {
-	set sl [list {*}[getExample $filter.$lng] --$start --name fs {*}$comargs @ {*}[getExample $server.$lng] {*}$sargs]
+	set sl [list {*}[getExample $filter.$lng] --$start --name fs {*}$scomargs @ {*}[getExample $server.$lng] {*}$sargs]
       } else {
-	set sl [list {*}[getExample $server.$lng] --$start {*}$sargs {*}$comargs]
+	set sl [list {*}[getExample $server.$lng] --$start {*}$sargs {*}$scomargs]
       }
       if {$env(TS_SETUP)} {
 	Print sl
@@ -1449,7 +1450,7 @@ proc Example {config client server args} {
   }
   
   ## 3. start client
-  set cl [list {*}[getExample $client.$lng] {*}$cargs {*}$comargs]
+  set cl [list {*}[getExample $client.$lng] {*}$cargs {*}$scomargs {*}$ccomargs]
   if {$com eq "pipe"} { 
     if {$filter ne "NO"} {
       lappend cl @ {*}[getExample $filter.$lng] --name fs @ {*}[getExample $server.$lng]
@@ -1573,14 +1574,24 @@ proc Create {I CON} {
   global env
   for {set i 0} {$i < $I} {incr i} {
     set FH_CUR [tclmsgque MqS]
-    if {$i == 0} {
-      set FH_FIRST $FH_CUR
-      $FH_CUR ConfigSetName     "client"
-      $FH_CUR ConfigSetTimeout  $env(TS_TIMEOUT)
-      $FH_CUR ConfigSetDebug    $env(TS_DEBUG)
-      $FH_CUR LinkCreate	{*}$CON
-    } else {
-      $FH_CUR LinkCreateChild	$FH_LAST
+    set num 0
+    while {[catch {
+	if {$i == 0} {
+	  set FH_FIRST $FH_CUR
+	  $FH_CUR ConfigSetName     "client"
+	  $FH_CUR ConfigSetTimeout  $env(TS_TIMEOUT)
+	  $FH_CUR ConfigSetDebug    $env(TS_DEBUG)
+	  $FH_CUR LinkCreate	    {*}$CON
+	} else {
+	  $FH_CUR LinkCreateChild   $FH_LAST
+	}
+      } ERR]} {
+      if {[incr num] == 10} {
+	error $ERR
+      }
+      $FH_CUR LinkDelete
+      puts "RETRY: $ERR"
+      after 10000
     }
     set FH_LAST $FH_CUR
   }

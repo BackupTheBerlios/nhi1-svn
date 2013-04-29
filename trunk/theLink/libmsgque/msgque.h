@@ -3524,8 +3524,8 @@ MQ_DECL MqErrorStackP (
 );
 
 /// \brief convenience wrapper for #MqErrorStackP
-# define MqErrorStack(error) \
-    MqErrorStackP(error, __func__, __FILE__)
+# define MqErrorStack(context) \
+    MqErrorStackP(context, __func__, __FILE__)
 
 /*****************************************************************************/
 /*                                                                           */

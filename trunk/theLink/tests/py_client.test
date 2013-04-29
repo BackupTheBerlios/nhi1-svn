@@ -10,6 +10,8 @@
 #:              please contact AUTHORS for additional information
 #:
 
+set self [info script]
+
 if {[info exists env(TS_LIBRARY)]} {
   source $env(TS_LIBRARY)
 } else {
@@ -47,7 +49,7 @@ finally:
 	} pyclient.1.[pid].dat]
     } \
     -body	  {
-	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
+	exec $PYTHON $pyclient --name client --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
     } \
     -returnCodes  error \
     -match	  glob \
@@ -74,7 +76,7 @@ finally:
 	} pyclient.2.[pid].dat]
     } \
     -body	  {
-	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
+	exec $PYTHON $pyclient --name client --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
     } \
     -returnCodes  error \
     -match	  glob \
@@ -159,7 +161,7 @@ srv.Exit()
 	} pyclient.6.[pid].dat]
     } \
     -body	  {
-	exec $PYTHON $pyclient --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
+	exec $PYTHON $pyclient --name client --debug $env(TS_DEBUG) @ {*}[getServer c.pipe]
     } \
     -returnCodes  error \
     -match	  glob \

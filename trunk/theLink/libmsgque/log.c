@@ -341,7 +341,7 @@ pLogBDY (
   struct MqBufferS * hd;
   struct MqBufferS * space;
 
-	// no SYSTEM RETR body
+  // no SYSTEM RETR body
   if (!strcmp (pTokenGetCurrent (context->link.srvT), "_SRT"))
     return;
 
@@ -353,7 +353,7 @@ pLogBDY (
 
   // start-msg
   MqLogV (context, prefix, level, ">>>>> BDY size<" MQ_FORMAT_Z "> numItems<" MQ_FORMAT_Z ">\n",
-           hd->cursize - BDY_SIZE, hd->numItems);
+			       hd->cursize - BDY_SIZE, hd->numItems);
 
   // items
   sLogDynItem (context, hd, prefix, level, space);

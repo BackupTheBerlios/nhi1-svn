@@ -10,6 +10,8 @@
 #:              please contact AUTHORS for additional information
 #:
 
+set self [info script]
+
 if {[info exists env(TS_LIBRARY)]} {
   source $env(TS_LIBRARY)
 } else {

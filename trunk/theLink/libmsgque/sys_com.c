@@ -255,6 +255,24 @@ SysConnect (
 }
 
 enum MqErrorE
+SysSetFlag (
+    struct MqS * const context,     
+    MQ_SOCK sock,
+    int flag
+)
+{
+  int oldflags;
+  if (unlikely ((oldflags = fcntl (sock, F_GETFD, 0)) == -1)) {
+    return sSysMqErrorMsg (context, __func__, "fcntl F_GETFD");
+  }
+  oldflags |= flag;
+  if (unlikely (fcntl (sock, F_SETFD, oldflags) == -1)) {
+    return sSysMqErrorMsg (context, __func__, "fcntl F_SETFD");
+  }
+  return MQ_OK;
+}
+
+enum MqErrorE
 SysSocket (
      struct MqS * const context,     
      int domain,
@@ -262,26 +280,18 @@ SysSocket (
      int protocol,
      MQ_SOCK *sock              
 ) {
-  int oldflags;
   if (unlikely ((*sock = (MQ_SOCK) socket (domain, type, protocol)) == INVALID_SOCKET)) {
     return sSysMqErrorMsg (context, __func__, "socket");
   }
 
-  //  This FD_CLOEXEC is required in trans.test using fixed --port test:
-  //  > Nhi1Exec trans.test --full-testing --only-c --only-tcp --port 5678 --only-spawn \
-  //	-only-num 1 --block-1 -match "trans-[14]-*" --debug 9
-  //  without FD_CLOEXEC on server socket the client of "trans-2" connects to the spawed child
-  //  of the previous killed server "Filter4" and receive immideatly an socket shutdown request.
-  if (MQ_IS_SERVER(context)) {
-    if (unlikely ((oldflags = fcntl (*sock, F_GETFD, 0)) == -1)) {
-      return sSysMqErrorMsg (context, __func__, "fcntl F_GETFD");
-    }
-    oldflags |= FD_CLOEXEC;
-    if (unlikely (fcntl (*sock, F_SETFD, oldflags) == -1)) {
-      return sSysMqErrorMsg (context, __func__, "fcntl F_SETFD");
-    }
-  }
-  return MQ_OK;
+/*
+  This FD_CLOEXEC is required in trans.test using fixed --port test:
+  > Nhi1Exec trans.test --full-testing --only-c --only-tcp --port 5678 --only-spawn \
+  -only-num 1 --block-1 -match "trans-[14]-*" --debug 9
+  without FD_CLOEXEC on server socket the client of "trans-2" connects to the spawed child
+  of the previous killed server "Filter4" and receive immideatly an socket shutdown request.
+*/
+  return SysSetFlag(context,*sock,FD_CLOEXEC);
 }
 
 enum MqErrorE
@@ -307,23 +317,28 @@ SysBind (
      const socklen_t addrlen
 ) {
   MQ_INT num = (MQ_INT) context->config.io.timeout;
+  MQ_CST host = "";
+  MQ_INT port = 0;
   while (1) {
     if (unlikely (bind (socket, my_addr, addrlen) == SOCKET_ERROR)) {
       enum MqErrorE ret = MQ_OK;
       // handle: ERRNO<98> ERR<Address already in use>
       if (my_addr->sa_family == AF_INET) {
-	MQ_CST host;
-	MQ_INT port;
 	if (sSysGetErrorNum == WIN32_WSA(EADDRINUSE)) {
 	  MqLal.SysSleep(MQ_ERROR_IGNORE, 1);
+	  if (num == (MQ_INT) context->config.io.timeout) {
+	    if (!MqErrorCheckI(SysGetTcpInfo(MQ_ERROR_IGNORE,(struct sockaddr_in*)my_addr,&host,&port))) {
+	      MqDLogV(context,0,"%s socket host<%s> and port<%u>\n", (MQ_IS_SERVER(context)?"local":"remote"),host, port);
+	    }
+	  }
 	  if (--num > 0) {
-	    MqDLogV(context,1,"%s - wait for %i seconds\n",strerror (sSysGetErrorNum), num);
+	    MqDLogV(context,0,"%s - wait for %i seconds\n",strerror (sSysGetErrorNum), num);
 	    sSysSetErrorNum(0);
 	    continue;
 	  }
 	}
 	ret = sSysMqErrorMsg (context, __func__, "bind");
-	if (!MqErrorCheckI(SysGetTcpInfo(MQ_ERROR_IGNORE,(struct sockaddr_in*)my_addr,&host,&port))) {
+	if (port > 0) {
 	  MqErrorSAppendV(context,"%s socket host<%s> and port<%u>", (MQ_IS_SERVER(context)?"local":"remote"),host, port);
 	}
       } else {
@@ -692,21 +707,12 @@ SysSocketPair (
   int socks[]				    ///< [out] the result from socketpair
 ) {
 #if defined(HAVE_SOCKETPAIR)
-  int oldflags;
   sSysSetErrorNum(0);
   if (unlikely (socketpair (AF_UNIX, SOCK_STREAM, 0, socks) == -1)) {
     return sSysMqErrorMsg (context, __func__, "socketpair");
   }
 
-  if (unlikely ((oldflags = fcntl (socks[0], F_GETFD, 0)) == -1)) {
-    return sSysMqErrorMsg (context, __func__, "fcntl F_GETFD");
-  }
-  oldflags |= FD_CLOEXEC;
-  if (unlikely (fcntl (socks[0], F_SETFD, oldflags) == -1)) {
-    return sSysMqErrorMsg (context, __func__, "fcntl F_SETFD");
-  }
-
-  return MQ_OK;
+  return SysSetFlag(context,socks[0],FD_CLOEXEC);
 #else
 /* socketpair.c
  * Copyright 2007 by Nathan C. Myers <ncm@cantrip.org>; all rights reserved.
@@ -746,7 +752,7 @@ SysSocketPair (
 	MqErrorCheck (SysConnect(context,socks[0],(struct sockaddr*const) &addr, sizeof(addr),1));
 	MqErrorCheck (SysAccept(context,listener,NULL,NULL,&socks[1]));
 	MqErrorCheck (SysCloseSocket(context,__func__,MQ_NO,&listener));
-        return MQ_OK;
+	MqErrorCheck (SysSetFlag(context,socks[0],FD_CLOEXEC));
     } while (0);
 
 error:
