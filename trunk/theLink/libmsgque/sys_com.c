@@ -254,7 +254,7 @@ SysConnect (
   return MqErrorDbV (MQ_ERROR_TIMEOUT, timeout);
 }
 
-#if MQ_IS_POSIX
+#if defined(MQ_IS_POSIX)
 enum MqErrorE
 SysSetFlag (
     struct MqS * const context,     

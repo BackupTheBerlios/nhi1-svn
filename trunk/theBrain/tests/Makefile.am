@@ -12,7 +12,11 @@
 
 EXTRA_DIST = $(srcdir)/*.tcl $(srcdir)/*.test
 
-TESTS_ENVIRONMENT = $(abs_top_srcdir)/bin/Nhi1Exec --full-testing --only-c
+TESTS_ENVIRONMENT = ! grep -E -A 10 "(Failed\s+[1-9]|Test files exiting with errors)"
+TESTS := $(patsubst $(srcdir)/%.test,%.res,$(wildcard $(srcdir)/*.test))
 
-TESTS = $(abs_top_srcdir)/theLink/tests/all.tcl
+./%.res: $(srcdir)/%.test
+	$(abs_top_srcdir)/bin/Nhi1Exec $< --only-binary --max 50 --only-pipe-uds $(MY_TEST_ARGS)
+
+CLEANFILES = *.res *.uds *.txt *.dat *.pid
 

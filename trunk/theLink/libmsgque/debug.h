@@ -57,6 +57,7 @@ END_C_DECLS
 # endif
 #else /* no THREAD */
 #  define MqThreadSelf() NULL
+#  define MqThreadSelfP() NULL
 #endif // MQ_HAS_THREAD
 
 /*****************************************************************************/

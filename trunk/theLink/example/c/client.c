@@ -27,6 +27,8 @@
 #include <string.h>
 #include <limits.h>
 #include <float.h>
+#include <unistd.h>
+
 
 #define NUM_TRANS   50000
 #define NUM_PARENT  100
@@ -379,6 +381,7 @@ ClientMain (
       const MQ_SRT stepS = ((SHRT_MAX/lnum)*2);
       const MQ_INT stepI = ((INT_MAX/lnum)*2);
       const MQ_WID stepW = ((LLONG_MAX/lnum)*2);
+      char db[50];
       MQ_BYT valY = SCHAR_MIN;
       MQ_SRT valS = SHRT_MIN;
       MQ_INT valI = INT_MIN;
@@ -386,10 +389,11 @@ ClientMain (
       int i; 
       // setup the callback
       MqErrorCheck(MqServiceCreate(mqctx, "SDTR", RET_SDTR, NULL ,NULL));
-      mq_unlink("testDb");
+      snprintf(db,50,"test.%u.dat", (unsigned int) getpid());
+      mq_unlink(db);
       // set transaction-database name
       MqErrorCheck(MqSendSTART(mqctx));
-      MqErrorCheck(MqSendC(mqctx,"testDb"));
+      MqErrorCheck(MqSendC(mqctx,db));
       MqErrorCheck(MqSendEND_AND_WAIT(mqctx,"STDB",MQ_TIMEOUT_USER));
       // prepare sql queries
       MqSendSTART (mqctx);
