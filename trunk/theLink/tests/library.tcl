@@ -107,9 +107,11 @@ set LIBRARY_PATH [list \
 if { "$host_os" == "mingw32" } {
   lappend LIBRARY_PATH $MINGWDLL
   set env(PATH) "[join $LIBRARY_PATH $PATH_SEP]$PATH_SEP$env(PATH)"
-} else {
-  set env(LD_LIBRARY_PATH) "[join $LIBRARY_PATH $PATH_SEP]$PATH_SEP$env(LD_LIBRARY_PATH)"
 }
+
+# even on Windows "LD_LIBRARY_PATH" ist required (filter.test for perl)
+catch {set $env(LD_LIBRARY_PATH)} LD_LIBRARY_PATH
+set env(LD_LIBRARY_PATH) "[join $LIBRARY_PATH $PATH_SEP]$PATH_SEP$LD_LIBRARY_PATH"
 
 #puts $env(PATH)
 

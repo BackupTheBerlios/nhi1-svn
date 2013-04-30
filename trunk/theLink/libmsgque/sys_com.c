@@ -254,6 +254,7 @@ SysConnect (
   return MqErrorDbV (MQ_ERROR_TIMEOUT, timeout);
 }
 
+#if MQ_IS_POSIX
 enum MqErrorE
 SysSetFlag (
     struct MqS * const context,     
@@ -271,6 +272,10 @@ SysSetFlag (
   }
   return MQ_OK;
 }
+#else
+# define FD_CLOEXEC 1
+# define SysSetFlag(a,b,c) MQ_OK
+#endif
 
 enum MqErrorE
 SysSocket (

@@ -20,6 +20,7 @@ AC_PREFIX_DEFAULT([/opt/nhi1])
 
 # set libmsgque VERSION information also in:
 # > theLink/perlmsgque/Net-PerlMsgque/lib/Net/PerlMsgque.pm
+# > theLink/perlmsgque/Net-PerlMsgque/README
 # > theLink/csmsgque/MqS.cs
 AC_SUBST([LIBMSGQUE_VERSION], ["5.5"])
 AC_DEFINE([LIBMSGQUE_VERSION], ["5.5"], [version of the 'libmsgque' package])

@@ -688,7 +688,7 @@ foreach I [getNum 3] {
     -result         {}
 
   test trans2-TE2-($I|$B|$C|$S) {kill filter + no connect} \
-    -constraints    {!thread} \
+    -constraints    {!thread && !python} \
     -setup	    {
       set testdb [makeFile {} testdb.2.[pid].dat]
       set joundb [makeFile {} ${testdb}-journal]
@@ -722,7 +722,7 @@ foreach I [getNum 3] {
     -result         {[cC]> (client-0) \[SysRecv] application EXIT request*}
 
   test trans2-TE3-($I|$B|$C|$S) {kill filter + connect} \
-    -constraints    {!thread} \
+    -constraints    {!thread && !python} \
     -setup	    {
       set testdb [makeFile {} testdb.3.[pid].dat]
       set joundb [makeFile {} ${testdb}-journal]

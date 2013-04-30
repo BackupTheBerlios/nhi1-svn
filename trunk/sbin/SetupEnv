@@ -16,6 +16,7 @@ set -o noglob
 set -o nounset
 shopt -s extglob
 #set -ux
+set -u
 
 # use extended shell glob
 shopt -s extglob
@@ -581,18 +582,18 @@ function parse_commandline {
     key="${opt##+(-|+)}"
     idx=${SE_INV[$key]:--1}
 
-    ## validate a "B" argument
-    if [[ ${SE_Type[$idx]} == *B* ]] ; then
-      case "${arg:-unset}" in
-	    yes)	arg=1;;
-	    no)		arg=0;;
-	    unset)	arg=1;;
-	    *)		Error "a boolean option (B) ia allowd to have only a 'yes' or a 'no' argument";;
-      esac
-    fi
-
 ## parse option-value
     if (( idx != -1 )) ; then
+      ## validate a "B" argument
+      if [[ ${SE_Type[$idx]} == *B* ]] ; then
+	case "${arg:-unset}" in
+	  yes)	  arg=1;;
+	  no)	  arg=0;;
+	  unset)  arg=1;;
+	  *)	Error "a boolean option (B) ia allowd to have only a 'yes' or a 'no' argument";;
+	esac
+      fi
+      # check the key
       if (( ${#key} > 1 )) ; then
 	if [[ ${SE_Type[$idx]} == *B* ]] ; then
 	  if [[ "$opt" == "--$key" ]] ; then

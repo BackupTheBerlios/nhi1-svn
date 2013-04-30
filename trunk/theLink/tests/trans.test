@@ -53,7 +53,7 @@ if {[Block 1]} {
 
 test trans-1-($I|$B|$C|$S) {send data with error} \
     -setup	    {
-      set TMP	[MakeFile "START" [pid].txt]
+      set TMP	[MakeFile "START" trans.1.[pid].txt]
       Setup $I $B $C $S --filter-server Filter4
       Echo0 $FH_LAST LOGF SendC $TMP
     } \
@@ -76,7 +76,7 @@ ERROR: [Cc]> (fs) \[service-call-error] <Tok|DUM2> <Num|1>
 
 test trans-2-($I|$B|$C|$S) {send valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" [pid].txt]
+      set TMP	[MakeFile "START" trans.2.[pid].txt]
       Setup $I $B $C $S --filter-server Filter4
       Echo0 $FH_LAST LOGF SendC $TMP
     } \
@@ -93,7 +93,7 @@ $J - HALLO"
 
 test trans-3-($I|$B|$C|$S) {send error + valid data} \
     -setup	    {
-      set TMP	[MakeFile "START" [pid].txt]
+      set TMP	[MakeFile "START" trans.3.[pid].txt]
       Setup $I $B $C $S --filter-server Filter4
       Echo0 $FH_LAST LOGF SendC $TMP
     } \
