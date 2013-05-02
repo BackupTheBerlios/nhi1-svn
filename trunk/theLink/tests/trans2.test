@@ -658,7 +658,7 @@ foreach I [getNum 3] {
   test trans2-TE1-($I|$B|$C|$S) {send OK} \
     -constraints    {!thread} \
     -setup	    {
-      set testdb [makeFile {} testdb.1.[pid].dat]
+      set testdb [makeFile {} $self.1.[pid].dat]
       set joundb [makeFile {} ${testdb}-journal]
       file delete -force $testdb $joundb
       Setup $I $B $C $S --filter-server Filter6 --server-arg [list --storage $testdb]
@@ -690,7 +690,7 @@ foreach I [getNum 3] {
   test trans2-TE2-($I|$B|$C|$S) {kill filter + no connect} \
     -constraints    {!thread && !python} \
     -setup	    {
-      set testdb [makeFile {} testdb.2.[pid].dat]
+      set testdb [makeFile {} $self.2.[pid].dat]
       set joundb [makeFile {} ${testdb}-journal]
       file delete -force $testdb $joundb
       Setup $I $B $C $S --filter-server Filter6 --server-arg [list --storage $testdb]
@@ -724,7 +724,7 @@ foreach I [getNum 3] {
   test trans2-TE3-($I|$B|$C|$S) {kill filter + connect} \
     -constraints    {!thread && !python} \
     -setup	    {
-      set testdb [makeFile {} testdb.3.[pid].dat]
+      set testdb [makeFile {} $self.3.[pid].dat]
       set joundb [makeFile {} ${testdb}-journal]
       file delete -force $testdb $joundb
       Setup $I $B $C $S --filter-server Filter6 --filter-args [list --storage $testdb]

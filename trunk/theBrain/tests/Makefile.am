@@ -15,8 +15,14 @@ EXTRA_DIST = $(srcdir)/*.tcl $(srcdir)/*.test
 TESTS_ENVIRONMENT = ! grep -E -A 10 "(Failed\s+[1-9]|Test files exiting with errors)"
 TESTS := $(patsubst $(srcdir)/%.test,%.res,$(wildcard $(srcdir)/*.test))
 
+if WIN32
+MAIN_ARGS=--only-pipe-tcp
+else
+MAIN_ARGS=--only-pipe-uds
+endif
+
 ./%.res: $(srcdir)/%.test
-	$(abs_top_srcdir)/bin/Nhi1Exec $< --only-binary --max 50 --only-pipe-uds $(MY_TEST_ARGS)
+	$(abs_top_srcdir)/bin/Nhi1Exec $< --only-binary --max 50 $(MAIN_ARGS) $(MY_TEST_ARGS)
 
 CLEANFILES = *.res *.uds *.txt *.dat *.pid
 

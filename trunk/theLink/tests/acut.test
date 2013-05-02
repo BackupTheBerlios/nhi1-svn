@@ -28,7 +28,7 @@ if {$env(USE_REMOTE) || ![testConstraint c]} return
 ##
 
 set data1 [makeFile {xa:24:12345678987654321:5.78
-cg:89:98765432123456789:3.46} [pid].dat]
+cg:89:98765432123456789:3.46} $self.[pid].dat]
 
  # start-type: fork, thread or spawn
   foreach S [getEnv START_LST] {

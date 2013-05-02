@@ -28,10 +28,10 @@ SetConstraints all
 array set l2s [lng2startInit]
 
 set data1 [makeFile {xa:24:12345678987654321:5.78
-cg:89:98765432123456789:3.46} [pid].1.dat]
+cg:89:98765432123456789:3.46} $self.[pid].1.dat]
 
 set data2 [makeFile {-A-:-B-
--C-:-D-} [pid].2.dat]
+-C-:-D-} $self.[pid].2.dat]
 
 ##
 ## -----------------------------------------------------------------------

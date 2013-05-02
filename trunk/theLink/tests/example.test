@@ -119,15 +119,15 @@ test example-hlft-1-($S) {hello world example with Filter3} \
 ##
 
 set data1 [makeFile {1:2:3
-a:b:c} [pid].1.dat]
+a:b:c} $self.[pid].1.dat]
 
 set data2 [makeFile {nobody 10 euro
 manager 1000 dollar
-worker 100 pound} [pid].2.dat]
+worker 100 pound} $self.[pid].2.dat]
 
 set data3 [makeFile {nobody 10
 manager 1000
-worker 100} [pid].3.dat]
+worker 100} $self.[pid].3.dat]
 
 foreach S [getEnv SRV_LST] {
 
