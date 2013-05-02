@@ -1,14 +1,14 @@
 > client.c --all @ server.rb
-using: /build/dev01/Main/performance-thread/performance/nothread/env.sh
+using: /build/dev1usr/Main/performance-thread/performance/nothread/env.sh
 skip: TS_LIBRARY
-exec: [5] /build/dev01/Main/performance-thread/performance/nothread/theLink/example/c/client,--all,@,/home/dev01/ext/x86_64-suse-linux/nothread/bin/ruby,/home/dev01/Project/NHI1/theLink/example/ruby/server.rb
-C> (client:12463) [2013-04-13:15-16-28] [0-0-0-0x1df3fe8-main]: start: --------------------------------------
-C> (client:12463) [2013-04-13:15-16-29] [0-0-0-0x1df3fe8-statistics]:                      MqSendEND:   1.85e+05
-C> (client:12463) [2013-04-13:15-16-29] [0-0-0-0x1df3fe8-statistics]:         MqSendEND_AND_CALLBACK:   1.00e+05
-C> (client:12463) [2013-04-13:15-16-30] [0-0-0-0x1df3fe8-statistics]:             MqSendEND_AND_WAIT:   4.93e+04
-C> (client:12463) [2013-04-13:15-16-30] [0-0-0-0x1df3fe8-statistics]:               MqSendPERSISTENT:   6.97e+03
-C> (client:12463) [2013-04-13:15-16-33] [0-0-0-0x1df3fe8-statistics]:                  parent create:   4.98e+01
-C> (client:12463) [2013-04-13:15-16-33] [0-0-0-0x1df3fe8-statistics]:                  parent delete:   8.30e+02
-C> (client:12463) [2013-04-13:15-16-34] [0-0-0-0x1df3fe8-statistics]:                   child create:   6.25e+03
-C> (client:12463) [2013-04-13:15-16-34] [0-0-0-0x1df3fe8-statistics]:                   child delete:   3.58e+04
-C> (client:12463) [2013-04-13:15-16-34] [0-0-0-0x1df3fe8-main]: end: ----------------------------------------
+exec: [5] /build/dev1usr/Main/performance-thread/performance/nothread/theLink/example/c/client,--all,@,/home/dev1usr/ext/x86_64-suse-linux/nothread/bin/ruby,/home/dev1usr/Project/NHI1/theLink/example/ruby/server.rb
+C> (client:7766:(nil)) [1367505217:362522] [B-0-0-0-0x16e7ff8-main]: start: --------------------------------------
+C> (client:7766:(nil)) [1367505217:482540] [B-0-0-0-0x16e7ff8-statistics]:                      MqSendEND:   4.17e+05
+C> (client:7766:(nil)) [1367505217:707317] [B-0-0-0-0x16e7ff8-statistics]:         MqSendEND_AND_CALLBACK:   2.22e+05
+C> (client:7766:(nil)) [1367505218:531283] [B-0-0-0-0x16e7ff8-statistics]:             MqSendEND_AND_WAIT:   6.07e+04
+C> (client:7766:(nil)) [1367505218:533158] [B-0-0-0-0x16e7ff8-statistics]:               MqSendPERSISTENT:   1.39e+04
+C> (client:7766:(nil)) [1367505220:753010] [B-0-0-0-0x16e7ff8-statistics]:                  parent create:   8.20e+01
+C> (client:7766:(nil)) [1367505220:774298] [B-0-0-0-0x16e7ff8-statistics]:                  parent delete:   4.70e+03
+C> (client:7766:(nil)) [1367505220:863961] [B-0-0-0-0x16e7ff8-statistics]:                   child create:   1.12e+04
+C> (client:7766:(nil)) [1367505220:879086] [B-0-0-0-0x16e7ff8-statistics]:                   child delete:   6.63e+04
+C> (client:7766:(nil)) [1367505220:879113] [B-0-0-0-0x16e7ff8-main]: end: ----------------------------------------

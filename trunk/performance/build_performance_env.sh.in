@@ -21,7 +21,7 @@ function Build # <thread|nothread> <config-arg>...
     cd $BUILD
     (
       set -x
-      @abs_top_srcdir@/bin/Nhi1Config +i +s -p --use-perf $@ \
+      @abs_top_srcdir@/bin/Nhi1Config +i +s -p --enable-static $@ \
 		--with-tool-root='@NHI1_TOOL_ROOT@' --enable-cache \
 		--with-python --with-cxx --with-tcl --with-perl \
 		--with-ruby --with-php --prefix="@abs_builddir@/$BUILD" || exit 1
@@ -32,8 +32,8 @@ function Build # <thread|nothread> <config-arg>...
 
 ## main
 if test "$1" = "thread" ; then
-  Build thread	 --use-threads=yes --with-csharp --with-java --with-go
+  Build thread	 --enable-threads=yes --with-csharp --with-java --with-go
 elif test "$1" = "nothread" ; then
-  Build nothread --use-threads=no --without-csharp --without-java --without-go
+  Build nothread --enable-threads=no --without-csharp --without-java --without-go
 fi
 

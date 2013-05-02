@@ -1,15 +1,15 @@
 > server.tcl --uds --file ./socket.uds --fork
 > client.c --all --uds --file ./socket.uds
-using: /build/dev01/Main/performance-thread/performance/nothread/env.sh
+using: /build/dev1usr/Main/performance-thread/performance/nothread/env.sh
 skip: TS_LIBRARY
-exec: [5] /build/dev01/Main/performance-thread/performance/nothread/theLink/example/c/client,--all,--uds,--file,./socket.uds
-C> (client:7068) [2013-04-13:15-13-51] [0-0-0-0x6d3e88-main]: start: --------------------------------------
-C> (client:7068) [2013-04-13:15-13-51] [0-0-0-0x6d3e88-statistics]:                      MqSendEND:   1.73e+05
-C> (client:7068) [2013-04-13:15-13-51] [0-0-0-0x6d3e88-statistics]:         MqSendEND_AND_CALLBACK:   1.03e+05
-C> (client:7068) [2013-04-13:15-13-52] [0-0-0-0x6d3e88-statistics]:             MqSendEND_AND_WAIT:   5.12e+04
-C> (client:7068) [2013-04-13:15-13-52] [0-0-0-0x6d3e88-statistics]:               MqSendPERSISTENT:   7.30e+03
-C> (client:7068) [2013-04-13:15-13-53] [0-0-0-0x6d3e88-statistics]:                  parent create:   9.99e+02
-C> (client:7068) [2013-04-13:15-13-54] [0-0-0-0x6d3e88-statistics]:                  parent delete:   2.46e+03
-C> (client:7068) [2013-04-13:15-13-54] [0-0-0-0x6d3e88-statistics]:                   child create:   3.52e+03
-C> (client:7068) [2013-04-13:15-13-54] [0-0-0-0x6d3e88-statistics]:                   child delete:   3.97e+04
-C> (client:7068) [2013-04-13:15-13-54] [0-0-0-0x6d3e88-main]: end: ----------------------------------------
+exec: [5] /build/dev1usr/Main/performance-thread/performance/nothread/theLink/example/c/client,--all,--uds,--file,./socket.uds
+C> (client:400:(nil)) [1367505130:425510] [B-0-0-0-0x123ce98-main]: start: --------------------------------------
+C> (client:400:(nil)) [1367505130:525704] [B-0-0-0-0x123ce98-statistics]:                      MqSendEND:   4.99e+05
+C> (client:400:(nil)) [1367505130:726324] [B-0-0-0-0x123ce98-statistics]:         MqSendEND_AND_CALLBACK:   2.49e+05
+C> (client:400:(nil)) [1367505131:923982] [B-0-0-0-0x123ce98-statistics]:             MqSendEND_AND_WAIT:   4.17e+04
+C> (client:400:(nil)) [1367505131:928122] [B-0-0-0-0x123ce98-statistics]:               MqSendPERSISTENT:   5.68e+03
+C> (client:400:(nil)) [1367505133:1472] [B-0-0-0-0x123ce98-statistics]:                  parent create:   1.37e+03
+C> (client:400:(nil)) [1367505133:15602] [B-0-0-0-0x123ce98-statistics]:                  parent delete:   7.09e+03
+C> (client:400:(nil)) [1367505133:226781] [B-0-0-0-0x123ce98-statistics]:                   child create:   4.74e+03
+C> (client:400:(nil)) [1367505133:241135] [B-0-0-0-0x123ce98-statistics]:                   child delete:   6.98e+04
+C> (client:400:(nil)) [1367505133:241146] [B-0-0-0-0x123ce98-main]: end: ----------------------------------------

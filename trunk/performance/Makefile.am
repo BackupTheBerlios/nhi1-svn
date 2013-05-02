@@ -17,6 +17,7 @@ arg ?= ALL
 clean-local:
 	rm -fr thread
 	rm -fr nothread
+	rm -f *.log
 
 thread: build_performance_env.sh
 	$(SHELL) build_performance_env.sh thread
@@ -24,14 +25,14 @@ thread: build_performance_env.sh
 nothread: build_performance_env.sh
 	$(SHELL) build_performance_env.sh nothread
 
-perf: performance.sh | thread nothread
-	$(SHELL) performance.sh $(arg)
+perftest: performance.sh | thread nothread
+	$(SHELL) performance.sh $(arg) 2>&1 | tee perf.log
 
 all-local: performance.sh build_performance_env.sh
 	@echo
-	@echo usage perf-tool
+	@echo "usage: make (thread|nothread|perftest) ?arg=...|ALL?"
 	@echo
 	@echo "  thread ..... build thread code"
 	@echo "  nothread ... build no-thread code"
-	@echo "  perf ....... make the performance test"
+	@echo "  perftest ... make the performance test"
 	@echo

@@ -63,30 +63,15 @@ function Die
   exit 1
 }
 
-function do_kill # <pid>...
-{
-    kill "$sig_spec" "$@"
-}
-
-function kill_children # pid
-{
-    local target=$1
-    local pid=
-    local ppid=
-    local i
-    # Returns alternating ids: first is pid, second is parent
-    IFS="
-"
-    for line in $(ps -o pid,ppid | tail +2); do
-	unset IFS
-	set $line
-	pid=$1
-	ppid=$2
-	(( ppid == target && pid != $$ )) && {
-	    kill_children $pid
-	    do_kill $pid
-	}
-    done
+function killtree {
+  local _pid=$1
+  local _sig=${2-KILL}
+  kill -stop ${_pid} # needed to stop quickly forking parent from producing child between child killing and parent killing
+  for _child in $(ps -o pid --no-headers --ppid ${_pid}); do
+    killtree ${_child} ${_sig}
+  done
+  echo kill -${_sig} ${_pid}
+  kill -${_sig} ${_pid}
 }
 
 function error
@@ -246,20 +231,26 @@ eval $(grep USE thread/env.sh)
 # ALL mean averything
 [[ "$1" == "ALL" ]] && shift
 declare -a R
-#loop over all target - filter awa
-for A in $ALL; do
+declare -i found
+#loop over all target - filter items
+for A in $ALL ; do
   IFS=_;B=($A);unset IFS
   # first item is the language, uppercase, USE_ prefix
   a=USE_${B[0]^^}
   # "c" and "cc" are always build if USE_x=no -> skip
   [[ "${B[0]}" != 'c' &&  "${B[0]}" != 'cc' && "${!a}" == "no" ]] && continue
   # loop over commandline pattern
-  for C in "$@" ; do
-    # everything NOT part of the pattern skip
-    [[ "$A" == *$C* ]] || continue 2
-  done
+  if (( $# > 0 )) ; then
+    let found=0
+    for C ; do
+      # everything NOT part of the pattern skip
+      [[ "$A" == *$C* ]] && let found=1
+    done
+  else
+    let found=1
+  fi
   # every non-skipped pattern -> add
-  R+=($A)
+  (( found == 1 )) && R+=($A)
 done
 
 ## do the tests
@@ -283,18 +274,18 @@ for SRV in ${R[@]:-}; do
   esac
 
   case $SRV in
-    *brain*)  SERVER="abrain"	    ;;
-    *python*) SERVER="server.py"    ;;
-    *ruby*)	  SERVER="server.rb"    ;;
-    *csharp*) SERVER="server.cs"    ;;
-    *vb*)	  SERVER="vbserver.vb"  ;;
-    *java*)	  SERVER="Server.java"  ;;
-    *perl*)	  SERVER="server.pl"    ;;
-    *php*)	  SERVER="server.php"   ;;
-    *tcl*)	  SERVER="server.tcl"   ;;
-    *go*)	  SERVER="server.go"    ;;
-    *cc*)	  SERVER="server.cc"    ;;
-    *c*)	  SERVER="server.c"     ;;
+    brain_*)	  SERVER="abrain"	;;
+    python_*)	  SERVER="server.py"    ;;
+    ruby_*)	  SERVER="server.rb"    ;;
+    csharp_*)	  SERVER="server.cs"    ;;
+    vb_*)	  SERVER="vbserver.vb"  ;;
+    java_*)	  SERVER="Server.java"  ;;
+    perl_*)	  SERVER="server.pl"    ;;
+    php_*)	  SERVER="server.php"   ;;
+    tcl_*)	  SERVER="server.tcl"   ;;
+    go_*)	  SERVER="server.go"    ;;
+    cc_*)	  SERVER="server.cc"    ;;
+    c_*)	  SERVER="server.c"     ;;
     *)
       echo "ERROR invalid server '$SRV'" 1>&1
       exit 1
@@ -302,17 +293,17 @@ for SRV in ${R[@]:-}; do
   esac
 
   case $SRV in
-    *pipe*)
+    *_pipe)
       CL="client.c${NUM}--all @ $SERVER"
       echo "> ${CL}" | tee "$outfile"
       ( cd $DIR && @abs_top_srcdir@/bin/Nhi1Exec $VG $CL 2>&1 | tee -a "$outfile" )
       continue
     ;;
-    *uds*)
+    *_uds_*)
       COM_ARGS="--uds --file ./socket.uds"
       COM_RM="./socket.uds"
     ;;
-    *tcp*)
+    *_tcp_*)
       COM_ARGS="--tcp --host localhost --port $PORT"
       COM_RM=""
       let PORT=PORT+1
@@ -320,9 +311,9 @@ for SRV in ${R[@]:-}; do
   esac
 
   case $SRV in
-    *thread*)	START=thread;;
-    *spawn*)	START=spawn;;
-    *fork*)		START=fork;;
+    *_thread)	START=thread;;
+    *_spawn)	START=spawn;;
+    *_fork)	START=fork;;
   esac
 
   SV="$SERVER $COM_ARGS --$START"
@@ -331,9 +322,9 @@ for SRV in ${R[@]:-}; do
   echo "> $CL" | tee -a "$outfile"
   (cd $DIR && @abs_top_srcdir@/bin/Nhi1Exec $VG $SV ) &
   PID=$! 
-  sleep 5
+  sleep 2
   ( cd $DIR && @abs_top_srcdir@/bin/Nhi1Exec $CL 2>&1 | tee -a "$outfile" )
-  kill_children $PID
+  killtree $PID
 
 done
 
