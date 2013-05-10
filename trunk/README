@@ -20,37 +20,33 @@ NHI1 overview
 NHI1 build
 ===============
 
-"NHI1" is able to build on a UNIX operating system like Linux, 
-BSD. For a build on Windows please change into the "win" directory 
-and follow the instructions from the "README.win" file.
-http://www.ruby-lang.org/
+"NHI1" was developed on Linux and Windows7. The Sources SHOULD compile on every 
+operating system having the GNU tool-chain available.
+
 The main development system is:
 
     SuSE Linux 12.3 (64bit) using "Intel(R) Xeon(R) CPU E3-1275 V2 @ 3.50GHz"
 
-The software-build was also tested on:
-
-    SuSE Linux 12.3 (64bit)
-    Windows 7
-
 The Build depends on the following tools:
 
-  - Compiler: gcc, g++
-  - Configuration: make, libtool, autoconf, automake, ccache
+  - GNU Compiler: gcc, g++
+  - Microsoft SDK tools: , crt, cl, lib, link
+  - GNU Configuration: make, libtool, autoconf, automake, ccache
   - Test: tclsh using the "tcltest" package
   - Documentation: doxygen
   - Create Binary Distribution: bzip2
 
 In addition the following software is also supported:
 
-  - tcl    - http://www.tcl.tk/
-  - python - http://www.python.org/download/
-  - perl   - http://www.perl.org/
+  - tcl    - http://www.tcl.tk/ + ActiveTcl
+  - python - http://www.python.org/download/ + ActivePython
+  - perl   - http://www.perl.org/ + ActivePerl
   - ruby   - http://www.ruby-lang.org/
   - php    - http://php.net/downloads.php
   - go     - from the distribution
-  - C#     - from the distribution
-  - java   - openjdk from the distribution
+  - C#     - Mono + Microsoft Windows SDK 7.1
+  - VB     - Microsoft Windows SDK 7.1
+  - java   - openjdk from Oracle and GNU
 
 To build "NHI1" please follow the next steps:
 
@@ -119,6 +115,10 @@ or use the convience wrapper (with user-frontend)
 To build the software run "make":
 
   > make
+
+or using parallel builds with:
+
+  > make -j #
 
 To test the software please follow the steps from:
 

@@ -845,7 +845,7 @@ MqLinkCreate (
     }
 
     // create my ctxId's
-    // the "ctxId" is important because the this id link the both "context" on client and server
+    // the "ctxId" is important because this id link the "context" on client and server
     // together. the parent ctxId is always "0". every child incrent this number. on both sites
     // of the link an array map the "ctxId" as array-key to the context pointer
     if (MQ_IS_PARENT (context)) {

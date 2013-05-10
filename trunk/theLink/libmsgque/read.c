@@ -420,7 +420,7 @@ pReadHDR (
     if (unlikely (debug >= 7 && size > BDY_SIZE))
       pLogBDY (context, __func__, 7, bdy);
 
-    // 5. if in a longterm-transaction, read the transaction-item on the !server!
+    // 5. if in a longterm-transaction, read the transaction-item -> only on the !server!
     if (unlikely(read->handShake == MQ_HANDSHAKE_TRANSACTION)) {
       MQ_TRA rmtTransId, transLId;
       MqErrorCheck (pReadT (context, &rmtTransId));
@@ -438,6 +438,7 @@ pReadHDR (
 	  )
 	) 
       ) {
+	// on error, just return the error
 	// now the "transLId" is "official" in use
 	read->transLId = transLId;
 	read->rmtTransId = rmtTransId;
@@ -445,6 +446,7 @@ pReadHDR (
 	return MqSendRETURN (context);
       };
       // answer first call with an empty return package
+      // a short-term-transaction (MqSendEND_AND_WAIT) require an answer.
       if (context->link.transSId != 0) {
 	enum MqErrorE ret;
 	read->transLId = 0LL;
@@ -472,7 +474,6 @@ pReadHDR (
   // this line have to use the 'return' because pTokenCheckSystem usually return
   // MQ_CONTINUE if a system token (_*) was found
   return pTokenCheckSystem (context->link.srvT);
-
 error:
   return MqErrorStack (context);
 }

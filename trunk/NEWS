@@ -10,9 +10,15 @@
 #:              please contact AUTHORS for additional information
 #:
 
-2 Feb 2013: v NHI1-0.17, PLMK-2.5 und libmsgque-5.5
+5 Mai 2013: v NHI1-0.17, PLMK-2.5 und libmsgque-5.5
 
- -> ...
+ -> Buildsystem-Redesign, using rcBuildFs to build and test on
+    an in-Memory tmpsfs Filesystem -> Fast
+ -> automake/autoconf configurations was redesigned to use
+    configuration pastterns and to create more rubust results
+ -> BUG-Fix missing close-on-exec flag on sockets
+ -> BUG-Fix wrong build-key length.
+ -> rededsign theBrain using the build-in sqlite database.
 
 
 8 Apr 2011: v NHI1-0.16, PLMK-2.4 und libmsgque-5.4

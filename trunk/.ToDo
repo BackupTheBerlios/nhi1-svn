@@ -1,16 +1,34 @@
 
-1. configure.in
+1. Routing
 
-/home/dev1usr/Project/NHI1/theBrain/libbrain/myconf.c:240:19: fatal error: bzlib.h: No such file or directory
-compilation terminated.
-make[3]: *** [libtmp_la-myconf.lo] Fehler 1
-make[3]: *** Warte auf noch nicht beendete Prozesse...
-mv -f .deps/libtmp_la-md5.Tpo .deps/libtmp_la-md5.Plo
-make[3]: Leaving directory `/build/Main/theBrain/libbrain'
-make[2]: *** [all-recursive] Fehler 1
-make[2]: Leaving directory `/build/Main/theBrain'
-make[1]: *** [all-recursive] Fehler 1
-make[1]: Leaving directory `/build/Main'
-make: *** [all] Fehler 2
+MqLinkCreate bekommt analog zu MqLinkCreateChild ein
+
+  MqLinkCreateRoute.
+
+Hauptaufgabe ist ein "Parent" zu finden um dann über ein "MqLinkCreateChild"
+ein ChildContext über den-ganzen-weg zu bauen.
+
+Der Parent wird vom "Resolver" gefunden und dieser "Resolver" gibt den
+kompletten weg bis zum Ziel zurück.
+
+Am Server ist der "gegenpart" zu einen "Route-Link" wieder ein
+"Route-Link" der wiederum ein "child" ist usw.
+
+MqLinkCreate -> _OKS wird aufgebort um damit er auf der "gegenseite"
+ein Routing-Context erzeugt. Es wird genau der Teil der absoluten
+Route mit-geliefert welcher begraucht wird um den Server-Route-Link 
+OHNE Resolver aufzubauen.
+
+Der initialie Route-Link kann auch per ABSOLUTEN-Path und somit
+ohne Resolver "gefüttert" werden.
 
 
+Wie funktioniert der "Resolver"
+
+Wen ein LinkCreateRout mit einen NICHT-Absoluten-Pfad "gefüttert"
+wird dann muss ein Routing-Search-Request ausgegeben werden.
+
+Alle Parent-Context werden mit einen Routing-Resolve-Auftrag
+angesprochen -> der Reihe nach.
+
+  => +ROT
