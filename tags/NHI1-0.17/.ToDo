@@ -1,0 +1,34 @@
+
+1. Routing
+
+MqLinkCreate bekommt analog zu MqLinkCreateChild ein
+
+  MqLinkCreateRoute.
+
+Hauptaufgabe ist ein "Parent" zu finden um dann über ein "MqLinkCreateChild"
+ein ChildContext über den-ganzen-weg zu bauen.
+
+Der Parent wird vom "Resolver" gefunden und dieser "Resolver" gibt den
+kompletten weg bis zum Ziel zurück.
+
+Am Server ist der "gegenpart" zu einen "Route-Link" wieder ein
+"Route-Link" der wiederum ein "child" ist usw.
+
+MqLinkCreate -> _OKS wird aufgebort um damit er auf der "gegenseite"
+ein Routing-Context erzeugt. Es wird genau der Teil der absoluten
+Route mit-geliefert welcher begraucht wird um den Server-Route-Link 
+OHNE Resolver aufzubauen.
+
+Der initialie Route-Link kann auch per ABSOLUTEN-Path und somit
+ohne Resolver "gefüttert" werden.
+
+
+Wie funktioniert der "Resolver"
+
+Wen ein LinkCreateRout mit einen NICHT-Absoluten-Pfad "gefüttert"
+wird dann muss ein Routing-Search-Request ausgegeben werden.
+
+Alle Parent-Context werden mit einen Routing-Resolve-Auftrag
+angesprochen -> der Reihe nach.
+
+  => +ROT

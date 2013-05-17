@@ -1,0 +1,156 @@
+#+
+#:  \file       theBrain/tests/brain.test
+#:  \brief      \$Id$
+#:  
+#:  (C) 2002 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+set self [info script]
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+if {![testConstraint brain]} return
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+#set tcl_traceExec 1
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [getNum 3] {
+
+ # transport-type: string or binary
+  foreach B [filter BIN_LST binary] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [getEnv COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filter SRV_LST $C] {
+
+##
+## -----------------------------------------------------------------------
+## database
+##
+
+# startup binary --------------------------
+Setup $I $B $C $S
+
+      foreach dbfile [list mem] {
+
+# tests ----------------------------
+
+test brain-1-($I|$B|$C|$S|$dbfile) {OPEN and CLOSE using an database} \
+    -body           {
+      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
+      Echo0 $FH_LAST CLOS
+    } \
+    -returnCodes    ok \
+    -result         ""
+
+test brain-1e-($I|$B|$C|$S|$dbfile) {OPEN invalid database} \
+    -body           {
+      Echo0 $FH_LAST OPEN SendC "/xyz"
+      Echo0 $FH_LAST CLOS
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error] <Tok|OPEN> <Num|14>
+[sS]> (server-0) \[OPEN] unable to open database file}
+
+test brain-2-($I|$B|$C|$S|$dbfile) {create table} \
+    -setup	    {
+      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
+    } \
+    -body           {
+      Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST CLOS
+    } \
+    -returnCodes    ok \
+    -result         ""
+
+test brain-2-e1-($I|$B|$C|$S|$dbfile) {create table with error} \
+    -setup	    {
+      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
+    } \
+    -body           {
+      Echo0 $FH_LAST EXEC SendC $SQL(errtbl)
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST CLOS
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|EXEC> <Num|1>
+[sS]> (server-0) \[EXEC] near "TOBLE": syntax error}
+
+test brain-2-e2-($I|$B|$C|$S|$dbfile) {create table twice} \
+    -setup	    {
+      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
+      Echo0 $FH_LAST EXEC SendC $SQL(testtbl)
+    } \
+    -body           {
+      Echo0 $FH_LAST EXEC SendC $SQL(doupltbl)
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST CLOS
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result	    {[cC]> (client-0) \[service-call-error] <Tok|EXEC> <Num|1>
+[sS]> (server-0) \[EXEC] table testtbl already exists}
+
+test brain-2-o1-($I|$B|$C|$S|$dbfile) {create table with two arguments} \
+    -setup	    {
+      Echo0 $FH_LAST OPEN SendC $DB_LST($dbfile)
+    } \
+    -body           {
+      Echo0 $FH_LAST EXEC SendC "$SQL(testtbl)$SQL(simptbl)"
+    } \
+    -cleanup	    {
+      Echo0 $FH_LAST CLOS
+    } \
+    -returnCodes    ok \
+    -result	    {}
+
+# cleanup ---------------------------
+
+      } ; # dbfile
+
+Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+

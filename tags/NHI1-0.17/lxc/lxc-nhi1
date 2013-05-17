@@ -1,0 +1,730 @@
+#!/bin/bash -u
+#+
+#:  \file       lxc/lxc-nhi1
+#:  \brief      \$Id$
+#:  
+#:  (C) 2013 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+#
+# template script for generating suse container for LXC
+#
+
+#
+# lxc: linux Container library
+
+# Authors:
+# Daniel Lezcano <daniel.lezcano@free.fr>
+# Frederic Crozat <fcrozat@suse.com>
+
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+DISTRO=12.3
+
+set -u
+
+# use: rpm --queryformat "%{Name} " --query --all
+all_packages=''
+
+die() {
+  echo "Error: $*"
+  exit 1
+}
+
+die_on_error()
+{
+  eval "$@" || die "failed: $*"
+}
+
+save_rm() {
+  rm --preserve-root --one-file-system "$@"
+}
+
+save_umount() {
+  r=${1:-$tgt_rootfs}
+  mountpoint -q $r && {
+    umount $r || return $?
+  }
+  return 0
+}
+
+save_mount() {
+  test ! -d $tgt_rootfs && {
+    mkdir -p $tgt_rootfs || return $?
+  }
+  save_umount || return $?
+  mount $tgt_device $tgt_rootfs || return $?
+  return 0
+}
+
+mount_block() {
+  save_umount
+  save_mount
+  eval "$@"
+  ret=$?
+  save_umount
+  return $ret
+}
+
+static_conf()
+{
+    echo configure opensuse step 1...
+
+    # set default route
+    IP=$(ip route | awk '/default/ { print $3 }')
+    echo "default $IP - -" > $tgt_rootfs/etc/sysconfig/network/routes
+
+#
+# I use autodev=1 now
+#
+#    # create minimal /dev
+#    # 1. create dirs
+#    for d in pts:755 shm:1777 mapper:755 net:755 hugepages:755 mqueue:1777
+#    do
+#      IFS=":"; set -- $d; unset IFS
+#      mkdir -p -m $2 $tgt_rootfs/dev/$1
+#    done
+#
+#    # 2. chreat character devices
+#    for c in random:666:1:8 urandom:666:1:9 tty:666:5:0 console:600:5:1 tty:666:5:0 tty1:660:136:12 \
+#              tty2:640:136:13 tty3:640:136:14 tty4:640:136:15 full:666:1:7 ptmx:666:5:2 mapper/control:600:10:60 \
+#                net/tun:600:10:200
+#    do
+#      IFS=":"; set -- $c; unset IFS
+#      rm -f $tgt_rootfs/dev/$1
+#      mknod -m $2 $tgt_rootfs/dev/$1 c $3 $4
+#    done
+#
+#    # 3. create soft-links
+#    for l in tty10:null fd:/proc/self/fd core:/proc/kcore kmsg:console stdout:/proc/self/fd/1 \
+#	      stdin:/proc/self/fd/0 stderr:/proc/self/fd/2 .udev:/run/udev
+#    do
+#      IFS=":"; set -- $l; unset IFS
+#      rm -f $tgt_rootfs/dev/$1
+#      mkdir -p $(dirname $2)
+#      ln -fs $2 $tgt_rootfs/dev/$1
+#    done
+
+    # set permission to files
+    chmod guo+w $tgt_rootfs/dev/zero
+    chmod guo+w $tgt_rootfs/dev/null
+    test ! -e $tgt_rootfs/dev/initctl && mkfifo $tgt_rootfs/dev/initctl
+    chmod 600 $tgt_rootfs/dev/initctl
+
+#    cat <<EOF > $tgt_rootfs/etc/inittab
+#id:5:initdefault:
+#EOF
+
+    # enable openssh server
+    chroot $tgt_rootfs /sbin/insserv sshd 2>/dev/null
+    # disable: remove pointless services in a container
+    chroot $tgt_rootfs /sbin/insserv -r -f boot.udev boot.loadmodules boot.device-mapper \
+      boot.clock boot.swap boot.klog kbd boot.md cpufreq 2>/dev/null
+
+    echo "Please change root-password !"
+    echo root:root | chpasswd --root $tgt_rootfs
+
+    echo configure opensuse step 1... done
+    return 0
+}
+
+dynamic_conf()
+{
+    echo configure opensuse step 2...
+
+    # setup dhcp network device
+    save_rm -f $tgt_rootfs/etc/sysconfig/network/ifcfg-eth0
+    save_rm -f $tgt_rootfs/etc/sysconfig/network/ifcfg-$lxc_prefix${src_name:-dummy_name}
+    cat <<EOF > $tgt_rootfs/etc/sysconfig/network/ifcfg-$lxc_prefix$tgt_name
+BOOTPROTO='dhcp'
+BROADCAST=''
+ETHTOOL_OPTIONS=''
+IPADDR=''
+MTU=''
+NAME='virtual lan network device'
+NETMASK=''
+NETWORK=''
+REMOTE_IPADDR=''
+STARTMODE='auto'
+USERCONTROL='no'
+EOF
+
+    echo configure opensuse step 2... done
+    return 0
+}
+
+delete_opensuse() {
+  echo delete opensuse...
+
+  if [[ ! -e $tgt_device ]] ; then
+    echo "warning: the target device '$tgt_device' is not available."
+  else
+    echo "info: delete the target device '$tgt_device'."
+    [[ $(lvs -o lv_attr --nosuffix --noheadings $tgt_device|awk '{print $1}') == [oO]????? ]] && {
+      echo "the target device $tgt_device is a master of a snapshot"
+      echo "  a deletion of a master will delete the snapshot(s) too"
+      echo "  the deletion will be canceled"
+      return 1
+    }
+    [[ -e $tgt_device ]] && {
+      /etc/init.d/lxc-watchdog stop $tgt_name || return $?
+      save_umount || return $?
+      #lvchange -an $tgt_device || return $?
+      #lvremove --verbose $tgt_device || return $?
+      lxc-destroy -n $tgt_name
+    }
+  fi
+
+  if [[ -e $tgt_path ]] ; then
+    echo "info: delete the target path '$tgt_path'."
+    save_rm -fr $tgt_path
+  fi
+
+  echo delete opensuse... done
+}
+
+
+snapshot_opensuse()
+{
+  echo snapshot opensuse...
+
+  [[ -e $tgt_device ]] && {
+    echo "the target device $tgt_device is already available."
+    return 1
+  }
+  [[ ! -e $src_device ]] && {
+    echo "the source device $src_device is not available."
+    return 1
+  }
+
+  lxc-info -s -n $src_name|grep RUNNING >/dev/null 2>&1 && {
+    lxc-freeze -n $src_name || return $?
+  }
+
+  # snapshot uses 20% of the size of the original volum using output in (M)egabytes
+  size=$(lvs -o lv_size --units b --nosuffix --noheadings $src_device | \
+	  awk '{print int($1 * 0.2 / 1024 / 1024)"M"}')
+
+  lvcreate -s -L $size -n $lxc_prefix$tgt_name $src_device || return $?
+
+  lxc-info -s -n $src_name|grep FROZEN >/dev/null 2>&1 && {
+    lxc-unfreeze -n $src_name || return $?
+  }
+
+  echo snapshot opensuse... done
+}
+
+merge_opensuse()
+{
+  echo merge opensuse...
+
+  [[ ! -e $tgt_device ]] && {
+    echo "the target device $tgt_device is not available."
+    return 1
+  }
+  [[ ! -e $src_device ]] && {
+    echo "the source device $src_device is not available."
+    return 1
+  }
+
+  set -- $(lvs -o lv_attr --nosuffix --noheadings $tgt_device)
+  [[ "$1" != o????? ]] && {
+    echo "the tgt-devise in no snapshot origin"
+  }
+
+  set -- $(lvs -o lv_attr --nosuffix --noheadings $src_device)
+  [[ "$1" != s????? ]] && {
+    echo "the src-devise in no snapshot"
+  }
+
+  /etc/init.d/lxc-watchdog stop $src_name || return $?
+  /etc/init.d/lxc-watchdog stop $tgt_name || return $?
+
+  save_umount $src_rootfs || return $?
+  save_umount $tgt_rootfs || return $?
+
+  lvchange -an $src_device || return $?
+  lvchange -an $tgt_device || return $?
+  lvconvert --merge $src_device || return $?
+
+  echo merge opensuse... done
+}
+
+ssh_keys()
+{
+  tgt_ip=$(dig +short nhi2)
+  ssh-keygen -R $tgt_name -f ~root/.ssh/known_hosts
+  ssh-keygen -R $tgt_ip -f ~root/.ssh/known_hosts
+  if test ! -f ~root/.ssh/lxc_rsa ; then
+    ssh-keygen -f ~root/.ssh/lxc_rsa
+  fi
+  echo "ENTER: password 'root'"
+  ssh-copy-id -i ~root/.ssh/lxc_rsa.pub root@$tgt_name || return $?
+  ssh -i ~/.ssh/lxc_rsa root@$tgt_name groupdel nhi1
+  ssh -i ~/.ssh/lxc_rsa root@$tgt_name groupadd -g 2000 nhi1 || return $?
+  ssh -i ~/.ssh/lxc_rsa root@$tgt_name userdel -r dev01
+  ssh -i ~/.ssh/lxc_rsa root@$tgt_name useradd -c "'first nhi1 development user'" -g users -G nhi1 -u 3000 -m dev01 || return $?
+  echo dev01:dev01 | ssh -i ~/.ssh/lxc_rsa root@$tgt_name chpasswd
+  ssh-keygen -R $tgt_name -f /home/$ssh_user/.ssh/known_hosts
+  ssh-keygen -R $tgt_ip -f /home/$ssh_user/.ssh/known_hosts
+  chown $ssh_user:$(id -gn $ssh_user) /home/$ssh_user/.ssh/known_hosts
+  echo "ENTER: password 'dev01'"
+  ssh-copy-id -i /home/$ssh_user/.ssh/id_rsa.pub dev01@$tgt_name || return $?
+}
+
+file_backup()
+{
+  local d=$(dirname $1)
+  local b=$(basename $1)
+  local n=$d/.$b.$(date +%y%m%d_%H%M%S)
+  test ! -w "$d" && die "unable to write in directors '$d'"
+  test ! -w "$1" && die "unable to write file '$1'"
+  if test -e $1 ; then
+    cp $1 $n || die "failed: cp $1 $n"
+    echo "create file-backup: $n"
+  fi
+}
+
+ask_for_ok()
+{
+  while read -p "Q: is this ok? (y/n) > " ; do
+    case "$REPLY" in
+      y)  break;;
+      n)  exit;;
+      *)  echo "invalid answer '$REPLY', please use 'y' for 'yes' and 'n' for 'no'";;
+    esac
+  done
+}
+
+create_bridge_interface()
+{
+  netconf=/etc/sysconfig/network
+
+  cat <<EOF
+
+!! ATTENTION !!
+
+The programm will modify yor network settings. Do NOT run this code from remote.
+
+The following files will be created:
+
+  $netconf/ifcfg-$network
+  $netconf/ifcfg-$bridge
+
+and first be backuped to: (if available)
+
+  $netconf/.ifcfg-$network.DATE
+  $netconf/.ifcfg-$bridge.DATE
+
+the following bridge will be created:
+
+  bridge '$bridge' linked to network interface '$network'
+
+EOF
+  ask_for_ok
+
+  if brctl show 2>&1 | grep $bridge 1>/dev/null 2>&1; then
+    die_on_error brctl addbr $bridge
+  fi
+  if brctl show $bridge 2>&1 | grep $network 1>/dev/null 2>&1; then
+    die_on_error brctl addif $bridge $network
+  fi
+  if brctl show $bridge 2>&1 | grep $network 1>/dev/null 2>&1; then
+    die "unable to create bridge '$bridge' using network interface '$network'"
+  fi
+
+  file_backup $netconf/ifcfg-$network
+
+  cat <<EOF >/etc/sysconfig/network/ifcfg-$network
+BOOTPROTO='static'
+BROADCAST=''
+ETHTOOL_OPTIONS=''
+IPADDR='0.0.0.0/24'
+MTU=''
+NAME='lxc-opensuse created network interface"
+NETMASK=''
+NETWORK=''
+REMOTE_IPADDR=''
+STARTMODE='auto'
+USERCONTROL='no'
+PREFIXLEN='32'
+EOF
+
+  file_backup $netconf/ifcfg-$bridge
+
+  cat <<EOF >$netconf/ifcfg-$bridge
+BOOTPROTO='dhcp'
+BRIDGE='yes'
+BRIDGE_FORWARDDELAY='0'
+BRIDGE_PORTS='$network'
+BRIDGE_STP='off'
+BROADCAST=''
+ETHTOOL_OPTIONS=''
+IPADDR=''
+MTU=''
+NAME=''
+NETMASK=''
+NETWORK=''
+REMOTE_IPADDR=''
+STARTMODE='auto'
+USERCONTROL='no'
+EOF
+
+  rcnetwork restart
+  rcnetwork status
+}
+
+create_opensuse()
+{
+  echo "create rootfs"
+  lxc-create -n $tgt_name -t $template -B lvm --lvname $lxc_prefix$tgt_name --vgname $v_group --fstype $fst --fssize $lv_size
+  return 0
+}
+
+
+global_lock()
+{
+  mkdir -p /var/lock/subsys/
+  (
+    flock -n -x 200 || {
+      echo "Cache repository is busy."
+      return 1
+    }
+
+    eval "$@" || return $?
+
+  ) 200>/var/lock/subsys/lxc
+}
+
+generate_mac_adress()
+{
+    macdb=${tgt_path%/*}/.macdb
+    if [ ! -f $macdb ] ; then
+      mac=""
+    else
+      mac=$(awk -v name=$tgt_name '$1 == name {print $2}' $macdb)
+    fi
+    test -z "$mac" && {
+      mac=$(printf '00:60:2F:%02X:%02X:%02X\n' $[RANDOM%256] $[RANDOM%256] $[RANDOM%256])
+      echo "$tgt_name $mac" >> $macdb
+    }
+    echo $mac
+}
+
+lxc_conf()
+{
+    echo copy configuration...
+
+    cat <<EOF > $tgt_path/config
+lxc.utsname = $tgt_name
+
+#basic
+lxc.tty = 4
+lxc.pts = 1024
+lxc.rootfs = $tgt_device
+lxc.mount = $tgt_path/fstab
+lxc.cap.drop = sys_module mac_admin mac_override mknod
+lxc.autodev=1
+
+# When using LXC with apparmor, uncomment the next line to run unconfined:
+#lxc.aa_profile = unconfined
+
+#network
+lxc.network.type = veth
+lxc.network.flags = up
+lxc.network.link = $bridge
+lxc.network.hwaddr = $(generate_mac_adress)
+lxc.network.ipv4 = 0.0.0.0
+lxc.network.name = $lxc_prefix$tgt_name
+lxc.network.veth.pair = $lxc_prefix$tgt_name
+
+lxc.cgroup.devices.deny = a
+# /dev/null and zero
+lxc.cgroup.devices.allow = c 1:3 rwm
+lxc.cgroup.devices.allow = c 1:5 rwm
+# consoles
+lxc.cgroup.devices.allow = c 5:1 rwm
+lxc.cgroup.devices.allow = c 5:0 rwm
+lxc.cgroup.devices.allow = c 4:0 rwm
+lxc.cgroup.devices.allow = c 4:1 rwm
+# /dev/{,u}random
+lxc.cgroup.devices.allow = c 1:9 rwm
+lxc.cgroup.devices.allow = c 1:8 rwm
+lxc.cgroup.devices.allow = c 136:* rwm
+lxc.cgroup.devices.allow = c 5:2 rwm
+# rtc
+lxc.cgroup.devices.allow = c 254:0 rwm
+
+EOF
+
+    echo copy configuration... done
+    return 0
+}
+
+clean()
+{
+    cache="/var/cache/lxc/opensuse/rootfs/"
+
+    if [ ! -e $cache ]; then
+	exit 0
+    fi
+
+    global_lock "
+	echo -n 'Purging the download cache...'
+	save_rm -rf $cache && echo 'Done.' || exit 1
+	exit 0
+    "
+}
+
+usage()
+{
+  less <<EOF
+
+usage: ${0##*/} ?options? command command-args... -h
+
+options:
+  -b	    bridge  interface     (default: $bridge)
+  -n	    network interface     (default: $network)
+  -t	    linux template        (default: $template)
+
+command:
+  create,delete,mount,umount .... tgt-name
+  snapshot ...................... tgt-name src-name
+  ssh-keys ...................... tgt-name user
+  list,clean,bridge .............
+
+Create/Delete a runable lxc container using a template setup.
+
+  create    create an container at /var/lib/lxc/[tgt-name] und a
+	    logical volumne at /dev/lxc/[tgt-name] using the 
+	    root-image at /var/cache/lxc/opensuse
+  snapshot  create an container at /var/lib/lxc/[tgt-name] und a
+	    logical volumne at /dev/lxc/[tgt-name] as snapshot
+	    of the logical volumne /dev/lxc/[src-name]
+  merge	    merge a snapshot into the origin and reconfig the target.
+	    delete source-device.
+  delete    delete a lxc-container and the according logical
+	    volumne
+  config    update lxc configuration
+  list	    list all available lxc-container with the current
+	    status
+  clean	    clean the root-image and the package-space
+  bridge    created bridge interface '$bridge' using network
+            interface '$network'
+  (u)mount  mount or umount the /var/lib/lxc/[tgt-name] filesystem
+  ssh-keys  create user dev01 on $tgt_name and copy root + user
+            keys to root+dev01 user on $tgt_name
+
+the logical-volumne using the '$v_group' volumne-group, the logical-
+volumne-name-prefix '$lxc_prefix' and the size '$lv_size'
+
+The veth network device is using the bridge '$bridge' and is created 
+with the 'lxc_' prefix to the 'tgt-name' like 'lxc_nhi1'.
+
+The network is using a dhcp setup to get the ip address and the
+network configuration done.
+
+The network device hardware address (mac-address) is generated
+and saved together with the 'tgt-name' in a file called '.macdb'
+located in the directory of the path parameter. In our case the
+file name is '/var/lib/lxc/.macdb'.
+
+The following linux templates are available:
+$(ls /usr/share/lxc/templates/lxc-* | awk -F - 'BEGIN {ORS=", "} {print $2} ')
+EOF
+  exit 0
+}
+
+##
+## =============================================================================
+## Main
+##
+
+name_set=0
+snapshot_set=0
+clean_set=0
+
+lv_size=20G
+v_group=lxc
+lxc_prefix=lxc_
+bridge=br0
+network=eth0
+template=opensuse
+store=lvm
+
+tgt_name=tgt-name
+
+o2=""
+
+fst='ext4'
+fso='acl,user_xattr'
+
+# post-command command-line-options
+while getopts h$o2 opt
+do
+  case "$opt" in
+    *)	usage ;;
+  esac
+done
+
+#i am root ?
+test "$(id -u)" != "0"	      && die "This script should be run as 'root'"
+test ! -e /etc/SuSE-release   && die "this code was designed inly for SuSE linux"
+
+#check for required commands
+for cmd in zypper printf cat ln mkdir mknod chroot rm umount flock getopt ip awk \
+	    chpasswd arch systemctl touch lvcreate lvremove lvs lxc-info lxc-freeze \
+	      lxc-unfreeze mount mkfs mountpoint brctl dig
+do
+  type $cmd &> /dev/null || die "'$cmd' command is missing"
+done
+
+# pre-command command-line-options
+while getopts b:n:t:s: opt
+do
+  case "$opt" in
+    h)  usage ;;
+    b)  bridge=$OPTARG ;;
+    n)  network=$OPTARG ;;
+    s)  store=$OPTARG
+      case $store in
+	none|lvm|btrfs)   ;;
+	*) die "as store only 'none', 'lvm' or 'btrfs' is allowd."
+      esac
+    ;;
+    t)  template=$OPTARG 
+      if test ! -e /usr/share/lxc/templates/lxc-$template ; then
+	die "the template '$template' is not available."
+      fi
+    ;;
+    ?)	exit ;;
+    *)	usage ;;
+  esac
+done
+
+# parse command
+command=${1:-dummy};shift
+
+case "$command" in
+  create|delete|snapshot|merge|config|mount|umount|ssh-keys)
+    (( $# == 0 )) && die "$command tgt-name ..."
+    name_set=1
+    tgt_name=$1; shift
+    tgt_dir=/var/lib/lxc
+    tgt_path=$tgt_dir/$tgt_name
+    tgt_rootfs=$tgt_path/rootfs
+    tgt_device=/dev/$v_group/$lxc_prefix$tgt_name
+    case "$command" in
+      ssh-keys)
+	(( $# == 0 )) && die "$command $tgt_name user ..."
+	ssh_user=$1; shift
+      ;;
+      snapshot|merge)
+	(( $# == 0 )) && die "$command $tgt_name src-name ..."
+	snapshot_set=1
+	src_name=$1; shift
+	src_dir=/var/lib/lxc
+	src_path=$src_dir/$src_name
+	src_rootfs=$src_path/rootfs
+	src_device=/dev/$v_group/$lxc_prefix$src_name
+      ;;
+    esac
+  ;;
+  clean|list|bridge)
+  ;;
+  *)              
+    usage 
+  ;;
+esac
+
+# post-command command-line-options
+while getopts h$o2 opt
+do
+  case "$opt" in
+    *)	usage ;;
+  esac
+done
+
+echo start $0 ...
+
+case "$command" in
+  delete|create|snapshot)
+    (( ! $name_set )) && die "the 'name' parameter is required"
+    [[ -z $tgt_rootfs ]] && die "target rootfs is empty"
+    [[ -z $tgt_path   ]] && die "target path is empty"
+  ;;
+esac
+
+# main command action
+case "$command" in
+  delete)
+    die_on_error delete_opensuse
+  ;;
+  bridge)
+    die_on_error create_bridge_interface
+  ;;
+  create)
+    die_on_error create_opensuse
+    die_on_error mount_block static_conf
+    die_on_error mount_block dynamic_conf
+    die_on_error lxc_conf
+  ;;
+  snapshot)
+    die_on_error snapshot_opensuse
+    die_on_error mount_block dynamic_conf
+    die_on_error lxc_conf
+  ;;
+  merge)
+    #die_on_error merge_opensuse
+    die_on_error mount_block dynamic_conf
+    die_on_error lxc_conf
+  ;;
+  ssh-keys)
+    die_on_error ssh_keys
+  ;;
+  config)
+    die_on_error mount_block static_conf
+    die_on_error mount_block dynamic_conf
+    die_on_error lxc_conf
+  ;;
+  mount)
+    save_umount
+    die_on_error save_mount
+    echo "mount: $tgt_rootfs"
+  ;;
+  umount)
+    die_on_error save_umount
+    echo "umount: $tgt_rootfs"
+  ;;
+  list)
+    /etc/init.d/lxc-watchdog stat
+  ;;
+  clean)
+    die_on_error clean
+  ;;
+  *)
+    die "invalid command: $command"
+  ;;
+esac
+
+echo end $0 ...
+exit 0
+
+# vim: set tabstop=8 softtabstop=2 shiftwidth=2

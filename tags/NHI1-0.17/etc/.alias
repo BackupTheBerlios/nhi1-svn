@@ -1,0 +1,84 @@
+#+
+#:  \file       etc/.alias
+#:  \brief      \$Id$
+#:  
+#:  (C) 2013 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+alias ee="vim ~/.bashrc"
+alias se=". ~/.bashrc"
+
+alias ep="vim ~/.profile"
+alias sp=". ~/.profile"
+
+alias ea="vim ~/.alias"
+alias sa=". ~/.alias"
+
+alias ep="vim ~/.profile"
+alias sp=". ~/.profile"
+
+alias ev="vim ~/.vimrc"
+alias em="vim Makefile.am"
+
+alias ec="vim ~/Project/NHI1/configure.ac"
+alias ei="vim ~/Project/NHI1/acinclude.m4"
+alias eo="vim .OtConfig"
+
+alias cdpn="cd ~/Project/NHI1"
+alias cdm="cd /build/$USER/Main"
+alias cds="cd ~/src"
+
+alias im='info automake'
+alias ia='info autoconf'
+alias il='info libtool'
+alias ik='info make'
+alias ic='info gcc'
+
+alias scr="cd ~/Project/NHI1 && screen -h 1000"
+alias lgdu="export LANG=de_DE.UTF-8"
+alias lgd="export LANG=de_DE"
+
+if test "$OSTYPE" = "cygwin" ; then
+  for x in i686-pc-cygwin:c x86_64-w64-mingw32:m ; do
+    IFS=':';set -- $x;unset IFS
+    alias cdm$2="cd /build/$USER/Main/$1"
+    mkdir -p /build/$USER/Main/$1
+  done
+else
+  for x in thread:t nothread:n performance-thread:pt performance-nothread:pn; do
+    IFS=':';set -- $x;unset IFS
+    alias cdm$2="cd /build/$USER/Main/$1"
+  done
+fi 
+
+for x in libmsgque:l ccmsgque:x tclmsgque:c tests:t perlmsgque:p msgqueforphp:h javamsgque:j \
+	  gomsgque:g doc:d example:e rubymsgque:r csmsgque:s pymsgque:y docs:d acmds:a sqlite:q
+do
+  IFS=':';set -- $x;unset IFS
+  alias cdr$2="cd ../$1"
+  alias cdl$2="cd theLink/$1"
+done
+
+for x in aguard:g tests:t
+do
+  IFS=':';set -- $x;unset IFS
+  alias cdg$2="cd theGuard/$1"
+done
+
+for x in abrain:b atrans:r tests:t
+do
+  IFS=':';set -- $x;unset IFS
+  alias cdb$2="cd theBrain/$1"
+done
+
+for x in performance:p theLink:l theGuard:g theBrain:b bin:i etc:e sbin:s tests:t
+do
+  IFS=':';set -- $x;unset IFS
+  alias cd$2="cd $1"
+done
+

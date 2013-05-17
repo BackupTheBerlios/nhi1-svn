@@ -1,0 +1,133 @@
+#+
+#:  \file       README
+#:  \brief      \$Id$
+#:  
+#:  (C) 2007 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+
+NHI1 overview
+=============
+
+  http://nhi1.berlios.de
+
+
+NHI1 build
+===============
+
+"NHI1" was developed on Linux and Windows7. The Sources SHOULD compile on every 
+operating system having the GNU tool-chain available.
+
+The main development system is:
+
+    SuSE Linux 12.3 (64bit) using "Intel(R) Xeon(R) CPU E3-1275 V2 @ 3.50GHz"
+
+The Build depends on the following tools:
+
+  - GNU Compiler: gcc, g++
+  - Microsoft SDK tools: , crt, cl, lib, link
+  - GNU Configuration: make, libtool, autoconf, automake, ccache
+  - Test: tclsh using the "tcltest" package
+  - Documentation: doxygen
+  - Create Binary Distribution: bzip2
+
+In addition the following software is also supported:
+
+  - tcl    - http://www.tcl.tk/ + ActiveTcl
+  - python - http://www.python.org/download/ + ActivePython
+  - perl   - http://www.perl.org/ + ActivePerl
+  - ruby   - http://www.ruby-lang.org/
+  - php    - http://php.net/downloads.php
+  - go     - from the distribution
+  - C#     - Mono + Microsoft Windows SDK 7.1
+  - VB     - Microsoft Windows SDK 7.1
+  - java   - openjdk from Oracle and GNU
+
+To build "NHI1" please follow the next steps:
+
+Unpack the source distribution in a temporary directory and
+switch into the top directory:
+
+  > tar -xzf NHI1-X.Y.tar.gz
+  > cd NHI1-X.Y
+
+(optional) To get a certified build environment I recomment to install the scripts:
+(optional) 
+(optional)   > NHI1-X.Y/etc/.bashrc
+(optional)   > NHI1-X.Y/etc/.alias
+(optional)   > NHI1-X.Y/etc/.vimrc
+(optional) 
+(optional) into your home-environment. (softlink is ok)
+(optional) 
+(optional) To get a repository with a set of prebuild binaries:
+(optional)   > tcl, perl, python, ruby and php
+(optional) use the:
+(optional)   > Nhi1BuildLanguage
+(optional) tool.
+(optional) 
+(optional) To support a tempfs build environment for fast compiling
+(optional) I recomment using the 'rcBuildFs' service with:
+(optional)   > NHI1-X.Y/bin/rcBuildFs install
+(optional) 
+(optional) this service require the following directories belonging to the current
+(optional) development user:
+(optional) 
+(optional)   /build/USER
+(optional)   /build/USER/Cache
+(optional)   /build/USER/Main
+(optional)   /build/USER/Main/nothread
+(optional)   /build/USER/Main/performance-nothread
+(optional)   /build/USER/Main/performance-thread
+(optional)   /build/USER/Main/thread
+(optional) 
+(optional) To navigate between the directories a couple of alias's are created
+(optional) starting with "cd.."
+(optional) 
+(optional) To build the software on a system other than the developing system I
+(optional) recommend to update your local build tools with:
+(optional) 
+(optional)   > autoreconf
+(optional)
+(optional) If you run an other version of the libtool or the autoconf or if
+(optional) have done an repository checkout it is better to recreate your
+(optional) configuration environment with:
+(optional)   
+(optional)   > autoreconf -fvi
+(optional)   
+
+To configure the build run the "configure" script:
+ 
+  # for help
+  > bash ./configure --help
+
+  # do the configuration
+  > bash ./configure ...
+
+or use the convience wrapper (with user-frontend)
+
+  > Nhi1Config -i ... -i for interactive
+
+To build the software run "make":
+
+  > make
+
+or using parallel builds with:
+
+  > make -j #
+
+To test the software please follow the steps from:
+
+  > less theLink/tests/README.tests
+
+To build the "documentation" the tool "doxygen" is required:
+
+  - create the documentation
+    > make html
+  - read the documentation
+    > firefox html/theLink/index.htm
+

@@ -1,0 +1,142 @@
+#+
+#:  \file       theLink/tests/token.test
+#:  \brief      \$Id$
+#:  
+#:  (C) 2002 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+set self [info script]
+ 
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+## 
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [getNum 3] {
+
+ # transport-type: string or binary
+  foreach B [getEnv BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [getEnv COM_LST] {
+
+    # server-type: server server.tcl
+     foreach S [filter SRV_LST $C] {
+
+##
+## -----------------------------------------------------------------------
+## token test (part 1)
+##
+
+# tests ----------------------------
+
+test token-1-($I|$B|$C|$S) {unknown service token} \
+    -setup	    {Setup $I $B $C $S} \
+    -cleanup	    {Cleanup} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendEND_AND_WAIT XXXX
+    } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|XXXX> <Num|1>*
+[sS]> (server-0) \[*pTokenInvoke\] token <XXXX> not found*}
+
+test token-2-($I|$B|$C|$S) {double service token} \
+    -setup	    { 
+      proc nothing {ctx} {}
+      Setup $I $B $C $S
+      $FH_LAST ServiceCreate XXXX nothing 
+    } \
+    -cleanup	    { 
+      $FH_LAST ServiceDelete XXXX 
+      Cleanup 
+    } \
+    -body           { $FH_LAST ServiceCreate XXXX nothing } \
+    -returnCodes    ok \
+    -result         {ctx}
+
+test token-3-($I|$B|$C|$S) {delete unknown servicehdl} \
+    -setup	    {Setup $I $B $C $S} \
+    -cleanup	    {Cleanup} \
+    -body           { $FH_LAST ServiceDelete XXXX } \
+    -returnCodes    error \
+    -match	    glob \
+    -result         {[cC]> (client-0) \[*sTokenSpaceDelItem\] item 'XXXX' not found
+[cC]> (client-0) found in function "pTokenDelHdl" at file "token.c"}
+
+test token-4-($I|$B|$C|$S) {valid service call after wrong service call} \
+    -setup	    {Setup $I $B $C $S
+		     catch {Echo1 $FH_LAST ECOI ReadI SendI 1} } \
+    -cleanup	    {Cleanup} \
+    -body           {Echo1 $FH_LAST ECOI ReadI SendI 1} \
+    -result         {1}
+
+test token-5-($I|$B|$C|$S) {token error in async-call} \
+    -setup	    { Setup $I $B $C $S --bgerror RET_BG} \
+    -cleanup	    { Cleanup } \
+    -body           {
+	RET_start
+	RET_add 111 Call $FH_LAST SendEND XXXX
+	RET_add 222 $FH_LAST ProcessEvent -timeout 2 -wait ONCE
+	RET_end
+    } \
+    -match	    glob \
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (server-0) \[*pTokenInvoke] token <XXXX> not found
+BG-TEXT-CODE:NONE
+222-CATCH:0
+222-RET:
+222-CODE:NONE
+END}
+
+test token-6-($I|$B|$C|$S) {get the ConfigToken value} \
+    -setup	    { Setup $I $B $C $S } \
+    -cleanup	    { Cleanup } \
+    -body           {Echo1 $FH_LAST GTTO ReadC} \
+    -returnCodes    ok \
+    -result         GTTO
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+    
+##  
+## -----------------------------------------------------------------------
+## finish
+##  
+    
+freeTests
+    
+# vim: set syn=tcl:

@@ -1,0 +1,263 @@
+#! /bin/bash
+#+
+#:  \file       bin/rcBuildFs
+#:  \brief      \$Id$
+#:  
+#:  (C) 2013 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+### BEGIN INIT INFO
+# Provides:          BuildFs
+# Required-Start:    $ALL
+# Should-Start:      $ALL
+# Required-Stop:     $ALL
+# Should-Stop:       $ALL
+# Default-Start:     3 5
+# Default-Stop:      0 1 2 6
+# Short-Description: buildfs setup and fill tempfs-build-environment
+# Description:       Start buildfs to allow to build in an in-memory
+#	environment. First the tempfs is created and than
+#	the tempfs is filled using rsync with the root-data and the user-data.
+### END INIT INFO
+
+# Shell functions sourced from /etc/rc.status:
+#      rc_check         check and set local and overall rc status
+#      rc_status        check and set local and overall rc status
+#      rc_status -v     be verbose in local rc status and clear it afterwards
+#      rc_status -v -r  ditto and clear both the local and overall rc status
+#      rc_status -s     display "skipped" and exit with status 3
+#      rc_status -u     display "unused" and exit with status 3
+#      rc_failed        set local and overall rc status to failed
+#      rc_failed <num>  set local and overall rc status to <num>
+#      rc_reset         clear both the local and overall rc status
+#      rc_exit          exit appropriate to overall rc status
+#      rc_active        checks whether a service is activated by symlinks
+. /etc/rc.status
+
+# Reset status of this service
+rc_reset
+
+# exit on undef variable
+set -u
+
+# configuration data
+rcBuildFs_size=10g
+rcBuildFs_directory=/build
+rcBuildFs_backup=/backup
+rcBuildFs_inst=/etc/init.d/BuildFs
+rcBuildFs_link=/sbin/rcBuildFs
+
+#usage: rsync args
+ToBak() {
+  rsync -a --delete --delete-excluded --filter '- */Main/**.[o|a|so]' "$@" $rcBuildFs_directory/ $rcBuildFs_backup/
+}
+
+#usage: rsync args
+ToBui() {
+  rsync -a "$@" $rcBuildFs_backup/ $rcBuildFs_directory/
+}
+
+# Return values acc. to LSB for all commands but status:
+# 0	  - success
+# 1       - generic or unspecified error
+# 2       - invalid or excess argument(s)
+# 3       - unimplemented feature (e.g. "reload")
+# 4       - user had insufficient privileges
+# 5       - program is not installed
+# 6       - program is not configured
+# 7       - program is not running
+# 8--199  - reserved (8--99 LSB, 100--149 distrib, 150--199 appl)
+# 
+# Note that starting an already running service, stopping
+# or restarting a not-running service as well as the restart
+# with force-reload (in case signaling is not supported) are
+# considered a success.
+
+Usage() {
+  cat <<-EOF
+
+	Usage: ${0##*/} {start|stop|status|restart|force-reload|reload|backup|install|uninstall|tobuild|tobak}
+
+	A tool to create an build-environment using a tempfs filesystem.
+
+	  The goal is to create a faster compile-edit-cyclus using the directories:
+
+	  /build ......... build directory, moutpoint of the tempfs filesystem
+	  /backup ........ backup directory, persistent storage of the /build directory
+	  /SOURCE ........ source-code directory can be choosen free
+
+	  The "${0##*/} start" will be called at system startup to mount a tempfs 
+	  filesystem to the /build directory. After mounting the /build directory 
+	  will be initialized with the data from the /backup directory.
+
+	  The "${0##*/} stop" will be called at system shutdown to save the date 
+	  from the /build directory into the /backup directory. After saving data
+	  the tempfs filesystem will be umounted.
+
+	the following sub-commands are supported:
+	
+	  start .......... mount and initialize /build
+	  stop ........... save und umount the /build
+	  restart ........ stop + start
+	  force-reload ... initialize /build, delete all new files
+	  reload ......... initialize /build, keep new files
+	  backup ......... save /build to /backup
+	  status ......... check if /build is mounted
+	  install ........ register ${0##*/} as service
+	  uninstall ...... unregister ${0##*/} as service
+	  tobuild ........ initialize /build from /backup
+	  tobak .......... save /build to /backup
+
+EOF
+  exit
+}
+
+cmd=${1:--h}
+
+test "$cmd" = "-h" -o "$cmd" = "--help" && Usage
+
+(( $UID != 0 )) && {
+  echo "ERROR: run this command as root"
+  exit 1
+}
+
+case "$cmd" in
+    start)
+	echo -n "Starting rcBuildFs..."
+
+	# mount build directory
+	if mountpoint -q $rcBuildFs_directory ; then
+	  echo -n "already mounted..."
+	else
+	  echo -n "mount..."
+	  mount -t tmpfs -o size=$rcBuildFs_size tmpfs $rcBuildFs_directory
+	fi
+
+	# fill with backup data
+	(( ! $? )) && {
+	  echo -n "fill..."
+	  ToBui
+	}
+
+	## Remember status and be verbose
+	rc_status -v
+	;;
+    stop)
+	echo -n "Shutting down rcBuildFs "
+
+	# mount build directory
+	if mountpoint -q $rcBuildFs_directory ; then
+	  # safe the data
+	  echo -n "backup..."
+	  ToBak --delete
+	  (( ! $? )) && {
+	    echo -n "umount..."
+	    umount $rcBuildFs_directory
+	  }
+	else
+	  echo -n "not mounted..."
+	fi
+
+	## Remember status and be verbose
+	rc_status -v
+	;;
+    try-restart|condrestart)
+	## unused
+	rc_status -u
+	;;
+    restart)
+	## Stop the service and regardless of whether it was
+	## running or not, start it again.
+	$0 stop
+	$0 start
+
+	## Remember status and be quiet
+	rc_status
+	;;
+    force-reload)
+	echo -n "Reload service rcBuildFs..."
+
+	# send data to build directory, delete new data
+	ToBui --delete
+
+	rc_status -v
+	;;
+    reload)
+	echo -n "Reload service rcBuildFs..."
+
+	# send data to build directory, do NOT delete new data
+	ToBui --update
+
+	rc_status -v
+	;;
+    backup)
+	echo -n "Backup service rcBuildFs..."
+
+	# send data to backup directory
+	ToBak --delete
+
+	rc_status -v
+	;;
+    status)
+	echo -n "Checking for service rcBuildFs "
+
+	## Return value is slightly different for the status command:
+	## 0 - service up and running
+	## 1 - service dead, but /var/run/  pid  file exists
+	## 2 - service dead, but /var/lock/ lock file exists
+	## 3 - service not running (unused)
+	## 4 - service status unknown :-(
+	## 5--199 reserved (5--99 LSB, 100--149 distro, 150--199 appl.)
+	
+	if mountpoint -q $rcBuildFs_directory ; then
+	  rc_failed 0
+	else
+	  rc_failed 3
+	fi
+	## NOTE: rc_status knows that we called this init script with
+	## "status" option and adapts its messages accordingly.
+	rc_status -v
+	;;
+    probe)
+	## Optional: Probe for the necessity of a reload, print out the
+	## argument to this init script which is required for a reload.
+	## Note: probe is not (yet) part of LSB (as of 1.9)
+	rc_status -u
+	;;
+    install)
+	echo -n "install rcBuildFs..."
+	if [[ -f "$rcBuildFs_inst" && $rcBuildFs_inst -nt $0 ]] ; then
+	  echo -n "allready done..."
+	else
+	  rm -f $rcBuildFs_inst && \
+	    cp $0 $rcBuildFs_inst && \
+		  /sbin/insserv $rcBuildFs_inst && \
+			ln -s $rcBuildFs_inst $rcBuildFs_link
+	fi
+	rc_status -v
+	;;
+    uninstall)
+	echo -n "uninstall rcBuildFs..."
+	if [[ ! -f "$rcBuildFs_inst" ]] ; then
+	  echo -n "allready done..."
+	else
+	  /sbin/insserv -r rcBuildFs && rm -f $rcBuildFs_inst $rcBuildFs_link
+	fi
+	rc_status -v
+	;;
+    tobuild)
+	ToBui
+	;;
+    tobak)
+	ToBak
+	;;
+    *)
+	Usage
+	;;
+esac
+rc_exit

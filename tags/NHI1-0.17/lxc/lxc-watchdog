@@ -1,0 +1,559 @@
+#! /bin/bash
+#+
+#:  \file       lxc/lxc-watchdog
+#:  \brief      \$Id$
+#:  
+#:  (C) 2013 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+# Shell functions sourced from /etc/rc.status:
+#      rc_check         check and set local and overall rc status
+#      rc_status        check and set local and overall rc status
+#      rc_status -v     be verbose in local rc status and clear it afterwards
+#      rc_status -v -r  ditto and clear both the local and overall rc status
+#      rc_status -s     display "skipped" and exit with status 3
+#      rc_status -u     display "unused" and exit with status 3
+#      rc_failed        set local and overall rc status to failed
+#      rc_failed <num>  set local and overall rc status to <num>
+#      rc_reset         clear both the local and overall rc status
+#      rc_exit          exit appropriate to overall rc status
+#      rc_active        checks whether a service is activated by symlinks
+. /etc/rc.status
+
+# Reset status of this service
+rc_reset
+
+# exit on undef variable
+set -u
+
+#usage: string
+die() {
+  echo "Error: $@"
+  exit 1
+}
+
+# Return values acc. to LSB for all commands but status:
+# 0       - success
+# 1       - generic or unspecified error
+# 2       - invalid or excess argument(s)
+# 3       - unimplemented feature (e.g. "reload")
+# 4       - user had insufficient privileges
+# 5       - program is not installed
+# 6       - program is not configured
+# 7       - program is not running
+# 8--199  - reserved (8--99 LSB, 100--149 distrib, 150--199 appl)
+# 
+# Note that starting an already running service, stopping
+# or restarting a not-running service as well as the restart
+# with force-reload (in case signaling is not supported) are
+# considered a success.
+
+lxc_check_root() {
+  (( $(id -u) != 0 )) && die "unable to continue without 'root' permissions"
+}
+
+# usage: [name] status
+# if 'name' is given the name is checkt and the exit status signal
+# if status is set (0) or not set (1)
+# if 'name' is NOT given the function act as 'filter' and an
+# incomming stream of names is chacked again the status given.
+# the output are only the 'names' with given 'status'.
+# the status is someting like RUNNING, STOPPED, STARTING, STOPPING, FREEZ
+lxc_is() {
+  if (( $# == 1 )) ; then
+    while read name ; do
+      lxc-info -s -n $name 2>/dev/null | awk -v name=$name -v check=$1 '$1 == "state:" && $2 == check {print name}'
+    done
+  else
+    lxc-info -s -n $1 2>/dev/null | grep $2 1>/dev/null
+  fi
+}
+
+# usage: name command...
+# check if name is a 'valid' lxc-container
+lxc_exists() {
+  name=$1
+  if [ ! -e $LXCDIR/$name/config ] ; then
+    echo "Usage: $0 invalid name '$name', valid names are"
+    lxc_status
+    return 1
+  fi
+  return 0
+}
+
+# usage: name
+# get the 'rootfs' parameter out of the lxc-container-config-file
+lxc_rootfs() {
+  awk '$1 == "lxc.rootfs" { print $3 }' "$LXCDIR/$1/config"
+}
+
+# usage: name
+# execute the 'lxc-info' command with common loglevel and logfile
+# discard annoying messages from stderr
+lxc_info() {
+  lxc-info -n $1 -o $LXCLOG/$name.log -l $LXCLOGLEVEL 2>/dev/null
+}
+
+# usage: name
+# extract the PID from the container-init process
+lxc_pid() {
+  lxc_info $1 | awk '/pid:/ {print $2}'
+}
+
+# usage: pattern
+# list all lxc-container 
+lxc_list_container() {
+  [[ $1 == 'ALL' ]] && set -- '*'
+  ls $LXCDIR/$1/config 2>/dev/null | cut -d/ -f5 | sort
+}
+
+# usage: ""
+# display the status of every lxc-container sorted by name
+lxc_status() {
+  ( echo name status pid mode lvattr root
+    echo ==== ====== === ==== ====== ====
+    # setup a hash of lv options
+    set -- $(lvs -o lv_path,lv_attr --nosuffix --noheadings /dev/$LXC_VG_NAME/$LXC_LV_PREFIX*)
+    while (( $# )) ; do
+      eval ${1##*/}=$2
+      shift 2
+    done
+    # 
+    lxc_list_container ALL | while read name
+    do
+      lxc_info $name | awk '/state:/ { st=$2 } /pid:/ { print st,$2 }' | \
+	while read status pid ; do 
+	  eval lv=\${$LXC_LV_PREFIX$name:------}
+	  mode=""
+	  for f in on_boot on_maintainance on_error ; do
+	    test -f $LXCDIR/$name/$f && mode="${mode}${f:3:1}" || mode="${mode}-"
+	  done
+	  echo "$name $status $pid $mode $lv $(lxc_rootfs $name)"
+    done
+  done ) | column -t
+}
+
+# usage: message
+# prefix the 'message' with the current date-time and write to stdout
+lxc_log() {
+  echo `date +%Y-%m-%dT%H:%M:%S` "$*"
+}
+
+# usage: command name args...
+# execute a 'lxc-tool' with default loglevel and logfile
+# example: lxc_exec start master args...
+# exec: lxc-start -n name -o logfile -l loglevel args...
+lxc_exec() {
+  cmd=$1; shift
+  name=$1; shift
+  lxc-$cmd -n $name -o $LXCLOG/$name.log -l $LXCLOGLEVEL "$@"
+}
+
+# usage: name state [timeout]
+# execute an 'lxc-wait' command and wait $LXCWAIT seconds for timeout.
+# the different states monitored are: RUNNING, STOPPED, STARTING, STOPPING
+lxc_wait() {
+  timeout ${3:-$LXCWAIT} lxc-wait -n $1 -s $2 -o $LXCLOG/$name.log -l $LXCLOGLEVEL
+}
+
+# usage: name message
+# write a error-message to stdout, set the 'on_error' flag and disable
+# automatic booting of the lxc-container.
+# this function is executed on a fatal non-recoverable error
+lxc_on_error() {
+  name=$1; shift
+  lxc_log "ERROR: $name - $*"
+  touch $LXCDIR/$name/on_error
+}
+
+# usage: name
+# start a lxc-container with environment cleanup and error handling
+lxc_start() {
+  name=$1
+  lxc_is $name STOPPED && {
+    lxc_log "starting $name..."
+    lxc_exec start $name -c $LXCLOG/$name.console -d
+    lxc_wait $name RUNNING || {
+      lxc_on_error $name "unable to start"
+      return 1
+    }
+    rm -f $LXCDIR/$name/on_maintainance
+    lxc_log "starting $name... done"
+  }
+  return 0
+}
+
+# usage: name
+# stop a lxc-container with environment cleanup and error handling
+lxc_stop() {
+  name=$1
+  lxc_is $name RUNNING && {
+    (( ! ${on_deamon_stop:-0} )) && touch $LXCDIR/$name/on_maintainance
+    lxc_log "stopping $name..."
+    # we can not use 'lxc-shutdown -n name -w...' because it is using
+    # the 'kill -PWR $pid' and this does not works on opensuse
+    kill -RTMIN+3 $(lxc_pid $name)
+    lxc_wait $name STOPPED 40 || {
+      lxc_log "using lxc-stop..."
+      lxc_exec stop $name
+      lxc_wait $name STOPPED || {
+        lxc_log "using lxc-kill..."
+       lxc_exec kill $name 9
+       lxc_wait $name STOPPED || {
+         lxc_on_error $name "unable to stop"
+         return 1
+       }
+      }
+    }
+    lxc_log "stopping $name... done"
+  }
+  return 0
+}
+
+# usage: name
+# restart a lxc-container with environment cleanup and error handling
+lxc_restart() {
+  name=$1
+  touch $LXCDIR/$name/on_maintainance
+  lxc-shutdown -r $name -t 40 || return $?
+  return 0
+}
+
+# usage: ""
+# list all lxc-container who have an 'on_boot' flag and are ready für booting
+lxc_list_on_boot() {
+  (
+    ls $LXCDIR/*/on_boot 2> /dev/null | while read path ; do
+      dir=${path%/*}
+      [[ -f $dir/on_error || -f $dir/on_maintainance ]] && continue
+      echo ${dir##*/}
+    done
+  ) | sort
+}
+
+# usage: (start|stop)
+# start or stopp all lxc-container having the 'on_boot' flag
+# and are not in 'on_maintainance' or 'on_error' mode
+lxc_work_on_boot() {
+  case "$1" in
+    start)
+      lxc_list_on_boot | lxc_is STOPPED | while read name ; do
+	lxc_start $name
+      done
+    ;;
+    stop)
+      # we need this flag to signal 'lxc_stop' to avoid the 'on_maintainance' flag
+      on_deamon_stop=1
+      lxc_list_on_boot | lxc_is RUNNING | while read name ; do
+	lxc_stop $name
+      done
+      on_deamon_stop=0
+    ;;
+  esac
+}
+
+
+# usage: ""
+# called by trap signal handler to shutdown the watchdog-daemon
+# add the 'on_boot' lxc-container.
+lxc_watchdog_trap() {
+  lxc_log "stopping watchdog-daemon..."
+  lxc_work_on_boot stop
+  lxc_log "stopping watchdog-daemon... done"
+  exit 0
+}
+
+# usage: ""
+# watchdog daemon used to automatic start a lxc-container.
+# this daemon ist started by 'lxc_watchdog_start'.
+# this daemon handel ONLY unplaned shutdown of a container...
+# no health-check is implemented (for now)
+lxc_watchdog() {
+  trap 'lxc_watchdog_trap' EXIT
+  lxc_log "starting watchdog-daemon"
+  while true ; do
+    lxc_work_on_boot start
+    sleep 60
+  done
+}
+
+# usage: ""
+# start the watchdog-daemon and start all the lxc-container having an 'on_boot' flag
+# and who are not in 'on_error' and 'on_maintainence' mode
+lxc_watchdog_start() {
+  echo -n "Starting lxc-watchdog daemon"
+  /sbin/checkproc $bin || {
+    /sbin/startproc -l $LXCLOG/watchdog.log $bin $0 watchdog
+  }
+  rc_status -v
+}
+
+# usage: ""
+# stop all the lxc-container having an 'on_boot' flag
+# and who are not in 'on_error' and 'on_maintainence' mode
+# stop the watchdog-daemon
+lxc_watchdog_stop() {
+  echo -n "Shutting down lxc-watchdog daemon"
+  /sbin/killproc $bin
+  rc_status -v
+}
+
+# usage: name args...
+# open a ssh-session to the lxc-container.
+# as long as lxc-attach does not work without an kernel patch we need a root
+# ssh connection !!without!! a posswort protection. For this issue I created
+# the key '/root/.ssh/lxc_rsa' with 'ssh-keygen'.
+# without args start a login-shell
+# if the setup is ok you can make a test:
+# ./lxc-watchdog ssh CONTAINER-NAME ls
+lxc_shell() {
+  name=$1; shift
+  ssh -i /root/.ssh/lxc_rsa "root@$name" "$@"
+}
+
+usage() {
+less <<EOF
+
+Usage: ${0##*/} ...
+
+commands for a named container
+  start,stop,restart ..... [ALL|PATTERN|name...]
+  log,llog,fstab,config .. [ALL|PATTERN|name...]
+  shell,console .......... [ALL|PATTERN|name...]
+
+  zypper ................. [ALL|PATTERN|name] zypper-args...
+  (un)set mode ........... [ALL|PATTERN|name...]
+
+commands for the watchdog-deamon
+  start,stop,restart,status,stat,log,install,uninstall
+
+named action:
+  start		start a specific lxc-container clear the 'maintainance' mode
+  stop		stop a specific lxc-container set the 'maintainance' mode
+  restart	restart a specific lxc-container
+  shell		open an ssh-shell to the lxc-container root account
+  console	open the 'console' of the lxc-container
+  llog		follow the lxc-tools log-messages
+  log		follow the console log-message
+  fstab/config	edit the lxc-container 'fstab' or 'config' file
+
+special named action:
+  zypper	package mangement for a specific lxc-container
+  (un)set	(un)set the (b)oot, (m)aintainance or (e)rror mode
+
+unnamed action:
+  start		start the watchdog-daemon and all lxc-container who are in 'boot' 
+		and are not in 'error' and not in 'maintenance' mode
+  stop		stop the watchdog-daemon and all lxc-container who are 'boot'
+		and are not in 'error' and not in 'maintenance' mode
+  restart	restart the watchdog-deamon
+  status	display the status of all lxc-container from internal or from
+		the 'systemctl' tool
+  stat		always display the status from the internal
+  log		follow the watchdog-daemon log file
+  mlog		follow the watchdog-messages from /var/log/messages log file
+  (un)install	(un)install the 'lxc-watchdog' service
+
+mode handling
+  there are three different modes: (b)oot, (m)aintainance and (e)rror.
+  the current mode is displayed with the 'lxc-watchdog stat' command using
+  the 'mode' column
+
+  boot-mode
+    the (b)oot mode is set/unset with the:
+      'lxc-watchdog (set|unset) "b" container-name'
+    command and is used to signal 'automatic' booting/shutdown during 
+    watchdog-deamon startup/shutdown. 
+    this happen normally on system startup/shutdown by the 'init' process
+
+  maintainance-mode
+    this mode is set if a specific container is shutdown with the 
+      'lxc-watchdog stop container-name'
+    command and is used to disable automatic booting even if the boot-mode
+    is set. the maintainance-mode is cleared after an successfull 
+      'lxc-watchdog start container-name'
+    command
+
+  error-mode
+    this mode is set if a specific container fails during 'start' or 'stop'
+    and disable automatic booting even if the boot-mode is set.
+    every sucessfull 'start' or 'stop' command will clean the error-mode.
+
+EOF
+  exit 3
+}
+
+# create necessary variables
+LXCDIR=/var/lib/lxc
+LXCLOGLEVEL=INFO
+LXCWAIT=10
+LXC_LV_PREFIX=lxc_
+LXC_VG_NAME=lxc
+
+# create necessary directories
+if (( $(id -u) == 0 )) ; then
+  LXCLOG=/var/log/lxc
+  LXCLOCK=/var/lock/lxc
+else
+  LXCLOG=/tmp/lxc-$USER/log
+  LXCLOCK=/tmp/lxc-$USER/lock
+fi
+
+# create necessary directories
+mkdir -p $LXCLOCK
+mkdir -p $LXCLOG
+
+bin=/var/run/lxc/lxc-watchdog
+cache="/var/cache/lxc/opensuse/partial-$(arch)"
+
+mkdir -p ${bin%/*}
+[[ ! -x $bin || /bin/bash -nt $bin ]] && cp -fp /bin/bash $bin
+
+if [[ ${0##*/} == "lxc-watchdog" ]] ; then
+  # any arguments?
+  (( $# == 0 )) && usage
+  command=$1; shift
+else
+  command=${0##*lxc-watchdog-}
+fi
+
+# special command argument scan
+case $command in
+  start|stop|restart|fstab|config|zypper|reload|force-reload|restart|try-restart|condrestart|watchdog|install|uninstall)
+    lxc_check_root
+  ;;
+  set|unset)
+    lxc_check_root
+    # special command 'set/unset' need the mode argument
+    case $1 in
+      b) mode_file=on_boot ;;
+      m) mode_file=on_maintainance ;;
+      e) mode_file=on_error ;;
+      *) die "invalid $command mode '$1'"
+    esac
+    [[ $command == 'set' ]] && mode_cmd=touch || mode_cmd=rm
+    shift
+  ;;
+esac
+
+# distinguish between 'with' and 'without' arguments
+if (( $# != 0 )) ; then
+  # 'with' arguments
+  # the arguments are names of the lxc-container
+  for pat in "$@" ; do
+    for name in $(lxc_list_container "$pat") ; do
+      lxc_exists $name || continue
+      case "$command" in
+	start)
+	  lxc_start $name
+	;;
+	stop)
+	  lxc_stop $name
+	;;
+	restart)
+	  lxc_restart $name
+	;;
+	llog)
+	  less $LXCLOG/$name.log
+	;;
+	log)
+	  less $LXCLOG/$name.console
+	;;
+	fstab|config)
+	  vi $LXCDIR/$name/$command
+	;;
+	shell)
+	  shift
+	  lxc_shell $name "$@"
+	  break
+	;;
+	console)
+	  lxc_exec console $name
+	;;
+	zypper)
+	  shift
+	  zypper --root $(lxc_rootfs $name) --cache $cache "$@"
+	  break
+	;;
+	set|unset)
+	  $mode_cmd -f $LXCDIR/$name/$mode_file
+	;;
+	*)
+	  usage
+	;;
+      esac
+    done
+  done
+else
+  # 'without' arguments
+  case "$command" in
+    status|stat)
+      echo -n "Checking for service lxc-watchdog..."
+      /sbin/checkproc $bin
+      rc_status -v
+      echo
+      lxc_status
+    ;;
+    watchdog)
+      lxc_watchdog
+    ;;
+    start)
+      lxc_watchdog_start
+      lxc_status
+    ;;
+    stop)
+      lxc_watchdog_stop
+      lxc_status
+    ;;
+    reload|force-reload|restart|restart|try-restart|condrestart)
+      lxc_watchdog_stop
+      lxc_watchdog_start
+      lxc_status
+    ;;
+    log)
+      tail -n 100 -f $LXCLOG/watchdog.log
+    ;;
+    mlog)
+      tail -n 500 -f /var/log/messages | grep lxc-watchdog
+    ;;
+    install)
+      echo -n "install lxc-watchdog..."
+      if [[ -f "/etc/init.d/lxc-watchdog" && "/etc/init.d/lxc-watchdog" -nt "$0" ]] ; then
+	echo -n "allready done..."
+      else 
+	rm -f /etc/init.d/lxc-watchdog
+	cp $0 /etc/init.d/lxc-watchdog
+	/sbin/insserv /etc/init.d/lxc-watchdog
+      fi
+      if [[ ! -L "/usr/sbin/rclxc-watchdog" ]] ; then
+	ln -fs /etc/init.d/lxc-watchdog /usr/sbin/rclxc-watchdog
+      fi
+      rc_status -v
+    ;;
+    uninstall)
+      echo -n "uninstall lxc-watchdog..."
+      if [[ ! -f "/etc/init.d/lxc-watchdog" ]] ; then
+	echo -n "allready done..."
+      else 
+	lxc_watchdog_stop
+	lxc_status
+	/sbin/insserv -r lxc-watchdog
+	rm -f /etc/init.d/lxc-watchdog
+      fi
+      if [[ -L "/usr/sbin/rclxc-watchdog" ]] ; then
+	rm -f /usr/sbin/rclxc-watchdog
+      fi
+      rc_status -v
+    ;;
+    *)
+      usage
+    ;;
+  esac
+fi
+
+exit 0

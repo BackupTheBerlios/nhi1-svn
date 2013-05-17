@@ -1,0 +1,8 @@
+Revision history for Perl extension Net::PerlMsgque.
+
+3.6  Fri Oct 16 07:57:53 2009
+	- original version; created by h2xs 1.23 with options
+		-c -n Net::PerlMsgque
+	- add libmsgque support
+
+

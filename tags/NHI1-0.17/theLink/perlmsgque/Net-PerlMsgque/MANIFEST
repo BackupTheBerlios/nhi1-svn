@@ -1,0 +1,8 @@
+Changes
+Makefile.PL
+MANIFEST
+PerlMsgque.xs
+ppport.h
+README
+t/Net-PerlMsgque.t
+lib/Net/PerlMsgque.pm

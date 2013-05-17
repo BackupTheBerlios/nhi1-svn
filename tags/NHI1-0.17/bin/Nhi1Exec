@@ -1,0 +1,410 @@
+#!/bin/bash
+#+
+#:  \file       bin/Nhi1Exec
+#:  \brief      \$Id$
+#:  
+#:  (C) 2009 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+set -u
+
+export LANG="C"
+
+# find env.sh config file
+abs_top_builddir=$PWD
+while [[ ! -f "$abs_top_builddir/env.sh" && "$abs_top_builddir" != '/' ]] ; do 
+  abs_top_builddir=$(dirname "$abs_top_builddir")
+done
+if [[ -r "${abs_top_builddir%/}/env.sh" ]] ; then
+  echo "using: $abs_top_builddir/env.sh"
+  . "$abs_top_builddir/env.sh"
+else
+ echo "unable to find the 'env.sh' configuration file"
+ echo "please build first and than use this tool in the build-tree"
+ exit
+fi
+
+##
+## =========================================================================
+## Functions
+##
+
+Die() {
+  echo "Error[${BASH_LINENO[1]}]: $*" 1>&2
+  exit 1
+}
+
+Usage() {
+  cat - <<-EOF
+The script is used as a wrapper to a NHI1 related tool, written using 
+one of the suported programming language abd identifed by the file postfix:
+
+  tcl, pl, php, rb, py, cs, vb, go, java, c, cc, test
+
+The general sytax is:
+
+  > Nhi1Exec [options...] file.POSTFIX [options...] args...
+
+If the "file.POSTFIX" argument has NO absolute path the file is search in the 
+local, local-relative-in-source or example ... directory.
+
+example:
+
+  1. invoke a single executable identified by the language postfix
+        > Nhi1Exec path/to/myprog.(tcl|pl|php|rb|py|cs|vb|go|java|c|cc|test)
+
+  2. invoke a test script to test the "python" and "perl" features
+        > cd NHI1-X.X/theLink/tests
+        > Nhi1Exec int.test --only-python-perl
+
+  3. invoke all tests for language "go" using "threads" and only "binary" data
+        > cd NHI1-X.X/theLink/tests
+        > Nhi1Exec all.tcl --only-go --only-threads --only-binary
+
+  4. start "tcl" server from the example-directory using "tcp" and listing on 
+     port "7777" and "spawn" for every new connection a new server
+        > cd NHI1-X.X/theLink/tests
+        > Nhi1Exec server.tcl --tcp --port 7777 --spawn
+
+  5. make all tests (not available for windows)
+        > cd NHI1-X.X
+        > make check
+
+Help is available with the following commands:
+
+  1. test specific help
+        > cd NHI1-X.X/theLink/tests
+        > Nhi1Exec all.tcl --help
+     or
+        > Nhi1Exec all.tcl --help-msgque
+
+  2. tcltest specific help
+        > man tcltest
+
+Available test scripts:
+$(
+  find $abs_top_srcdir -name tests | while read dir ; do
+    ( 
+      ls $dir/*.test 1>/dev/null 2>&1 && {
+	echo -e "\n  ${dir#$abs_top_srcdir/}:"
+	cd $dir
+	ls -1 *.test | xargs -n 4 printf '    %-18s %-18s %-18s %-18s\n'
+      }
+    )
+  done
+)
+
+The prefix is used to add debugger or profiler tools in front of the executable.
+The following tools are supported:
+
+  st:   strace
+            > $PREFIX_st
+  vg:   valgrind:
+            > $PREFIX_vg
+  sp:   valgrind: gen-suppressions
+            > $PREFIX_sp
+  lc:   valgrind: leak-chec
+            > $PREFIX_lc
+  sr:   valgrind: leak-chec + show-reachable
+            > $PREFIX_sr
+  gdb:  use debugger 'gdb'
+            > $PREFIX_gdb
+  ddd:  use debugger 'ddd'
+            > $PREFIX_ddd
+  kdbg: use debugger 'kdbg'
+            > $PREFIX_kdbg
+  sdk:  windows sdk command shell
+            > $PREFIX_sdk
+  windbg:  windows sdk debugger
+            > $PREFIX_windbg
+  depends:  windows profiler
+            > $PREFIX_depends
+EOF
+  exit 1
+}
+
+mycygpath() {
+  eval $CYGPATH_M \"$1\"
+}
+
+#
+# lookup the token
+#
+lookup() {
+  if [[ "$1" == '-silent' ]] ; then
+    declare -i silent=1
+    shift
+  else
+    declare -i silent=0
+  fi
+  declare -a ret
+  declare CMDDIR="$(dirname -- "$1")"
+  if test -d "$CMDDIR" ; then
+    CMDDIR="$(mycygpath "$(cd "$CMDDIR";pwd)")"
+  fi
+  declare CM1="$(basename -- "$1")"
+  declare CM2="${CM1%.*}"
+  declare lng="${CM1##*.}"
+
+  # fix the CMD path
+  if [[ ! -f "$CMDDIR/$CM1" && ! -f  "$CMDDIR/$CM2" ]] ; then
+    # look for CMD in the same directory but in the source tree
+    CMDDIR="$abs_top_srcdir_m/${CMDDIR#$abs_top_builddir_m/}"
+    if [[ ! -f  "$CMDDIR/$CM1" && ! -f  "$CMDDIR/$CM2" ]] ; then
+      # look into the example directories
+      case "$lng" in
+	tcl)      CMDDIR="$abs_top_srcdir_m/theLink/example/tcl";;
+	test)     CMDDIR="$abs_top_srcdir_m/theLink/tests";;
+	java)     CMDDIR="$abs_top_builddir_m/theLink/example/java";;
+	py)	  CMDDIR="$abs_top_srcdir_m/theLink/example/python";;
+	pl)	  CMDDIR="$abs_top_srcdir_m/theLink/example/perl";;
+	rb)	  CMDDIR="$abs_top_srcdir_m/theLink/example/ruby";;
+	php)      CMDDIR="$abs_top_srcdir_m/theLink/example/php";;
+	cs)	  CMDDIR="$abs_top_builddir_m/theLink/example/csharp";;
+	vb)	  CMDDIR="$abs_top_builddir_m/theLink/example/vb";;
+	go)	  CMDDIR="$abs_top_builddir_m/theLink/example/go";;
+	cc)	  CMDDIR="$abs_top_builddir_m/theLink/example/cc";;
+	c)	  CMDDIR="$abs_top_builddir_m/theLink/example/c";;
+      esac
+    fi
+  fi
+
+  if [[ -f "$CMDDIR/$CM1" ]] ; then
+    CMDDIR="$CMDDIR/"
+    CM1="$CM1"
+  elif [[ -f "$CMDDIR/$CM2" ]] ; then
+    CMDDIR="$CMDDIR/"
+    CM1="$CM2"
+  elif [[ -f "$CMDDIR/$CM2.exe" ]] ; then
+    CMDDIR="$CMDDIR/"
+    CM1="$CM2.exe"
+  elif (( ! silent )) ; then
+    CMDDIR=""
+    CM1="$1"
+  fi
+
+  if (( silent )) ; then
+    echo "$CMDDIR$CM1"
+  else 
+    # find executable if CMD is a script-file
+    case "$lng" in
+      tcl|test) EXE="${TCLSH:-tclsh}";;
+      java)	EXE="${JAVA:-java}"; CM1="example.${CM1%.*}";;
+      py)	EXE="${PYTHON:-python}";;
+      pl)	EXE="${PERL:-perl}";;
+      rb)	EXE="${RUBY:-ruby}";;
+      php)	EXE="${PHP:-php};-c;$abs_top_builddir_m/theLink/msgqueforphp";;
+      cs)	EXE="${CLREXEC}"; CM1="${CM1%.*}.exe";;
+      go)	EXE=""; CM1="${CM1%.*}$EXT";;
+      cc)	EXE=""; CM1="${CM1%.*}$EXT";;
+      c)	EXE=""; CM1="${CM1%.*}$EXT";;
+      bat)	EXE='cmd.exe;/E:ON;/V:ON;/C;call';;
+      *)	EXE="";;
+    esac
+
+    test -n "$EXE" && ret+=("$EXE")
+    test -n "$CM1" && ret+=("$CMDDIR$CM1")
+    IFS=";";echo "${ret[*]}";unset IFS
+  fi
+}
+
+##
+## =========================================================================
+## Main
+##
+
+# special Windows
+if [[ ${WINDIR:-} != "" ]] ; then
+  PATH=$PATH:$LD_LIBRARY_PATH
+  EXT=.exe
+  MONO=""
+else
+  EXT=""
+  MONO=$CLREXEC
+fi
+export TS_DEBUG=0
+
+PREFIX=""
+
+PREFIX_vg="valgrind;--trace-children=yes;--num-callers=36;--quiet"
+PREFIX_sdk=${SDK_EXEC// /;}
+PREFIX_windbg="$PREFIX_sdk;C:/Program Files/Debugging Tools for Windows (x64)/windbg.exe"
+PREFIX_depends="C:/Users/dev1usr/Desktop/depends/depends.exe;/pa:1"
+PREFIX_gdb="gdb;-d;../perlmsgque/Net*/;--tui;--args"
+PREFIX_ddd="ddd;--args"
+PREFIX_kdbg="/opt/kde3/bin/kdbg"
+PREFIX_lc="valgrind;--trace-children=yes;--leak-check=full;--num-callers=36;--quiet"
+PREFIX_sr="valgrind;--trace-children=yes;--leak-check=full;--show-reachable=yes;--num-callers=36;--quiet"
+PREFIX_st="strace"
+PREFIX_sp="valgrind;--trace-children=yes;--leak-check=full;--num-callers=36;--quiet;--gen-suppressions=all"
+
+# setup special variables
+#case "${1:-}" in
+#  *.tcl|*.test)   
+#    # find library.tcl
+#    d="$abs_top_srcdir${PWD#$abs_top_builddir}"
+#    [[ -r "$d/library.tcl" ]] && export TS_LIBRARY="$d/library.tcl"
+#    unset d
+#  ;;
+#esac
+
+TEE=""
+POSTFIX=""
+
+##
+## =========================================================================
+## Command-Line
+##
+
+eval "$($abs_top_srcdir/sbin/SetupEnv "$0" "$@" <<-'EOF'
+G_Shell 'bash'
+# ---------------------------------------------------------------------
+G_Date='$Date$'
+G_Revision='$Revision$'
+G_Author='$Author: aotto1968 $'
+G_Source='$URL: svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk/bin/Nhi1Config $'
+# --------------------------------------------------------------------
+G_Description='frontend to run test-scripts'
+G_HelpProc='Usage'
+# -------------------------------------------------------------------
+G_Option break-on-non-option
+G_Argument 'prefix:prefix:no:prefix test with:L:no:vg:gdb:ddd:kdbg:lc:sr:st:sp:mdb:sdk:windbg:depends'
+G_Argument 'lookup:lookup:no:lookup a test-script:B'
+G_Argument 'remote:remote:no:add "--tcp --port 7777 --thread" to the argument(s):B'
+
+EOF
+  )"
+
+(( $# == 0 )) && Usage
+
+if [[ "$lookup" == 'yes' ]] ; then
+  lookup "$1"
+  exit
+fi
+
+if [[ "$remote" == 'yes' ]] ; then
+  set -- "$@" --tcp --port 7777 --thread
+fi
+
+case "$prefix" in
+  vg) 
+    PREFIX=$PREFIX_vg
+    POSTFIX='grep -v DWARF2'
+  ;;
+  sdk) 
+    PREFIX=$PREFIX_sdk
+    POSTFIX=''
+    TEE='no'
+  ;;
+  windbg) 
+    PREFIX=$PREFIX_windbg
+    POSTFIX=''
+    TEE='no'
+  ;;
+  depends) 
+    PREFIX=$PREFIX_depends
+    POSTFIX=''
+    TEE='no'
+  ;;
+  gdb) 
+    PREFIX=$PREFIX_gdb
+    POSTFIX=''
+    TEE='no'
+  ;;
+  ddd) 
+    PREFIX=$PREFIX_ddd
+    TEE='no'
+  ;;
+  kdbg) 
+    PREFIX=$PREFIX_kdbg
+    TEE='no'
+  ;;
+  lc) 
+    PREFIX=$PREFIX_lc
+    POSTFIX='grep -v DWARF2'
+  ;;
+  sr) 
+    PREFIX=$PREFIX_sr
+    POSTFIX='grep -v DWARF2'
+  ;;
+  st) 
+    PREFIX=$PREFIX_st
+  ;;
+  sp) 
+    PREFIX=$PREFIX_sp
+    POSTFIX='grep -v DWARF2'
+  ;;
+  mdb) 
+    MONO='mdb'
+  ;;
+esac
+
+# set local tcltest configuration file
+export TS_LIBRARY="$(mycygpath "$(lookup -silent library.tcl)")"
+if [[ -r "$TS_LIBRARY" ]] ; then
+  echo "add: TS_LIBRARY=$PWD/library.tcl"
+else
+  echo "skip: TS_LIBRARY"
+  unset TS_LIBRARY
+fi
+
+# rebuild command line, expand the path, find executable etc..
+#
+declare -a cmdline=()
+declare -a args=()
+declare -i first=1
+declare id=all
+
+while (( $# )) ; do
+  if [[ "$1" == -* && $first -eq 1 ]] ; then
+    args+=("$1")
+  else
+    if (( first )) ; then
+      if [[ "$1" == *.test || "$1" == *all.tcl ]] ; then
+	TEE="${TEE:-yes}"
+	POSTFIX="${POSTFIX:-cat}"
+      fi
+      id=$(basename -- "${1%.*}")
+      # "" need for white-space-path
+      IFS=";";cmdline+=( $(lookup "$1") ) || exit;unset IFS
+      (( ${#args[@]} )) && cmdline+=( "${args[@]:-}" )
+      args=()
+      (( first=0 ))
+    else
+      cmdline+=( "$1" )
+      [[ "$1" == "@" ]] && first=1
+    fi
+  fi
+  shift
+done
+
+IFS=",";echo "exec: [${#cmdline[@]}] ${cmdline[*]}";unset IFS
+
+set "${cmdline[@]}"
+
+EXE="$1"; shift
+IFS=";"
+
+if [[ $TEE == "yes" ]] ; then
+  if [[ $PREFIX == *kdbg* ]] ; then
+    exec $PREFIX "$EXE" -a "$@" 2>&1 | $POSTFIX | tee ./$id.res
+  else
+    exec $PREFIX "$EXE" "$@" 2>&1 | $POSTFIX | tee ./$id.res
+  fi
+else
+  if [[ $PREFIX == *kdbg* ]] ; then
+    $PREFIX $EXE -a "$@"
+  else
+    if [[ "$POSTFIX" == "cat" ]] ; then
+      exec $PREFIX "$EXE" "$@" 2>&1 | $POSTFIX
+    else
+      exec $PREFIX "$EXE" "$@"
+    fi
+  fi
+fi
+

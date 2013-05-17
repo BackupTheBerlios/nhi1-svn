@@ -1,0 +1,204 @@
+#+
+#:  \file       theLink/tests/byt.test
+#:  \brief      \$Id$
+#:  
+#:  (C) 2002 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+set self [info script]
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+#set tcl_traceExec 1
+
+set MAX    [tclmsgque const maxY]
+set MIN    [tclmsgque const minY]
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [getNum 2] {
+
+ # transport-type: string or binary
+  foreach B [getEnv BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [getEnv COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filter SRV_LST $C] {
+
+##
+## -----------------------------------------------------------------------
+## int
+##
+
+# startup binary --------------------------
+
+Setup $I $B $C $S
+
+# tests ----------------------------
+
+test byt-1-($I|$B|$C|$S) {echo datatype (MQ_INT)} {
+    tclmsgque print objtype [Echo1 $FH_LAST ECOU ReadY SendY $MAX]
+} "int"
+
+test byt-2-($I|$B|$C|$S) {(MQ_WID to MQ_INT) fit max} \
+    -body           {Echo1 $FH_LAST ECOY ReadY SendY $MAX} \
+    -returnCodes    ok \
+    -result         $MAX
+ 
+test byt-3-($I|$B|$C|$S) {(MQ_WID to MQ_INT) fit min} \
+    -body           {Echo1 $FH_LAST ECOY ReadY SendY $MIN} \
+    -returnCodes    ok \
+    -result         $MIN
+
+test byt-4-($I|$B|$C|$S) {(MQ_STR to MQ_INT) fit max} \
+    -body           {Echo1 $FH_LAST ECOY ReadY SendC $MAX} \
+    -returnCodes    ok \
+    -result         $MAX
+
+test byt-5-($I|$B|$C|$S) {(MQ_STR to MQ_INT) fit min} \
+    -body           {Echo1 $FH_LAST ECOY ReadY SendC $MIN} \
+    -returnCodes    ok \
+    -result         $MIN
+
+test byt-6-($I|$B|$C|$S) {(MQ_STR to MQ_INT) error size} \
+    -body           {Echo1 $FH_LAST ECOY ReadY SendC 123.7} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] size ERROR, can not convert '123.7' into an 'BYT' object*}
+
+test byt-7-($I|$B|$C|$S) {range error underflow} \
+    -body           {Echo1 $FH_LAST ECOY ReadY SendC ${MIN}0} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] underflow ERROR, can not convert '*' into an 'BYT' object*}
+
+test byt-8-($I|$B|$C|$S) {range error overflow} \
+    -body           {Echo1 $FH_LAST ECOY ReadY SendC ${MAX}0} \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] overflow ERROR, can not convert '*' into an 'BYT' object*}
+ 
+if {$B eq "binary"} {
+    test byt-9-($I|$B|$C|$S) {(MQ_WID to MQ_INT) error WID type} \
+	-body           {Echo1 $FH_LAST ECOY ReadY SendW 1234} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] type ERROR, it is not allowed to convert an 'WID' object into an 'BYT' object*}
+} else {
+    test byt-9-($I|$B|$C|$S) {(MQ_WID to MQ_INT) error WID type} \
+	-body           {Echo1 $FH_LAST ECOY ReadY SendW 1234} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] overflow ERROR, can not convert '1234' into an 'BYT' object*}
+}
+
+if {$B eq "binary"} { 
+    test byt-10-($I|$B|$C|$S) {(MQ_DBL to MQ_INT) error DBL type} \
+	-body           {Echo1 $FH_LAST ECOY ReadY SendD 1234.5} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] type ERROR, it is not allowed to convert an 'DBL' object into an 'BYT' object*}
+} else {
+    test byt-10-($I|$B|$C|$S) {(MQ_DBL to MQ_INT) error DBL type} \
+	-body           {Echo1 $FH_LAST ECOY ReadY SendD 1234.5} \
+	-returnCodes    error \
+	-match          glob \
+	-result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] size ERROR, can not convert '1.2345*e+*03' into an 'BYT' object*}
+}
+ 
+test byt-11-($I|$B|$C|$S) {(MQ_LST to MQ_INT) error LST type} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendL_START
+      $FH_LAST SendD 1234.5
+      $FH_LAST SendL_END
+      $FH_LAST SendEND_AND_WAIT ECOY
+      $FH_LAST ReadY
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA1\] type ERROR, it is not allowed to convert an 'LST' object into an 'BYT' object*}
+
+test byt-12-($I|$B|$C|$S) {set/get context data} \
+    -body           {
+	for {set i 0} {$i < $I} {incr i} {
+	  set ctx $FH(0-$i)
+	  $ctx SendSTART
+	  $ctx SendY $i
+	  $ctx SendEND SETU
+	}
+	for {set i 0} {$i < $I} {incr i} {
+	  set ctx $FH(0-$i)
+	  $ctx SendSTART
+	  $ctx SendEND_AND_WAIT GETU
+	  set ret [$ctx ReadY]
+	  if {$i != $ret} {
+	    error "expect value '$i' but got '$ret'"
+	  }
+	}
+	return OK
+    } \
+    -result	{OK}
+
+## !ACHTUNG! dieser test muss am ende stehen
+test byt-XX-($I|$B|$C|$S) {no data} \
+    -body           {
+      $FH_LAST SendSTART
+      $FH_LAST SendEND_AND_WAIT ECOY
+      $FH_LAST ReadY
+    } \
+    -returnCodes    error \
+    -match          glob \
+    -result         {[cC]> (client-0) \[service-call-error\] <Tok|ECOY> <Num|213>*
+[sS]> (server-0) \[*sReadA1\] request more arguments than available*}
+
+# cleanup ---------------------------
+
+Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+freeTests
+
+# vim: set syn=tcl:

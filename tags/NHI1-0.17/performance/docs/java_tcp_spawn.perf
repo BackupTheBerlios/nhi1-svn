@@ -1,0 +1,15 @@
+> Server.java --tcp --host localhost --port 7787 --spawn
+> client.c --all --tcp --host localhost --port 7787
+using: /build/dev1usr/Main/performance-thread/performance/thread/env.sh
+skip: TS_LIBRARY
+exec: [7] /build/dev1usr/Main/performance-thread/performance/thread/theLink/example/c/client,--all,--tcp,--host,localhost,--port,7787
+C> (client:2923:0x7f6c5b31e700) [1367505160:246271] [B-0-0-0-0x13e90e8-main]: start: --------------------------------------
+C> (client:2923:0x7f6c5b31e700) [1367505160:344359] [B-0-0-0-0x13e90e8-statistics]:                      MqSendEND:   5.10e+05
+C> (client:2923:0x7f6c5b31e700) [1367505160:521738] [B-0-0-0-0x13e90e8-statistics]:         MqSendEND_AND_CALLBACK:   2.82e+05
+C> (client:2923:0x7f6c5b31e700) [1367505161:571086] [B-0-0-0-0x13e90e8-statistics]:             MqSendEND_AND_WAIT:   4.76e+04
+C> (client:2923:0x7f6c5b31e700) [1367505161:811701] [B-0-0-0-0x13e90e8-statistics]:               MqSendPERSISTENT:   5.00e+01
+C> (client:2923:0x7f6c5b31e700) [1367505170:132023] [B-0-0-0-0x13e90e8-statistics]:                  parent create:   1.37e+01
+C> (client:2923:0x7f6c5b31e700) [1367505170:164871] [B-0-0-0-0x13e90e8-statistics]:                  parent delete:   3.05e+03
+C> (client:2923:0x7f6c5b31e700) [1367505170:310193] [B-0-0-0-0x13e90e8-statistics]:                   child create:   6.88e+03
+C> (client:2923:0x7f6c5b31e700) [1367505170:341457] [B-0-0-0-0x13e90e8-statistics]:                   child delete:   3.20e+04
+C> (client:2923:0x7f6c5b31e700) [1367505170:341471] [B-0-0-0-0x13e90e8-main]: end: ----------------------------------------

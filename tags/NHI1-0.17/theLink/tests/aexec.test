@@ -1,0 +1,188 @@
+#+
+#:  \file       theLink/tests/aexec.test
+#:  \brief      \$Id$
+#:  
+#:  (C) 2002 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+set self [info script]
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+SetConstraints all
+
+if {$env(USE_REMOTE) || ![testConstraint tcl]} return
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+set AEXEC [file nativename [file normalize [file join $linksrcdir acmds aexec]]]
+
+test aexec-1 {aexec help} \
+    -body   { Exec $TCLSH $AEXEC --help } \
+    -returnCodes ok \
+    -match glob \
+    -result {NONE--usage: aexec put \[msgque-options\] @ TOK command args... @ ...
+usage: aexec get \[msgque-options\] @ TOK args...
+
+  The aexec tool is used to create a remote-function-call client/server applica-
+  tions using the libmsgque library providing services identified by a unique
+  token 'TOK' as 4 character string.
+
+  The server 'aexec put':
+    The argument after the Token is a 'command' like 'cat' or a 'shell-script'.
+    The server is able to serve multiple services separated by the alfa '@' sepa-
+    rator and is usually started together with the '--fork' option.
+
+  The client 'aexec get':
+    The client is able to call a single service identified by the token 'TOK'.
+    All arguments after the token 'TOK' are passed to stdin of the server 'cmd'
+    separated by newlines.
+
+  aexec \[OPTION\]:
+    -h, --help       print this help
+    --help-msgque    print "msgque" specific help
+}
+
+test aexec-2 {example network tcp first token} \
+    -setup  {
+	set PORT    [FindFreePort]
+	exec $TCLSH $AEXEC put  --tcp --port $PORT @ HOST cat /etc/hosts @ SERV cat /etc/services &
+    } \
+    -cleanup	{
+    } \
+    -body   { 
+	Exec $TCLSH $AEXEC get --tcp --port $PORT @ HOST
+    } \
+    -returnCodes ok \
+    -match glob \
+    -result {*}
+
+test aexec-3 {example tcp connection second token} \
+    -constraints    tcp \
+    -setup  {
+	set PORT    [FindFreePort]
+	exec $TCLSH $AEXEC put  --tcp --port $PORT @ HOST cat /etc/hosts @ SERV cat /etc/services &
+    } \
+    -cleanup	{
+    } \
+    -body   { 
+	Exec $TCLSH $AEXEC get --tcp --port $PORT @ SERV
+    } \
+    -returnCodes ok \
+    -match glob \
+    -result {*}
+
+test aexec-3 {example tcp connection second token} \
+    -constraints    tcp \
+    -setup  {
+	set PORT    [FindFreePort]
+	exec $TCLSH $AEXEC put  --tcp --port $PORT @ HOST cat /etc/hosts @ SERV cat /etc/services &
+    } \
+    -cleanup	{
+    } \
+    -body   { 
+	Exec $TCLSH $AEXEC get --tcp --port $PORT @ SERV
+    } \
+    -returnCodes ok \
+    -match glob \
+    -result {*}
+
+test aexec-4 {example uds connection first token} \
+    -constraints    uds \
+    -setup  {
+	set FILE    [FindFreeFile]
+	exec $TCLSH $AEXEC put  --uds --file $FILE @ HOST cat /etc/hosts @ SERV cat /etc/services &
+    } \
+    -cleanup	{
+	catch {file delete -force $FILE}
+    } \
+    -body   { 
+	Exec $TCLSH $AEXEC get --uds --file $FILE @ HOST
+    } \
+    -returnCodes ok \
+    -match glob \
+    -result {*}
+
+test aexec-5 {example uds connection with client arguments} \
+    -constraints    uds \
+    -setup  {
+	set FILE    [FindFreeFile]
+	exec $TCLSH $AEXEC put  --uds --file $FILE @ TEST cat &
+    } \
+    -cleanup	{
+	catch {file delete -force $FILE}
+    } \
+    -body   { 
+	Exec $TCLSH $AEXEC get --uds --file $FILE @ TEST 1 2 3
+    } \
+    -returnCodes ok \
+    -result {1
+2
+3}
+
+test aexec-6 {example uds using wrong service} \
+    -constraints    uds \
+    -setup  {
+	set FILE    [FindFreeFile]
+	exec $TCLSH $AEXEC put  --uds --file $FILE @ TEST cat &
+    } \
+    -cleanup	{
+	catch {file delete -force $FILE}
+    } \
+    -body   { 
+	Exec $TCLSH $AEXEC get --uds --file $FILE @ WROG 1 2 3
+    } \
+    -returnCodes ok \
+    -result {C> (aexec) [service-call-error] <Tok|WROG> <Num|1>
+S> (aexec) [pTokenInvoke] token <WROG> not found}
+
+test aexec-7 {example uds using wrong service using server name} \
+    -constraints    uds \
+    -setup  {
+	set FILE    [FindFreeFile]
+	exec $TCLSH $AEXEC put --name otto  --uds --file $FILE @ TEST cat &
+    } \
+    -cleanup	{
+	catch {file delete -force $FILE}
+    } \
+    -body   { 
+	Exec $TCLSH $AEXEC get --uds --file $FILE @ WROG 1 2 3
+    } \
+    -returnCodes ok \
+    -result {C> (aexec) [service-call-error] <Tok|WROG> <Num|1>
+S> (otto) [pTokenInvoke] token <WROG> not found}
+
+test aexec-8 {example uds using wrong service using client name} \
+    -constraints    uds \
+    -setup  {
+	set FILE    [FindFreeFile]
+	exec $TCLSH $AEXEC put --name otto --uds --file $FILE @ TEST cat &
+    } \
+    -cleanup	{
+	catch {file delete -force $FILE}
+    } \
+    -body   { 
+	Exec $TCLSH $AEXEC get --name question --uds --file $FILE @ WROG 1 2 3
+    } \
+    -returnCodes ok \
+    -result {C> (question) [service-call-error] <Tok|WROG> <Num|1>
+S> (otto) [pTokenInvoke] token <WROG> not found}
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+# vim: set syn=tcl:

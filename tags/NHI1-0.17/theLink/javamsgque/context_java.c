@@ -1,0 +1,300 @@
+/**
+ *  \file       theLink/javamsgque/context_java.c
+ *  \brief      \$Id$
+ *  
+ *  (C) 2009 - NHI - #1 - Project - Group
+ *  
+ *  \version    \$Rev$
+ *  \author     EMail: aotto1968 at users.berlios.de
+ *  \attention  this software has GPL permissions to copy
+ *              please contact AUTHORS for additional information
+ */
+
+#define MSGQUE msgque
+
+#include "context_java.h"
+
+void FactoryInit(JNIEnv*);
+
+/// global data
+JavaVM	    *cached_jvm;
+
+jclass	    NS(Class_MqS), NS(Class_IServerSetup), NS(Class_IServerCleanup),
+	    NS(Class_Throwable), NS(Class_Class), NS(Class_Object), NS(Class_IService),
+	    NS(Class_NullPointerException), NS(Class_System), NS(Class_RuntimeException),
+	    NS(Class_ICallback), NS(Class_StackTraceElement), NS(Class_StringWriter),
+	    NS(Class_PrintWriter), NS(Class_MqBufferS), NS(Class_MqSException), 
+	    NS(Class_IFactory), NS(Class_IBgError), NS(Class_IEvent), NS(Class_MqFactoryS),
+	    NS(Class_MqDumpS);
+
+jfieldID    NS(FID_MqFactoryS_hdl), NS(FID_MqBufferS_hdl), NS(FID_MqS_hdl), NS(FID_MqSException_num), 
+	    NS(FID_MqSException_code), NS(FID_MqSException_txt), NS(FID_MqDumpS_hdl);
+
+jmethodID   NS(MID_Throwable_getMessage), NS(MID_Class_getName), NS(MID_IService_Service),
+	    NS(MID_IServerSetup_ServerSetup), NS(MID_IServerCleanup_ServerCleanup), NS(MID_System_exit),
+	    NS(MID_ICallback_Callback), NS(MID_Throwable_printStackTrace),
+	    NS(MID_StringWriter_INIT), NS(MID_PrintWriter_INIT), NS(MID_StringWriter_toString),
+	    NS(MID_MqSException_INIT), NS(MID_MqBufferS_INIT), NS(MID_MqS_ErrorSet), 
+	    NS(MID_MqS_INIT), NS(MID_MqS_Factory), NS(MID_IBgError_BgError), NS(MID_IEvent_Event),
+	    NS(MID_MqFactoryS_INIT), NS(MID_MqDumpS_INIT); 
+
+JNIEXPORT jint JNICALL
+JNI_OnLoad(JavaVM *jvm, void *reserved)
+{
+  JNIEnv *env;
+  jclass cls;
+  cached_jvm = jvm;  /* cache the JavaVM pointer */
+
+  if ((*jvm)->GetEnv(jvm, (void*) &env, JNI_VERSION_1_6)) {
+    return JNI_ERR; /* JNI version not supported */
+  }
+
+  MqSetup();
+
+#define check(v,c) if ((v=(c))==NULL) return JNI_ERR
+#define checkC(v,n) check(cls, (*env)->FindClass(env, n));\
+    check(v, (*env)->NewGlobalRef(env, cls));
+#define checkF(v,c,n,s) check(v, (*env)->GetFieldID(env,c,n,s));
+#define checkSF(v,c,n,s) check(v, (*env)->GetStaticFieldID(env,c,n,s));
+#define checkM(v,c,n,s) check(v, (*env)->GetMethodID(env,c,n,s));
+#define checkSM(v,c,n,s) check(v, (*env)->GetStaticMethodID(env,c,n,s));
+
+  // setup "jclass"
+  checkC(NS(Class_MqS),			    "javamsgque/MqS");
+  checkC(NS(Class_MqBufferS),		    "javamsgque/MqBufferS");
+  checkC(NS(Class_MqFactoryS),		    "javamsgque/MqFactoryS");
+  checkC(NS(Class_MqDumpS),		    "javamsgque/MqDumpS");
+  checkC(NS(Class_MqSException),	    "javamsgque/MqSException");
+  checkC(NS(Class_IService),		    "javamsgque/IService");
+  checkC(NS(Class_IServerSetup),	    "javamsgque/IServerSetup");
+  checkC(NS(Class_IServerCleanup),	    "javamsgque/IServerCleanup");
+  checkC(NS(Class_ICallback),		    "javamsgque/ICallback");
+  checkC(NS(Class_IBgError),		    "javamsgque/IBgError");
+  checkC(NS(Class_IEvent),		    "javamsgque/IEvent");
+  checkC(NS(Class_RuntimeException),	    "java/lang/RuntimeException");
+  checkC(NS(Class_NullPointerException),    "java/lang/NullPointerException");
+  checkC(NS(Class_Throwable),		    "java/lang/Throwable");
+  checkC(NS(Class_Class),		    "java/lang/Class");
+  checkC(NS(Class_Object),		    "java/lang/Object");
+  checkC(NS(Class_System),		    "java/lang/System");
+  checkC(NS(Class_StringWriter),	    "java/io/StringWriter");
+  checkC(NS(Class_PrintWriter),		    "java/io/PrintWriter");
+
+  // setup "jfieldID"
+  checkF(NS(FID_MqS_hdl),			NS(Class_MqS),		  "hdl",		"J");
+  checkF(NS(FID_MqBufferS_hdl),			NS(Class_MqBufferS),	  "hdl",		"J");
+  checkF(NS(FID_MqFactoryS_hdl),		NS(Class_MqFactoryS),	  "factory",		"J");
+  checkF(NS(FID_MqDumpS_hdl),			NS(Class_MqDumpS),	  "hdl",		"J");
+  checkF(NS(FID_MqSException_num),		NS(Class_MqSException),	  "p_num",		"I");
+  checkF(NS(FID_MqSException_code),		NS(Class_MqSException),	  "p_code",		"I");
+  checkF(NS(FID_MqSException_txt),		NS(Class_MqSException),	  "p_txt",		"Ljava/lang/String;");
+
+  // setup "jmethodID"
+  checkM(NS(MID_Throwable_getMessage),		NS(Class_Throwable),	  "getMessage",		"()Ljava/lang/String;");
+  checkM(NS(MID_Throwable_printStackTrace),	NS(Class_Throwable),	  "printStackTrace",	"(Ljava/io/PrintWriter;)V");
+  checkM(NS(MID_Class_getName),			NS(Class_Class),	  "getName",		"()Ljava/lang/String;");
+  checkM(NS(MID_IService_Service),		NS(Class_IService),	  "Service",		"(Ljavamsgque/MqS;)V");
+  checkM(NS(MID_IServerSetup_ServerSetup),	NS(Class_IServerSetup),	  "ServerSetup",	"()V");
+  checkM(NS(MID_IServerCleanup_ServerCleanup),	NS(Class_IServerCleanup), "ServerCleanup",	"()V");
+  checkM(NS(MID_StringWriter_INIT),		NS(Class_StringWriter),	  "<init>",		"()V");
+  checkM(NS(MID_StringWriter_toString),		NS(Class_StringWriter),	  "toString",		"()Ljava/lang/String;");
+  checkM(NS(MID_PrintWriter_INIT),		NS(Class_PrintWriter),	  "<init>",		"(Ljava/io/Writer;)V");
+  checkSM(NS(MID_System_exit),			NS(Class_System),	  "exit",		"(I)V");
+  checkM(NS(MID_ICallback_Callback),		NS(Class_ICallback),	  "Callback",		"(Ljavamsgque/MqS;)V");
+  checkM(NS(MID_MqSException_INIT),		NS(Class_MqSException),	  "<init>",		"(IILjava/lang/String;)V");
+  checkM(NS(MID_MqBufferS_INIT),		NS(Class_MqBufferS),	  "<init>",		"(J)V");
+  checkM(NS(MID_MqDumpS_INIT),			NS(Class_MqDumpS),	  "<init>",		"(J)V");
+  checkM(NS(MID_MqFactoryS_INIT),		NS(Class_MqFactoryS),	  "<init>",		"(J)V");
+  checkM(NS(MID_MqS_ErrorSet),			NS(Class_MqS),		  "ErrorSet",		"(Ljava/lang/Throwable;)V");
+  checkM(NS(MID_MqS_INIT),			NS(Class_MqS),		  "<init>",		"(Ljavamsgque/MqS;)V");
+  checkM(NS(MID_IBgError_BgError),		NS(Class_IBgError),	  "BgError",		"()V");
+  checkM(NS(MID_IEvent_Event),			NS(Class_IEvent),	  "Event",		"()V");
+
+#undef check
+#undef checkC
+#undef checkF
+#undef checkSF
+#undef checkM
+
+  FactoryInit(env);
+
+  return JNI_VERSION_1_6;
+}
+
+JNIEXPORT void JNICALL 
+JNI_OnUnload(JavaVM *jvm, void *reserved)
+{
+  JNIEnv *env;
+  void *val;
+  if ((*jvm)->GetEnv(jvm, &val, JNI_VERSION_1_6)) {
+    return;
+  }
+
+  // cleanup libmsgque
+  MqCleanup();
+
+  // cleanup global variables
+  env = (JNIEnv*) val;
+  (*env)->DeleteGlobalRef(env, NS(Class_MqS));
+  (*env)->DeleteGlobalRef(env, NS(Class_MqBufferS));
+  (*env)->DeleteGlobalRef(env, NS(Class_MqSException));
+  (*env)->DeleteGlobalRef(env, NS(Class_IService));
+  (*env)->DeleteGlobalRef(env, NS(Class_IServerSetup));
+  (*env)->DeleteGlobalRef(env, NS(Class_IServerCleanup));
+  (*env)->DeleteGlobalRef(env, NS(Class_ICallback));
+  (*env)->DeleteGlobalRef(env, NS(Class_IFactory));
+  (*env)->DeleteGlobalRef(env, NS(Class_IEvent));
+  (*env)->DeleteGlobalRef(env, NS(Class_Throwable));
+  (*env)->DeleteGlobalRef(env, NS(Class_Class));
+  (*env)->DeleteGlobalRef(env, NS(Class_Object));
+  (*env)->DeleteGlobalRef(env, NS(Class_System));
+  (*env)->DeleteGlobalRef(env, NS(Class_StringWriter));
+  (*env)->DeleteGlobalRef(env, NS(Class_PrintWriter));
+  (*env)->DeleteGlobalRef(env, NS(Class_RuntimeException));
+  (*env)->DeleteGlobalRef(env, NS(Class_NullPointerException));
+  return;
+}
+
+static void 
+MQ_DECL NS(ThreadExit) (
+  int exitnum
+)
+{
+  (*cached_jvm)->DetachCurrentThread(cached_jvm);
+}
+
+static void
+MQ_DECL NS(ProcessExit) (
+  int exitnum
+)
+{
+  JNIEnv *env;
+  if ((*cached_jvm)->GetEnv(cached_jvm, (void*) &env, JNI_VERSION_1_6) == JNI_OK) {
+    (*env)->CallStaticVoidMethod(env, NS(Class_System), NS(MID_System_exit), (jint) exitnum);
+  }
+}
+
+JNIEXPORT void JNICALL NS(Exit) (
+  JNIEnv *	env, 
+  jobject	self 
+)
+{
+  MqExit(CONTEXT);
+}
+
+JNIEXPORT void JNICALL NS(pProcessEvent) (
+  JNIEnv *	env, 
+  jobject	self, 
+  jint		timeout,
+  jint		flags
+)
+{
+  SETUP_context;
+  ErrorMqToJavaWithCheck(MqProcessEvent(context, timeout, (enum MqWaitOnEventE) flags));
+error:
+  return;
+}
+
+JNIEXPORT void JNICALL NS(Init) (
+  JNIEnv *	env, 
+  jclass	cls,
+  jobjectArray	argv
+)
+{
+  jobject obj;
+  const char *str; 
+  jsize argc = (*env)->GetArrayLength(env, argv);
+  struct MqBufferLS *initB = MqInitCreate();
+  jsize i;
+  for (i=0; i<argc; i++) {
+    obj = (*env)->GetObjectArrayElement(env, argv, i);
+    str = JO2C_START(env, obj);
+    MqBufferLAppendC(initB,str);
+    JO2C_STOP(env,obj,str);
+  }
+}
+
+JNIEXPORT void JNICALL NS(ContextCreate) (
+  JNIEnv  *env, 
+  jobject self,
+  jobject tmpl
+)
+{
+  struct MqS *context = MqContextCreate (0, tmpl ? XCONTEXT(tmpl) : NULL);
+  MQ_PTR call;
+
+  context->self = (MQ_PTR) (*env)->NewGlobalRef(env, self);
+  if (context->self == NULL) {
+    ErrorStringToJava("unable to create global reference for 'context->class'");
+    goto error;
+  }
+
+  context->threadData		 = (MQ_PTR) env;
+  MqConfigSetIgnoreFork (context, MQ_YES);
+  context->setup.Parent.fCreate  = MqLinkDefault;
+  context->setup.Child.fCreate   = MqLinkDefault;
+  context->setup.fProcessExit    = NS(ProcessExit);
+  context->setup.fThreadExit	 = NS(ThreadExit);
+
+  // check for Server
+  if ((*env)->IsInstanceOf(env, self, NS(Class_IServerSetup)) == JNI_TRUE) {
+    JavaErrorCheckNULL(call = NS(ProcCreate)(env, self, NULL, NS(MID_IServerSetup_ServerSetup), NULL));
+    MqConfigSetServerSetup (context, NS(ProcCall), call, NS(ProcFree), NS(ProcCopy));
+  }
+  if ((*env)->IsInstanceOf(env, self, NS(Class_IServerCleanup)) == JNI_TRUE) {
+    JavaErrorCheckNULL(call = NS(ProcCreate)(env, self, NULL, NS(MID_IServerCleanup_ServerCleanup), NULL));
+    MqConfigSetServerCleanup (context, NS(ProcCall), call, NS(ProcFree), NS(ProcCopy));
+  }
+
+  // check for BgError
+  if ((*env)->IsInstanceOf(env, self, NS(Class_IBgError)) == JNI_TRUE) {
+    JavaErrorCheckNULL(call = NS(ProcCreate)(env, self, NULL, NS(MID_IBgError_BgError), NULL));
+    MqConfigSetBgError (context, NS(ProcCall), call, NS(ProcFree), NS(ProcCopy));
+  }
+
+  // check for Event
+  if ((*env)->IsInstanceOf(env, self, NS(Class_IEvent)) == JNI_TRUE) {
+    JavaErrorCheckNULL(call = NS(ProcCreate)(env, self, NULL, NS(MID_IEvent_Event), NULL));
+    MqConfigSetEvent (context, NS(ProcCall), call, NS(ProcFree), NS(ProcCopy));
+  }
+
+  SET_context(context);
+  return;
+
+error:
+  MqContextDelete(&context);
+  SET_context(0L);
+  return;
+}
+
+JNIEXPORT void JNICALL NS(ContextDelete) (
+  JNIEnv  *env, 
+  jobject self
+)
+{
+  struct MqS * context = CONTEXT;
+  if (context == NULL) {
+    return;
+  } else {
+    SETUP_self;
+    SET_context(0L);
+    MqContextDelete (&context);
+    if (self != NULL) (*env)->DeleteGlobalRef(env, self);
+  }
+}
+
+JNIEXPORT void JNICALL NS(LogC) (
+  JNIEnv  *env, 
+  jobject self,
+  jstring prefixO,
+  jint	  level,
+  jstring textO
+)
+{
+  MQ_CST prefix = JO2C_START(env, prefixO);
+  MQ_CST text = JO2C_START(env, textO);
+  MqLogC(CONTEXT, prefix, level, text);
+  JO2C_STOP(env, textO, text);
+  JO2C_STOP(env, prefixO, prefix);
+}
+

@@ -1,0 +1,118 @@
+#+
+#:  \file       theLink/tests/py_server.test
+#:  \brief      \$Id$
+#:  
+#:  (C) 2009 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+set self [info script]
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+SetConstraints all
+
+if {$env(USE_REMOTE) || ![testConstraint python]} return
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+if true {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [getNum 2] {
+
+ # transport-type: string or binary
+  foreach B [getEnv BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [getEnv COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filter SRV_LST $C python] {
+
+##
+## -----------------------------------------------------------------------
+## py_server test
+##
+
+# startup binary --------------------------
+
+#Setup $I $B $C $S
+
+# tests ----------------------------
+
+# cleanup ---------------------------
+
+#Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+} ; ## false
+
+SetConstraints all
+
+test py-server-X1 {server with defined UDS handle normal startup} \
+    -constraints    {local uds} \
+    -setup	    {   
+	## define server
+	set pyserver [makeFile [subst {
+import sys
+from pymsgque import *
+def setup (ctx):
+  pass
+srv = MqS()
+try:
+  srv.ConfigSetServerSetup(setup)
+  srv.LinkCreate(sys.argv)
+  srv.ProcessEvent(MqS_WAIT_FOREVER)
+except:
+  srv.ErrorSet()
+finally:
+  srv.Exit()
+	}] pyserver.[pid].dat]
+	## start
+	set UDS [FindFreeFile]
+	Bg @stdout $PYTHON $pyserver --debug $env(TS_DEBUG) --uds --file $UDS --spawn
+    } \
+    -cleanup	{
+	Cleanup
+    } \
+    -body       {
+	Create 1 [list --name client --uds --file $UDS]
+    } \
+    -match	glob \
+    -result	{<MqS-*> <MqS-*>}
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+# vim: set syn=tcl:

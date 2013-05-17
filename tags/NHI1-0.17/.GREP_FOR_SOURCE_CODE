@@ -1,0 +1,10 @@
+#!/bin/bash
+
+case ${1:-all} in
+  all)
+    find . -type f | egrep -v '(svn|tags|build|binary|man|html|win|exe|class|save|gz|Po|\.o|\.Plo|\.lo|\.so|Makefile.in|configure|autom4te.cache)'
+  ;;
+  c)
+    find . -type f | egrep '(\.c|\.cc|\.h)$'
+  ;;
+esac

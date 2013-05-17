@@ -1,0 +1,345 @@
+#!/bin/bash
+#+
+#:  \file       performance/performance.sh.in
+#:  \brief      \$Id$
+#:  
+#:  (C) 2009 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+set -u
+
+#set -xv
+
+typeset -i PORT=7777
+
+VG=""
+HT="no"
+#NUM=" --num 10 "
+NUM=" "
+
+if (( $# > 0 )) ; then 
+  case "$1" in
+    -vg)  VG="--prefix=vg" ; shift;;
+    -x)	  set -x; shift;;
+    -v)	  set -v; shift;;
+    -*)	  echo usage $0 -vb -x -v ...
+	  HT=yes
+	  shift
+    ;;
+  esac
+else
+  set -- ALL
+fi
+
+## setup the TOTAL - LINK perf
+FSL=" %-20s | %-8s %-8s %-8s %-8s %-8s %-8s %-8s %-8s\n"
+FIL=" %-20s | %8s %8s %8s %8s %9s %8s %8s %8s\n"
+exec 3>'@abs_top_srcdir@/performance/docs/total_link.perf'
+DATE=$(date +"%Y-%m-%d %H:%M:%S")
+printf "$FSL" "   Tests from:    " "  send  " "  send  " "  send  " "  send  " " parent  " " parent " " child  " " child  " 1>&3
+printf "$FSL" "$DATE"              "  END   " "CALLBACK" "  WAIT  " " PERSIS " " create  " " delete " " create " " delete " 1>&3
+printf "$FSL" -------------------   --------   --------   --------   --------   ---------   --------   --------   --------  1>&3
+
+### setup the TOTAL - BRAIN perf
+#FSB=" %-20s | %-8s %-8s\n"
+#FIB=" %-20s | %8s %8s\n"
+#exec 4>'@abs_top_srcdir@/performance/docs/total_brain.perf'
+#DATE=$(date +"%Y-%m-%d %H:%M:%S")
+#printf "$FSB" "   Tests from:    " "        " "        " 1>&4
+#printf "$FSB" "$DATE"              "  PUT   " "  GET   " 1>&4
+#printf "$FSB" -------------------   --------   --------  1>&4
+
+kill_parent=1
+sig_spec=-9
+
+function Die
+{
+  echor "ERROR: $*"
+  exit 1
+}
+
+function killtree {
+  local _pid=$1
+  local _sig=${2-KILL}
+  kill -stop ${_pid} # needed to stop quickly forking parent from producing child between child killing and parent killing
+  for _child in $(ps -o pid --no-headers --ppid ${_pid}); do
+    killtree ${_child} ${_sig}
+  done
+  echo kill -${_sig} ${_pid}
+  kill -${_sig} ${_pid}
+}
+
+function error
+{
+  echo "ERROR: $@"
+  exit 1
+}
+
+c=C
+cc=C++
+csharp=C#
+java=Java
+perl=Perl
+python=Python
+ruby=Ruby
+tcl=Tcl
+vb=VB.NET
+php=PHP
+go=Go
+
+TotalLink() {
+  L=$1;
+  T=$2;
+  F=${L}_${T}
+  local -a vals
+  IFS="
+"
+  IDX=0
+  if test -f "@abs_top_srcdir@/performance/docs/$F.perf" ; then
+    for V in $(awk -F ": " '/statistics/ {sub(/^  */, "", $3); print $3}' "@abs_top_srcdir@/performance/docs/$F.perf") ; do
+      vals[$IDX]=$V
+      let IDX++
+    done
+	if [[ "${vals[*]:-}" == "" ]] ; then
+	  echo "WARNING: no values available vor $F"
+	else
+	  printf "$FIL" "   ${!L}" ${vals[*]} 1>&3
+	fi
+  else 
+    printf "$FIL" "   ${!L}" na. na. na. na. na. na. na. na. 1>&3
+  fi
+}
+
+TotalBrain() {
+  L=$1;
+  T=$2;
+  F=${L}_${T}
+  local -a vals
+  IFS="
+"
+  IDX=0
+  if test -f "@abs_top_srcdir@/performance/docs/$F.perf" ; then
+    FLAG=NO
+    for LINE in $(<"@abs_top_srcdir@/performance/docs/$F.perf") ; do
+      unset IFS
+      [[ $LINE == *statistics* && $FLAG == "NO" ]] && {
+	set - ${LINE:68}
+	N="$1 $2"
+	V1=$5
+	FLAG=YES
+	continue
+      }
+      [[ $LINE == *statistics* && $FLAG == "YES" ]] && {
+	set - ${LINE:68}
+	[[ $N != "$1 $2" ]] && error FORMAT
+	V2=$5
+	FLAG=NO
+	printf "$FIL" "   $N" $V1 $V2 1>&4
+	continue
+      }
+    done
+
+  fi
+}
+
+ALL="c_pipe
+c_tcp_fork
+c_tcp_thread
+c_tcp_spawn
+c_uds_fork
+c_uds_thread
+c_uds_spawn
+cc_pipe
+cc_tcp_fork
+cc_tcp_thread
+cc_tcp_spawn
+cc_uds_fork
+cc_uds_thread
+cc_uds_spawn
+tcl_pipe
+tcl_tcp_fork
+tcl_tcp_thread
+tcl_tcp_spawn
+tcl_uds_fork
+tcl_uds_thread
+tcl_uds_spawn
+java_pipe
+java_tcp_thread
+java_tcp_spawn
+java_uds_thread
+java_uds_spawn
+python_pipe
+python_tcp_fork
+python_tcp_spawn
+python_uds_fork
+python_uds_spawn
+ruby_pipe
+ruby_tcp_fork
+ruby_tcp_spawn
+ruby_uds_fork
+ruby_uds_spawn
+csharp_pipe
+csharp_tcp_thread
+csharp_tcp_spawn
+csharp_uds_thread
+csharp_uds_spawn
+perl_pipe
+perl_tcp_fork
+perl_tcp_thread
+perl_tcp_spawn
+perl_uds_fork
+perl_uds_thread
+perl_uds_spawn
+go_pipe
+go_tcp_thread
+go_tcp_spawn
+go_uds_thread
+go_uds_spawn
+php_pipe
+php_tcp_fork
+php_tcp_spawn
+php_uds_fork
+php_uds_spawn"
+
+#brain_pipe
+#brain_tcp_fork
+#brain_tcp_thread
+#brain_tcp_spawn
+#brain_uds_fork
+#brain_uds_thread
+#brain_uds_spawn
+
+#vb_pipe
+#vb_tcp_thread
+#vb_tcp_spawn
+#vb_uds_thread
+#vb_uds_spawn
+
+[[ $HT == "yes" ]] && {
+  echo $ALL
+  exit 0
+}
+
+#apply the commandline filter
+# read from target all targets able to be tested add vars like USE_TCL="yes or no"
+eval $(grep USE thread/env.sh)
+# ALL mean averything
+[[ "$1" == "ALL" ]] && shift
+declare -a R
+declare -i found
+#loop over all target - filter items
+for A in $ALL ; do
+  IFS=_;B=($A);unset IFS
+  # first item is the language, uppercase, USE_ prefix
+  a=USE_${B[0]^^}
+  # "c" and "cc" are always build if USE_x=no -> skip
+  [[ "${B[0]}" != 'c' &&  "${B[0]}" != 'cc' && "${!a}" == "no" ]] && continue
+  # loop over commandline pattern
+  if (( $# > 0 )) ; then
+    let found=0
+    for C ; do
+      # everything NOT part of the pattern skip
+      [[ "$A" == *$C* ]] && let found=1
+    done
+  else
+    let found=1
+  fi
+  # every non-skipped pattern -> add
+  (( found == 1 )) && R+=($A)
+done
+
+## do the tests
+#for SRV in c tcl java python ; do
+for SRV in ${R[@]:-}; do
+
+  echo $SRV
+
+  outfile="@abs_top_srcdir@/performance/docs/${SRV}.perf"
+
+  case $SRV in
+    *thread* | *java* | *csharp* | *vb* | *go* )	
+      DIR="thread"
+    ;;
+    total)	
+      continue
+    ;;
+    *)	
+      DIR="nothread"
+    ;;
+  esac
+
+  case $SRV in
+    brain_*)	  SERVER="abrain"	;;
+    python_*)	  SERVER="server.py"    ;;
+    ruby_*)	  SERVER="server.rb"    ;;
+    csharp_*)	  SERVER="server.cs"    ;;
+    vb_*)	  SERVER="vbserver.vb"  ;;
+    java_*)	  SERVER="Server.java"  ;;
+    perl_*)	  SERVER="server.pl"    ;;
+    php_*)	  SERVER="server.php"   ;;
+    tcl_*)	  SERVER="server.tcl"   ;;
+    go_*)	  SERVER="server.go"    ;;
+    cc_*)	  SERVER="server.cc"    ;;
+    c_*)	  SERVER="server.c"     ;;
+    *)
+      echo "ERROR invalid server '$SRV'" 1>&1
+      exit 1
+    ;;
+  esac
+
+  case $SRV in
+    *_pipe)
+      CL="client.c${NUM}--all @ $SERVER"
+      echo "> ${CL}" | tee "$outfile"
+      ( cd $DIR && @abs_top_srcdir@/bin/Nhi1Exec $VG $CL 2>&1 | tee -a "$outfile" )
+      continue
+    ;;
+    *_uds_*)
+      COM_ARGS="--uds --file ./socket.uds"
+      COM_RM="./socket.uds"
+    ;;
+    *_tcp_*)
+      COM_ARGS="--tcp --host localhost --port $PORT"
+      COM_RM=""
+      let PORT=PORT+1
+    ;;
+  esac
+
+  case $SRV in
+    *_thread)	START=thread;;
+    *_spawn)	START=spawn;;
+    *_fork)	START=fork;;
+  esac
+
+  SV="$SERVER $COM_ARGS --$START"
+  CL="client.c${NUM}--all $COM_ARGS"
+  echo "> $SV" | tee "$outfile"
+  echo "> $CL" | tee -a "$outfile"
+  (cd $DIR && @abs_top_srcdir@/bin/Nhi1Exec $VG $SV ) &
+  PID=$! 
+  sleep 2
+  ( cd $DIR && @abs_top_srcdir@/bin/Nhi1Exec $CL 2>&1 | tee -a "$outfile" )
+  killtree $PID
+
+done
+
+# calculate the total
+for TST in pipe tcp_fork tcp_thread tcp_spawn uds_fork uds_thread uds_spawn; do
+  echo -e "\n $TST:" 1>&3
+  for LNG in c cc csharp java go perl python ruby tcl php; do
+    TotalLink ${LNG} ${TST}
+  done
+#  echo -e "\n $TST:" 1>&4
+#  for LNG in brain; do
+#    TotalBrain ${LNG} ${TST}
+#  done
+done
+cat '@abs_top_srcdir@/performance/docs/total_link.perf'
+
+test -f socket.uds && rm socket.uds
+exit 0

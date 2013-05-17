@@ -1,0 +1,162 @@
+#+
+#:  \file       theLink/tests/filter.test
+#:  \brief      \$Id$
+#:  
+#:  (C) 2002 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+set self [info script]
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+SetConstraints all
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+array set l2s [lng2startInit]
+
+set data1 [makeFile {xa:24:12345678987654321:5.78
+cg:89:98765432123456789:3.46} $self.[pid].1.dat]
+
+set data2 [makeFile {-A-:-B-
+-C-:-D-} $self.[pid].2.dat]
+
+##
+## -----------------------------------------------------------------------
+## filter test
+##
+
+foreach L [getEnv LNG_LST] {
+
+test filter-1-$L {filter + eof ok} \
+    -body       {Exec cat $data1 | {*}[getATool split] -d : @ {*}[getExample Filter1.$L] @ {*}[getATool join] -d :} \
+    -result	{<xa>:<24>:<12345678987654321>:<5.78>
+<cg>:<89>:<98765432123456789>:<3.46>}
+
+test filter-2-$L {filter with tcl error} \
+    -body       {Exec cat $data1 | {*}[getATool split] --debug 0 -d : @ {*}[getExample Filter2.$L] @ \
+			{*}[getATool join] -d :} \
+    -match	glob \
+    -result	{CHILDSTATUS-1-C> (split) \[service-call-error] <Tok|+FTR> <Num|1>
+S> (filter) \[*Error*] *my error*}
+
+test filter-3-$L {filter with default} \
+    -constraints {[testConstraint unix] || $L != "java"} \
+    -body       {
+	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] @ F2 @ F3 @ {*}[getATool join] -d :
+    } \
+    -result	"F3:F3:$START_ID($L):9:F2:F2:$START_ID($L):9:F1:F1:$START_ID($L):9:-A-:-B-
+F3:F3:$START_ID($L):9:F2:F2:$START_ID($L):9:F1:F1:$START_ID($L):9:-C-:-D-"
+
+  foreach S $l2s($L) {
+    
+    # "R2" on "fork" is not dupilcate because it is "inline"
+    switch -exact $S {
+      thread  { set R1 3 ; set R2 3 }
+      fork    { set R1 5 ; set R2 4 }
+      spawn   { set R1 9 ; set R2 9 }
+      pipe    { set R1 9 ; set R2 9 }
+    }
+    set I0 9
+
+test filter-4-$L-$S {filter with choose first} \
+    -body       {
+	ExecErr cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] --$S @ F2 @ F3 @ {*}[getATool join] -d :
+    } \
+    -result	"F3:F3:$START_ID($S):$R1:F2:F2:$START_ID($S):$R1:F1:F1:$START_ID($S):$I0:-A-:-B-
+F3:F3:$START_ID($S):$R1:F2:F2:$START_ID($S):$R1:F1:F1:$START_ID($S):$I0:-C-:-D-"
+
+test filter-5-$L-$S {filter with choose middel} \
+    -constraints {[testConstraint unix] || $L != "java"} \
+    -body       {
+	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] @ F2 --$S @ F3 @ {*}[getATool join] -d :
+    } \
+    -result	"F3:F3:$START_ID($S):$R1:F2:F2:$START_ID($S):$I0:F1:F1:$START_ID($L):$I0:-A-:-B-
+F3:F3:$START_ID($S):$R1:F2:F2:$START_ID($S):$I0:F1:F1:$START_ID($L):$I0:-C-:-D-"
+
+test filter-6-$L-$S {filter with choose last} \
+    -constraints {[testConstraint unix] || $L != "java"} \
+    -body       {
+	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] @ F2 @ F3 --$S @ {*}[getATool join] -d :
+    } \
+    -result	"F3:F3:$START_ID($S):$I0:F2:F2:$START_ID($L):$I0:F1:F1:$START_ID($L):$I0:-A-:-B-
+F3:F3:$START_ID($S):$I0:F2:F2:$START_ID($L):$I0:F1:F1:$START_ID($L):$I0:-C-:-D-"
+
+test filter-7-$L-$S {filter with choose middel and service-call-error} \
+    -constraints {[testConstraint unix] || $L != "java"} \
+    -body     {
+	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] @ F2 --$S @ F3
+    } \
+    -match    glob \
+    -result   {CHILDSTATUS-220-C> (split) \[service-call-error] <Tok|+FTR> <Num|220>
+C> (F1) \[service-call-error] <Tok|+FTR> <Num|220>
+C> (F2) \[service-call-error] <Tok|+FTR> <Num|220>
+S> (F3) \[*MqServiceGetFilter*] no filter is available
+C> (split) found in function "split" at file "asplit.c"
+C> (split) found in function "SplitCreate" at file "asplit.c"
+C> (split) use '-h' or '--help' for usage}
+
+test filter-8-$L-$S {filter with choose first and startup-error} \
+    -body     {
+	Exec cat $data2 | {*}[getATool split] -d : @ {*}[getExample Filter5.$L F1] --$S @ F2 @ DUMMY
+    } \
+    -match    glob \
+    -result   {CHILDSTATUS-204-C> (F2) \[*] can not start server 'DUMMY'*
+C> (F2) found in function "*MqLinkConnect" at file "link.c*"
+C> (F2) found in function "*MqLinkCreate" at file "link.c*"
+C> (F2) found in function "*MqLinkDefault" at file "link.c*"
+S> (F2) found in function "*MqLinkCreate" at file "link.c*"
+S> (F2) found in function "*MqLinkDefault" at file "link.c*"
+C> (split) found in function "pTokenCheckSystem" at file "token.c*"
+C> (split) found in function "pServiceStart" at file "service.c*"
+C> (split) found in function "pEventStart" at file "event.c*"
+C> (split) found in function "MqProcessEvent" at file "service.c*"
+C> (split) found in function "sWaitForToken" at file "link.c*"
+C> (split) found in function "MqLinkConnect" at file "link.c*"
+C> (split) found in function "MqLinkCreate" at file "link.c*"
+C> (split) found in function "SplitCreate" at file "asplit.c*"
+C> (split) use '-h' or '--help' for usage}
+
+    foreach C [filter -or COM_LST tcp uds] {
+
+test filter-9-$L-$C-$S {filter as Bg with choose first} \
+    -setup	{  
+	set TMP	[MakeFile "START" [pid].txt]
+	set CON	[FindFreeConnection $L.$C.$S]
+	set SRV	[list {*}[getExample Filter5.$L F1] {*}$CON --$S @ F2 @ F3 @ {*}[getATool join] -d : ]
+    } \
+    -body       {
+	Bg $TMP {*}$SRV
+	ExecErr cat $data2 | {*}[getATool split] -d : {*}$CON
+	WaitOnFileToken $TMP -D-
+    } \
+    -cleanup	{
+	Cleanup
+    } \
+    -result	"F3:F3:$START_ID($S):$R1:F2:F2:$START_ID($S):$R1:F1:F1:$START_ID($S):$R2:-A-:-B-
+F3:F3:$START_ID($S):$R1:F2:F2:$START_ID($S):$R1:F1:F1:$START_ID($S):$R2:-C-:-D-"
+
+    } ; # end "C"
+  } ; # end "S"
+} ; # end "L"
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+# vim: set syn=tcl:

@@ -1,0 +1,15 @@
+> Server.java --uds --file ./socket.uds --spawn
+> client.c --all --uds --file ./socket.uds
+using: /build/dev1usr/Main/performance-thread/performance/thread/env.sh
+skip: TS_LIBRARY
+exec: [5] /build/dev1usr/Main/performance-thread/performance/thread/theLink/example/c/client,--all,--uds,--file,./socket.uds
+C> (client:5169:0x7f9f2d146700) [1367505176:627644] [B-0-0-0-0xd85e88-main]: start: --------------------------------------
+C> (client:5169:0x7f9f2d146700) [1367505176:727677] [B-0-0-0-0xd85e88-statistics]:                      MqSendEND:   5.00e+05
+C> (client:5169:0x7f9f2d146700) [1367505176:890464] [B-0-0-0-0xd85e88-statistics]:         MqSendEND_AND_CALLBACK:   3.07e+05
+C> (client:5169:0x7f9f2d146700) [1367505177:532690] [B-0-0-0-0xd85e88-statistics]:             MqSendEND_AND_WAIT:   7.79e+04
+C> (client:5169:0x7f9f2d146700) [1367505177:536614] [B-0-0-0-0xd85e88-statistics]:               MqSendPERSISTENT:   5.48e+03
+C> (client:5169:0x7f9f2d146700) [1367505185:844158] [B-0-0-0-0xd85e88-statistics]:                  parent create:   1.37e+01
+C> (client:5169:0x7f9f2d146700) [1367505185:877309] [B-0-0-0-0xd85e88-statistics]:                  parent delete:   3.02e+03
+C> (client:5169:0x7f9f2d146700) [1367505186:17985] [B-0-0-0-0xd85e88-statistics]:                   child create:   7.11e+03
+C> (client:5169:0x7f9f2d146700) [1367505186:33147] [B-0-0-0-0xd85e88-statistics]:                   child delete:   6.61e+04
+C> (client:5169:0x7f9f2d146700) [1367505186:33159] [B-0-0-0-0xd85e88-main]: end: ----------------------------------------

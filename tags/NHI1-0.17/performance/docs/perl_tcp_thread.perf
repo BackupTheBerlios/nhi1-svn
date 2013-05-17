@@ -1,0 +1,15 @@
+> server.pl --tcp --host localhost --port 7795 --thread
+> client.c --all --tcp --host localhost --port 7795
+using: /build/dev1usr/Main/performance-thread/performance/thread/env.sh
+skip: TS_LIBRARY
+exec: [7] /build/dev1usr/Main/performance-thread/performance/thread/theLink/example/c/client,--all,--tcp,--host,localhost,--port,7795
+C> (client:12847:0x7feebe815700) [1367505291:562949] [B-0-0-0-0x8b80e8-main]: start: --------------------------------------
+C> (client:12847:0x7feebe815700) [1367505291:711171] [B-0-0-0-0x8b80e8-statistics]:                      MqSendEND:   3.37e+05
+C> (client:12847:0x7feebe815700) [1367505291:949696] [B-0-0-0-0x8b80e8-statistics]:         MqSendEND_AND_CALLBACK:   2.10e+05
+C> (client:12847:0x7feebe815700) [1367505293:653811] [B-0-0-0-0x8b80e8-statistics]:             MqSendEND_AND_WAIT:   2.93e+04
+C> (client:12847:0x7feebe815700) [1367505293:894685] [B-0-0-0-0x8b80e8-statistics]:               MqSendPERSISTENT:   5.00e+01
+C> (client:12847:0x7feebe815700) [1367505295:343119] [B-0-0-0-0x8b80e8-statistics]:                  parent create:   2.23e+02
+C> (client:12847:0x7feebe815700) [1367505295:358325] [B-0-0-0-0x8b80e8-statistics]:                  parent delete:   6.59e+03
+C> (client:12847:0x7feebe815700) [1367505295:492998] [B-0-0-0-0x8b80e8-statistics]:                   child create:   7.43e+03
+C> (client:12847:0x7feebe815700) [1367505295:520224] [B-0-0-0-0x8b80e8-statistics]:                   child delete:   3.68e+04
+C> (client:12847:0x7feebe815700) [1367505295:520237] [B-0-0-0-0x8b80e8-main]: end: ----------------------------------------

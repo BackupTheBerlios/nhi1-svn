@@ -1,0 +1,29 @@
+@ECHO OFF
+REM
+REM  \file       sbin/wincl.bat.in
+REM  \brief      \$Id$
+REM  
+REM  (C) 2013 - NHI - #1 - Project - Group
+REM  
+REM  \version    \$Rev$
+REM  \author     EMail: aotto1968 at users.berlios.de
+REM  \attention  this software has GPL permissions to copy
+REM              please contact AUTHORS for additional information
+REM
+set MAKE=
+set MAKEFLAGS=
+call "@SDK_SETENV@" /@SDK_DEBUG@ /@SDK_CPU@ 2>NUL
+IF /I @SDK_DEBUG@==Release SET EXTRA_FLAGS=/DNDEBUG
+REM NDEBUG -> used for assert
+REM /NOLOGO -> no logo, less visual pollution
+REM /c -> Compiles without linking.
+REM /Fo -> Specifies an object (.obj) file name or directory to be used instead of the default.
+REM /MD -> Causes your application to use the multithread- and DLL-specific version of the run-time library
+REM /Zi -> Produces a program database (PDB)
+REM /GL -> Whole Program Optimization
+REM /GF -> Eliminate Duplicate Strings
+REM /Ox -> Uses maximum optimization (/Ob2gity /Gs).
+REM /fp:precise -> Specify Floating-Point Behavior (default)
+
+@ECHO ON
+cl.exe /nologo /c /W3 /wd4711 /I. /Fo.libs/ /GF /GL /Ox /MD /Zi /@SDK_DEBUG@ %EXTRA_FLAGS% /DNO_STRICT /fp:precise %1 %2 %3 %4 %5 %6 %7 %8 %9

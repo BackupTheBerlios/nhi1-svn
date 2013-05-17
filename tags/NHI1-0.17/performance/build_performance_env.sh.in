@@ -1,0 +1,39 @@
+#! /bin/bash
+#+
+#:  \file       performance/build_performance_env.sh.in
+#:  \brief      \$Id$
+#:  
+#:  (C) 2009 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+## config/build/install
+function Build # <thread|nothread> <config-arg>...
+{
+  (
+    BUILD=$1; shift
+    rm -fr $BUILD
+    mkdir $BUILD
+    cd $BUILD
+    (
+      set -x
+      @abs_top_srcdir@/bin/Nhi1Config +i +s -p --enable-static $@ \
+		--with-tool-root='@NHI1_TOOL_ROOT@' --enable-cache \
+		--with-python --with-cxx --with-tcl --with-perl \
+		--with-ruby --with-php --prefix="@abs_builddir@/$BUILD" || exit 1
+      make -l 5 -j 4 || exit 1
+    ) || exit 1
+  ) || exit 1
+}
+
+## main
+if test "$1" = "thread" ; then
+  Build thread	 --enable-threads=yes --with-csharp --with-java --with-go
+elif test "$1" = "nothread" ; then
+  Build nothread --enable-threads=no --without-csharp --without-java --without-go
+fi
+

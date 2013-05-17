@@ -1,0 +1,52 @@
+#+
+#:  \file       tests/tool-root.test
+#:  \brief      \$Id$
+#:  
+#:  (C) 2013 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+test tool-root-no {check without using the 'tool-root' option} \
+    -body           { configure } \
+    -returnCodes    error \
+    -match			glob \
+    -result			{*configure: error: the option '--with-tool-root' or the environment variable 'NHI1_TOOL_ROOT' is required*} 
+
+test tool-root-wrong {check using wrong 'tool-root' option} \
+    -body           { configure --with-tool-root=hhh } \
+    -returnCodes    error \
+    -match			glob \
+    -result			{*configure: error: the directory 'hhh' is no directory*}
+
+test tool-root-with {check using 'tool-root' option with missing directory argument} \
+    -body           { configure --with-tool-root } \
+    -returnCodes    error \
+    -match			glob \
+    -result			{*configure: error: the option '--with-tool-root' and a directory argument is required*}
+
+test tool-root-without {check without using 'tool-root'} \
+    -body           { configure --without-tool-root } \
+    -returnCodes    error \
+    -match			glob \
+    -result			{*configure: error: the option '--with-tool-root' and a directory argument is required*}
+
+test tool-root {check with the 'tool-root' environmnet variable 'NHI1_TOOL_ROOT'} \
+	-setup			{ set env(NHI1_TOOL_ROOT) . } \
+    -body           { configure } \
+	-cleanup		{ unset env(NHI1_TOOL_ROOT) } \
+    -returnCodes	ok \
+    -match			glob \
+    -result			{*checking for build with: tool-root... .*}
+
+cleanupTests
+

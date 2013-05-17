@@ -1,0 +1,169 @@
+#!/usr/bin/env bash
+#+
+#:  \file       bin/Nhi1Tags
+#:  \brief      \$Id$
+#:  
+#:  (C) 2004 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+set -u
+
+# find top-level directory
+abs_top_dir=$PWD
+while [[ ! -f "$abs_top_dir/env.sh" && "${abs_top_dir##*/}" != 'NHI1' && "$abs_top_dir" != '/' ]] ; do
+  abs_top_dir=$(dirname "$abs_top_dir")
+done
+if [[ -r "$abs_top_dir/env.sh" ]] ; then
+  . "$abs_top_dir/env.sh"
+else
+  abs_top_srcdir=$abs_top_dir
+fi
+
+DO='yes'
+BASE="$(basename $PWD)"
+SPWD="$abs_top_srcdir${PWD#$abs_top_dir}"
+
+if [[ $HOSTTYPE == "FreeBSD" ]] ; then
+  ADD=''
+else
+  ADD='--c-kinds=+p'
+fi
+
+set -x
+[[ ! -f $abs_top_dir/tags ]] && (
+  cd $abs_top_dir
+  if test -n "${CC:-}" ; then
+    echo "" | $CC - -v -E 2>&1 | gawk '
+      BEGIN {
+	flag=0
+      }
+      /^#include <[.]{3}>.*$/ {
+	flag=1; next
+      }
+      /^[[:alpha:] ]+[.]$/ {
+	flag=0; next
+      }
+      {
+	if (flag) print $0
+      }
+    ' | while read path ; do
+	  test -d "$path" && find "$path" -type f -name "*.h" | xargs ctags -a 
+	done
+  else
+    echo "unable to find compiler setup.... skip setup global-header tags file"
+
+  fi
+)
+
+test -f $abs_top_dir/tags && cp $abs_top_dir/tags .
+
+[[ $BASE != "libmsgque" && $BASE != "ccmsgque" ]] && {
+  test -d $abs_top_srcdir/theLink/libmsgque && \
+    ctags -a $ADD $abs_top_srcdir/theLink/libmsgque/*.[ch]
+}
+
+[[ $BASE != "sqlite" ]] && {
+  ctags -a $abs_top_srcdir/theLink/sqlite/*.[ch]
+}
+
+[[ $BASE = "c" ]] && {
+  ctags -a $ADD $SPWD/*.[ch]
+}
+
+[[ $BASE = "cc" ]] && {
+  ctags -a $ADD $abs_top_builddir/theLink/ccmsgque/*.h
+}
+
+[[ $BASE = "ccmsgque" ]] && {
+  ctags -a $ADD --language-force=C++ $(find /usr/include/c++/4.3/ -type f)
+  ctags -a $ADD $SPWD/*.cc $SPWD/*.h
+}
+
+[[ $BASE == "tclmsgque" ]] && {
+  ctags -a $ADD $HOME/src/tcl-latest/generic/*.[ch]
+  ctags -a $ADD $HOME/src/tcl-latest/unix/*.[ch]
+  ctags -a $ADD $SPWD/*.[ch] -I HD,NS
+  exit 0
+}
+
+[[ $BASE == "javamsgque" ]] && {
+  find $JAVA_HOME/include -name "*.h" | \
+    xargs ctags -a $ADD -I NS
+  ctags -a $ADD $SPWD/*.java
+}
+
+[[ $BASE == "csmsgque" ]] && {
+  ctags -a $ADD $SPWD/*.cs
+}
+
+[[ $BASE == "pymsgque" ]] && {
+  if [[ "$OSTYPE" == "cygwin" ]] ; then
+    PY_HOME=''
+    PY_API=/cygdrive/c/Python32
+  else
+    PY_HOME=$HOME/src/python-latest/
+    PY_API=$HOME/ext/$MACHTYPE/test/lib/perl5
+  fi
+  test -n "$PY_API" && find $PY_API -name "*.h" | \
+    xargs ctags -a $ADD -I PyAPI_DATA,PyAPI_FUNC
+  test -n "$PY_HOME" && find -L $PY_HOME -name "*.c" | \
+    xargs ctags -a $ADD -I PyAPI_DATA,PyAPI_FUNC
+  #ctags -a $ADD *.py
+}
+
+[[ $BASE == "msgqueforphp" || $BASE == "MsgqueForPhp" ]] && {
+  find -L $HOME/src/php-latest -name "*.[ch]" | \
+    xargs ctags -a $ADD
+  find $HOME/ext/$MACHTYPE/test/include/php -name "*.[h]" | \
+    xargs ctags -f php.tags $ADD -I PHP_METHOD
+}
+
+[[ $BASE == "rubymsgque" ]] && {
+  find -L $HOME/src/ruby-latest -name "*.[ch]" | xargs ctags -a $ADD
+}
+
+[[ $PWD == *example/java* ]] && {
+  find $JAVA_HOME/include -name "*.h" | \
+    xargs ctags -a $ADD -I NS
+  ctags -a $ADD $abs_top_srcdir/theLink/javamsgque/*.java  $abs_top_srcdir/theLink/javamsgque/*.[ch]
+  ctags -a $ADD $SPWD/*.java
+  DO=no
+}
+
+[[ $BASE == "perlmsgque" || $BASE == "Net-PerlMsgque" ]] && {
+  if [[ "$OSTYPE" == "cygwin" ]] ; then
+    PERL_HOME=''
+    PERL_API=/cygdrive/c/Perl64
+  else
+    PERL_HOME=$HOME/src/perl-latest/
+    PERL_API=$HOME/ext/$MACHTYPE/test/lib/perl5
+  fi
+  test -n "$PERL_API" && find $PERL_API -name "*.h" | xargs ctags -a $ADD 
+  test -n "$PERL_HOME" && find -L $PERL_HOME -name "*.c" | xargs ctags -a $ADD
+  ctags -a $ADD -I XS --language-force=C *.[ch] *.xs
+  DO="no"
+}
+
+[[ $BASE == "tests" ]] && {
+  ctags -a $ADD $abs_top_srcdir/theLink/tests/*.tcl *.test
+}
+
+[[ $BASE == "atrans" ]] && {
+  ctags -a $ADD $SPWD/*.cc
+}
+
+# add all "c" and "h" files in the local directory
+if [[ $DO == "yes" ]] ; then
+  set $SPWD/*.[ch]
+  test -f ${1:-} && ctags -a $ADD -I NS "$@"
+fi
+
+## add
+
+exit 0
+

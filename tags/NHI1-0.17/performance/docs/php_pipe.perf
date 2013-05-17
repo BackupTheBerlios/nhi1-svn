@@ -1,0 +1,14 @@
+> client.c --all @ server.php
+using: /build/dev1usr/Main/performance-thread/performance/nothread/env.sh
+skip: TS_LIBRARY
+exec: [7] /build/dev1usr/Main/performance-thread/performance/nothread/theLink/example/c/client,--all,@,/home/dev1usr/ext/x86_64-suse-linux/nothread/bin/php,-c,/build/dev1usr/Main/performance-thread/performance/nothread/theLink/msgqueforphp,/home/dev1usr/Project/NHI1/theLink/example/php/server.php
+C> (client:14940:(nil)) [1367505364:613496] [B-0-0-0-0x126d308-main]: start: --------------------------------------
+C> (client:14940:(nil)) [1367505364:753637] [B-0-0-0-0x126d308-statistics]:                      MqSendEND:   3.57e+05
+C> (client:14940:(nil)) [1367505365:5119] [B-0-0-0-0x126d308-statistics]:         MqSendEND_AND_CALLBACK:   1.99e+05
+C> (client:14940:(nil)) [1367505366:123321] [B-0-0-0-0x126d308-statistics]:             MqSendEND_AND_WAIT:   4.47e+04
+C> (client:14940:(nil)) [1367505366:127429] [B-0-0-0-0x126d308-statistics]:               MqSendPERSISTENT:   6.16e+03
+C> (client:14940:(nil)) [1367505367:698812] [B-0-0-0-0x126d308-statistics]:                  parent create:   1.75e+02
+C> (client:14940:(nil)) [1367505367:715975] [B-0-0-0-0x126d308-statistics]:                  parent delete:   5.84e+03
+C> (client:14940:(nil)) [1367505367:897260] [B-0-0-0-0x126d308-statistics]:                   child create:   5.52e+03
+C> (client:14940:(nil)) [1367505367:924577] [B-0-0-0-0x126d308-statistics]:                   child delete:   3.67e+04
+C> (client:14940:(nil)) [1367505367:924602] [B-0-0-0-0x126d308-main]: end: ----------------------------------------

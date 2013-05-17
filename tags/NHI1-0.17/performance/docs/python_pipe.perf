@@ -1,0 +1,14 @@
+> client.c --all @ server.py
+using: /build/dev1usr/Main/performance-thread/performance/nothread/env.sh
+skip: TS_LIBRARY
+exec: [5] /build/dev1usr/Main/performance-thread/performance/nothread/theLink/example/c/client,--all,@,/home/dev1usr/ext/x86_64-suse-linux/nothread/bin/python3,/home/dev1usr/Project/NHI1/theLink/example/python/server.py
+C> (client:7016:(nil)) [1367505186:133088] [B-0-0-0-0x2337ff8-main]: start: --------------------------------------
+C> (client:7016:(nil)) [1367505186:234520] [B-0-0-0-0x2337ff8-statistics]:                      MqSendEND:   4.93e+05
+C> (client:7016:(nil)) [1367505186:482096] [B-0-0-0-0x2337ff8-statistics]:         MqSendEND_AND_CALLBACK:   2.02e+05
+C> (client:7016:(nil)) [1367505187:630073] [B-0-0-0-0x2337ff8-statistics]:             MqSendEND_AND_WAIT:   4.36e+04
+C> (client:7016:(nil)) [1367505187:632049] [B-0-0-0-0x2337ff8-statistics]:               MqSendPERSISTENT:   1.31e+04
+C> (client:7016:(nil)) [1367505191:110774] [B-0-0-0-0x2337ff8-statistics]:                  parent create:   4.03e+01
+C> (client:7016:(nil)) [1367505191:170168] [B-0-0-0-0x2337ff8-statistics]:                  parent delete:   1.68e+03
+C> (client:7016:(nil)) [1367505191:284465] [B-0-0-0-0x2337ff8-statistics]:                   child create:   8.75e+03
+C> (client:7016:(nil)) [1367505191:296632] [B-0-0-0-0x2337ff8-statistics]:                   child delete:   8.24e+04
+C> (client:7016:(nil)) [1367505191:296645] [B-0-0-0-0x2337ff8-main]: end: ----------------------------------------

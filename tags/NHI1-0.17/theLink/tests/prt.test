@@ -1,0 +1,267 @@
+#+
+#:  \file       theLink/tests/prt.test
+#:  \brief      \$Id$
+#:  
+#:  (C) 2002 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+set self [info script]
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+#set tcl_traceExec 1
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [getNum 3] {
+
+ # transport-type: string or binary
+  foreach B [getEnv BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [getEnv COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filter SRV_LST $C] {
+
+      SetConstraints $I $B $S
+
+      # 1) java has a problem to spawn new processes on windows
+      # error: "can not '_spawnvp' -> [34] ERR<Result too large>"
+      # this only happen if java ist used together with "tcltest"
+      # 2) if a process is created as a pipe than a "spawn" is done
+      # from tcl. after a "spawn" the new process is initialized
+      # to "apawn" as default. the CREATE2 will create a new sub-
+      # server as spawn ... this is the reason why a "pipe" is
+      # forbidden in this special test case.
+      if {[CheckConstraintsAND win java pipe]} continue
+
+##
+## -----------------------------------------------------------------------
+## int
+##
+
+# startup binary --------------------------
+Setup $I $B $C $S --bgerror RET_BG --setup-parent {
+  Call $FH_LAST SendEND_AND_WAIT SND2 SendC CREATE2 SendI 0
+}
+
+# tests ----------------------------
+
+test prt-1a1-($I|$B|$C|$S) {SEND + WAIT with error} \
+    -constraints    binary \
+    -body           {
+      RET_start
+      RET_add 111 Call $FH_LAST SendEND_AND_WAIT ECOI SendD 1.1
+      RET_add 222 Echo1 $FH_LAST ECOI ReadI SendF 2.2
+      RET_end
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         {START
+111-CATCH:1
+111-RET:[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+111-CODE:TCLMSGQUE 1 2 {[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*}
+222-CATCH:1
+222-RET:[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'FLT' object into an 'INT' object*
+222-CODE:TCLMSGQUE 1 2 {[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'FLT' object into an 'INT' object*}
+END}
+
+test prt-1a2-($I|$B|$C|$S) {SEND + WAIT with error} \
+    -constraints    binary \
+    -body           {
+      RET_start
+      RET_add 111 Call $FH_LAST SendEND ECOI SendD 1.1
+      RET_add 222 Echo1 $FH_LAST ECOI ReadI SendF 2.2
+      RET_end
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-CODE:NONE
+222-CATCH:1
+222-RET:[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'FLT' object into an 'INT' object*
+222-CODE:TCLMSGQUE 1 2 {[cC]> (client-0) \[service-call-error] <Tok|ECOI> <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'FLT' object into an 'INT' object*}
+END}
+
+test prt-1b-($I|$B|$C|$S) {SEND + WAIT without error} \
+    -constraints    binary \
+    -body           {
+      RET_start
+      RET_add 111 Call $FH_LAST SendEND ECOI SendD 1.1
+      RET_add 222 Echo1 $FH_LAST ECOI ReadI SendI 678
+      RET_end
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-CODE:NONE
+222-CATCH:0
+222-RET:678
+222-CODE:NONE
+END}
+
+test prt-2-($I|$B|$C|$S) {SEND + CALLBACK with error} \
+    -constraints    binary \
+    -body	    {
+      proc CB {ctx} {
+	RET_add cb $ctx ReadI
+      }
+      RET_start
+      RET_add 111 Call $FH_LAST SendEND ECOI SendD 1.1
+      RET_add 222 CallCB $FH_LAST ECOI CB SendD 3.3
+      RET_add 333 $FH_LAST ProcessEvent -wait ONCE
+      RET_add 444 $FH_LAST ProcessEvent -wait ONCE
+      RET_end
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+222-CATCH:0
+222-RET:
+222-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-CODE:NONE
+333-CATCH:0
+333-RET:
+333-CODE:NONE
+444-CATCH:1
+444-RET:[cC]> (client-0) \[callback-error] <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+444-CODE:TCLMSGQUE 1 2 {[cC]> (client-0) \[callback-error] <Num|1>*
+[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*}
+END}
+
+test prt-2b-($I|$B|$C|$S) {SEND + CALLBACK without error} \
+    -constraints    binary \
+    -body	    {
+      proc CB {ctx} {
+	RET_add cb $ctx ReadI
+      }
+      RET_start
+      RET_add 111 Call $FH_LAST SendEND ECOI SendD 1.1
+      RET_add 222 CallCB $FH_LAST ECOI CB SendI 123
+      RET_add 333 $FH_LAST ProcessEvent -wait ONCE
+      RET_add 444 $FH_LAST ProcessEvent -wait ONCE
+      RET_end
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+222-CATCH:0
+222-RET:
+222-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (server-0) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-CODE:NONE
+333-CATCH:0
+333-RET:
+333-CODE:NONE
+cb-CATCH:0
+cb-RET:123
+cb-CODE:NONE
+444-CATCH:0
+444-RET:
+444-CODE:NONE
+END}
+
+test prt-3-($I|$B|$C|$S) {} \
+    -constraints    binary \
+    -body	    {
+      RET_start
+      RET_add 111 Call $FH_LAST SendEND SND2 SendC MqSendEND SendI 0 SendC REDI SendD 1.1
+      RET_add 222 $FH_LAST ProcessEvent -wait ONCE
+      RET_end
+    } \
+    -returnCodes    ok \
+    -match	    glob \
+    -result         {START
+111-CATCH:0
+111-RET:
+111-CODE:NONE
+BG-NUM-CATCH:0
+BG-NUM-RET:1
+BG-NUM-CODE:NONE
+BG-TEXT-CATCH:0
+BG-TEXT-RET:[sS]> (*server*) \[*pBufferGetA4] type ERROR, it is not allowed to convert an 'DBL' object into an 'INT' object*
+BG-TEXT-CODE:NONE
+222-CATCH:0
+222-RET:
+222-CODE:NONE
+END}
+
+# cleanup ---------------------------
+
+Cleanup
+
+##  
+## -----------------------------------------------------------------------
+## finish loop
+##
+   
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+freeTests
+
+# vim: set syn=tcl:

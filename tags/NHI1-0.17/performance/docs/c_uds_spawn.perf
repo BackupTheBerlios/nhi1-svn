@@ -1,0 +1,15 @@
+> server.c --uds --file ./socket.uds --spawn
+> client.c --all --uds --file ./socket.uds
+using: /build/dev1usr/Main/performance-thread/performance/nothread/env.sh
+skip: TS_LIBRARY
+exec: [5] /build/dev1usr/Main/performance-thread/performance/nothread/theLink/example/c/client,--all,--uds,--file,./socket.uds
+C> (client:129381:(nil)) [1367505073:902721] [B-0-0-0-0x13fee98-main]: start: --------------------------------------
+C> (client:129381:(nil)) [1367505073:964693] [B-0-0-0-0x13fee98-statistics]:                      MqSendEND:   8.07e+05
+C> (client:129381:(nil)) [1367505074:66179] [B-0-0-0-0x13fee98-statistics]:         MqSendEND_AND_CALLBACK:   4.93e+05
+C> (client:129381:(nil)) [1367505074:973802] [B-0-0-0-0x13fee98-statistics]:             MqSendEND_AND_WAIT:   5.51e+04
+C> (client:129381:(nil)) [1367505074:977675] [B-0-0-0-0x13fee98-statistics]:               MqSendPERSISTENT:   6.62e+03
+C> (client:129381:(nil)) [1367505076:44580] [B-0-0-0-0x13fee98-statistics]:                  parent create:   1.50e+03
+C> (client:129381:(nil)) [1367505076:49994] [B-0-0-0-0x13fee98-statistics]:                  parent delete:   1.86e+04
+C> (client:129381:(nil)) [1367505076:108594] [B-0-0-0-0x13fee98-statistics]:                   child create:   1.71e+04
+C> (client:129381:(nil)) [1367505076:131425] [B-0-0-0-0x13fee98-statistics]:                   child delete:   4.39e+04
+C> (client:129381:(nil)) [1367505076:131447] [B-0-0-0-0x13fee98-main]: end: ----------------------------------------

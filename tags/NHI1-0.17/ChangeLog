@@ -1,0 +1,426 @@
+#+
+#:  \file       ChangeLog
+#:  \brief      \$Id$
+#:  
+#:  (C) 2010 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+/**
+
+\page changelog ChangeLog
+
+\n
+\n
+
+\section V0_17 Mai 2013: v NHI1-0.17, PLMK-2.5 und libmsgque-5.5
+
+\subsection V0_17_1 REDESIGN buildsystem
+  \li using out of root build by default
+  \li automake/autoconf scripts now using patterns
+  \li change syntax to --with-LNG for programming languags support
+  \li using an in-memory filesystem to build and test the software
+
+\subsection V0_17_2 NEW linux container support (lxc)
+  \li tool: lxc-nhi1 to create a new lxc container (tested on opensuse)
+  \li tool: lxc-watchdog to manage the new lxc container cluster
+
+\subsection V0_17_3 REDESIGN test
+  \li now using parallel testing with the "make -j #" option
+  \li tool: tests/TestControl.bash to make a mass build test
+
+\subsection V0_17_4 NEW end-user tools 
+  \li Nhi1BuildLanguage: build tcp,perl,phy,ruby,phyton language
+  \li Nhi1Config: wrapper to configure
+  \li Nhi1Docs: build documentation tree
+  \li Nhi1Exec: find and exec scripts/tests
+  \li Nhi1Label: label files, provide common header
+  \li Nhi1Tags: crate tags file to lookup functions
+  \li rcBuildFs: unix service to manage an in-memory filesystem
+
+\subsection V0_17_5 BUG-Fix 
+  \li 1. libmsgque: missing close-on-exec flag on sockets
+  \li 2. aguard: wrong build-key length.
+
+\subsection V0_17_6 REDESIGN theBrain 
+  \li using now the build-in sqlite database.
+  \li using a special systax to define a strong typed datatype in sqlite
+
+\subsection V0_17_7 REDESIGN Windows build
+  \li now using mingw and microsoft sdk compiler
+  \li automake/autoconf configuration update to find windows build tools
+
+\section V0_17alfa 2013 - NHI1-0.17alfa, PLMK-2.5 und libmsgque-5.5
+
+1. fig bug in rubymsgque, now the toplevel class initialize method does not 
+need a template dummy argument anymore.
+
+\verbatim
+class MyServer < MqS
+  def initialize()
+    super()
+    ...
+  end
+  ...
+end
+\endverbatim
+
+2. fix bug in phpmsgque, initialization of "MqInitCreate" now done during FactoryAdd
+or FactoryDefault
+
+3. fix bug in c# configuration - not handel version-numbers right
+
+4. java install in opensuse lxc-container and fix bug doesn't complain about missing
+java executables.
+
+\verbatim
+zypper in jdk-7u11-linux-x64.rpm
+/usr/sbin/update-alternatives --install "/usr/bin/java"  "java"  "/usr/java/latest/bin/java" 20000
+/usr/sbin/update-alternatives --install "/usr/bin/javac" "javac" "/usr/java/latest/bin/javac" 20000
+/usr/sbin/update-alternatives --install "/usr/bin/javah" "javah" "/usr/java/latest/bin/javah" 20000
+\endverbatim
+
+\n
+\n
+
+\section V0_16 08 Apr 2011 - NHI1-0.16, PLMK-2.4 und libmsgque-5.4
+
+this release change the build-environement on windows
+from Visual-X-Express to cygwin/mingw
+
+\verbatim
+svn diff --summarize -r '{2011-03-15}:{2011-05-8}' svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk
+\endverbatim
+
+\n
+\n
+
+\section V0_15 15 Feb 2011 - NHI1-0.15, PLMK-2.4 und libmsgque-5.4
+
+Update \b windows support
+
+\verbatim
+svn diff --summarize -r '{2011-02-27}:{2011-03-15}' svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk
+\endverbatim
+
+\n
+\n
+
+\section V0_14 27 Feb 2011 - NHI1-0.14, PLMK-2.3 und libmsgque-5.3
+
+This release add \e persistent-transaction-support-part-2. The \RNS{Storage}
+interface was added to store/retrieve a \e data-package from/to the database.
+
+\verbatim
+svn diff --summarize -r '{2011-02-05}:{2011-02-27}' svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk
+\endverbatim
+
+\n
+\n
+
+\section V0_13 05 Feb 2011 - NHI1-0.13, PLMK-2.2 und libmsgque-5.2
+
+This release add \e persistent-transaction-support-part-1 and an improved \e factory-interface.
+In addition some code/documentation errors were fixed.
+
+\verbatim
+svn diff --summarize -r '{2011-01-21}:{2011-02-05}' svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk
+\endverbatim
+
+\n
+\n
+
+\section V0_12 21 Jan 2011 - NHI1-0.12, PLMK-2.1 und libmsgque-5.1
+
+This release embed "sqlite" support into the PLMK kernel.
+
+\verbatim
+svn diff --summarize -r '{2011-01-14}:{2011-01-21}' svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk
+\endverbatim
+
+\n
+\n
+
+\section V0_11 13 Jan 2011 - NHI1-0.11, PLMK-2.0 und libmsgque-5.0
+
+This release add support for the \AllLngTxt{FactoryObject} design pattern.
+
+\verbatim
+svn diff --summarize -r '{2010-11-30}:{2011-01-14}'
+\endverbatim
+
+\n
+\n
+
+\section V0_10 29 Nov 2010 - NHI1-0.10, PLMK-1.8 und libmsgque-4.8
+
+This release add support for the new programming-language "Go" from Google.
+
+files changed:
+\verbatim
+svn diff --summarize svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/ svn+ssh://svn.berlios.de/svnroot/repos/nhi1/trunk
+
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/tests/all.tcl
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/tests/error.test
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/tests/client.test
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/tests/library.tcl
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/tests/csserver.exe
+ M      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/tests
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/javamsgque/context_java.c
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/javamsgque/javamsgque.jar
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/perlmsgque/Net-PerlMsgque/lib/Net/PerlMsgque.pm
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/csmsgque/csmsgque.cs
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/MakeGoMsgque.inc.in
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/Makefile.in
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/read.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/client.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/MqSException.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/MqBinary.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/send.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/MqBufferS.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/link.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/MqS.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/service.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/test1.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/test2.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/gomsgque.c
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/config.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/server.go
+A       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/Makefile
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/gomsgque.h
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src/slave.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/src
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque/Makefile.am
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/gomsgque
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/docs/main/Doxyfile
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/docs/main/main.doc
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/docs/doxygen.sh
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/docs/Doxyfile.generic
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/service.c
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/msgque.c
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/msgque.h
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/read.c
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/buffer.c
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/slave.c
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/token.c
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/bufferL.c
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/trans.c
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/libmsgque/link.c
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/Makefile.am
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/c/Filter4.c
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/MyServer.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/mulclient.go
+A       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/Makefile.in
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/testclient.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/src
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/MyClient.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/mulserver.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/Makefile.am
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/Filter1.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/testserver.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/Filter2.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/Filter3.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go/Filter4.go
+AM      svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/go
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/theLink/example/php/Makefile.in
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/bin/Label
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/bin/LbMain
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/NEWS
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/.OtConfig
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/configure.in
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/win/env.sh
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/win/mqconfig.h
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/win/win/win.vsprops
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/acinclude.m4
+M       svn+ssh://svn.berlios.de/svnroot/repos/nhi1/tags/NHI1-0.9/Makefile.am
+\endverbatim
+
+\n
+\n
+
+\section V0_9 08 Nov 2010 - NHI1-0.9, PLMK-1.7 und libmsgque-4.7
+
+This version adds the ability to:
+
+- \msgqueforphp "PHP" language support.
+- a new interface of the \RNSA{ProcessEvent} function and the \RNSC{startAs} configuration option.
+- terminate an application from a callback with the \RNSA{ErrorSetEXIT} function.
+
+The PHP language is characterized by an extensive but undocumented C API. The number of 
+features combined with a growing and moving language made the extension programming difficult
+and lengthy. The successful PHP extension shows the flexibility and adaptability of NHI1.
+
+\n
+\n
+
+\section V0_8 22 Oct 2010 - NHI1-0.8, PLMK-1.6 und libmsgque-4.6
+
+This release adds the ability to:
+
+- <A HREF="http://www.ruby-lang.org/">Ruby</A> language support (LNG)
+- L)anguage A)bstraction L)ayer (\ref MqLalS)
+- G)arbage C)ollection Object-Mark (\ref MqMark)
+
+Ruby is an object-oriented programming language like Python.
+The new \libmsgque C-function \ref MqMark was added to the GC support and marks all objects
+that are referenced within 'libmsgque'. The programmer now has the opportunity to replace 
+internal functions such as: \ref MqLalS::SysCalloc "SysCalloc", \ref MqLalS::SysMalloc "SysMalloc", 
+\ref MqLalS::SysRealloc "SysRealloc", \ref MqLalS::SysFree "SysFree", \ref MqLalS::SysSelect "SysSelect", 
+\ref MqLalS::SysFork "SysFork", \ref MqLalS::SysServerSpawn "SysServerSpawn", 
+\ref MqLalS::SysServerThread "SysServerThread", \ref MqLalS::SysServerFork "SysServerFork", 
+\ref MqLalS::SysWait "SysWait", \ref MqLalS::SysUSleep "SysUSleep", \ref MqLalS::SysSleep "SysSleep", 
+\ref MqLalS::SysDaemonize "SysDaemonize", \ref MqLalS::SysExit "SysExit", \ref MqLalS::SysAbort "SysAbort" 
+to adapt to the environment (\ref MqLalS).
+
+\n
+\n
+
+\section V0_7 08 Mar 2010 - NHI1-0.7, PLMK-1.6 and libmsgque-4.5
+
+This is a \e major-feature-release to add \e longtime-transaction support.
+
+\subsection V0_7_lt longtime-transaction support
+
+A \e longtime-transaction is a transaction with an infinite time period between the start 
+and the end. A \e longtime-transaction is always a \e persistent-transaction
+too. The \e persistent support is available as an in-memory solution on the \e application-server
+or in an additional \e bidirectional-filter, with local storage, available for the next release.\n
+
+A typical scenario for a \e longtime-transaction is:
+- A user with a client connect to the server and start a \e longtime-transaction job. 
+After a while the user shutdown the client and leave the office. At the next morning the
+user start the client again and the results are send from the server to the client.
+- On a space mission the time-overhead between transaction start and end is large. It is
+usually not possible to keep the client-server-connection open all the time.
+- On a military action-system the enemy try to interrupted the client-server-connection
+to disable data communication.
+.
+
+To use a \e longtime-transaction the results are send to a \e client-service registered with
+\RNSA{ServiceCreate}. This service and addtional data (I call this data \e local-context-data)
+have to be added to the \e longterm-transaction package to be available in the result. On the 
+\e link-target the \e local-context-data is initial stripped from the \e data-package and is 
+later added to the results again.\n
+
+The \e local-context-data is added to the \e data-package with \RNSA{SendT_START} and
+\RNSA{SendT_END}. The \e local-context-data is read from the \e data-package with 
+\RNSA{ReadT_START} and \RNSA{ReadT_END}.
+
+\subsection V0_7_sp service proxy support
+
+A \e service-proxy (\RNSA{ServiceProxy}) is used to forward the entire \e data-package from one 
+context to an other context and is used in a \e filter like environment.
+
+\n
+\n
+
+\section V0_6 16 Feb 2010 - NHI1-0.6, PLMK-1.5 and libmsgque-4.4
+
+This is a \e major-feature-release to prepare the environment for the new 
+\e milestone-release coming soon
+
+\subsection V0_6_gc Performing memory cleanup using Garbage-Collection
+
+To find a \e safe moment to free unused memory is the
+most difficult part in a complex software. To solve this problem 
+a \e refCount based \e Garbage-Collection has been introduced. This is not an easy
+step because the \e GC have to cooperate with the \RNSA{syn,callback-language} 
+memory cleanup technology.
+To achive this goal a very \e conservative strategy was applied. \b No cleanup
+of lost objects is performed (this is the job of the \e callback-languages).
+Only deleted objects (\RNSA{ContextDelete}) with a MqS::refCount > 0
+are added into the \e GC-Pool. The cleanup is done with the following conditions:
+- \RNSA{ProcessEvent} with the \e FOREVER flag (this is the \e main-loop)
+  after an event was processed.
+- \RNSA{Exit}, on thread or process exit
+- on application-exit
+.
+The MqS::refCount is increased with \b ++ and decreased with \b --. The
+default MqS::refCount is \b 0. \n
+The refCount is modified to protect the calling object:
+- during a \RNSA{ProcessEvent} call
+- in a \e callback
+- during an \e event-action task, example: \RNSC{IEvent}
+.
+
+\subsection V0_6_log New message-logging API
+
+The \PLMK logging was opened to give the user the abillity to create a \PLMK
+conform logging message on stderr.\n
+The following functions were added:
+- \RNSA{LogC}, to write a string message
+- \b LogV (\ref c_LogV "C", \ref cc_LogV "C++"), to write a \e printf style message
+- \b LogVL (\ref c_LogVL "C", \ref cc_LogVL "C++"), to write a \e vprintf style message
+.
+
+\n
+\n
+
+\section V0_5 1 Feb 2010 - NHI1-0.5, PLMK-1.4 and libmsgque-4.3
+
+This is a \e feature-release to prepare the environment for the new 
+\e milestone-release coming soon
+
+\subsection V0_5_con Recover from a Server or a Network downtime
+
+\subsubsection V0_5_con_old Old Behaviour
+
+A \e server-downtime is equivalent with a broken \e client-server-link and result in an 
+\e exit-error-code from a \e link-access-operation. This error usually end in
+a \RNSA{ContextDelete} operation and the entire environment, including the local variables,
+is lost. No functions are available to act on the \e exit-error-code and to \e re-connect
+the server.
+
+\subsubsection V0_5_con_new New Behaviour
+
+Starting with the release \b libmsgque-4.3 two functions are available to act on
+the \e exit-error-code.
+-# \RNSA{ErrorIsEXIT}: in an \e error-handler separate the \e exit-error 
+   from the \e normal-error
+-# \RNSA{LinkConnect}: do a \e re-connect on a broken \e client-server-link
+.
+
+These two functions can be used together with \RNSC{ignoreExit}, 
+\RNSC{IEvent} and \RNSA{ErrorSetCONTINUE} to build a filter to cache a 
+\e service-request and guarantee the delivery.
+
+\subsubsection V0_5_con_example C++ Example from the file "theLink/example/cc/Filter4.cc"
+\dontinclude Filter4.cc
+
+\skip void Event
+\until }
+\until }
+\until }
+\until }
+\until }
+\until }
+\until }
+\until }
+\until }
+
+\subsection V0_5_ident Identify the link-target
+
+\subsubsection V0_5_ident_def Definition
+
+A \e link-target is the direct neighbour and the identification of the \e link-target is used to
+modify the local behaviour. In different to \RNSC{name} the \b ident is set by the
+programmer and can \b not be changed by the user. The goal is to give every major 
+\e application a unique name like: \c "PayrollServer-V1.7" or \c "DocuStoreClient-V1.7-USR-aotto1968". 
+This ident is exchanged during \e link-startup and can be retrieved with
+\RNSA{LinkGetTargetIdent}.
+
+\subsubsection V0_5_ident_example C++ Example from the file "theLink/example/cc/Filter4.cc"
+
+In the \e service-handler \b LOGF decide to use the \e string-data local or to send the \e string-data to the \e link-target
+\dontinclude Filter4.cc
+
+\skip LOGF
+\until SendRETURN
+\until }
+
+*/
+

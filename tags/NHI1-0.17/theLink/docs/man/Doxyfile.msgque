@@ -1,0 +1,80 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+ENABLED_SECTIONS    += C-STYLE
+
+INPUT		    += $(SRCDIR)/libmsgque
+FILE_PATTERNS       += msgque.h
+STRIP_FROM_PATH	    += $(SRCDIR)/libmsgque
+STRIP_FROM_INC_PATH += $(SRCDIR)/libmsgque
+SHOW_FILES	    = YES
+ENABLED_SECTIONS    += MSGQUE
+EXAMPLE_PATH	    += $(SRCDIR)/libmsgque
+
+ALIASES		    += "null=\e NULL"
+ALIASES		    += "yes=\e MQ_YES"
+ALIASES		    += "no=\e MQ_NO"
+ALIASES		    += "lang=C"
+ALIASES		    += "dirname=LNG"
+ALIASES		    += "fileextension=.EXT"
+
+ALIASES             += "NS{1}=Mq\1"
+ALIASES             += "RNS{1}=\ref \NS{\1}"
+ALIASES             += "RNSA{1}=\ref \NS{\1}"
+ALIASES             += "RNSA{2}=\ref \NS{\1} \"\2\""
+ALIASES             += "RNSC{1}=\config_\1"
+ALIASES             += "RNSO{1}=\ref \NS{\1}Object"
+
+ALIASES		    += "config_ignoreExit=\ref MqSetupS::ignoreExit"
+ALIASES		    += "config_startAs=\ref MqConfigS::startAs"
+ALIASES		    += "config_IEvent=\ref MqConfigSetEvent"
+ALIASES		    += "config_IBgError=\ref MqConfigSetBgError"
+ALIASES		    += "config_IServerSetup=#MqConfigSetServerSetup"
+ALIASES		    += "config_IFactory=#MqConfigSetFactory"
+ALIASES		    += "config_timeout=\ref MqIoConfigS::timeout"
+ALIASES		    += "config_isServer=\ref MqSetupS::isServer"
+ALIASES		    += "config_IServerCleanup=#MqConfigSetServerSetup"
+ALIASES		    += "config_name=\ref MqConfigS::name"
+ALIASES		    += "config_srvname=\ref MqConfigS::srvname"
+ALIASES		    += "config_storage=\ref MqConfigS::storage"
+ALIASES		    += "config_debug=\ref MqConfigS::debug"
+ALIASES		    += "config_isSilent=\ref MqConfigS::isSilent"
+
+ALIASES		    += "MQ_START_DEFAULT=#MQ_START_DEFAULT"
+ALIASES		    += "MQ_START_FORK=#MQ_START_FORK"
+ALIASES		    += "MQ_START_THREAD=#MQ_START_THREAD"
+ALIASES		    += "MQ_START_SPAWN=#MQ_START_SPAWN"
+ALIASES		    += "MQ_WAIT_NO=#MQ_WAIT_NO"
+ALIASES		    += "MQ_WAIT_ONCE=#MQ_WAIT_ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=#MQ_WAIT_FOREVER"
+ALIASES		    += "MQ_TIMEOUT_DEFAULT=#MQ_TIMEOUT_DEFAULT"
+ALIASES		    += "MQ_TIMEOUT_USER=#MQ_TIMEOUT_USER"
+ALIASES		    += "MQ_TIMEOUT_MAX=#MQ_TIMEOUT_MAX"
+
+ALIASES		    += "ctx=\param[in] ctx the context returned by \RNS{ContextCreate}"
+ALIASES		    += "retException=\return an \RNS{ErrorObject} on error"
+ALIASES		    += "retFactoryException=\return a #MqFactoryReturnE object"
+
+ALIASES		    += "Y=#MQ_BYT"
+ALIASES		    += "O=#MQ_BOL"
+ALIASES		    += "S=#MQ_SRT"
+ALIASES		    += "I=#MQ_INT"
+ALIASES		    += "F=#MQ_FLT"
+ALIASES		    += "W=#MQ_WID"
+ALIASES		    += "D=#MQ_DBL"
+ALIASES		    += "C=#MQ_CST"
+ALIASES		    += "B=#MQ_BIN"
+ALIASES		    += "U=#MQ_BUF"

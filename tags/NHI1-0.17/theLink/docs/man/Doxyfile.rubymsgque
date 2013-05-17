@@ -1,0 +1,393 @@
+# Doxyfile 1.5.3
+
+# This file describes the settings to be used by the documentation system
+# doxygen (www.doxygen.org) for a project
+#
+# All text after a hash (#) is considered a comment and will be ignored
+# The format is:
+#       TAG = value [value, ...]
+# For lists items can also be appended using:
+#       TAG += value [value, ...]
+# Values that contain spaces should be placed between quotes (" ")
+
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+
+
+ENABLED_SECTIONS    += RUBY
+ENABLED_SECTIONS    += DAEMON
+ENABLED_SECTIONS    += GC
+EXAMPLE_PATH	    += $(SRCDIR)/example/ruby
+
+ALIASES		    += "self=rubymsgque"
+ALIASES		    += "selftut=rubymsgquetut"
+ALIASES		    += "NS{1}=ruby_\1"
+ALIASES		    += "lang=RUBY"
+ALIASES		    += "fileextension=.rb"
+ALIASES		    += "exeextension=.rb"
+ALIASES		    += "executable=ruby"
+ALIASES		    += "dirname=ruby"
+ALIASES		    += "null=\e nil"
+ALIASES		    += "yes=\e true"
+ALIASES		    += "no=\e false"
+ALIASES		    += "package=require \"rubymsgque\""
+
+ALIASES		    += "FactoryDefault=MqFactoryS FactoryDefault(?\C ident,? Class cs)"
+ALIASES		    += "FactoryDefaultIdent=\C FactoryDefaultIdent()"
+ALIASES		    += "FactoryAdd=MqFactoryS FactoryAdd(?\C ident,? Class cs)"
+ALIASES		    += "FactoryGet=MqFactoryS FactoryGet(\C ident)"
+ALIASES		    += "FactoryGetCalled=MqFactoryS FactoryGetCalled(\C ident)"
+
+ALIASES		    += "FactoryNew=MqS factory.New(\C ident)"
+ALIASES		    += "FactoryCopy=MqFactoryS factory.Copy(\C ident)"
+
+ALIASES		    += "FactoryCtxSet=ctx.FactoryCtxIdentSet(MqFactoryS factory)"
+ALIASES		    += "FactoryCtxGet=MqFactoryS ctx.FactoryCtxGet()"
+ALIASES		    += "FactoryCtxIdentSet=ctx.FactoryCtxIdentSet(\C ident)"
+ALIASES		    += "FactoryCtxIdentGet=\C ctx.FactoryCtxIdentGet()"
+
+
+# OBJECT CREATION AND DELETION
+ALIASES		    += "object_example=\code \n\
+require \"rubymsgque\" \n\
+class MyClass < MqS \n\
+  ... \n\
+  def initialize \n\
+    super() \n\
+    mydata = nil \n\
+  end \n\
+  ... \n\
+end \n\
+ctx = FactoryAdd(MyClass).Add() \n\
+... \n\
+\endcode"
+
+ALIASES		    += "ContextCreate=ctx=MqS.new(?tmpl?)"
+ALIASES		    += "ContextCreateSection="
+ALIASES		    += "ContextDelete=ctx.Delete()"
+ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageFile)"
+ALIASES		    += "LogC=ctx.LogC(prefix,level,message)"
+
+# OBJECT CONFIGURATION
+ALIASES		    += "Init=Init()"
+ALIASES		    += "init_example=\
+\code \n\
+Init(\"ruby\", \"myExecutable.rb\", \"myFirstArgument\"); \n\
+\endcode"
+
+ALIASES		    += "config_type_buffersize=Fixnum"
+ALIASES		    += "config_set_buffersize=ConfigSetBuffersize"
+ALIASES		    += "config_get_buffersize=ConfigGetBuffersize"
+
+ALIASES		    += "config_type_debug=Fixnum"
+ALIASES		    += "config_set_debug=ConfigSetDebug"
+ALIASES		    += "config_get_debug=ConfigGetDebug"
+
+ALIASES		    += "config_type_timeout=Fixnum"
+ALIASES		    += "config_set_timeout=ConfigSetTimeout"
+ALIASES		    += "config_get_timeout=ConfigGetTimeout"
+
+ALIASES		    += "config_type_name=String"
+ALIASES		    += "config_set_name=ConfigSetName"
+ALIASES		    += "config_get_name=ConfigGetName"
+
+ALIASES		    += "config_type_srvname=String"
+ALIASES		    += "config_set_srvname=ConfigSetSrvName"
+ALIASES		    += "config_get_srvname=ConfigGetSrvName"
+
+ALIASES		    += "config_type_storage=String"
+ALIASES		    += "config_set_storage=ConfigSetStorage"
+ALIASES		    += "config_get_storage=ConfigGetStorage"
+
+ALIASES		    += "config_type_ident=String"
+ALIASES		    += "config_set_ident=ConfigSetIdent"
+ALIASES		    += "config_get_ident=ConfigGetIdent"
+
+ALIASES		    += "config_type_isSilent=true/false"
+ALIASES		    += "config_set_isSilent=ConfigSetIsSilent"
+ALIASES		    += "config_get_isSilent=ConfigGetIsSilent"
+
+ALIASES		    += "config_type_isString=true/false"
+ALIASES		    += "config_set_isString=ConfigSetIsString"
+ALIASES		    += "config_get_isString=ConfigGetIsString"
+
+ALIASES		    += "config_type_ignoreExit=true/false"
+ALIASES		    += "config_set_ignoreExit=ConfigSetIgnoreExit"
+ALIASES		    += "config_get_ignoreExit=NO"
+
+ALIASES		    += "config_type_ignoreExit=true/false"
+ALIASES		    += "config_set_ignoreExit=ConfigSetIgnoreExit"
+ALIASES		    += "config_get_ignoreExit=NO"
+
+ALIASES		    += "config_type_daemon=String"
+ALIASES		    += "config_set_daemon=ConfigSetDeamon (pidfile)"
+ALIASES		    += "config_get_daemon=NO"
+
+ALIASES		    += "config_type_startAs=Fixnum"
+ALIASES		    += "config_set_startAs=ConfigSetStartAs (startAs)"
+ALIASES		    += "config_get_startAs=ConfigGetStartAs"
+ALIASES		    += "MQ_START_DEFAULT=\c MqS::START_DEFAULT"
+ALIASES		    += "MQ_START_FORK=\c MqS::START_FORK"
+ALIASES		    += "MQ_START_THREAD=\c MqS::START_THREAD"
+ALIASES		    += "MQ_START_SPAWN=\c MqS::START_SPAWN"
+
+ALIASES		    += "config_type_tcp=String"
+ALIASES		    += "config_set_tcp=ConfigSetIoTcp (host, port, myhost, myport)"
+ALIASES		    += "config_get_tcp=ConfigGetIoTcpHost/Port/MyHost/MyPort"
+
+ALIASES		    += "config_type_uds=String"
+ALIASES		    += "config_set_uds=ConfigSetIoUdsFile (file)"
+ALIASES		    += "config_get_uds=ConfigGetIoUdsFile"
+
+ALIASES		    += "config_type_pipe=Fixnum"
+ALIASES		    += "config_set_pipe=ConfigSetIoPipeSocket (socket)"
+ALIASES		    += "config_get_pipe=ConfigGetIoPipeSocket"
+
+ALIASES		    += "config_type_isServer=true/false"
+ALIASES		    += "config_set_isServer=ConfigSetIsServer"
+ALIASES		    += "config_get_isServer=ConfigGetIsServer"
+
+ALIASES		    += "config_type_isParent=true/false"
+ALIASES		    += "config_set_isParent=NO"
+ALIASES		    += "config_get_isParent=MqConfigGetIsParent"
+
+ALIASES		    += "config_type_isSlave=true/false"
+ALIASES		    += "config_set_isSlave=NO"
+ALIASES		    += "config_get_isSlave=ConfigGetIsSlave"
+
+ALIASES		    += "config_type_isConnected=true/false"
+ALIASES		    += "config_set_isConnected=NO"
+ALIASES		    += "config_get_isConnected=ConfigGetIsConnected"
+
+ALIASES		    += "config_type_master=PyObject"
+ALIASES		    += "config_set_master=\ref \NS{slave}"
+ALIASES		    += "config_get_master=ConfigGetMaster"
+
+ALIASES		    += "config_type_ctxId=Fixnum"
+ALIASES		    += "config_set_ctxId=NO"
+ALIASES		    += "config_get_ctxId=ConfigGetCtxId"
+
+ALIASES             += "config_IServerSetup=ConfigSetServerSetup(callback)"
+ALIASES		    += "config_IServerCleanup=ConfigSetServerCleanup(callback)"
+ALIASES		    += "config_IFactory=ConfigSetFactory(callback)"
+ALIASES             += "config_IBgError=ConfigSetBgError(callback)"
+ALIASES             += "config_IEvent=ConfigSetEvent(callback)"
+
+ALIASES		    += "config_IFactory_example=\code \n\
+class Server < MqS \n\
+  def initialize \n\
+    ConfigSetFactory(lambda {Server.new}) \n\
+    ... \n\
+  end \n\
+end \n\
+... \n\
+\endcode"
+
+# LINK CREATION AND DELETION
+ALIASES		    += "LinkCreate=ctx.LinkCreate(args)"
+ALIASES		    += "LinkCreateChild=ctx.LinkCreateChild(parent,args)"
+ALIASES		    += "LinkDelete=ctx.LinkDelete()"
+ALIASES		    += "LinkGetParent=MqS ctx.LinkGetParent()"
+ALIASES		    += "LinkIsParent=true/false ctx.LinkIsParent()"
+ALIASES		    += "LinkGetCtxId=Fixnum ctx.LinkGetCtxId()"
+ALIASES		    += "LinkIsConnected=Fixnum ctx.LinkIsConnected()"
+ALIASES		    += "LinkGetTargetIdent=\C ctx.LinkGetTargetIdent()"
+ALIASES		    += "LinkConnect=ctx.LinkConnect()"
+
+# SEND DATA
+ALIASES		    += "send_example=\code ctx.SendSTART()\nctx.SendI(num)\nctx.SendL_START()\n  ctx.SendD(balance)\n  ctx.SendC(\"name of the owner\")\n  ctx.SendB(signature)\nctx.SendL_END()\nctx.SendEND_AND_WAIT(\"SRV1\") \endcode"
+ALIASES		    += "SendSTART=ctx.SendSTART()"
+ALIASES		    += "SendEND=ctx.SendEND(token)"
+ALIASES		    += "SendEND_AND_WAIT=ctx.SendEND_AND_WAIT(token,?timeout=TIMEOUT_USER?)"
+ALIASES		    += "SendEND_AND_CALLBACK=ctx.SendEND_AND_CALLBACK(token,callback)"
+ALIASES		    += "SendRETURN=ctx.SendRETURN()"
+ALIASES		    += "SendERROR=ctx.SendERROR()"
+ALIASES		    += "SendO=ctx.SendO(\O value)"
+ALIASES		    += "SendY=ctx.SendY(\Y value)"
+ALIASES		    += "SendS=ctx.SendS(\S value)"
+ALIASES		    += "SendI=ctx.SendI(\I value)"
+ALIASES		    += "SendW=ctx.SendW(\W value)"
+ALIASES		    += "SendF=ctx.SendF(\F value)"
+ALIASES		    += "SendD=ctx.SendD(\D value)"
+ALIASES		    += "SendC=ctx.SendC(\C value)"
+ALIASES		    += "SendB=ctx.SendB(\B value)"
+ALIASES		    += "SendU=ctx.SendU(\TU value)"
+ALIASES		    += "SendL_START=ctx.SendL_START()"
+ALIASES		    += "SendL_END=ctx.SendL_END()"
+ALIASES		    += "SendN=ctx.SendN(value)"
+ALIASES		    += "SendT_START=ctx.SendT_START()"
+ALIASES		    += "SendT_END=ctx.SendT_END(\C:token)"
+ALIASES		    += "SendT_example=\code \n\
+ctx.SendSTART() \n\
+ctx.SendT_START() \n\
+ctx.SendC(\"myEnvironment\") \n\
+ctx.SendT_END(\"ENV1\") \n\
+ctx.SendC(\"myData\") \n\
+ctx.SendEND_AND_WAIT (\"SRVC\")\endcode"
+
+
+# READ DATE
+ALIASES		    += "read_example=\code \n\
+num = ctx.ReadI() \n\
+ctx.ReadL_START() \n\
+balance = ctx.ReadD() \n\
+owner = ctx.ReadC() \n\
+signature = ctx.ReadB() \n\
+ctx.ReadL_END() \n\
+\endcode"
+
+ALIASES		    += "ReadO=\O ctx.ReadO()"
+ALIASES		    += "ReadY=\Y ctx.ReadY()"
+ALIASES		    += "ReadS=\S ctx.ReadS()"
+ALIASES		    += "ReadI=\I ctx.ReadI()"
+ALIASES		    += "ReadW=\W ctx.ReadW()"
+ALIASES		    += "ReadF=\F ctx.ReadF()"
+ALIASES		    += "ReadD=\D ctx.ReadD()"
+ALIASES		    += "ReadC=\C ctx.ReadC()"
+ALIASES		    += "ReadB=\B ctx.ReadB()"
+ALIASES		    += "ReadU=\TU ctx.ReadU()"
+ALIASES		    += "ReadN=\B ctx.ReadN()"
+ALIASES		    += "ReadDUMP=\TD ctx.ReadDUMP()"
+ALIASES		    += "ReadLOAD=ctx.ReadLOAD(\TD dump)"
+ALIASES		    += "ReadForward=ctx.ReadForward(\TM otherCtx, ?\TD dump?)"
+ALIASES		    += "ReadProxy=ctx.ReadProxy(otherCtx)"
+ALIASES		    += "ReadGetNumItems=Fixnum ctx.ReadGetNumItems()"
+ALIASES		    += "ReadItemExists=true/false ctx.ReadItemExists()"
+ALIASES		    += "ReadUndo=ctx.ReadUndo()"
+ALIASES		    += "ReadL_START=ctx.ReadL_START(?buffer?)"
+ALIASES		    += "ReadL_END=ctx.ReadL_END()"
+ALIASES		    += "ReadT_START=ctx.ReadT_START(?buffer?)"
+ALIASES		    += "ReadT_END=ctx.ReadT_END()"
+ALIASES		    += "ReadT_example=\code \n\
+def SRVR \n\
+  ReadT_START() \n\
+  myEnvironment = ReadI() \n\
+  ReadT_END() \n\
+  theResult = ReadI()\n\
+end \n\
+\endcode"
+
+# ADDING SERVICES
+ALIASES		    += "service_example=\code \n\
+def ServerSetup \n\
+  ServiceCreate (\"SRV1\", method(:SRV1)) \n\
+end \n\
+\endcode"
+ALIASES		    += "ServiceInterface=method(:OwnMethod, :OtherMethod or :Proc)"
+ALIASES		    += "ServiceCreate=ctx.ServiceCreate(token,callback)"
+ALIASES		    += "ServiceProxy=ctx.ServiceProxy(token,?id=0?)"
+ALIASES		    += "ServiceStorage=ctx.ServiceStorage(token)"
+ALIASES		    += "ServiceDelete=ctx.ServiceDelete(token)"
+ALIASES		    += "ProcessEvent=ctx.ProcessEvent(timeout=Fixnum|TIMEOUT_DEFAULT(|USER|MAX), wait=WAIT_NO(|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent2=ctx.ProcessEvent(wait=WAIT_NO(|ONCE|FOREVER))"
+ALIASES		    += "ProcessEvent3=ctx.ProcessEvent()"
+ENABLED_SECTIONS    += ProcessEvent2
+ENABLED_SECTIONS    += ProcessEvent3
+ALIASES		    += "MQ_WAIT_NO=MqS::WAIT_NO"
+ALIASES		    += "MQ_WAIT_ONCE=MqS::WAIT_ONCE"
+ALIASES		    += "MQ_WAIT_FOREVER=MqS::WAIT_FOREVER"
+ALIASES		    += "MQ_TIMEOUT_DEFAULT=MqS::TIMEOUT_DEFAULT"
+ALIASES		    += "MQ_TIMEOUT_USER=MqS::TIMEOUT_USER"
+ALIASES		    += "MQ_TIMEOUT_MAX=MqS::TIMEOUT_MAX"
+ALIASES		    += "ServiceGetToken=String ctx.ServiceGetToken()"
+ALIASES		    += "ServiceGetFilter=MqS ctx.ServiceGetFilter([id=0])"
+ALIASES		    += "ServiceIsTransaction=true/false ctx.ServiceIsTransaction()"
+
+# SLAVE CREATION AND DELETION
+ALIASES		    += "SlaveWorker=ctx.SlaveWorker(id,args)"
+ALIASES		    += "SlaveWorker_example=\code ctx.SlaveWorker (7, [\"--thread\", \"--silent\", \"@\", \"WORKER\", \"--name\", \"MyWorker\"]); \endcode"
+ALIASES		    += "SlaveCreate=ctx.SlaveCreate(id,slave)"
+ALIASES		    += "SlaveDelete=ctx.SlaveDelete(id)"
+ALIASES		    += "SlaveGet=MqS ctx.SlaveGet(id)"
+ALIASES		    += "SlaveGetMaster=MqS ctx.SlaveGetMaster(id)"
+ALIASES		    += "SlaveIs=\O ctx.SlaveIs(id)"
+
+# STORAGE
+ALIASES		    += "StorageOpen=ctx.MqStorageOpen(\C storageFile)"
+ALIASES		    += "StorageClose=ctx.StorageClose()"
+ALIASES		    += "StorageInsert=\W ctx.StorageInsert()"
+ALIASES		    += "StorageSelect=\W ctx.StorageSelect(\W transLId)"
+ALIASES		    += "StorageDelete=ctx.StorageDelete(\W transLId)"
+ALIASES		    += "StorageCount=\W ctx.StorageCount()"
+
+# THE DUMP OBJECT
+ALIASES		    += "DumpSize=int dump.Size()"
+ALIASES		    += "DumpDelete=DumpDelete: called by Garbage Collection"
+
+# THE BUFFER OBJECT
+ALIASES		    += "buffer_example=\code \n\
+buf = ctx.ReadU() \n\
+if buf.GetType() == 'C' \n\
+  print(buf.GetC()) \n\
+end \n\
+\endcode"
+ALIASES		    += "BufferObject=<I>MqBufferS()</I>"
+ALIASES		    += "BufferGetO=\O buffer.GetO()"
+ALIASES		    += "BufferGetY=\Y buffer.GetY()"
+ALIASES		    += "BufferGetS=\S buffer.GetS()"
+ALIASES		    += "BufferGetI=\I buffer.GetI()"
+ALIASES		    += "BufferGetW=\W buffer.GetW()"
+ALIASES		    += "BufferGetF=\F buffer.GetF()"
+ALIASES		    += "BufferGetD=\D buffer.GetD()"
+ALIASES		    += "BufferGetC=\C buffer.GetC()"
+ALIASES		    += "BufferGetB=\B buffer.GetB()"
+ALIASES		    += "BufferGetType=String buffer.GetType()"
+ALIASES		    += "BufferDup=\TU buffer.Dup()"
+ALIASES		    += "BufferDelete=buffer.Delete()"
+
+ALIASES		    += "Y=Fixnum"
+ALIASES		    += "O=true/false"
+ALIASES		    += "S=Fixnum"
+ALIASES		    += "I=Fixnum"
+ALIASES		    += "F=Float"
+ALIASES		    += "W=Fixnum"
+ALIASES		    += "D=Float"
+ALIASES		    += "C=String"
+ALIASES		    += "B=Binary"
+ALIASES		    += "U=MqBufferS"
+ALIASES		    += "TM=MqS"
+ALIASES		    += "TB=Binary"
+ALIASES		    += "TE=MqSException"
+ALIASES		    += "TU=MqBufferS"
+ALIASES		    += "TD=MqDumpS"
+
+# ERROR OBJECT
+ALIASES		    += "error_example=\code \n\
+begin \n\
+ i = ctx.ReadI() \n\
+rescue Exception => ex \n\
+ ctx.ErrorSet(ex) \n\
+ puts(ctx.ErrorGetText()) \n\
+ ctx.ErrorReset() \n\
+end \n\
+\endcode"
+ALIASES		    += "ErrorObject=<I>ex=MqSException()</I>"
+ALIASES		    += "ErrorGetText=ex.text or ctx.ErrorGetText()"
+ALIASES		    += "ErrorGetNum=ex.num or ctx.ErrorGetNum()"
+ALIASES		    += "ErrorC=ctx.ErrorC(prefix,errnum,message)"
+ALIASES		    += "ErrorSet=ctx.ErrorSet()"
+ALIASES		    += "ErrorSetCONTINUE=ctx.ErrorSetCONTINUE()"
+ALIASES		    += "ErrorSetEXIT=ctx.ErrorSetEXIT()"
+ALIASES		    += "ErrorIsEXIT=\O ctx.ErrorIsEXIT()"
+ALIASES		    += "ErrorReset=ctx.ErrorReset()"
+ALIASES		    += "ErrorRaise=ctx.ErrorRaise()"
+ALIASES		    += "ErrorPrint=ctx.ErrorPrint()"
+
+ALIASES		    += "ErrorIsEXIT_example=\code \
+begin \n\
+  ctx.SendEND_AND_WAIT(\"TOKS\") \n\
+rescue Exception => ex \n\
+  ctx.ErrorSet(ex) \n\
+  if ctx.ErrorIsEXIT() \n\
+    ctx.ErrorReset() \n\
+  end \n\
+end \n\
+\endcode"
+
+ALIASES		    += "tut_build=\b no build necessary"
+ALIASES		    += "tut_server=\skip require\n\until Exit\n\until end"
+ALIASES		    += "tut_client=\skip require\n\until Exit\n\until end"
+ALIASES		    += "tut_filter=\skip require\n\until Exit\n\until end"
+

@@ -1,0 +1,91 @@
+TYPEMAP
+MqS*		T_MqS
+MqSelf*		T_MqSelf
+MqSException*	T_MqSException
+MqBufferS*	T_MqBufferS
+MqBufferSelf*	T_MqBufferSelf
+MqFactoryS*	T_MqFactoryS
+MqFactorySelf*	T_MqFactorySelf
+MqDumpS*	T_MqDumpS
+MqDumpSelf*	T_MqDumpSelf
+MQ_BOL		T_BOOL
+MQ_BYT		T_CHAR
+MQ_SRT		T_IV
+MQ_INT		T_IV
+MQ_WID		T_IV
+MQ_TRA		T_IV
+MQ_FLT		T_FLOAT
+MQ_DBL		T_DOUBLE
+MQ_CST		T_PV
+MQ_BIN		T_PV
+MQ_STR		T_PV
+MQ_SIZE		T_IV
+MQ_TIME_T	T_IV
+MQ_NST          T_NPV
+mq_bool		T_IV
+
+INPUT
+T_MqS
+	$var = get_MqS (aTHX_ $arg);
+
+T_MqSelf
+	$var = get_MqSelf (aTHX_ $arg);
+
+T_MqBufferS
+	$var = get_MqBufferS (aTHX_ $arg);
+
+T_MqBufferSelf
+	$var = get_MqBufferSelf (aTHX_ $arg);
+
+T_MqDumpS
+	$var = get_MqDumpS (aTHX_ $arg);
+
+T_MqDumpSelf
+	$var = get_MqDumpSelf (aTHX_ $arg);
+
+T_MqFactoryS
+	$var = get_MqFactoryS (aTHX_ $arg);
+
+T_MqFactorySelf
+	$var = get_MqFactorySelf (aTHX_ $arg);
+
+T_NPV
+        $var = (SvOK($arg) ? ($type)SvPV_nolen($arg) : NULL);
+
+
+OUTPUT
+# never define 'T_MqS' as output because a RETVAL will be automatic
+# defined as 'mortal' and so the 'context->self' value will be
+# destroyed.
+
+T_MqBufferS
+        sv_setref_pv($arg, \"Net::PerlMsgque::MqBufferS\", (void*)$var);
+
+T_MqBufferSelf
+        sv_setref_pv($arg, \"Net::PerlMsgque::MqBufferS\", (void*)$var);
+
+T_MqDumpS
+        sv_setref_pv($arg, \"Net::PerlMsgque::MqDumpS\", (void*)$var);
+
+T_MqDumpSelf
+        sv_setref_pv($arg, \"Net::PerlMsgque::MqDumpS\", (void*)$var);
+
+T_MqFactoryS
+	if ($var == NULL) {
+	  croak("MqFactoryS exception");
+	} else {
+	  sv_setref_pv($arg, \"Net::PerlMsgque::MqFactoryS\", (void*)$var);
+	}
+
+T_MqFactorySelf
+	if ($var == NULL) {
+	  croak("MqFactoryS exception");
+	} else {
+	  sv_setref_pv($arg, \"Net::PerlMsgque::MqFactoryS\", (void*)$var);
+	}
+
+T_MqSException
+        sv_setref_pv($arg, \"Net::PerlMsgque::MqSException\", (void*)$var);
+
+T_NPV
+	sv_setpvn((SV*)$arg, $var, ($var?strlen($var):0));

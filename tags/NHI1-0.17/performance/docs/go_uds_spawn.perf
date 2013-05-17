@@ -1,0 +1,15 @@
+> server.go --uds --file ./socket.uds --spawn
+> client.c --all --uds --file ./socket.uds
+using: /build/dev1usr/Main/performance-thread/performance/thread/env.sh
+skip: TS_LIBRARY
+exec: [5] /build/dev1usr/Main/performance-thread/performance/thread/theLink/example/c/client,--all,--uds,--file,./socket.uds
+C> (client:14710:0x7f4e39a0e700) [1367505361:714164] [B-0-0-0-0x19f9e88-main]: start: --------------------------------------
+C> (client:14710:0x7f4e39a0e700) [1367505361:821717] [B-0-0-0-0x19f9e88-statistics]:                      MqSendEND:   4.65e+05
+C> (client:14710:0x7f4e39a0e700) [1367505362:52975] [B-0-0-0-0x19f9e88-statistics]:         MqSendEND_AND_CALLBACK:   2.16e+05
+C> (client:14710:0x7f4e39a0e700) [1367505362:689275] [B-0-0-0-0x19f9e88-statistics]:             MqSendEND_AND_WAIT:   7.86e+04
+C> (client:14710:0x7f4e39a0e700) [1367505362:691687] [B-0-0-0-0x19f9e88-statistics]:               MqSendPERSISTENT:   1.16e+04
+C> (client:14710:0x7f4e39a0e700) [1367505364:360859] [B-0-0-0-0x19f9e88-statistics]:                  parent create:   1.49e+02
+C> (client:14710:0x7f4e39a0e700) [1367505364:373357] [B-0-0-0-0x19f9e88-statistics]:                  parent delete:   8.02e+03
+C> (client:14710:0x7f4e39a0e700) [1367505364:509148] [B-0-0-0-0x19f9e88-statistics]:                   child create:   7.37e+03
+C> (client:14710:0x7f4e39a0e700) [1367505364:531068] [B-0-0-0-0x19f9e88-statistics]:                   child delete:   4.57e+04
+C> (client:14710:0x7f4e39a0e700) [1367505364:531095] [B-0-0-0-0x19f9e88-main]: end: ----------------------------------------
