@@ -2,11 +2,15 @@
 
 <CENTER>
 
-\section nw  NEWS, from 11 Apr 2011
+\section nw  NEWS, from 15 Mai 2012
 
-Finish release \b 9 of \ref wp2 \n
-~ \a NEW identical \b UNIX and \b WINDOWS build-environment ~ \n
-~ replace <B>MS Visual *</B> with \b cygwin tool-chain and \b mingw cross-compiler ~ \n
+Finish release \b 10 of \ref wp2 - \ref V0_17 "ChangeLog" \n
+~ buildsystem redesign\n
+~ NEW linux container support (lxc)\n
+~ test redesign\n
+~ new end-user tools\n
+~ BUG-Fix\n
+~ Windows build enhancement\n
 
 
 \section intro Introduction
@@ -29,6 +33,7 @@ setup and maintaining the link and is responsible for: \n
 </TABLE>
 
 \section man Documentation Matrix
+
 <TABLE>
   <TR>  
     <TH>documentation</TH> 
@@ -103,36 +108,17 @@ setup and maintaining the link and is responsible for: \n
 </TABLE>
 
 \section detail Misc Documentation
-<TABLE border="1" cellspacing="1" >
-  <TR>  
-    <TH>tools</TH> 
-    <TH>documentation</TH> 
-  </TR>
-  <TR>  
-      <TD>\ref rcBuild</TD>
-      <TD>\ref wp2</TD>
-  </TR>
-  <TR>  
-      <TD>\ref Nhi1Label</TD>
-      <TD>\ref features</TD>
-  </TR>
-  <TR>  
-      <TD>\ref Nhi1BuildLanguage</TD>
-      <TD>\ref context</TD>
-  </TR>
-  <TR>  
-      <TD>\ref Nhi1Config</TD>
-      <TD>\ref filter</TD>
-  </TR>
-  <TR>  
-      <TD>\ref Nhi1Exec</TD>
-      <TD>\ref performance</TD>
-  </TR>
-  <TR>  
-      <TD>\ref Nhi1Docs</TD>
-      <TD>\ref faq</TD>
-  </TR>
-</TABLE>
+
+  tools			  | docs
+  :----------		  | :---------------
+  \ref rcBuildFs	  | \ref wp2
+  \ref Nhi1Label	  | \ref features
+  \ref Nhi1BuildLanguage  | \ref context
+  \ref Nhi1Config	  | \ref filter
+  \ref Nhi1Exec		  | \ref performance
+  \ref Nhi1Docs		  | \ref faq
+  \ref lxc-nhi1		  | \ref md_README_TESTS
+  \ref lxc-watchdog	  | \ref md_README_PERFORMANCE
 
 \section main_example1 Example1 Client/Server to multiplicate two double values
 <TABLE>

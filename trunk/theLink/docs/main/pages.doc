@@ -25,8 +25,8 @@
 */
 
 /**
-\page rcBuild rcBuild
-\verbinclude rcBuild.help
+\page rcBuildFs rcBuildFs
+\verbinclude rcBuildFs.help
 */
 
 /**
@@ -49,4 +49,13 @@
 \verbinclude Nhi1Docs.help
 */
 
+/**
+\page lxc-nhi1 lxc-nhi1
+\verbinclude lxc-nhi1.help
+*/
+
+/**
+\page lxc-watchdog lxc-watchdog
+\verbinclude lxc-watchdog.help
+*/
 

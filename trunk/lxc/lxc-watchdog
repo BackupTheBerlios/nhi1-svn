@@ -1,17 +1,15 @@
 #! /bin/bash
-### BEGIN INIT INFO
-# Provides:          lxc-watchdog
-# Required-Start:    $remote_fs $named $network $time
-# Should-Start:      
-# Required-Stop:     
-# Should-Stop:       
-# Default-Start:     3 5
-# Default-Stop:      0 1 2 6
-# Short-Description: Manage Linux Containers startup/shutdown
-# Description:       Administrator Interface to the lxc subsystem
-#       providing a watchdog daemon to monitor all lxc-container
-#       and a commandline interface to work on a single container.
-### END INIT INFO
+#+
+#:  \file       lxc/lxc-watchdog
+#:  \brief      \$Id$
+#:  
+#:  (C) 2013 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 
 # Shell functions sourced from /etc/rc.status:
 #      rc_check         check and set local and overall rc status
@@ -324,15 +322,15 @@ less <<EOF
 Usage: ${0##*/} ...
 
 commands for a named container
-  {start|stop|restart} ..... [ALL|PATTERN|name...]
-  {log|llog|fstab|config} .. [ALL|PATTERN|name...]
-  {shell|console} .......... [ALL|PATTERN|name...]
+  start,stop,restart ..... [ALL|PATTERN|name...]
+  log,llog,fstab,config .. [ALL|PATTERN|name...]
+  shell,console .......... [ALL|PATTERN|name...]
 
-  {zypper} ................. [ALL|PATTERN|name] zypper-args...
-  {(un)set} mode ........... [ALL|PATTERN|name...]
+  zypper ................. [ALL|PATTERN|name] zypper-args...
+  (un)set mode ........... [ALL|PATTERN|name...]
 
 commands for the watchdog-deamon
-  {start|stop|restart|status|stat|log|install|uninstall}
+  start,stop,restart,status,stat,log,install,uninstall
 
 named action:
   start		start a specific lxc-container clear the 'maintainance' mode

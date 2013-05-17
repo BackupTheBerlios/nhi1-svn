@@ -388,6 +388,7 @@ foreach _F $argv {
 	{.vim}	    {set do [TypeGENERIC \"]}
 	{.phpini}   {set do [TypeGENERIC \;]}
 	{.bat}	    {set do [TypeBAT]}
+	{.md}	    {set do [Type*]}
 	ignore	    {continue}
 	default	    {set ig 1;puts "ignore: $_F"}
     }

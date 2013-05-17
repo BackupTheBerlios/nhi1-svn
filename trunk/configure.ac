@@ -238,7 +238,7 @@ AC_SUBST([path],[$PATH])
 AC_SUBST([ld_library_path],[$LD_LIBRARY_PATH])
 
 AC_CONFIG_FILES([Makefile tests/Makefile sbin/winsdk.bat sbin/wincl.bat sbin/winlink.bat sbin/winlib.bat sbin/wincrt.bat
-  theLink/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile theLink/tests/Makefile 
+  theLink/Makefile theLink/acmds/Makefile theLink/sqlite/Makefile theLink/tests/Makefile lxc/Makefile
     theLink/docs/Makefile bin/Makefile sbin/Makefile etc/Makefile tests/TestControl.bash
       theLink/libmsgque/Makefile theLink/example/c/Makefile
 	theLink/ccmsgque/Makefile theLink/example/cc/Makefile

@@ -1,4 +1,15 @@
 #!/bin/bash -u
+#+
+#:  \file       lxc/lxc-nhi1
+#:  \brief      \$Id$
+#:  
+#:  (C) 2013 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
 
 #
 # template script for generating suse container for LXC
@@ -484,7 +495,7 @@ clean()
 
 usage()
 {
-  cat <<EOF
+  less <<EOF
 
 usage: ${0##*/} ?options? command command-args... -h
 
@@ -499,7 +510,7 @@ command:
   ssh-keys ...................... tgt-name user
   list,clean,bridge .............
 
-Create/Delete a runable lxc container using an opensuse setup.
+Create/Delete a runable lxc container using a template setup.
 
   create    create an container at /var/lib/lxc/[tgt-name] und a
 	    logical volumne at /dev/lxc/[tgt-name] using the 
@@ -564,6 +575,14 @@ o2=""
 
 fst='ext4'
 fso='acl,user_xattr'
+
+# post-command command-line-options
+while getopts h$o2 opt
+do
+  case "$opt" in
+    *)	usage ;;
+  esac
+done
 
 #i am root ?
 test "$(id -u)" != "0"	      && die "This script should be run as 'root'"
@@ -642,7 +661,6 @@ do
     *)	usage ;;
   esac
 done
-
 
 echo start $0 ...
 

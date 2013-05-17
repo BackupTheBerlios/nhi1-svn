@@ -1,6 +1,6 @@
 #!/bin/bash -u
 #+
-#:  \file       tests/TestControl.bash
+#:  \file       tests/TestControl.bash.in
 #:  \brief      \$Id$
 #:  
 #:  (C) 2013 - NHI - #1 - Project - Group

@@ -17,9 +17,46 @@
 \n
 \n
 
-\section V0_17 ?? ??? 2013 - NHI1-0.17, PLMK-2.5 und libmsgque-5.5
+\section V0_17 Mai 2013: v NHI1-0.17, PLMK-2.5 und libmsgque-5.5
 
-#1 fig bug in rubymsgque, now the toplevel class initialize method does not 
+\subsection V0_17_1 REDESIGN buildsystem
+  \li using out of root build by default
+  \li automake/autoconf scripts now using patterns
+  \li change syntax to --with-LNG for programming languags support
+  \li using an in-memory filesystem to build and test the software
+
+\subsection V0_17_2 NEW linux container support (lxc)
+  \li tool: lxc-nhi1 to create a new lxc container (tested on opensuse)
+  \li tool: lxc-watchdog to manage the new lxc container cluster
+
+\subsection V0_17_3 REDESIGN test
+  \li now using parallel testing with the "make -j #" option
+  \li tool: tests/TestControl.bash to make a mass build test
+
+\subsection V0_17_4 NEW end-user tools 
+  \li Nhi1BuildLanguage: build tcp,perl,phy,ruby,phyton language
+  \li Nhi1Config: wrapper to configure
+  \li Nhi1Docs: build documentation tree
+  \li Nhi1Exec: find and exec scripts/tests
+  \li Nhi1Label: label files, provide common header
+  \li Nhi1Tags: crate tags file to lookup functions
+  \li rcBuildFs: unix service to manage an in-memory filesystem
+
+\subsection V0_17_5 BUG-Fix 
+  \li 1. libmsgque: missing close-on-exec flag on sockets
+  \li 2. aguard: wrong build-key length.
+
+\subsection V0_17_6 REDESIGN theBrain 
+  \li using now the build-in sqlite database.
+  \li using a special systax to define a strong typed datatype in sqlite
+
+\subsection V0_17_7 REDESIGN Windows build
+  \li now using mingw and microsoft sdk compiler
+  \li automake/autoconf configuration update to find windows build tools
+
+\section V0_17alfa 2013 - NHI1-0.17alfa, PLMK-2.5 und libmsgque-5.5
+
+1. fig bug in rubymsgque, now the toplevel class initialize method does not 
 need a template dummy argument anymore.
 
 \verbatim
@@ -32,12 +69,12 @@ class MyServer < MqS
 end
 \endverbatim
 
-#2 fix bug in phpmsgque, initialization of "MqInitCreate" now done during FactoryAdd
+2. fix bug in phpmsgque, initialization of "MqInitCreate" now done during FactoryAdd
 or FactoryDefault
 
-#3 fix bug in c# configuration - not handel version-numbers right
+3. fix bug in c# configuration - not handel version-numbers right
 
-#4 java install in opensuse lxc-container and fix bug doesn't complain about missing
+4. java install in opensuse lxc-container and fix bug doesn't complain about missing
 java executables.
 
 \verbatim

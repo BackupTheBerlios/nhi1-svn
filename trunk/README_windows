@@ -110,24 +110,3 @@ The following pitfalls are important:
 
   5. perl does only support the msvc build on windows.
 
-
-OLD
-========================================================================
-
-
-Java
-====
-
-export JAVA_HOME=/cygdrive/c/Programme/Java/jdk1.6.0_24/
-export PATH="$JAVA_HOME/bin:$PATH"
-
-
-C# / VB.Net
-===========
-
-CSDIR=/cygdrive/c/Windows/Microsoft.NET/Framework64
-FrameworkDir=$(cygpath -w $CSDIR)
-FrameworkVersion=v4.0.30319
-export PATH=$CSDIR/$FrameworkVersion:'/cygdrive/c/Program Files/Microsoft SDKs/Windows/v7.1/Bin/x64':$PATH
-
-

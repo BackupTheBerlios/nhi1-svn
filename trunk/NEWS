@@ -10,16 +10,36 @@
 #:              please contact AUTHORS for additional information
 #:
 
-5 Mai 2013: v NHI1-0.17, PLMK-2.5 und libmsgque-5.5
+15 Mai 2013: v NHI1-0.17, PLMK-2.5 und libmsgque-5.5
 
- -> Buildsystem-Redesign, using rcBuildFs to build and test on
-    an in-Memory tmpsfs Filesystem -> Fast
- -> automake/autoconf configurations was redesigned to use
-    configuration pastterns and to create more rubust results
- -> BUG-Fix missing close-on-exec flag on sockets
- -> BUG-Fix wrong build-key length.
- -> rededsign theBrain using the build-in sqlite database.
-
+ -> REDESIGN buildsystem
+  * using out of root build by default
+  * automake/autoconf scripts now using patterns
+  * change syntax to --with-LNG for programming languags support
+  * using an in-memory filesystem to build and test the software
+ -> NEW linux container support (lxc)
+  * tool: lxc-nhi1 to create a new lxc container (tested on opensuse)
+  * tool: lxc-watchdog to manage the new lxc container cluster
+ -> REDESIGN test
+  * now using parallel testing with the "make -j #" option
+  * tool: tests/TestControl.bash to make a mass build test
+ -> NEW end-user tools 
+  * Nhi1BuildLanguage: build tcp,perl,phy,ruby,phyton language
+  * Nhi1Config: wrapper to configure
+  * Nhi1Docs: build documentation tree
+  * Nhi1Exec: find and exec scripts/tests
+  * Nhi1Label: label files, provide common header
+  * Nhi1Tags: crate tags file to lookup functions
+  * rcBuildFs: unix service to manage an in-memory filesystem
+ -> BUG-Fix 
+  * libmsgque: missing close-on-exec flag on sockets
+  * aguard: wrong build-key length.
+ -> REDESIGN theBrain 
+  * using now the build-in sqlite database.
+  * using a special systax to define a strong typed datatype in sqlite
+ -> REDESIGN Windows build
+  * now using mingw and microsoft sdk compiler
+  * automake/autoconf configuration update to find windows build tools
 
 8 Apr 2011: v NHI1-0.16, PLMK-2.4 und libmsgque-5.4
 

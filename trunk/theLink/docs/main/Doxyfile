@@ -14,12 +14,12 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 
-INPUT		    +=	. $(SRCDIR)/../ChangeLog
-FILE_PATTERNS	    +=	*.doc
+INPUT		    +=	. $(SRCDIR)/../ChangeLog $(SRCDIR)/tests $(SRCDIR)/../performance
+FILE_PATTERNS	    +=	*.doc *.md
 EXAMPLE_PATH	    =	$(SRCDIR)/.. $(SRCDIR) $(SRCDIR)/acmds $(BUILDDIR)/acmds/docs $(SRCDIR)/docs/main \
 			$(SRCDIR)/docs/man $(SRCDIR)/tests $(BUILDDIR)/example/c/docs \
 			$(SRCDIR)/../performance/docs \
-			$(BUILDDIR)/../bin/docs \
+			$(BUILDDIR)/../bin/docs $(BUILDDIR)/../lxc/docs \
 			$(SRCDIR)/example/c \
 			$(SRCDIR)/example/cc \
 			$(SRCDIR)/example/tcl \
