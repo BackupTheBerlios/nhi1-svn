@@ -100,7 +100,7 @@ SC_WITH_TOOL_ROOT
 
 SC_ENABLE_CACHE
 
-if test "$build_os" = "cygwin"; then
+if test "$host_os" = "mingw32"; then
   CYGPATH_M='cygpath -m'
 else
   CYGPATH_M='echo'

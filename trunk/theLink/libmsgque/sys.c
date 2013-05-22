@@ -522,7 +522,7 @@ static enum MqErrorE SysServerSpawn (
   // fork to create the child
 #if defined(HAVE_VFORK)
   if (unlikely ((pid = vfork()) == -1)) {
-    cmd="vfork"
+    cmd="vfork";
     err=errno;
     goto error;
   }

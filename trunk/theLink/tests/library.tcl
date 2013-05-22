@@ -106,6 +106,9 @@ set LIBRARY_PATH [list \
 
 if { "$host_os" == "mingw32" } {
   lappend LIBRARY_PATH $MINGWDLL
+}
+
+if { "$build_os" == "cygwin" } {
   set env(PATH) "[join $LIBRARY_PATH $PATH_SEP]$PATH_SEP$env(PATH)"
 }
 
@@ -114,46 +117,47 @@ catch {set $env(LD_LIBRARY_PATH)} LD_LIBRARY_PATH
 set env(LD_LIBRARY_PATH) "[join $LIBRARY_PATH $PATH_SEP]$PATH_SEP$LD_LIBRARY_PATH"
 
 #puts $env(PATH)
+proc setup_path {var args} {
+  if {[info exists ::env($var)]} {
+    return $::env($var)
+  }
+  set val [list]
+  foreach a $args {
+    lappend val $a
+  }
+  set ::env($var) [join $val $::PATH_SEP]
+}
 
 ## setup TCL path
-set TCLLIBPATH [list]
-lappend TCLLIBPATH [file join $linkbuilddir tclmsgque .libs]
-lappend auto_path [file join $linkbuilddir tclmsgque .libs]
-set env(TCLLIBPATH) $TCLLIBPATH
+lappend auto_path [setup_path TCLLIBPATH [file join $linkbuilddir tclmsgque .libs]]
 
 ## setup PYTHON path
-set PYTHONPATH [list]
-lappend PYTHONPATH [file nativename [file join $linkbuilddir pymsgque]]
-lappend PYTHONPATH [file nativename [file join $linkbuilddir pymsgque .libs]]
-set env(PYTHONPATH) [join $PYTHONPATH $PATH_SEP]
-#Print env(PYTHONPATH)
+setup_path PYTHONPATH \
+  [file nativename [file join $linkbuilddir pymsgque]] \
+    [file nativename [file join $linkbuilddir pymsgque .libs]]
 
 ## setup RUBY path
-set RUBYLIB [list]
-lappend RUBYLIB [file nativename [file join $linkbuilddir rubymsgque]]
-lappend RUBYLIB [file nativename [file join $linkbuilddir rubymsgque .libs]]
-set env(RUBYLIB) [join $RUBYLIB $PATH_SEP]
-#Print env(RUBYLIB)
+setup_path RUBYLIB \
+  [file nativename [file join $linkbuilddir rubymsgque]] \
+    [file nativename [file join $linkbuilddir rubymsgque .libs]]
 
 ## setup JAVA classpath
-set CLASSPATH [list]
-lappend CLASSPATH [file nativename [file join $linkbuilddir javamsgque javamsgque.jar]]
-lappend CLASSPATH [file nativename [file join $linkbuilddir example java]]
-set env(CLASSPATH) [join $CLASSPATH $PATH_SEP]
-#Print env(CLASSPATH)
+setup_path CLASSPATH \
+  [file nativename [file join $linkbuilddir javamsgque javamsgque.jar]] \
+    [file nativename [file join $linkbuilddir example java]]
 
 ## setup C# search path
-set MONO_PATH [list]
-lappend MONO_PATH [file nativename [file join $linkbuilddir csmsgque]]
-lappend MONO_PATH [file nativename [file join $linkbuilddir example csharp]]
-set env(MONO_PATH) [join $MONO_PATH $PATH_SEP]
-set env(LIB) [join $MONO_PATH $PATH_SEP]
-#Print env(MONO_PATH)
+set env(LIB) [setup_path MONO_PATH \
+  [file nativename [file join $linkbuilddir csmsgque]] \
+    [file nativename [file join $linkbuilddir example csharp]] \
+]
 
 ## setup PERL search path
-set env(PERL5LIB) [file nativename [file join $linkbuilddir perlmsgque Net-PerlMsgque blib lib]]
-append env(PERL5LIB) "$PATH_SEP[file nativename [file join $linksrcdir example perl]]"
+setup_path PERL5LIB \
+  [file nativename [file join $linkbuilddir perlmsgque Net-PerlMsgque blib lib]] \
+    [file nativename [file join $linksrcdir example perl]]
 
+## misc os specific modification
 if {$tcl_platform(os) eq "FreeBSD"} {
     set WAIT 1000
 } elseif {$tcl_platform(platform) eq "windows"} {
