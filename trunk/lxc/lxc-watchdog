@@ -414,7 +414,7 @@ cache="/var/cache/lxc/opensuse/partial-$(arch)"
 mkdir -p ${bin%/*}
 [[ ! -x $bin || /bin/bash -nt $bin ]] && cp -fp /bin/bash $bin
 
-if [[ ${0##*/} == "lxc-watchdog" ]] ; then
+if [[ ${0##*/} == *lxc-watchdog ]] ; then
   # any arguments?
   (( $# == 0 )) && usage
   command=$1; shift

@@ -60,6 +60,9 @@ install-web:
 #	@echo -e "\n\n!!!!!  have you run 'make html' first ?  !!!!!\n\n"
 #	rsync -azv --delete html/ aotto1968,libmsgque@web.sourceforge.net:htdocs/
 
+install-src:
+	ftp -u ftp://ftp.berlios.de/incoming/ NHI1-*.tar.bz2 || true
+
 install-files:
 	for F in NHI1-$(VERSION)* binary-dist/NHI1-$(VERSION)* ; do \
 	  ftp -u ftp://ftp.berlios.de/incoming/$$(basename $$F) $$F || true; \
