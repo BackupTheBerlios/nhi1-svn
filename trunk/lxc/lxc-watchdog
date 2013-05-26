@@ -220,7 +220,7 @@ lxc_stop() {
 lxc_restart() {
   name=$1
   touch $LXCDIR/$name/on_maintainance
-  lxc-shutdown -r $name -t 40 || return $?
+  lxc-shutdown -n $name -r -t 40 || return $?
   return 0
 }
 
@@ -523,7 +523,10 @@ else
     ;;
     install)
       echo -n "install lxc-watchdog..."
-      if [[ -f "/etc/init.d/lxc-watchdog" && "/etc/init.d/lxc-watchdog" -nt "$0" ]] ; then
+      if [[ "$0" == *rclxc-watchdog ]] ; then
+	echo -n "do NOT use rclxc-watchdog for 'install', use repository original"
+	rc_failed 1
+      elif [[ -f "/etc/init.d/lxc-watchdog" && "/etc/init.d/lxc-watchdog" -nt "$0" ]] ; then
 	echo -n "allready done..."
       else 
 	rm -f /etc/init.d/lxc-watchdog
@@ -537,6 +540,9 @@ else
     ;;
     uninstall)
       echo -n "uninstall lxc-watchdog..."
+      if [[ -L "/usr/sbin/rclxc-watchdog" ]] ; then
+	rm -f /usr/sbin/rclxc-watchdog
+      fi
       if [[ ! -f "/etc/init.d/lxc-watchdog" ]] ; then
 	echo -n "allready done..."
       else 
@@ -544,9 +550,6 @@ else
 	lxc_status
 	/sbin/insserv -r lxc-watchdog
 	rm -f /etc/init.d/lxc-watchdog
-      fi
-      if [[ -L "/usr/sbin/rclxc-watchdog" ]] ; then
-	rm -f /usr/sbin/rclxc-watchdog
       fi
       rc_status -v
     ;;
