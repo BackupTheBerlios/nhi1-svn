@@ -231,6 +231,11 @@ case "$cmd" in
 	;;
     install)
 	echo -n "install rcBuildFs..."
+	for d in /build /backup ; do
+	  mkdir -p $d
+	  chown root:users $d
+	  chmod ug+rwx $d
+	done
 	if [[ -f "$rcBuildFs_inst" && $rcBuildFs_inst -nt $0 ]] ; then
 	  echo -n "allready done..."
 	else
@@ -242,6 +247,7 @@ case "$cmd" in
 	rc_status -v
 	;;
     uninstall)
+	$0 stop
 	echo -n "uninstall rcBuildFs..."
 	if [[ ! -f "$rcBuildFs_inst" ]] ; then
 	  echo -n "allready done..."

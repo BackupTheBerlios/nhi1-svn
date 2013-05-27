@@ -84,7 +84,7 @@ mkdir -p "$NHI1_TOOL_ROOT" || die "unable to create directory '$NHI1_TOOL_ROOT'"
 # with '--use-all' det all "--use-*" targets to yes
 if test "$useAll" = "yes" ; then
   for u in "${!use[@]}" ; do
-	use[$u]="yes"
+      use[$u]="yes"
   done
 fi
 
@@ -174,21 +174,20 @@ for l in ${!lang[@]} ; do
       ;;
     esac
 
-if false; then
     (
-      cd "$l-latest/$buildDir"
-      if test "$clean" = "yes" ; then
-	test -f Makefile && {
-	  make distclean || die "unable to 'make distclean'"
-	}
-      fi
-      if test ! -f Makefile ; then
-	bash -norc "$buildScript" "${buildConf[@]}" "$@" || die "unable to configure"
-      fi
-      make -j $Jobs || die "unable to build"
-      make install || die "unable to install"
+      cd "$l-latest/$buildDir" && {
+	if test "$clean" = "yes" ; then
+	  test -f Makefile && {
+	    make distclean || die "unable to 'make distclean'"
+	  }
+	fi
+	if test ! -f Makefile ; then
+	  bash -norc "$buildScript" "${buildConf[@]}" "$@" || die "unable to configure"
+	fi
+	make -j $Jobs || die "unable to build"
+	make install || die "unable to install"
+      }
     )
-fi
 
     # post install correction script
     case "$l" in

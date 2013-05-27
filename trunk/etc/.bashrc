@@ -82,5 +82,5 @@ fi
 export NHI1_HOME=$(dirname $(dirname $(readlink -e ~/.bashrc)))
 export NHI1_TOOL_ROOT="$HOME/ext/$MACHTYPE"
 export PATH="$NHI1_HOME/bin:/usr/local/bin:$PATH"
-export MANPATH="/usr/local/share/man:$MANPATH"
+export MANPATH="/usr/local/share/man:$NHI1_TOOL_ROOT/man:$MANPATH"
 

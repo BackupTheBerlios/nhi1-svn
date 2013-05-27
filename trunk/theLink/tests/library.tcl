@@ -93,9 +93,6 @@ switch -exact $tcl_platform(platform) {
 set env(PATH) "[join $PATH $PATH_SEP]$PATH_SEP$env(PATH)"
 
 ## setup LIBRARY search path
-if {![info exists env(LD_LIBRARY_PATH)]} {
-  set env(LD_LIBRARY_PATH) ""
-}
 set LIBRARY_PATH [list \
   [file nativename [file join $linkbuilddir libmsgque .libs]] \
   [file nativename [file join $linkbuilddir ccmsgque .libs]] \
@@ -107,16 +104,21 @@ set LIBRARY_PATH [list \
 if { "$host_os" == "mingw32" } {
   lappend LIBRARY_PATH $MINGWDLL
 }
+set LIBRARY_PATH "[join $LIBRARY_PATH $PATH_SEP]"
 
 if { "$build_os" == "cygwin" } {
-  set env(PATH) "[join $LIBRARY_PATH $PATH_SEP]$PATH_SEP$env(PATH)"
+  set env(PATH) "$LIBRARY_PATH$PATH_SEP$env(PATH)"
 }
 
 # even on Windows "LD_LIBRARY_PATH" ist required (filter.test for perl)
-catch {set $env(LD_LIBRARY_PATH)} LD_LIBRARY_PATH
-set env(LD_LIBRARY_PATH) "[join $LIBRARY_PATH $PATH_SEP]$PATH_SEP$LD_LIBRARY_PATH"
+if {[info exists env(LD_LIBRARY_PATH)]} {
+  append LIBRARY_PATH "$PATH_SEP$env(LD_LIBRARY_PATH)"
+}
+set env(LD_LIBRARY_PATH) $LIBRARY_PATH
 
-#puts $env(PATH)
+#puts "PATH=$env(PATH)"
+#puts "LD_LIBRARY_PATH=$env(LD_LIBRARY_PATH)"
+
 proc setup_path {var args} {
   if {[info exists ::env($var)]} {
     return $::env($var)
