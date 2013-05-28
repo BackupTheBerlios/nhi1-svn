@@ -65,99 +65,17 @@ proc Error {args} {
   exit 1
 }
 
-## setup the path to find the !newly! created executable first
-set PATH [list \
-  [file nativename [file dirname [info nameofexecutable]]] \
-  [file nativename [file join $linkbuilddir csmsgque]] \
-  [file nativename [file join $linkbuilddir tests]] \
-  [file nativename [file join $linkbuilddir acmds]] \
-  [file nativename [file normalize .libs]] \
-  [file nativename [file normalize .]] \
-]
-
 switch -exact $tcl_platform(platform) {
     windows { 
-	lappend PATH {C:\cygwin\bin}
-	lappend PATH {C:\cygwin\usr\bin}
 	set KILL [list taskkill.exe /F /T /PID]
     }
     unix {
-	lappend PATH /bin
-	lappend PATH /usr/bin
 	set KILL [list kill -9]
     }
     default { 
 	set KILL [list kill -9]
     }
 }
-set env(PATH) "[join $PATH $PATH_SEP]$PATH_SEP$env(PATH)"
-
-## setup LIBRARY search path
-set LIBRARY_PATH [list \
-  [file nativename [file join $linkbuilddir libmsgque .libs]] \
-  [file nativename [file join $linkbuilddir ccmsgque .libs]] \
-  [file nativename [file join $linkbuilddir javamsgque .libs]] \
-  [file nativename [file join $linkbuilddir tclmsgque .libs]] \
-  [file nativename [file join $linkbuilddir perlmsgque Net-PerlMsgque blib arch auto Net PerlMsgque]] \
-]
-
-if { "$host_os" == "mingw32" } {
-  lappend LIBRARY_PATH $MINGWDLL
-}
-set LIBRARY_PATH "[join $LIBRARY_PATH $PATH_SEP]"
-
-if { "$build_os" == "cygwin" } {
-  set env(PATH) "$LIBRARY_PATH$PATH_SEP$env(PATH)"
-}
-
-# even on Windows "LD_LIBRARY_PATH" ist required (filter.test for perl)
-if {[info exists env(LD_LIBRARY_PATH)]} {
-  append LIBRARY_PATH "$PATH_SEP$env(LD_LIBRARY_PATH)"
-}
-set env(LD_LIBRARY_PATH) $LIBRARY_PATH
-
-#puts "PATH=$env(PATH)"
-#puts "LD_LIBRARY_PATH=$env(LD_LIBRARY_PATH)"
-
-proc setup_path {var args} {
-  if {[info exists ::env($var)]} {
-    return $::env($var)
-  }
-  set val [list]
-  foreach a $args {
-    lappend val $a
-  }
-  set ::env($var) [join $val $::PATH_SEP]
-}
-
-## setup TCL path
-lappend auto_path [setup_path TCLLIBPATH [file join $linkbuilddir tclmsgque .libs]]
-
-## setup PYTHON path
-setup_path PYTHONPATH \
-  [file nativename [file join $linkbuilddir pymsgque]] \
-    [file nativename [file join $linkbuilddir pymsgque .libs]]
-
-## setup RUBY path
-setup_path RUBYLIB \
-  [file nativename [file join $linkbuilddir rubymsgque]] \
-    [file nativename [file join $linkbuilddir rubymsgque .libs]]
-
-## setup JAVA classpath
-setup_path CLASSPATH \
-  [file nativename [file join $linkbuilddir javamsgque javamsgque.jar]] \
-    [file nativename [file join $linkbuilddir example java]]
-
-## setup C# search path
-set env(LIB) [setup_path MONO_PATH \
-  [file nativename [file join $linkbuilddir csmsgque]] \
-    [file nativename [file join $linkbuilddir example csharp]] \
-]
-
-## setup PERL search path
-setup_path PERL5LIB \
-  [file nativename [file join $linkbuilddir perlmsgque Net-PerlMsgque blib lib]] \
-    [file nativename [file join $linksrcdir example perl]]
 
 ## misc os specific modification
 if {$tcl_platform(os) eq "FreeBSD"} {

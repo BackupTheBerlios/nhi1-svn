@@ -40,7 +40,7 @@ Die() {
 }
 
 Usage() {
-  cat - <<-EOF
+  less - <<-EOF
 The script is used as a wrapper to a NHI1 related tool, written using 
 one of the suported programming language abd identifed by the file postfix:
 
