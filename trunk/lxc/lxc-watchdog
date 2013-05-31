@@ -243,14 +243,19 @@ lxc_work_on_boot() {
   case "$1" in
     start)
       lxc_list_on_boot | lxc_is STOPPED | while read name ; do
-	lxc_start $name
+	lxc_start $name &
       done
     ;;
     stop)
       # we need this flag to signal 'lxc_stop' to avoid the 'on_maintainance' flag
       on_deamon_stop=1
       lxc_list_on_boot | lxc_is RUNNING | while read name ; do
-	lxc_stop $name
+	lxc_stop $name &
+      done
+      lxc_list_on_boot | while read name ; do
+	while lxc_is $name RUNNING ; do
+	  sleep 10
+	done
       done
       on_deamon_stop=0
     ;;
