@@ -201,7 +201,7 @@ pBufferLSplitAlfa (
 }
 
 void
-pBufferLDeleteStatic (
+MqBufferLReset (
   struct MqBufferLS * const bufL
 )
 {
@@ -216,17 +216,19 @@ pBufferLDeleteStatic (
   for (; arg < end; arg++) {
     MqBufferDelete ((struct MqBufferS * *) arg);
   }
-  MqSysFree (bufL->data);
+
+  bufL->cursize = 0;
 }
 
 void
 MqBufferLDelete (
-  struct MqBufferLS ** bufP
+  struct MqBufferLS ** bflP
 )
 {
-  if (unlikely(bufP == NULL || *bufP == NULL)) return;
-  pBufferLDeleteStatic (*bufP);
-  MqSysFree (*bufP);
+  if (unlikely(bflP == NULL || *bflP == NULL)) return;
+  MqBufferLReset (*bflP);
+  MqSysFree ((*bflP)->data);
+  MqSysFree (*bflP);
 }
 
 /*****************************************************************************/

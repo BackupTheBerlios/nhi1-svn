@@ -561,6 +561,85 @@ MqLinkCreateChild (
   return MqLinkCreate (context, argvP);
 }
 
+/*
+
+static enum MqErrorE
+pResolve (
+  struct MqS * const ctx,
+  MQ_BFL idL,
+  MQ_BFL *revLP
+)
+{
+  *revLP=NULL;
+  MqErrorCheck(MqSendSTART(ctx));
+  MqErrorCheck(MqSendC(ctx,id));
+  MqErrorCheck(MqSendEND_AND_WAIT(ctx,"_RSV",MQ_TIMEOUT_USER));
+  MqErrorCheck(MqReadL(ctx,revLP);
+error:
+  return MqErrorStack(ctx);
+}
+
+enum MqErrorE
+MqResolve (
+  struct MqS * const context,
+  MQ_CST id,
+  MQ_BFL *revLP
+)
+{
+  struct MqS * ctx = context,
+
+  *parentP = NULL;
+
+  // If I'm a slave switch to the master
+  if (MQ_IS_SLAVE(ctx)) {
+    ctx = ctx->config.master;
+  }
+
+  // break the "id" into a list
+
+  // check the master
+  MqErrorCheck(pResolve(ctx,id,revLP));
+  if (*revLP != NULL) return MQ_OK;
+
+  // check the slave
+  if (ctx->link.slave != NULL) {
+    struct MqLinkSlaveS * const slave = ctx->link.slave;
+    for (id=0; id<slave->used; id++) {
+      MqErrorCheck(pResolve(slave->claves[id],id,revLP));
+      if (*revLP != NULL) return MQ_OK;
+    }
+  }
+
+error:
+  return MqErrorStack(context);
+}
+
+enum MqErrorE
+MqLinkCreateRoute (
+  struct MqS * const context,
+  MQ_CST target,
+  struct MqBufferLS ** argvP
+)
+{
+  struct MqS * const parent = NULL; 
+  MqErrorCheck(MqResolve(context, target));
+
+  // 'parent' not connected
+  if (unlikely(parent == NULL)) {
+    MqBufferLDelete (argvP);
+    return MqErrorDbV(MQ_ERROR_CONNECTED, "parent", "not");
+  }
+
+  MqConfigDup(context, parent);
+  pConfigSetParent(context, parent);
+  return MqLinkCreate (context, argvP);
+error:
+  MqBufferLDelete (argvP);
+  return MqErrorStack(context);
+}
+
+*/
+
 static enum MqErrorE
 MqLinkPrepare (
   struct MqS * const context,

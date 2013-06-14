@@ -342,8 +342,8 @@ pLogBDY (
   struct MqBufferS * space;
 
   // no SYSTEM RETR body
-  if (!strcmp (pTokenGetCurrent (context->link.srvT), "_SRT"))
-    return;
+  //if (!strcmp (pTokenGetCurrent (context->link.srvT), "_SRT"))
+  //  return;
 
   // init
   hd = MqBufferDup (buf);

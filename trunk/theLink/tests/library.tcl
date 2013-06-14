@@ -447,7 +447,6 @@ proc FindFreePort {{num 0}} {
   } else {
     set port [incr ::portNUM]
   }
-#puts "$::self: $port"
   return $port
 }
 
@@ -547,13 +546,20 @@ proc SetConstraints {args} {
 		  thread spawn server parent child child2 child3} {
       testConstraint $c no
     }
-    # 2. string/binary
-    testConstraint $N yes
-    if {$N == 1} {
-      testConstraint parent yes
+    # 2. parent/child
+    if {[llength $N] == 2} {
+      foreach {N1 N2} $N break
+      for {set i 0} {$i < $N1} {incr i} {
+	testConstraint $i yes
+      }
     } else {
-      testConstraint child yes
-      testConstraint child$N yes
+      testConstraint $N yes
+      if {$N == 1} {
+	testConstraint parent yes
+      } else {
+	testConstraint child yes
+	testConstraint child$N yes
+      }
     }
     # 3. string/binary
     testConstraint $B yes
@@ -1164,9 +1170,6 @@ proc Setup {num mode com server args} {
   }
   unset -nocomplain SERVER_OUTPUT
 
-  ## 1. setup variables
-  set scomargs --$com
-  set ccomargs [list]
   # replase all FILE, PORT and PID placeholder
   set args [MkUnique $args]
 
@@ -1179,55 +1182,61 @@ proc Setup {num mode com server args} {
     unset PIDFILE
   }
 
-  # init client-parent (cargs), client-child (cargs) and server (sargs) arguments
-  set cargs	[list]
-  set sargs	[list]
-
-  if {$serverArg ne ""} {
-    lappend sargs {*}$serverArg
-  }
-
-  ## 2. for NON-PIPE server start the server as --fork/--thread/--spawn once
-  if {$com ne "pipe"} {
-    ## ...
-    switch -exact -- $com {
-      tcp	{
-	set PORT  [FindFreePort 0]
-	lappend scomargs --port    [optV args --port $PORT]
-
-	# set host for client and server
-	lappend scomargs --host [optV args --host [getEnv TS_HOST]]
-      }
-      uds	{
-	set FILE  [FindFreeFile]
-	lappend scomargs --file [optV args --file $FILE]
-      }
-    }
-    lappend sargs {*}$args
-    optVD sargs --buffersize --timeout --myhost --myport
-    set sargs [MkUnique $sargs]
-    if {$serverSilent} { lappend sargs --silent }
-    if {!$env(USE_REMOTE)} {
-      if {$filter_server ne "NO"} {
-	set sl [list {*}[getFilter $filter_server.$server] {*}$filter_args {*}$DAEMON]
-	lappend sl --name fs {*}$scomargs @ {*}[getServerOnly $server] {*}$sargs
-      } else {
-	set sl [list {*}[getServer $server] {*}$DAEMON {*}$sargs {*}$scomargs]
-      }
-      if {$env(TS_SETUP)} {
-	puts "Setup: start server"
-      }
-      Bg @stdout {*}$sl
-      after $::WAIT
-    }
-  }
-  
-  ## 3. create new tclmsgque object
-  set FH_LAST	""
-
-  lappend cargs {*}$args
-
   for {set PNO 0} {$PNO<$numParent} {incr PNO} {
+
+    ## initialize communication args
+    set scomargs --$com
+    set ccomargs [list]
+
+    # init client-parent (cargs), client-child (cargs) and server (sargs) arguments
+    set cargs	[list]
+    set sargs	[list]
+
+    if {$serverArg ne ""} {
+      lappend sargs {*}$serverArg
+    }
+
+    ## 2. for NON-PIPE server start the server as --fork/--thread/--spawn once
+    if {$com ne "pipe"} {
+      ## ...
+      switch -exact -- $com {
+	tcp	{
+	  set PORT  [FindFreePort $PNO]
+	  lappend scomargs --port    [optV args --port $PORT]
+
+	  # set host for client and server
+	  lappend scomargs --host [optV args --host [getEnv TS_HOST]]
+	}
+	uds	{
+	  set FILE  [FindFreeFile]
+	  lappend scomargs --file [optV args --file $FILE]
+	}
+      }
+      lappend sargs {*}$args
+      optVD sargs --buffersize --timeout --myhost --myport
+      set sargs [MkUnique $sargs]
+      if {$serverSilent} { lappend sargs --silent }
+      if {!$env(USE_REMOTE)} {
+	if {$filter_server ne "NO"} {
+	  set sl [list \
+	    {*}[getFilter $filter_server.$server] {*}$filter_args {*}$DAEMON \
+	      --name fs {*}$scomargs @ {*}[getServerOnly $server] {*}$sargs --factory sv-$PNO \
+	  ]
+	} else {
+	  set sl [list {*}[getServer $server] {*}$DAEMON {*}$sargs --factory sv-$PNO {*}$scomargs] 
+	}
+	if {$env(TS_SETUP)} {
+	  puts "Setup: start server"
+	}
+	Bg @stdout {*}$sl
+	after $::WAIT
+      }
+    }
+    
+    ## 3. create new tclmsgque object
+    set FH_LAST	""
+
+    lappend cargs {*}$args
 
     ## prepare parent arguments
     if {$filter_client ne "NO"} {
@@ -1239,12 +1248,13 @@ proc Setup {num mode com server args} {
       if {$filter_server ne "NO"} {
 	lappend cl @ {*}[getFilter $filter_server.$server] {*}$filter_args --name fs {*}$scomargs {*}$ccomargs
 	if {$serverSilent} { lappend cl --silent }
-	lappend cl @ {*}[getServerOnly $server] {*}$sargs
+	lappend cl @ {*}[getServerOnly $server] {*}$sargs --factory sv-$PNO
       } else {
-	lappend cl @ {*}[getServer $server] {*}$sargs
+	lappend cl @ {*}[getServer $server] {*}$sargs --factory sv-$PNO
 	if {$serverSilent} { lappend cl --silent }
       }
     }
+    ## start the SERVER
     Start $mode $isError $PNO-0 $cl $ident client-$PNO server-$PNO
     if {$bgerror ne ""} {
       $FH_LAST ConfigSetBgError $bgerror
@@ -1256,7 +1266,7 @@ proc Setup {num mode com server args} {
       uplevel $setup_parent
     }
 
-    ## start the childs
+    ## start the CHILD
     for {set CNO 1} {$CNO<$numChild} {incr CNO} {
       ## prepare child arguments
       set cl [list LinkCreateChild $FH_LAST]

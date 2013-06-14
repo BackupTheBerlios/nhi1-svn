@@ -518,12 +518,13 @@ pTokenCheckSystem (
 	    context->link.bits.endian = (myendian ? MQ_YES : MQ_NO);
 # endif
 
-	    // read the other endian and set my context->link.bits.endian
+	    // set the target factory-identification
 	    MqReadC(context, &name);
 	    MqSysFree (context->link.targetIdent);
 	    context->link.targetIdent = MqSysStrDup(MQ_ERROR_PANIC, name);
 
-	    // read server name
+	    // set the identification-string for the server-context...
+	    // this is good to identify messages from a special client.
 	    MqReadC(context, &name);
 	    if (*name != '\0')
 	      MqConfigSetSrvName (context, name);

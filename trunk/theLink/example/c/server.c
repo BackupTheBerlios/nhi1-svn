@@ -70,6 +70,7 @@ ServerHelp (const char * base)
     fputs(MqHelp (NULL), stderr);
     fputs("\n", stderr);
     fprintf(stderr,"  %s [OPTION]:\n", base);
+    fputs("    --factory        identification of the factory", stderr);
     fputs("    -h, --help       print this help\n", stderr);
     fputs("\n", stderr);
 
@@ -1058,6 +1059,27 @@ error:
   return MqSendRETURN (mqctx);
 }
 
+/// \brief test the "MqLinkCreateRoute" feature
+/// \service
+static enum MqErrorE
+Ot_ROT1 (
+  struct MqS * const mqctx,
+  MQ_PTR data
+)
+{
+  MQ_CST s, id;
+  MqErrorCheck(MqReadC(mqctx, &s));
+  MqErrorCheck(MqReadC(mqctx, &id));
+  MqSendSTART(mqctx);
+    if (!strcmp(s,"CREATE")) {
+      MQ_BFL argv;
+      MqErrorCheck(MqReadL(mqctx, &argv));
+      // MqErrorCheck(MqLinkCreateRoute (mqctx, id, &argv));
+    }
+error:
+  return MqSendRETURN (mqctx);
+}
+
 /// \brief test the "Init" feature
 /// \service
 static enum MqErrorE
@@ -1226,6 +1248,28 @@ Ot_CFG1 (
     MqSendC(mqctx, MqFactoryDefaultIdent());
   } else {
     MqErrorV(mqctx, __func__, 1, "invalid command: %s", cmd);
+  }
+
+error:
+  return MqSendRETURN (mqctx);
+}
+
+static enum MqErrorE
+Ot_CFG2 (
+  struct MqS * const mqctx,
+  MQ_PTR data
+)
+{
+  MQ_CST cmd;
+
+  MqErrorCheck (MqReadC (mqctx, &cmd));
+
+  MqSendSTART(mqctx);
+
+  if (!strncmp (cmd, "Ident", 5)) {
+    MqSendC(mqctx,  MqFactoryCtxIdentGet (mqctx));
+  } else {
+    MqSendC(mqctx,  "nothing");
   }
 
 error:
@@ -1409,11 +1453,14 @@ ServerSetup (
     MqErrorCheck (MqServiceCreate (mqctx, "ERLR", Ot_ERLR, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ERLS", Ot_ERLS, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "CFG1", Ot_CFG1, NULL, NULL));
+    MqErrorCheck (MqServiceCreate (mqctx, "CFG2", Ot_CFG2, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "PRNT", Ot_PRNT, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "TRNS", Ot_TRNS, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "TRN2", Ot_TRN2, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "STDB", Ot_STDB, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "DMPL", Ot_DMPL, NULL, NULL));
+
+    MqErrorCheck (MqServiceCreate (mqctx, "ROT1", Ot_ROT1, NULL, NULL));
   }
 
 error:
@@ -1456,12 +1503,17 @@ main (
   MQ_CST argv[]
 )
 {
+  MQ_STR ident = NULL;
+
   // parse the command-line
   struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
+  
+  MqBufferLCheckOptionC(MQ_ERROR_IGNORE, args, "--factory", &ident);
 
   // call Factory 
   struct MqS *mqctx = MqFactoryNew (MQ_ERROR_PANIC, NULL,
-    MqFactoryAdd(MQ_ERROR_PANIC, "server", ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+    MqFactoryAdd(MQ_ERROR_PANIC, ident ? ident : "server", ServerFactory, 
+		    NULL, NULL, NULL, NULL, NULL, NULL, NULL)
   );
 
   // setup the link, parse command-line arguments

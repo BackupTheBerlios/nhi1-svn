@@ -46,7 +46,7 @@ rc_reset
 set -u
 
 # configuration data
-rcBuildFs_size=10g
+rcBuildFs_size=75%
 rcBuildFs_directory=/build
 rcBuildFs_backup=/backup
 rcBuildFs_inst=/etc/init.d/BuildFs
@@ -242,7 +242,7 @@ case "$cmd" in
 	  rm -f $rcBuildFs_inst && \
 	    cp $0 $rcBuildFs_inst && \
 		  /sbin/insserv $rcBuildFs_inst && \
-			ln -s $rcBuildFs_inst $rcBuildFs_link
+			ln -fs $rcBuildFs_inst $rcBuildFs_link
 	fi
 	rc_status -v
 	;;

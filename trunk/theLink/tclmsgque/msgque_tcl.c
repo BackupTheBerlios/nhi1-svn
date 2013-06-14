@@ -337,6 +337,29 @@ static int NS(Main) (
   return TCL_OK;
 }
 
+static int NS(Resolve) (
+  Tcl_Interp * interp,
+  int objc,
+  Tcl_Obj * const objv[]
+)
+{
+  int skip = 2;
+  struct MqS ** ctxL = NULL;
+  Tcl_Obj *RET = NULL;
+  MQ_STR ident;
+  CHECK_C(ident)
+  CHECK_NOARGS
+  RET = Tcl_NewListObj(0,NULL);
+  ctxL = MqResolve(ident);
+  if (ctxL != NULL) {
+    for (int i=0; ctxL[i] != NULL; i++) {
+      TclErrorCheck (Tcl_ListObjAppendElement(interp, RET, (Tcl_Obj*)ctxL[i]->self));
+    }
+  }
+  Tcl_SetObjResult(interp, RET);
+  RETURN_TCL
+}
+
 /** \brief handle the \b msgque tcl command
  *
  * \param[in] clientData Tcl mandatory field, not used
@@ -356,6 +379,7 @@ static int NS(MsgqueSetup) (
 
   struct LookupKeyword keys[] = {
     { "MqS",		      NS(MqS_Init)	      },
+    { "Resolve",	      NS(Resolve)	      },
     { "print",		      NS(Print)		      },
     { "Main",		      NS(Main)		      },
     { "const",		      NS(Const)		      },

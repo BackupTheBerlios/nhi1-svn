@@ -1777,6 +1777,13 @@ MQ_EXTERN void MQ_DECL MqMark (
   MqMarkF markF
 );
 
+/// \brief return a list of all Factory-Identifer in duty
+/// \param ident the identifier to search the context for
+/// \return an array of MqS* items, the last item is a NULL
+MQ_EXTERN struct MqS ** MQ_DECL MqResolve (
+  MQ_CST ident
+);
+
 #if defined(_DEBUG)
 /// \brief convenience function to log \e MqS configuration data
 /// \context
@@ -2038,6 +2045,13 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreateChild (
   struct MqS * const ctx,
   struct MqS * const parent,
   struct MqBufferLS ** args
+);
+
+/// \brief create a link identified by target-context-name
+MQ_EXTERN enum MqErrorE MQ_DECL MqLinkCreateRoute (
+  struct MqS * const ctx,
+  MQ_CST id,
+  struct MqBufferLS ** argvP
 );
 
 /// \brief helper: wrapper for #MqLinkCreate or #MqLinkCreateChild with additional \e error-check code
@@ -3056,10 +3070,17 @@ MQ_EXTERN struct MqBufferLS * MQ_DECL MqBufferLDup (
 );
 
 /// \brief delete a dynamically created #MqBufferLS object
-/// \param bufP the pointer to an struct MqBufferLS * object
+/// \param bflP the pointer to an struct MqBufferLS * object
 /// \attDelete
 MQ_EXTERN void MQ_DECL MqBufferLDelete (
-  struct MqBufferLS ** bufP
+  struct MqBufferLS ** bflP
+);
+
+/// \brief reset a #MqBufferLS object
+/// \param bfl the struct MqBufferLS * object to reset
+/// \attDelete
+MQ_EXTERN void MQ_DECL MqBufferLReset (
+  struct MqBufferLS * bfl
 );
 
 /*****************************************************************************/
@@ -3653,6 +3674,7 @@ static mq_inline int MqErrorCheckI(
 /// \brief check \e return-code and <I>goto error</I> on error
 #define MqErrorCheck(PROC) if (MqErrorCheckI(PROC)) goto error
 /// \brief check \e return-code and <I>break</I> on error
+/// \brief check \e return-code and <I>break</I> on error
 #define MqErrorBreak(PROC) if (MqErrorCheckI(PROC)) break
 
 /// \brief process error message
@@ -3904,14 +3926,13 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadU (
 /// \brief read an MqBufferLS object from all items of the \e Read-Buffer object
 /// \context
 /// \param[in,out] out data will be appended to \e *out, if \e *out != \c NULL the
-///                    \e *out value will be used otherwise \e *out will be set to a new
-///		       #MqBufferLS object
+///    \e *out value will be used otherwise \e *out will be set to a new
+///    #MqBufferLS object.
 /// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadL (
   struct MqS * const context,
   struct MqBufferLS ** const out
 ) __attribute__((nonnull(1)));
-
 
 /// \brief link two \e context-objects to direct pass a data item from one object to the other.
 /// \ctx and the source of the copy

@@ -5,8 +5,17 @@ MqLinkCreate bekommt analog zu MqLinkCreateChild ein
 
   MqLinkCreateRoute.
 
-Hauptaufgabe ist ein "Parent" zu finden um dann über ein "MqLinkCreateChild"
+Hauptaufgabe ist ein "Parent" zu finden um dann analog zu "MqLinkCreateChild"
 ein ChildContext über den-ganzen-weg zu bauen.
+
+Eine Strecke wird über eine "Adresse" definiert die analog zu einer
+Pfadangabe absolut oder relativ sein darf. bsp:
+
+absolut:  /factory1/factory2/target
+relativ:  ../factory2/target		(upper directory)
+relativ:  ./factory2/target		(current directory)
+relativ:  factory2/target		(current directory)
+
 
 Der Parent wird vom "Resolver" gefunden und dieser "Resolver" gibt den
 kompletten weg bis zum Ziel zurück.

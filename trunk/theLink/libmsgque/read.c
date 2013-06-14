@@ -913,16 +913,21 @@ MqReadL (
   if (unlikely(read == NULL)) {
     return MqErrorDbV(MQ_ERROR_CONNECTED, "msgque", "not");
   } else {
-    struct MqBufferLS * const line = (*out == NULL ? MqBufferLCreate (read->bdy->numItems) : *out);
-    struct MqBufferS * buf = NULL;
+    MQ_BFL bfl = *out;
+    MQ_BUF buf = NULL;
+    read->canUndo = MQ_NO;
+    if (bfl == NULL) {
+      bfl = *out = MqBufferLCreate (read->bdy->numItems);
+    } else {
+      MqBufferLReset(bfl);
+    }
     while (read->bdy->numItems) {
       MqErrorCheck (MqReadU (context, &buf));
-      MqBufferLAppend (line, MqBufferDup(buf), -1);
+      MqBufferLAppend (bfl, MqBufferDup(buf), -1);
     }
-    *out = line;
-    read->canUndo = MQ_NO;
     return MQ_OK;
 error:
+    MqBufferLDelete(out);
     return MqErrorStack (context);
   }
 }

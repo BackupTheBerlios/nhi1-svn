@@ -400,6 +400,7 @@ MqFactoryAdd (
     MqErrorDbFactoryNum(error, MQ_FACTORY_RETURN_CREATE_FUNCTION_REQUIRED);
     return NULL;
   }
+
   return sFactoryAddName (error, ident, Create, Delete);
 }
 

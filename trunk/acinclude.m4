@@ -1073,7 +1073,12 @@ AC_DEFUN([SC_WITH_RUBY], [
       AC_SUBST([RUBY_CFLAGS], [$($PKG_CONFIG --cflags ruby-1.9)])
       AC_SUBST([RUBY_LDFLAGS],[$($PKG_CONFIG --libs ruby-1.9)])
     ],[
-      AC_MSG_ERROR([unable to find the package 'ruby-1.9'])
+      AS_IF([$PKG_CONFIG --exists ruby-2.0], [
+	AC_SUBST([RUBY_CFLAGS], [$($PKG_CONFIG --cflags ruby-2.0)])
+	AC_SUBST([RUBY_LDFLAGS],[$($PKG_CONFIG --libs ruby-2.0)])
+      ],[
+	AC_MSG_ERROR([unable to find the package 'ruby-1.9' or 'ruby-2.0'])
+      ])
     ])
   ])
 ])

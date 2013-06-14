@@ -17,8 +17,14 @@ if { $tcl_platform(platform) == "windows" } {
   append env(LD_LIBRARY_PATH) "$PATH_SEP"
 }
 
+if {[info exists env(LD_LIBRARY_PATH)]} {
+  set ldp $env(LD_LIBRARY_PATH)
+} else {
+  set ldp ""
+}
+
 set env(PATH) "[file join .. libmsgque .libs]$PATH_SEP$env(PATH)"
-set env(LD_LIBRARY_PATH) "[file join .. libmsgque .libs]$PATH_SEP$env(LD_LIBRARY_PATH)"
+set env(LD_LIBRARY_PATH) "[file join .. libmsgque .libs]$PATH_SEP$ldp"
 
 pkg_mkIndex -verbose ./.libs
 

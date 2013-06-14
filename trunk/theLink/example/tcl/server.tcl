@@ -412,6 +412,20 @@ proc Ot_SND2 {ctx} {
   $ctx SendRETURN
 }
 
+proc Ot_ROT1 {ctx} {
+  
+  set cmd   [$ctx ReadC]
+  set name  [$ctx ReadC]
+
+  $ctx SendSTART
+  switch -exact $cmd {
+    CREATE {
+      $ctx LinkCreateRoute $name
+    }
+  }
+  $ctx SendRETURN
+}
+
 proc Ot_BUF1 {ctx} {
   set buf [$ctx ReadU]
   set typ [$buf GetType]
@@ -710,6 +724,8 @@ proc ServerSetup {ctx} {
     $ctx ServiceCreate TRNS Ot_TRNS
     $ctx ServiceCreate STDB Ot_STDB
     $ctx ServiceCreate DMPL Ot_DMPL
+
+    $ctx ServiceCreate ROT1 Ot_ROT1
   }
 }
 

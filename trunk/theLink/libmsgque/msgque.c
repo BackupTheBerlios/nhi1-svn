@@ -402,6 +402,15 @@ MqMark (
   pTokenMark(context, markF);
 }
 
+struct MqS **
+MqResolve (
+  MQ_CST	      const ident
+)
+{
+  struct MqS ** ret = NULL;
+  return ret;
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                debugging                                  */
