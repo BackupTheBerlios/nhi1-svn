@@ -392,16 +392,16 @@ IFS=";"
 
 if [[ $TEE == "yes" ]] ; then
   if [[ $PREFIX == *kdbg* ]] ; then
-    exec $PREFIX "$EXE" -a "$@" 2>&1 | $POSTFIX | tee ./$id.res
+    exec $PREFIX "$EXE" -a "$@" 2>&1 | eval $POSTFIX | tee ./$id.res
   else
-    exec $PREFIX "$EXE" "$@" 2>&1 | $POSTFIX | tee ./$id.res
+    exec $PREFIX "$EXE" "$@" 2>&1 | eval $POSTFIX | tee ./$id.res
   fi
 else
   if [[ $PREFIX == *kdbg* ]] ; then
     $PREFIX $EXE -a "$@"
   else
     if [[ "$POSTFIX" == "cat" ]] ; then
-      exec $PREFIX "$EXE" "$@" 2>&1 | $POSTFIX
+      exec $PREFIX "$EXE" "$@" 2>&1 | eval $POSTFIX
     else
       exec $PREFIX "$EXE" "$@"
     fi

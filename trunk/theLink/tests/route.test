@@ -1,0 +1,112 @@
+#+
+#:  \file       theLink/tests/slave.test
+#:  \brief      \$Id: slave.test 695 2013-04-29 08:35:45Z aotto1968 $
+#:  
+#:  (C) 2002 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev: 695 $
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+set self [info script]
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##
+## -----------------------------------------------------------------------
+## init
+##
+
+#set tcl_traceExec 1
+set parents 3
+
+##
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+if {[Block 1]} {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [getNum 1] {
+
+ # transport-type: string or binary
+  foreach B [getEnv BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [getEnv COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filter SRV_LST $C] {
+
+      # "spawn" does not set the factory commandline-option
+      if {[string match *spawn* $S]} continue
+
+      set J [list $parents $I]
+
+      SetConstraints $J $B $S
+
+test route-0-($J|$B|$C|$S) {empty resolve} \
+    -body           { tclmsgque Resolve sv-1 } \
+    -returnCodes    ok \
+    -result         {}
+
+
+# startup binary --------------------------
+
+Setup $J $B $C $S 
+
+# tests ----------------------------
+
+test route-1-($J|$B|$C|$S) {Route Setup} \
+    -body           {
+      Echo1 $FH_LAST CFG2 ReadC SendC Ident
+    } \
+    -returnCodes    ok \
+    -result         sv-[expr $parents - 1]
+
+test route-2-($J|$B|$C|$S) {Route multiple Setup} \
+    -body           {
+      list \
+	[Echo1 $FH(0-0) CFG2 ReadC SendC Ident] \
+	[Echo1 $FH(1-0) CFG2 ReadC SendC Ident] \
+	[Echo1 $FH(2-0) CFG2 ReadC SendC Ident] 
+    } \
+    -returnCodes    ok \
+    -result         {sv-0 sv-1 sv-2}
+
+test route-3-($J|$B|$C|$S) {Route resolv a factory} \
+    -body           {
+      set RET [list]
+      foreach FHr [tclmsgque Resolve sv-1] {
+	lappend RET [Echo1 $FHr CFG2 ReadC SendC Ident]
+      }
+      set RET
+    } \
+    -returnCodes    ok \
+    -result         {sv-1}
+
+# cleanup ---------------------------
+Cleanup
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}; # false
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+freeTests
+
+# vim: set syn=tcl:

@@ -239,6 +239,7 @@ static mq_inline MQ_CST StringOrUnknown(MQ_CST str) {
 
 #if defined (MQ_HAS_THREAD)
 # if defined(HAVE_PTHREAD) /* unix thread */
+#  define MqThreadLocal __thread
 #  define MqThreadSelf() pthread_self()
 #  define MqThreadGetTLS(k) pthread_getspecific(k)
 #  define MqThreadSetTLS(k,v) pthread_setspecific(k,v)
@@ -254,6 +255,7 @@ static mq_inline MQ_CST StringOrUnknown(MQ_CST str) {
       MqPanicC(MQ_ERROR_PANIC,__func__,-1,"unable to 'pthread_key_create'"); \
     }
 # else /* windows THREAD */
+#  define MqThreadLocal __declspec(thread)
 #  define MqThreadSelf() GetCurrentThreadId()
 #  define MqThreadGetTLS(k) TlsGetValue(k)
 #  define MqThreadSetTLS(k,v) TlsSetValue(k,v)
@@ -266,6 +268,7 @@ static mq_inline MQ_CST StringOrUnknown(MQ_CST str) {
     }
 # endif
 #else /* no THREAD */
+#  define MqThreadLocal
 #  define MqThreadKeyCreate(k)
 #  define MqThreadGetTLS(k) k
 #  define MqThreadSetTLS(k,v) k=v
@@ -615,6 +618,7 @@ struct MqEventS;
 
 void pEventAdd ( MQ_CST, struct MqS * const , MQ_SOCK * const);
 void pEventDel ( MQ_CST, struct MqS const * const );
+void pEventGetList( struct MqS ***, MQ_SIZE * );
 
 enum MqErrorE pEventCheck (struct MqS*const, struct MqEventS*, enum MqIoSelectE const, struct timeval*const);
 enum MqErrorE pEventStart (struct MqS*const, struct MqEventS*, struct timeval const*const);

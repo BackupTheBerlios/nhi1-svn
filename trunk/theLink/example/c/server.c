@@ -1503,7 +1503,7 @@ main (
   MQ_CST argv[]
 )
 {
-  MQ_STR ident = NULL;
+  MQ_STR ident = MqStringDup(MQ_ERROR_PANIC, "server");
 
   // parse the command-line
   struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
@@ -1512,8 +1512,7 @@ main (
 
   // call Factory 
   struct MqS *mqctx = MqFactoryNew (MQ_ERROR_PANIC, NULL,
-    MqFactoryAdd(MQ_ERROR_PANIC, ident ? ident : "server", ServerFactory, 
-		    NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+    MqFactoryAdd(MQ_ERROR_PANIC, ident, ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
   );
 
   // setup the link, parse command-line arguments
@@ -1527,6 +1526,7 @@ main (
 
   // finish and exit
 error:
+  MqSysFree (ident)
   MqExit (mqctx);
 }
 

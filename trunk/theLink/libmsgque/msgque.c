@@ -404,10 +404,32 @@ MqMark (
 
 struct MqS **
 MqResolve (
-  MQ_CST	      const ident
+  MQ_CST const ident
 )
 {
-  struct MqS ** ret = NULL;
+  static MqThreadLocal struct MqS ** ret = NULL;
+  static MqThreadLocal MQ_SIZE size = 0;
+  struct MqS ** DataL;
+  MQ_SIZE DataLCur;
+  MQ_SIZE DataRetCur=0;
+  if (ret == NULL) {
+    ret = MqSysCalloc(MQ_ERROR_PANIC,10,sizeof(*ret));
+    size = 10;
+  }
+  pEventGetList(&DataL,&DataLCur);
+  if (DataL != NULL) {
+    if (DataLCur+1 > size) {
+      ret = MqSysRealloc(MQ_ERROR_PANIC, ret, DataLCur+1*sizeof(*ret));
+      size = DataLCur+1;
+    }
+    for (MQ_SIZE i=0; i<DataLCur; i++) {
+      struct MqS * context = DataL[i];
+      if (context && context->link.targetIdent && strcmp(context->link.targetIdent,ident) == 0) {
+	ret[DataRetCur++] = context;
+      }
+    }
+  }
+  ret[DataRetCur] = NULL;
   return ret;
 }
 

@@ -1442,19 +1442,21 @@ MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetDeleteData (
   struct MqFactoryS  const * const item
 );
 
-/// \brief add a new \e MqFactoryS-instance identified by \e ident
-/// \param[in] error (C-API only) flag to signal how to report an error. valid values are: #MQ_ERROR_PANIC,
-///                  #MQ_ERROR_PRINT, #MQ_ERROR_IGNORE or an other \e MqS-instance
-/// \param[in] ident  the factory identifier
-/// \param[in] createCallF	(C-API) instance constructor function
-/// \param[in] createData	(C-API) instance constructor data
-/// \param[in] createDataFreeF	(C-API) instance constructor data free function
-/// \param[in] createDataCopyF	(C-API) instance copy-constructor data free function
-/// \param[in] deleteCallF	(C-API) instance destructor function
-/// \param[in] deleteData	(C-API) instance destructor data
-/// \param[in] deleteDataFreeF	(C-API) instance destructor data free function
-/// \param[in] deleteDataCopyF	(C-API) instance copy-constructor data free function
-/// \return the new \e MqFactoryS-instance or \c NULL on error
+/**
+\brief add a new \e MqFactoryS-instance identified by \e ident
+\param[in] error (C-API only) flag to signal how to report an error. valid values are: #MQ_ERROR_PANIC,
+                 #MQ_ERROR_PRINT, #MQ_ERROR_IGNORE or an other \e MqS-instance
+\param[in] ident  the factory identifier
+\param[in] createCallF	(C-API) instance constructor function
+\param[in] createData	(C-API) instance constructor data
+\param[in] createDataFreeF	(C-API) instance constructor data free function
+\param[in] createDataCopyF	(C-API) instance copy-constructor data free function
+\param[in] deleteCallF	(C-API) instance destructor function
+\param[in] deleteData	(C-API) instance destructor data
+\param[in] deleteDataFreeF	(C-API) instance destructor data free function
+\param[in] deleteDataCopyF	(C-API) instance copy-constructor data free function
+\return the new \e MqFactoryS-instance or \c NULL on error
+**/
 MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryAdd (
   struct MqS *	      const error,
   MQ_CST	      const ident,
@@ -1777,9 +1779,12 @@ MQ_EXTERN void MQ_DECL MqMark (
   MqMarkF markF
 );
 
-/// \brief return a list of all Factory-Identifer in duty
+/// \brief return a list of all \e context belonging to \e ident
 /// \param ident the identifier to search the context for
-/// \return an array of MqS* items, the last item is a NULL
+/// \return an array of MqS* items, the last item is a NULL.
+/// \attention 
+///   - the \e return-value is owned by \libmsgque -> do not free !!
+///   - the live-time of the \e return-value is up to the next call of \e MqResolve
 MQ_EXTERN struct MqS ** MQ_DECL MqResolve (
   MQ_CST ident
 );

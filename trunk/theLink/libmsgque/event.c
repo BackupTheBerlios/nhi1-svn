@@ -118,6 +118,20 @@ EventCleanup(void)
   }
 }
 
+// attention returnning data is target of modification by event-mangement
+void
+pEventGetList( struct MqS *** pDataL, MQ_SIZE * pDataLCur  )
+{
+  struct MqEventS * sysevent = (struct MqEventS *) MqThreadGetTLS(event_key);
+  if (sysevent == NULL) {
+    *pDataL = NULL;
+    *pDataLCur = 0;
+  } else {
+    *pDataL = sysevent->DataL;
+    *pDataLCur = sysevent->DataLCur;
+  }
+}
+
 //######################################################################
 /// \attention only call this function for a \e PARENT context
 /// \attention this function set "context->link.io->sockP"
