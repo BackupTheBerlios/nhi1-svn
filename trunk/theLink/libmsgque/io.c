@@ -18,7 +18,7 @@ BEGIN_C_DECLS
 /// \brief undefined socket, initial value for #MqIoS:sockP
 static MQ_SOCK sockUndef = -1;
 
-extern struct MqBufferLS * MqInitBuf;
+extern struct MqBufferLS * pInitArg0;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -464,9 +464,9 @@ rescan:
 
 	// check if we use the "WORKER" keyword
 	if (context->link.bits.isWORKER) {
-	  // replace "WORKER" with "MqInitBuf" data
-	  if (MqInitBuf && MqInitBuf->cursize >= 1) {
-	    name = MqInitBuf->data[0]->cur.C;
+	  // replace "WORKER" with "MqInitArg0" data
+	  if (pInitArg0 && pInitArg0->cursize >= 1) {
+	    name = pInitArg0->data[0]->cur.C;
 	    del_first_on_spawn = MQ_YES;
 	  }
 	  // add startup entry function
@@ -480,8 +480,8 @@ rescan:
 	  // well we need the "name-of-the-executable" binary name
 	  // > atool split ... @ cut ... @ join ...
 	  // name is "cut" and next line will replace the name with "atool"
-	  if (MqInitBuf && MqInitBuf->cursize >= 1) {
-	    name = MqInitBuf->data[0]->cur.C;
+	  if (pInitArg0 && pInitArg0->cursize >= 1) {
+	    name = pInitArg0->data[0]->cur.C;
 	    del_first_on_spawn = MQ_YES;
 	  }
 	}
@@ -523,7 +523,7 @@ rescan:
 //printLC("spawn")
 	startType = MQ_START_SERVER_AS_SPAWN;
 	MqDLogC(context,8,"PIPE: MQ_START_SERVER_AS_SPAWN\n");
-	// only SPAWN need all arguments from MqInitBuf
+	// only SPAWN need all arguments from MqInitArg0
 
 	//if (context->setup.factory && context->setup.factory->called && factory != NULL) {
 	if (factory != NULL) {
@@ -535,8 +535,8 @@ rescan:
 	  if (del_first_on_spawn && context->setup.factory && !context->setup.factory->called) {
 	    MqErrorCheck (MqBufferLGetU (context, alfa1, 0, &tmpName));
 	  }
-//printULS(MqInitBuf)
-	  MqBufferLAppendL(alfa1, MqInitBuf, 0);
+//printULS(MqInitArg0)
+	  MqBufferLAppendL(alfa1, pInitArg0, 0);
 	}
 	goto rescan;
       }
@@ -555,15 +555,15 @@ rescan:
 
 	// MqMainToolName set in "sMqCheckArg" or at application main startup
 	if (name == NULL) {
-	  if (MqInitBuf == NULL) {
+	  if (pInitArg0 == NULL) {
 	    MqErrorDb2(context, MQ_ERROR_NO_INIT);
 	    goto cleanup;
 	  } else {
-	    name = MqInitBuf->data[0]->cur.C;
+	    name = pInitArg0->data[0]->cur.C;
 	  }
 	}
 
-	// empty alfa1 (GenericServer) starup -> init with MqInitBuf data from above
+	// empty alfa1 (GenericServer) starup -> init with MqInitArg0 data from above
 	if (alfa1 == NULL) {
 	  alfa1 = MqBufferLCreate(20);
 	  MqBufferLAppendC(alfa1, name);
@@ -612,15 +612,15 @@ rescan:
 
 	// MqMainToolName set in "sMqCheckArg" or at application main startup
 	if (name == NULL) {
-	  if (MqInitBuf == NULL) {
+	  if (pInitArg0 == NULL) {
 	    MqErrorDb2(context, MQ_ERROR_NO_INIT);
 	    goto cleanup;
 	  } else {
-	    name = MqInitBuf->data[0]->cur.C;
+	    name = pInitArg0->data[0]->cur.C;
 	  }
 	}
 
-	// empty alfa1 (GenericServer) starup -> init with MqInitBuf data
+	// empty alfa1 (GenericServer) starup -> init with MqInitArg0 data
 	if (alfa1 == NULL) {
 	  alfa1 = MqBufferLCreate(20);
 	  MqBufferLAppendC(alfa1, name);
@@ -659,6 +659,9 @@ rescan:
 
 	if (alfa2 == NULL && start_as_pipe != 1)
 	  alfa2 = MqBufferLDup (context->link.alfa);
+
+//printULS(alfa2)
+
 	// add 20 item's as additional space
 	argV = arg = (char **) MqSysMalloc (context, sizeof(char*) * (
 	    (alfa1 != NULL ? alfa1->cursize : 0) + (alfa2 ? alfa2->cursize : 0) + 20 
@@ -666,19 +669,19 @@ rescan:
 
 	// init main
 	if (name == NULL) {
-	  if (MqInitBuf == NULL) {
+	  if (pInitArg0 == NULL) {
 	    MqErrorDb2(context, MQ_ERROR_NO_INIT);
 	    goto cleanup;
 	  } else {
-	    name = MqInitBuf->data[0]->cur.C;
+	    name = pInitArg0->data[0]->cur.C;
 	  }
 	}
 
-	// empty alfa1 (GenericServer) starup -> init with MqInitBuf data
+	// empty alfa1 (GenericServer) starup -> init with MqInitArg0 data
 	if (alfa1 == NULL) {
           int i;
-	  for (i=0; i<MqInitBuf->cursize; i++) {
-	    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, MqInitBuf->data[i]->cur.C);
+	  for (i=0; i<pInitArg0->cursize; i++) {
+	    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, pInitArg0->data[i]->cur.C);
 	  }
 	} else {
 	  // copy everything befor the first MQ_ALFA or option
@@ -694,8 +697,10 @@ rescan:
 	  if (context->setup.factory && context->setup.factory->called) {
 	    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, context->setup.factory->ident);
 	  }
-	  *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--name");
-	  *arg++ = MqSysStrDup(MQ_ERROR_PANIC, context->config.name);
+	  //*arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--name");
+	  //*arg++ = MqSysStrDup(MQ_ERROR_PANIC, context->config.name);
+	  //*arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--factory");
+	  //*arg++ = MqSysStrDup(MQ_ERROR_PANIC, context->setup.factory->ident);
 	}
 
 	// fill arg with system-arguments
@@ -725,11 +730,11 @@ rescan:
     case MQ_START_SERVER_AS_INLINE_FORK: {
 //printLC("MQ_START_SERVER_AS_INLINE_FORK:")
 	if (name == NULL) {
-	  if (MqInitBuf == NULL) {
+	  if (pInitArg0 == NULL) {
 	    MqErrorDb2(context, MQ_ERROR_NO_INIT);
 	    goto cleanup;
 	  } else {
-	    name = MqInitBuf->data[0]->cur.C;
+	    name = pInitArg0->data[0]->cur.C;
 	  }
 	}
 	// case: the function GenericServer is listen on a "tcl" or "uds" connection
@@ -924,3 +929,4 @@ pIoLog (
 #endif
 
 END_C_DECLS
+

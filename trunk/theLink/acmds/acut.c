@@ -113,7 +113,7 @@ CutCreate (
   MqServiceProxy  (mqctx, "+EOF", 0);
 
   // get and parse the fields
-  MqBufferLCheckOptionC (mqctx, *argvP, "-f", &fieldsC);
+  MqBufferLCheckOptionC (mqctx, *argvP, "-f", &fieldsC, MQ_NO);
   if (fieldsC == NULL) {
     MqErrorC (mqctx, __func__, 1, "option argument '-f' is required");
     goto error;

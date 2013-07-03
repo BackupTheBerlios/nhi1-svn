@@ -101,14 +101,14 @@ class F3 : public MqC, public IServerSetup {
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
   // init libmsgque global data
-  MqBufferLAppendC(MqInitCreate(), argv[0]);
+  MqBufferLAppendC(MqInitArg0(), argv[0]);
 
   // define factories
   MqFactoryC<F1>::Add("F1");
   MqFactoryC<F2>::Add("F2");
   MqFactoryC<F3>::Add("F3");
 
-  // call factory usong the !second! argument,
+  // call factory using the !second! argument,
   // first argument is the executable self
   MqC *filter = MqFactoryC<MqC>::GetCalled(argv[1]).New();
   try {
@@ -119,3 +119,4 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   }
   filter->Exit();
 }
+

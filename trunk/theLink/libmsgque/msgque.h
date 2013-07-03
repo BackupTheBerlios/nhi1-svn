@@ -1282,20 +1282,29 @@ MQ_DECL MqConfigGetSelf (
 ///\endif
 ///\ifnot MAN
 ///\code
-///struct MqBufferLS * args = MqInitCreate();
-///MqBufferLAppendC(args, "myExec");
-///MqBufferLAppendC(args, "myExecArgument_1");
+///MqInitArg0("myExec", "myExecArgument_1");
 ///...
 ///\endcode
 ///\endif
 /// \if MSGQUE
 /// \anchor \NS{Init}
 /// \endif
-MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitCreate (void);
+/// \param[in] arg0 the executable or \c NULL to reset the value
+/// \return the  \e startup-prefix list
+MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitArg0 (
+  MQ_CST arg0,
+  ...
+);
+MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitArgs (void);
+MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitArgsVC (
+  int const argc,
+  MQ_CST argv[]
+);
 
 /// \brief get the process \e startup-prefix argument
 /// \return a pointer to the initialization buffer (Only C-API)
-MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGet (void);
+MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGetArg0 (void);
+MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGetArgs (void);
 
 /// \brief extract boolean information from context
 /// \{
@@ -2374,7 +2383,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqServiceDelete (
 example: A typical server looks like:
 \code
 ...
-MqErrorCheck(MqLinkCreate(ctx,argv,alfa);
+MqErrorCheck(MqLinkCreate(ctx, &argv);
 ...
 MqErrorCheck(MqProcessEvent(ctx, MQ_TIMEOUT, MQ_WAIT_FOREVER);
 ...
@@ -3039,7 +3048,7 @@ main ( int argc, char **argv)
 {
   // the command-line-arguments before (largv) and after (lalfa) the first MQ_ALFA
   struct MqBufferLS * largv, lalfa;
-  MqBufferLCreateArgv(NULL, argc, argv, &largv, &lalfa);
+  MqBufferLCreateArgs(argc, argv);
 ....
  * \endcode
  */
@@ -3107,12 +3116,33 @@ MQ_EXTERN void MQ_DECL MqBufferLAppend (
 
 /// \brief copy a MqBufferLS list into an MqBufferLS object on \e position
 /// \bufL
+/// \param[in] argc the length of the \e argv array
+/// \param[in] argv the array with arguments
+MQ_EXTERN void MQ_DECL MqBufferLAppendVC (
+  register struct MqBufferLS * const bufL,
+  int const argc,
+  MQ_CST argv[]
+);
+
+/// \brief copy a MqBufferLS list into an MqBufferLS object on \e position
+/// \bufL
 /// \param[in] in the MqBufferLS object to append
 /// \param[in] position insert \e in at \e position, shift all following arguments one up
 /// \attention Set \e position to \b 0 to append to the beginning or set position to \b -1 to append to the end
 MQ_EXTERN void MQ_DECL MqBufferLAppendL (
   register struct MqBufferLS * const bufL,
   struct MqBufferLS * const in,
+  MQ_SIZE position
+);
+
+/// \brief merge a MqBufferLS list into an MqBufferLS object on \e position
+/// \bufL
+/// \param[in] inP the MqBufferLS object to be merged from and be destroyes afterwards.
+/// \param[in] position insert \e in at \e position, shift all following arguments one up
+/// \attention Set \e position to \b 0 to append to the beginning or set position to \b -1 to append to the end
+MQ_EXTERN void MQ_DECL MqBufferLMerge (
+  register struct MqBufferLS * const bufL,
+  struct MqBufferLS ** inP,
   MQ_SIZE position
 );
 
@@ -3265,6 +3295,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferLCheckOptionD (
 /// \bufL0
 /// \optionL
 /// \param[out] var the MQ_STR argument for return
+/// \param[in] onlyFirst shoul only the first item be returned (MQ_YES) or all (MQ_NO)
 /// \retMqErrorE
 /// \attL \n
 /// The return string \e var has dynamic allocated data and have to be freed later.\n
@@ -3273,7 +3304,8 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferLCheckOptionC (
   struct MqS * const context,
   struct MqBufferLS * const bufL,
   MQ_CST const opt,
-  MQ_STR * const var
+  MQ_STR * const var,
+  MQ_BOL const onlyFirst
 );
 
 /// \brief search for an \e option with an #MQ_BUF argument in an #MqBufferLS object
@@ -3325,7 +3357,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferLDeleteItem (
 ///
 /// a typical usage for this code is parsing an MqBufferLS object for multiple occurrences of a string
 /// \code
-/// while ((startindex = MqBufferLSearchC (buf, str, startindex)) != -1) {
+/// while ((startindex = MqBufferLSearchC (buf, str, strlen(str), startindex)) != -1) {
 ///   ...
 /// }
 /// \endcode
@@ -5210,4 +5242,6 @@ and send every data item with \RNSA{SendEND_AND_WAIT}.
 END_C_DECLS
 
 #endif /* MQ_MSGQUE_H */
+
+
 

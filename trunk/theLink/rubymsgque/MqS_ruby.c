@@ -128,7 +128,7 @@ static VALUE USleep(VALUE self, VALUE usec)
 
 static VALUE Init(int argc, VALUE *argv, VALUE self)
 {
-  NS(argv2bufl) (NULL, MqInitCreate(), argc, argv);
+  NS(argv2bufl) (NULL, MqInitArg0(), argc, argv);
   return Qnil;
 }
 
@@ -194,4 +194,5 @@ void NS(MqS_Init) (void) {
   globalRef = rb_ary_new();
   rb_gc_register_mark_object(globalRef);
 }
+
 

@@ -9,4 +9,4 @@
 #:  \attention  this software has GPL permissions to copy
 #:              please contact AUTHORS for additional information
 #:
-exec find . -name "*.cc" -o -name "*.h" -o -name "*.c" | egrep -v '(performance|binary-build)'
+exec find . -type f -name "*.cc" -o -name "*.h" -o -name "*.c" | egrep -v '(performance|binary-build)'

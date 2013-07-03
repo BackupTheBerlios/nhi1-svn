@@ -18,8 +18,9 @@
 
 BEGIN_C_DECLS
 
-extern struct MqBufferLS * MqInitBuf;
-extern struct MqFactoryS *defaultFactoryItem;
+extern struct MqBufferLS * pInitArg0;
+extern struct MqBufferLS * pInitArgs;
+extern struct MqFactoryS * defaultFactoryItem;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -30,7 +31,7 @@ extern struct MqFactoryS *defaultFactoryItem;
 static const MQ_STRB*
 sInitGetFirst (void)
 {
-  return (MqInitBuf && MqInitBuf->cursize > 0 ? MqInitBuf->data[0]->cur.C : "unknown");
+  return (pInitArg0 && pInitArg0->cursize > 0 ? pInitArg0->data[0]->cur.C : "unknown");
 }
 
 MQ_STR
@@ -242,16 +243,15 @@ sMqCheckArg (
     // allways read the first item from argv as executable-name
     arg = argv->data[0];
     // if "MqMainToolName" is empty -> fill it with a default value
-    if (MqInitBuf == NULL) {
-      struct MqBufferLS * initB = MqInitCreate();
-      MqBufferLAppendC(initB, arg->cur.C);
+    if (pInitArg0 == NULL) {
+      MqInitArg0(arg->cur.C);
     }
     // try to figure out a "good" name
     if (context->config.name == NULL || !strcmp(context->config.name,defaultFactoryItem->ident)) {
       if (arg != NULL) {
 	pConfigSetName(context, MqSysBasename (arg->cur.C, MQ_NO));
-      } else if (MqInitBuf != NULL) {
-	pConfigSetName(context, MqSysBasename (MqInitBuf->data[0]->cur.C, MQ_NO));
+      } else if (pInitArg0 != NULL) {
+	pConfigSetName(context, MqSysBasename (pInitArg0->data[0]->cur.C, MQ_NO));
       } else if (context->config.name == NULL) {
 	MqConfigSetName (context, "unknown");
       }
@@ -280,7 +280,7 @@ sMqCheckArg (
 	    MqConfigSetIsString (context, MQ_YES);
 	  } else if (!strncmp(argC, "spawn", 5)) {
 //printLC("spawn")
-	    if (MqInitBuf == NULL) {
+	    if (pInitArg0 == NULL) {
 	      return MqErrorDb (MQ_ERROR_NO_INIT);
 	    } else if (context->config.ignoreSpawn == MQ_YES) {
 	      return MqErrorDbV (MQ_ERROR_OPTION_FORBIDDEN, "current", "--spawn");
@@ -844,6 +844,8 @@ MqLinkCreate (
   struct MqBufferLS ** argvP
 )
 {
+  struct MqBufferLS *targvP;
+
   // avoid double link create
   if (unlikely(context->link.read != NULL)) {
     MqBufferLDelete (argvP);
@@ -866,6 +868,19 @@ MqLinkCreate (
   if (context->link.bits.onCreateStart == MQ_NO) {
     context->link.bits.onCreateStart = MQ_YES;
     context->link.bits.onCreateEnd = MQ_NO;
+
+    // add initial commandline arguments to the local commandline arguments
+    if (pInitArgs != NULL) {
+      if (argvP != NULL) {
+	MqBufferLMerge(*argvP, &pInitArgs, 0);
+      } else {
+	targvP = pInitArgs;
+	pInitArgs = NULL;
+	argvP = &targvP;
+      }
+      //MqBufferLLogS(context, *argvP, __func__, "argv");
+    }
+
     if (context->config.parent != NULL && context->setup.Child.fCreate != NULL) {
       enum MqErrorE ret;
       context->refCount++;
@@ -885,9 +900,9 @@ MqLinkCreate (
   {
     MqErrorReset(context);
 
-    // write commandline arguments un debug-level '9'
-    if (argvP != NULL && MQ_ERROR_IS_POINTER(context) && 9 <= context->config.debug) {
-      MqBufferLLogS(context, *argvP, __func__, "argv");
+    // write commandline arguments on debug-level '9'
+    if (MQ_ERROR_IS_POINTER(context) && 9 <= context->config.debug) {
+      if (argvP != NULL) MqBufferLLogS(context, *argvP, __func__, "argv");
     }
 
     // 2. parse the command-line arguments
@@ -915,7 +930,7 @@ MqLinkCreate (
 	    // "factory" available ?
 	    MqBufferLAppend (context->link.alfa,MqBufferCreateC (MQ_ERROR_PANIC, context->setup.factory->ident), 0);
 	  } else {
-	    MqBufferLAppendL(context->link.alfa,MqInitBuf,0);
+	    MqBufferLAppendL(context->link.alfa,pInitArg0,0);
 	  }
 	} else if (!strncmp(context->link.alfa->data[0]->cur.C, "WORKER", 6)) {
 	  context->link.bits.isWORKER = MQ_YES;
@@ -1301,5 +1316,7 @@ MqLogChild (
 #endif /* _DEBUG */
 
 END_C_DECLS
+
+
 
 

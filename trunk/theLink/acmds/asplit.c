@@ -232,7 +232,7 @@ SplitCreate (
   MqErrorCheck (MqLinkCreate (ctx, argvP));
 
   // get the delimiter character
-  MqBufferLCheckOptionC (ctx, *argvP, "-d", &delimiter);
+  MqBufferLCheckOptionC (ctx, *argvP, "-d", &delimiter, MQ_NO);
 
   // do the splitting
   if (argvP != NULL && *argvP != NULL && (*argvP)->cursize != 0) {

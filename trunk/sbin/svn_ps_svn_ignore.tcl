@@ -1,4 +1,4 @@
-#!/usr/bin/env tclsh
+#!/usr/bin/env Nhi1Exec
 #+
 #:  \file       sbin/svn_ps_svn_ignore.tcl
 #:  \brief      \$Id$

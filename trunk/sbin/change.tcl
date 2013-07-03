@@ -1,4 +1,4 @@
-#!/usr/bin/env tclsh
+#!/usr/bin/env Nhi1Exec
 #+
 #:  \file       sbin/change.tcl
 #:  \brief      \$Id$
@@ -11,9 +11,12 @@
 #:              please contact AUTHORS for additional information
 #:
 
-## USAGE: change.tcl [-t] [-s] "FromPat/Text" "ToPat/Text" files...
-##          -t ... test
-##          -s ... use TEXT for "From/To" (default RegExp)
+if {[lindex $argv 0] eq "-h"} {
+  puts {USAGE: change.tcl [-t] [-s] "FromPat/Text" "ToPat/Text" files...}
+  puts {         -t ... test}
+  puts {         -s ... use TEXT for "From/To" (default RegExp)}
+  exit 0
+}
 
 if {[lindex $argv 0] eq "-t"} {
   set TEST	true
@@ -64,6 +67,7 @@ foreach F [lrange $argv 2 end] {
 	set Write 0
 	set Path [file join $HOME tmp [ file tail $F ]]
 
+	puts ""
 	puts [ format {Bearbeiten von: %30s - Transformation ==> Von: %-20s, Nach: %-20s} \
 		[string range $F end-30 end] [string range $Von 0 20] [string range $Nach 0 20] ]
 

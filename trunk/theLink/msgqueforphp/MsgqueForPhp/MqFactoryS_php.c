@@ -229,7 +229,7 @@ PHP_METHOD(MsgqueForPhp_MqS, FactoryCtxIdentSet)
 
 static void initCreate()
 {
-  struct MqBufferLS * initB = MqInitGet();
+  struct MqBufferLS * initB = MqInitGetArg0();
   if (initB != NULL) return;
 
   // Fetch $_SERVER from the global scope
@@ -245,8 +245,11 @@ static void initCreate()
       convert_to_string(a0);
 
       // init libmsgque global data, but only in not done before
-      if (MqInitGet() == NULL && a0 != NULL && Z_TYPE_P(a0) != IS_NULL) {
-	initB = MqInitCreate();
+      if (MqInitGetArg0() == NULL && a0 != NULL && Z_TYPE_P(a0) != IS_NULL) {
+
+
+
+	initB = MqInitArg0();
 	MqBufferLAppendC(initB, PG(php_binary));
 	MqBufferLAppendC(initB, "-c");
 	MqBufferLAppendC(initB, VAL2CST(a0));
@@ -381,4 +384,6 @@ void NS(MqFactoryS_Setup) (TSRMLS_D) {
       RETURN_ERROR("MqFactoryS exception");
     }
 }
+
+
 

@@ -54,8 +54,8 @@ RUBYMQ_EXTERN void Init_rubymsgque() {
   VALUE a0 = rb_gv_get("$0");
 
   // init libmsgque global data
-  if (MqInitGet() == NULL && !NIL_P(a0)) {
-    struct MqBufferLS * initB = MqInitCreate();
+  if (MqInitGetArg0() == NULL && !NIL_P(a0)) {
+    struct MqBufferLS * initB = MqInitArg0();
     MqBufferLAppendC(initB, VAL2CST(rb_argv0));
     MqBufferLAppendC(initB, VAL2CST(a0));
   }
@@ -66,4 +66,6 @@ RUBYMQ_EXTERN void Init_rubymsgque() {
   id_unbind = rb_intern("unbind");
   id_bind = rb_intern("bind");
 }
+
+
 

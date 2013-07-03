@@ -260,7 +260,7 @@ static int NS(InitCmd) (
   struct Tcl_Obj *const *objv
 )
 {
-  struct MqBufferLS * initB = MqInitCreate();
+  struct MqBufferLS * initB = MqInitArg0(NULL, NULL);
   int i;
   for (i=2; i<objc; i++) {
     MqBufferLAppendC(initB, Tcl_GetString(objv[i]));
@@ -428,7 +428,7 @@ Tclmsgque_Init (
   Tcl_Interp * interp
 )
 {
-  // check for the reight tcl
+  // check for the right tcl version
   if (Tcl_InitStubs (interp, "8.5", 0) == NULL) {
     return TCL_ERROR;
   }
@@ -443,14 +443,9 @@ Tclmsgque_Init (
   Tcl_CreateObjCommand (interp, "tclmsgque", NS(MsgqueSetup), (ClientData) NULL, NS(MsgqueCleanup));
 
   // init libmsgque global data
-  if (MqInitGet() == NULL && Tcl_GetNameOfExecutable() != NULL) {
-    struct MqBufferLS * initB = MqInitCreate();
-
-    if (Tcl_Eval(interp, "info script") == TCL_ERROR)
-      return TCL_ERROR;
-
-    MqBufferLAppendC(initB, Tcl_GetNameOfExecutable());
-    MqBufferLAppendC(initB, Tcl_GetStringResult(interp));
+  if (MqInitGetArg0() == NULL && Tcl_GetNameOfExecutable() != NULL) {
+    if (Tcl_Eval(interp, "info script") == TCL_ERROR) return TCL_ERROR;
+    MqInitArg0(Tcl_GetNameOfExecutable(), Tcl_GetStringResult(interp), NULL);
   }
 
   // create the default-factory
@@ -464,4 +459,6 @@ Tclmsgque_Init (
 
   return TCL_OK;
 }
+
+
 

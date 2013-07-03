@@ -78,11 +78,10 @@ main (
   } else {
     // the parent-context
     struct MqBufferLS * largv = MqBufferLCreateArgs ((argc-1), (argv+1));
-    struct MqBufferLS * initB = MqInitCreate();
     struct MqS *ctx = NULL;
 
     // init libmsgque global data
-    MqBufferLAppendC(initB, argv[0]);
+    MqInitArg0(argv[0], NULL);
 
     // add Factory 
     MqFactoryAdd (MQ_ERROR_PANIC, "split", SplitFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
@@ -112,3 +111,4 @@ error:
 }
 
 /** \} atool */
+

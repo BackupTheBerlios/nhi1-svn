@@ -15,18 +15,19 @@ set -u
 
 export LANG="C"
 
-# find env.sh config file
-abs_top_builddir=$PWD
-while [[ ! -f "$abs_top_builddir/env.sh" && "$abs_top_builddir" != '/' ]] ; do 
-  abs_top_builddir=$(dirname "$abs_top_builddir")
+abs_top_dir=$PWD
+while [[ ! ( -f "$abs_top_dir/env.sh" || -f "$abs_top_dir/build/env.sh" ) && \
+		  "${abs_top_dir##*/}" != 'NHI1' && "$abs_top_dir" != '/' ]] ; do
+  abs_top_dir=$(dirname "$abs_top_dir")
 done
-if [[ -r "${abs_top_builddir%/}/env.sh" ]] ; then
-  echo "using: $abs_top_builddir/env.sh"
-  . "$abs_top_builddir/env.sh"
+if [[ -r "$abs_top_dir/env.sh" ]] ; then
+  . "$abs_top_dir/env.sh"
+elif [[ -r "$abs_top_dir/build/env.sh" ]] ; then
+  . "$abs_top_dir/build/env.sh"
 else
- echo "unable to find the 'env.sh' configuration file"
- echo "please build first and than use this tool in the build-tree"
- exit
+  echo "unable to find the 'env.sh' configuration file"
+  echo "please build first and than use this tool in the build-tree"
+  exit
 fi
 
 ##

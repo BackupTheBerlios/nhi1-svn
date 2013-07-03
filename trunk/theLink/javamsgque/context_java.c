@@ -204,7 +204,7 @@ JNIEXPORT void JNICALL NS(Init) (
   jobject obj;
   const char *str; 
   jsize argc = (*env)->GetArrayLength(env, argv);
-  struct MqBufferLS *initB = MqInitCreate();
+  struct MqBufferLS *initB = MqInitArg0();
   jsize i;
   for (i=0; i<argc; i++) {
     obj = (*env)->GetObjectArrayElement(env, argv, i);
@@ -297,4 +297,5 @@ JNIEXPORT void JNICALL NS(LogC) (
   JO2C_STOP(env, textO, text);
   JO2C_STOP(env, prefixO, prefix);
 }
+
 

@@ -66,7 +66,7 @@ PHP_METHOD(MsgqueForPhp_MqS, Info)
 static
 PHP_METHOD(MsgqueForPhp_MqS, Init)
 {
-  NS(Argument2MqBufferLS)(MqInitCreate(), ZEND_NUM_ARGS() TSRMLS_CC) ;
+  NS(Argument2MqBufferLS)(MqInitArg0(), ZEND_NUM_ARGS() TSRMLS_CC) ;
 }
 
 
@@ -599,3 +599,4 @@ void NS(MqS_Init) (TSRMLS_D)
   INIT_CLASS_ENTRY(iEvent,"iEvent", NS(iEvent_functions));
   NS(iEvent) = zend_register_internal_interface(&iEvent TSRMLS_CC);
 }
+

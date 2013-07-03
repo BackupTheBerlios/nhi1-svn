@@ -1088,7 +1088,7 @@ Ot_INIT (
   MQ_PTR data
 )
 {
-  struct MqBufferLS * initB = MqInitCreate();
+  struct MqBufferLS * initB = MqInitArg0(NULL, NULL);
   MqReadL(mqctx, &initB);
   return MqSendRETURN (mqctx);
 }
@@ -1503,20 +1503,16 @@ main (
   MQ_CST argv[]
 )
 {
-  MQ_STR ident = MqStringDup(MQ_ERROR_PANIC, "server");
-
   // parse the command-line
-  struct MqBufferLS * args = MqBufferLCreateArgs (argc, argv);
+  MqInitArgsVC(argc, argv);
   
-  MqBufferLCheckOptionC(MQ_ERROR_IGNORE, args, "--factory", &ident);
-
   // call Factory 
   struct MqS *mqctx = MqFactoryNew (MQ_ERROR_PANIC, NULL,
-    MqFactoryAdd(MQ_ERROR_PANIC, ident, ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+    MqFactoryAdd(MQ_ERROR_PANIC, "server", ServerFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
   );
 
   // setup the link, parse command-line arguments
-  MqErrorCheck(MqLinkCreate (mqctx, &args));
+  MqErrorCheck(MqLinkCreate (mqctx, NULL));
 
   // test debug output
   MqLogC(mqctx, "test", 1, "this is the log test\n");
@@ -1526,9 +1522,9 @@ main (
 
   // finish and exit
 error:
-  MqSysFree (ident)
   MqExit (mqctx);
 }
 
 /** \} server */
+
 

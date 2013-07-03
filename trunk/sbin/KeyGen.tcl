@@ -1,4 +1,4 @@
-#!/usr/bin/env tclsh
+#!/usr/bin/env Nhi1Exec
 #+
 #:  \file       sbin/KeyGen.tcl
 #:  \brief      \$Id$

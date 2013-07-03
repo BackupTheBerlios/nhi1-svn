@@ -160,6 +160,10 @@ test -f $abs_top_dir/tags && cp $abs_top_dir/tags .
   ctags -a $ADD $SPWD/*.cc
 }
 
+[[ $BASE == "sbin" ]] && {
+  ctags -a $ADD --language-force=Sh $SPWD/*
+}
+
 # add all "c" and "h" files in the local directory
 if [[ $DO == "yes" ]] ; then
   set $SPWD/*.[ch]

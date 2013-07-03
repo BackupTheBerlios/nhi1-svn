@@ -37,7 +37,7 @@ enum MqErrorE NS(FactoryCreate) (
     interp = Tcl_CreateInterp();
     TclErrorToCtxWithReturn (tmpl, Tcl_Init(interp))
     Tcl_SetVar (interp, "MQ_STARTUP_IS_THREAD", "yes", TCL_GLOBAL_ONLY);
-    TclErrorToCtxWithReturn (tmpl, Tcl_EvalFile(interp, MqInitGet()->data[1]->cur.C))
+    TclErrorToCtxWithReturn (tmpl, Tcl_EvalFile(interp, MqInitGetArg0()->data[1]->cur.C))
   } else if (create == MQ_FACTORY_NEW_INIT) {
     interp = (Tcl_Interp *const) tmpl;
   } else {
@@ -462,5 +462,6 @@ int NS(ConfigGetStatusIs) (NS_ARGS)
   Tcl_SetObjResult(interp, Tcl_NewIntObj (MqConfigGetStatusIs(&tclctx->mqctx)));
   RETURN_TCL
 }
+
 
 

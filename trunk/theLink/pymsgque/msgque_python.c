@@ -31,7 +31,7 @@ static PyObject* NS(Init) (
 )
 {
   Py_ssize_t len;
-  struct MqBufferLS * initB = MqInitCreate();
+  struct MqBufferLS * initB = MqInitArg0();
   PyObject *item, *utf8;
   Py_ssize_t i;
   if (!PyList_Check(list)) goto error;
@@ -145,8 +145,8 @@ PyInit_pymsgque(void)
   PyErrorCheck(PyModule_AddIntConstant(m, "MqS_START_SPAWN",      3));
 
   // init libmsgque global data
-  if (MqInitGet() == NULL && Py_GetProgramName() != NULL) {
-    struct MqBufferLS * initB = MqInitCreate();
+  if (MqInitGetArg0() == NULL && Py_GetProgramName() != NULL) {
+    struct MqBufferLS * initB = MqInitArg0();
     char * buf1 = MqSysMalloc(MQ_ERROR_IGNORE, 250);
     PyObject *sys, *list, *item, *utf8;
     if (buf1 == NULL) return PyErr_NoMemory();
@@ -173,4 +173,6 @@ PyInit_pymsgque(void)
 error:
   return NULL;
 }
+
+
 

@@ -40,7 +40,8 @@ void EventDelete (void);
 void FactoryDelete (void);
 void SqlDelete (void);
 
-struct MqBufferLS * MqInitBuf = NULL;
+struct MqBufferLS * pInitArg0 = NULL;
+struct MqBufferLS * pInitArgs = NULL;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -54,9 +55,9 @@ MqHelp ( MQ_CST  tool )
   MqBufferCreateStatic (buf, 1000);
 
   if (tool) {
-      MqBufferAppendV (buf, "  %s [ARGUMENT]... syntax:\n", tool);
-      MqBufferAppendV (buf, "    aclient [OPTION]... %c %s [OPTION]... %c [ARGUMENT]...\n", MQ_ALFA, tool, MQ_ALFA);
-      MqBufferAppendV (buf, "\n");
+    MqBufferAppendV (buf, "  %s [ARGUMENT]... syntax:\n", tool);
+    MqBufferAppendV (buf, "    aclient [OPTION]... %c %s [OPTION]... %c [ARGUMENT]...\n", MQ_ALFA, tool, MQ_ALFA);
+    MqBufferAppendV (buf, "\n");
   }
   MqBufferAppendV (buf, "  msgque [OPTION]:\n");
   MqBufferAppendV (buf, "    --help-msgque    print msgque specific help\n");
@@ -66,24 +67,63 @@ MqHelp ( MQ_CST  tool )
 
 /*****************************************************************************/
 /*                                                                           */
-/*                             create / delete                               */
+/*                             Init Glabal Data                              */
 /*                                                                           */
 /*****************************************************************************/
 
 struct MqBufferLS*
-MqInitCreate ()
+MqInitArg0 (
+  MQ_CST  arg0,
+  ...
+)
 {
-  if (MqInitBuf != NULL) MqBufferLDelete(&MqInitBuf);
-  MqInitBuf = MqBufferLCreate(2);
-  return MqInitBuf;
+  MQ_CST str;
+  va_list ap;
+  if (pInitArg0 != NULL) {
+    MqBufferLReset(pInitArg0);
+  } else {
+    pInitArg0 = MqBufferLCreate(2);
+  }
+  va_start(ap, arg0);
+  if (arg0 != NULL) MqBufferLAppendC(pInitArg0, arg0);
+  while ( (str=(MQ_CST)va_arg(ap,MQ_CST)) != NULL) {
+    MqBufferLAppendC (pInitArg0, str);
+  }
+  va_end(ap);
+  return pInitArg0;
 }
 
 struct MqBufferLS*
-MqInitGet ()
+MqInitGetArg0 ()
 {
-  return MqInitBuf;
+  return pInitArg0;
 }
 
+struct MqBufferLS*
+MqInitArgs ()
+{
+  MqBufferLDelete(&pInitArgs);
+  pInitArgs = MqBufferLCreate(2);
+  return pInitArgs;
+}
+
+struct MqBufferLS*
+MqInitArgsVC (
+  int const argc,
+  MQ_CST argv[]
+)
+{
+  MqBufferLDelete(&pInitArgs);
+  pInitArgs = MqBufferLCreate(argc);
+  MqBufferLAppendL(pInitArgs, MqBufferLCreateArgs (argc, argv), 0);
+  return pInitArgs;
+}
+
+struct MqBufferLS*
+MqInitGetArgs ()
+{
+  return pInitArgs;
+}
 
 /*****************************************************************************/
 /*                                                                           */
@@ -500,7 +540,8 @@ void MqCleanup(void)
   FactoryDelete ();
   SysDelete ();
   GenericDelete();
-  if (MqInitBuf != NULL) MqBufferLDelete(&MqInitBuf);
+  if (pInitArg0 != NULL) MqBufferLDelete(&pInitArg0);
+  if (pInitArgs != NULL) MqBufferLDelete(&pInitArgs);
 }
 
 END_C_DECLS
@@ -528,4 +569,8 @@ BOOL WINAPI DllMain(
   return TRUE;
 }
 #endif
+
+
+
+
 

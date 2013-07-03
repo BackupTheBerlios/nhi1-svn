@@ -202,7 +202,7 @@ namespace example {
       }
 
       void INIT() {
-	struct MqBufferLS * initB = MqInitCreate();
+	struct MqBufferLS * initB = MqInitArg0();
 	SendSTART   (); 
 	while (ReadItemExists()) {
 	  MqBufferLAppendC(initB, ReadC());
@@ -749,5 +749,6 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   // report error to client, shutdown the link and exit the application
   server->Exit ();
 }
+
 
 

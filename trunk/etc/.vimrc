@@ -21,7 +21,7 @@ set showmatch
 syntax on
 
 map <F12> <C-]>
-nnoremap <F11> :grep <C-R><C-W> *<CR>:cw<CR>
+nnoremap <F11> :grep <C-R><C-W> --exclude=tags %:p:h/*<CR>:cw<CR>
 
 " Alt-right/left to navigate forward/backward in the tags stack
 map <M-Left> <C-T>

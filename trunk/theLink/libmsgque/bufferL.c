@@ -288,6 +288,20 @@ MqBufferLAppend (
 }
 
 void
+MqBufferLAppendVC (
+  register struct MqBufferLS * const bufL,
+  int const argc,
+  MQ_CST argv[]
+)
+{
+  MQ_CST *start = argv;
+  MQ_CST *end = argv+argc;
+  for (; start < end; start++) {
+    MqBufferLAppendC (bufL, *start);
+  }
+}
+
+void
 MqBufferLAppendL (
   register struct MqBufferLS * const bufL,
   struct MqBufferLS * const in,
@@ -319,6 +333,48 @@ MqBufferLAppendL (
   }
   bufL->cursize+=shift;
   bufL->cur = bufL->data + bufL->cursize;
+}
+
+void
+MqBufferLMerge (
+  register struct MqBufferLS * const bufL,
+  struct MqBufferLS ** inP,
+  MQ_SIZE position
+)
+{
+  if (inP == NULL) {
+    return;
+  } else {
+    struct MqBufferLS *in = *inP;
+    int shift = in->cursize;
+    struct MqBufferS ** end;
+    struct MqBufferS ** arg, **argin;
+
+    sBufferLAddSize (bufL, shift);
+    if (position == -1 || position >= bufL->cursize) {
+      // append to the end
+      position = bufL->cursize;
+    } else {
+      // shift everything after "position" to the right
+      end = bufL->data + bufL->cursize - 1 + shift;
+      arg = bufL->data + position + shift;
+      for ( ; arg <= end ; end--) {
+	 *end = *(end-shift);
+      }
+    }
+    // copy in data starting at position
+    arg = bufL->data + position;
+    end = arg + shift;
+    argin = in->data;
+    for ( ; arg < end ; arg++, argin++) {
+	*(arg) = *argin;
+    }
+    bufL->cursize+=shift;
+    bufL->cur = bufL->data + bufL->cursize;
+    in->cursize = 0;
+    in->cur = in->data;
+    MqBufferLDelete(inP);
+  }
 }
 
 void
@@ -541,7 +597,8 @@ MqBufferLCheckOptionC (
   struct MqS * const context,
   struct MqBufferLS * const bufL,
   MQ_CST const opt,
-  MQ_STR * const var
+  MQ_STR * const var,
+  MQ_BOL const onlyFirst
 )
 {
   MQ_SIZE index;
@@ -555,14 +612,26 @@ MqBufferLCheckOptionC (
   while ((index = MqBufferLSearchC (bufL, opt, len, index)) != -1) {
     MqBufferLDeleteItem (context, bufL, index, 1, MQ_YES);
     if (likely (bufL->cursize) && likely (index < bufL->cursize)) {
+      MQ_BOL doDelete;
+      MQ_BUF buf = bufL->data[index];
       MQ_CST tmp;
-      MqErrorCheck (MqBufferGetC (bufL->data[index], &tmp));
+      MqErrorCheck (MqBufferGetC (buf, &tmp));
       MqSysFree(*var);
-      *var = MqSysStrDup(MQ_ERROR_PANIC, tmp);
-      MqBufferLDeleteItem (context, bufL, index, 1, MQ_YES);
+      if (buf->data != buf->bls) {
+	*var = (MQ_STR) tmp;
+	pBufferDeleteRef(&buf);
+	doDelete = MQ_NO;
+      } else {
+	// we need to "dup" because the buffer string is be part 
+	// of the buffer object (cc MqBufferS::bls)
+	*var = MqSysStrDup(MQ_ERROR_PANIC, tmp);
+	doDelete = MQ_YES;
+      }
+      MqBufferLDeleteItem (context, bufL, index, 1, doDelete);
     } else {
       return MqErrorDbV (MQ_ERROR_OPTION_ARG, opt);
     }
+    if (onlyFirst) break;
   }
 
   return MQ_OK;

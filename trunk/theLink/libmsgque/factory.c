@@ -19,6 +19,8 @@ BEGIN_C_DECLS
 
 struct MqFactoryS *defaultFactoryItem = NULL;
 
+extern struct MqBufferLS * pInitArgs;
+
 enum MqFactoryReturnE {
   MQ_FACTORY_RETURN_OK,
   MQ_FACTORY_RETURN_ERR,
@@ -390,9 +392,13 @@ MqFactoryAdd (
   MqFactoryDataCopyF  const deleteDataCopyF
 )
 {
+  MQ_STR lident = NULL;
   struct MqFactoryCreateS Create = {fCreate, createData, createDatafreeF, createDataCopyF};
   struct MqFactoryDeleteS Delete = {fDelete, deleteData, deleteDatafreeF, deleteDataCopyF};
-  if (ident == NULL || *ident == '\0') {
+  // parse for '--factory' option to add new name
+  MqBufferLCheckOptionC (MQ_ERROR_IGNORE, pInitArgs, "--factory", &lident, MQ_YES);
+  if (lident == NULL) lident = (MQ_STR) ident;
+  if (lident == NULL || *lident == '\0') {
     MqErrorDbFactoryNum(error, MQ_FACTORY_RETURN_INVALID_IDENT);
     return NULL;
   }
@@ -401,7 +407,7 @@ MqFactoryAdd (
     return NULL;
   }
 
-  return sFactoryAddName (error, ident, Create, Delete);
+  return sFactoryAddName (error, lident, Create, Delete);
 }
 
 struct MqFactoryS *

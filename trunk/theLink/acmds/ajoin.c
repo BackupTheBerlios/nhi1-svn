@@ -166,7 +166,7 @@ JoinCreate (
   joinctx->delimiter = MqSysStrDup(mqctx, " ");
 
   // get the delimiter
-  MqErrorCheck (MqBufferLCheckOptionC (mqctx, *argvP, "-d", &joinctx->delimiter));
+  MqErrorCheck (MqBufferLCheckOptionC (mqctx, *argvP, "-d", &joinctx->delimiter, MQ_NO));
 
   // check for the format key
   MqErrorCheck (OptLCreate (mqctx, *argvP, &joinctx->formatlist));
