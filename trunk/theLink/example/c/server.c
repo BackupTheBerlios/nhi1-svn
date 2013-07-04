@@ -1504,7 +1504,7 @@ main (
 )
 {
   // parse the command-line
-  MqInitArgsVC(argc, argv);
+  struct MqBufferLS * args = MqBufferLCreateArgs(argc, argv);
   
   // call Factory 
   struct MqS *mqctx = MqFactoryNew (MQ_ERROR_PANIC, NULL,
@@ -1512,7 +1512,7 @@ main (
   );
 
   // setup the link, parse command-line arguments
-  MqErrorCheck(MqLinkCreate (mqctx, NULL));
+  MqErrorCheck(MqLinkCreate (mqctx, &args));
 
   // test debug output
   MqLogC(mqctx, "test", 1, "this is the log test\n");
@@ -1526,5 +1526,4 @@ error:
 }
 
 /** \} server */
-
 

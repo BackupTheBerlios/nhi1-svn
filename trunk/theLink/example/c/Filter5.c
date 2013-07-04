@@ -155,15 +155,11 @@ int main (int argc, MQ_CST argv[])
 {
   struct MqS * ctx;
 
-//for (int i=0;i<argc;i++) {
-//  printC(argv[i])
-//}
+  // init the libmsgque arguments for later use
+  struct MqBufferLS * largs = MqBufferLCreateArgs(argc-1, argv+1);
 
   // init the libmsgque global applications starter
   MqInitArg0(argv[0], NULL);
-
-  // init the libmsgque arguments for later use
-  MqInitArgsVC(argc-1, argv+1);
 
   // add Factory
   MqFactoryAdd (MQ_ERROR_PANIC, "F1", F1New, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
@@ -174,7 +170,7 @@ int main (int argc, MQ_CST argv[])
   ctx = MqFactoryNew (MQ_ERROR_PANIC, NULL, MqFactoryGetCalled (argv[1]));
 
   // call entry point
-  MqErrorCheck (MqLinkCreate (ctx, NULL));
+  MqErrorCheck (MqLinkCreate (ctx, &largs));
 
   // start event-loop and wait forever
   MqProcessEvent (ctx, MQ_TIMEOUT, MQ_WAIT_FOREVER);

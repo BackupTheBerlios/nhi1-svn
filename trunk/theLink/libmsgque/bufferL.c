@@ -218,6 +218,7 @@ MqBufferLReset (
   }
 
   bufL->cursize = 0;
+  bufL->cur = bufL->data;
 }
 
 void

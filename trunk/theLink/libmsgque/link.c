@@ -19,7 +19,6 @@
 BEGIN_C_DECLS
 
 extern struct MqBufferLS * pInitArg0;
-extern struct MqBufferLS * pInitArgs;
 extern struct MqFactoryS * defaultFactoryItem;
 
 /*****************************************************************************/
@@ -244,7 +243,7 @@ sMqCheckArg (
     arg = argv->data[0];
     // if "MqMainToolName" is empty -> fill it with a default value
     if (pInitArg0 == NULL) {
-      MqInitArg0(arg->cur.C);
+      MqInitArg0(arg->cur.C,NULL);
     }
     // try to figure out a "good" name
     if (context->config.name == NULL || !strcmp(context->config.name,defaultFactoryItem->ident)) {
@@ -404,7 +403,6 @@ sMqCheckArg (
 	}
 	case 'f': {
 	  if (!strncmp(argC, "fork", 4)) {
-//printLC("fork")
 	    if (context->config.ignoreFork == MQ_YES) {
 	      return MqErrorDbV (MQ_ERROR_OPTION_FORBIDDEN, "current", "--fork");
 	    } else {
@@ -412,6 +410,16 @@ sMqCheckArg (
 	    }
 	  } else if (!strncmp(argC, "file", 4)) {
 	    ArgBUF(context->config.io.uds.file, "--file");
+	    continue;
+	  } else if (!strncmp(argC, "factory", 7)) {
+	    MQ_BUF ident=NULL;
+	    ArgBUF(ident, "--factory");
+	    if (context->setup.factory) {
+	      MqSysFree(context->setup.factory->ident);
+	      context->setup.factory->ident = MqSysStrDup(MQ_ERROR_PANIC,ident->cur.C);
+	    }
+	    MqBufferDelete(&ident);
+	    // to.be.filled
 	    continue;
 	  } else {
 	    continue;
@@ -844,8 +852,6 @@ MqLinkCreate (
   struct MqBufferLS ** argvP
 )
 {
-  struct MqBufferLS *targvP;
-
   // avoid double link create
   if (unlikely(context->link.read != NULL)) {
     MqBufferLDelete (argvP);
@@ -868,18 +874,6 @@ MqLinkCreate (
   if (context->link.bits.onCreateStart == MQ_NO) {
     context->link.bits.onCreateStart = MQ_YES;
     context->link.bits.onCreateEnd = MQ_NO;
-
-    // add initial commandline arguments to the local commandline arguments
-    if (pInitArgs != NULL) {
-      if (argvP != NULL) {
-	MqBufferLMerge(*argvP, &pInitArgs, 0);
-      } else {
-	targvP = pInitArgs;
-	pInitArgs = NULL;
-	argvP = &targvP;
-      }
-      //MqBufferLLogS(context, *argvP, __func__, "argv");
-    }
 
     if (context->config.parent != NULL && context->setup.Child.fCreate != NULL) {
       enum MqErrorE ret;

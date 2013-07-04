@@ -41,7 +41,6 @@ void FactoryDelete (void);
 void SqlDelete (void);
 
 struct MqBufferLS * pInitArg0 = NULL;
-struct MqBufferLS * pInitArgs = NULL;
 
 /*****************************************************************************/
 /*                                                                           */
@@ -85,7 +84,9 @@ MqInitArg0 (
     pInitArg0 = MqBufferLCreate(2);
   }
   va_start(ap, arg0);
-  if (arg0 != NULL) MqBufferLAppendC(pInitArg0, arg0);
+  if (arg0 != NULL) {
+    MqBufferLAppendC(pInitArg0, arg0);
+  }
   while ( (str=(MQ_CST)va_arg(ap,MQ_CST)) != NULL) {
     MqBufferLAppendC (pInitArg0, str);
   }
@@ -97,32 +98,6 @@ struct MqBufferLS*
 MqInitGetArg0 ()
 {
   return pInitArg0;
-}
-
-struct MqBufferLS*
-MqInitArgs ()
-{
-  MqBufferLDelete(&pInitArgs);
-  pInitArgs = MqBufferLCreate(2);
-  return pInitArgs;
-}
-
-struct MqBufferLS*
-MqInitArgsVC (
-  int const argc,
-  MQ_CST argv[]
-)
-{
-  MqBufferLDelete(&pInitArgs);
-  pInitArgs = MqBufferLCreate(argc);
-  MqBufferLAppendL(pInitArgs, MqBufferLCreateArgs (argc, argv), 0);
-  return pInitArgs;
-}
-
-struct MqBufferLS*
-MqInitGetArgs ()
-{
-  return pInitArgs;
 }
 
 /*****************************************************************************/
@@ -541,7 +516,6 @@ void MqCleanup(void)
   SysDelete ();
   GenericDelete();
   if (pInitArg0 != NULL) MqBufferLDelete(&pInitArg0);
-  if (pInitArgs != NULL) MqBufferLDelete(&pInitArgs);
 }
 
 END_C_DECLS

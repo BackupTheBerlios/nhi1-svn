@@ -697,8 +697,8 @@ rescan:
 	  if (context->setup.factory && context->setup.factory->called) {
 	    *arg++ = MqSysStrDup(MQ_ERROR_PANIC, context->setup.factory->ident);
 	  }
-	  //*arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--name");
-	  //*arg++ = MqSysStrDup(MQ_ERROR_PANIC, context->config.name);
+	  *arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--name");
+	  *arg++ = MqSysStrDup(MQ_ERROR_PANIC, context->config.name);
 	  //*arg++ = MqSysStrDup(MQ_ERROR_PANIC, "--factory");
 	  //*arg++ = MqSysStrDup(MQ_ERROR_PANIC, context->setup.factory->ident);
 	}

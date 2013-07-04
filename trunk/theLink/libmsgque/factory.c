@@ -19,8 +19,6 @@ BEGIN_C_DECLS
 
 struct MqFactoryS *defaultFactoryItem = NULL;
 
-extern struct MqBufferLS * pInitArgs;
-
 enum MqFactoryReturnE {
   MQ_FACTORY_RETURN_OK,
   MQ_FACTORY_RETURN_ERR,
@@ -380,25 +378,21 @@ MqFactoryGetCalled (
 
 struct MqFactoryS *
 MqFactoryAdd (
-  struct MqS *	      const error,
-  MQ_CST	      const ident,
-  MqFactoryCreateF    const fCreate,
-  MQ_PTR	      const createData,
-  MqFactoryDataFreeF  const createDatafreeF,
-  MqFactoryDataCopyF  const createDataCopyF,
-  MqFactoryDeleteF    const fDelete,
-  MQ_PTR	      const deleteData,
-  MqFactoryDataFreeF  const deleteDatafreeF,
-  MqFactoryDataCopyF  const deleteDataCopyF
+  struct MqS *		const error,
+  MQ_CST		const ident,
+  MqFactoryCreateF	const fCreate,
+  MQ_PTR		const createData,
+  MqFactoryDataFreeF	const createDatafreeF,
+  MqFactoryDataCopyF	const createDataCopyF,
+  MqFactoryDeleteF	const fDelete,
+  MQ_PTR		const deleteData,
+  MqFactoryDataFreeF	const deleteDatafreeF,
+  MqFactoryDataCopyF	const deleteDataCopyF
 )
 {
-  MQ_STR lident = NULL;
   struct MqFactoryCreateS Create = {fCreate, createData, createDatafreeF, createDataCopyF};
   struct MqFactoryDeleteS Delete = {fDelete, deleteData, deleteDatafreeF, deleteDataCopyF};
-  // parse for '--factory' option to add new name
-  MqBufferLCheckOptionC (MQ_ERROR_IGNORE, pInitArgs, "--factory", &lident, MQ_YES);
-  if (lident == NULL) lident = (MQ_STR) ident;
-  if (lident == NULL || *lident == '\0') {
+  if (ident == NULL || *ident == '\0') {
     MqErrorDbFactoryNum(error, MQ_FACTORY_RETURN_INVALID_IDENT);
     return NULL;
   }
@@ -407,7 +401,7 @@ MqFactoryAdd (
     return NULL;
   }
 
-  return sFactoryAddName (error, lident, Create, Delete);
+  return sFactoryAddName (error, ident, Create, Delete);
 }
 
 struct MqFactoryS *

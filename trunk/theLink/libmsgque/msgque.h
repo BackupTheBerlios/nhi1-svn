@@ -1295,16 +1295,10 @@ MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitArg0 (
   MQ_CST arg0,
   ...
 );
-MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitArgs (void);
-MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitArgsVC (
-  int const argc,
-  MQ_CST argv[]
-);
 
 /// \brief get the process \e startup-prefix argument
 /// \return a pointer to the initialization buffer (Only C-API)
 MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGetArg0 (void);
-MQ_EXTERN struct MqBufferLS* MQ_DECL MqInitGetArgs (void);
 
 /// \brief extract boolean information from context
 /// \{
@@ -1455,28 +1449,28 @@ MQ_EXTERN MQ_PTR MQ_DECL MqFactoryItemGetDeleteData (
 \brief add a new \e MqFactoryS-instance identified by \e ident
 \param[in] error (C-API only) flag to signal how to report an error. valid values are: #MQ_ERROR_PANIC,
                  #MQ_ERROR_PRINT, #MQ_ERROR_IGNORE or an other \e MqS-instance
-\param[in] ident  the factory identifier
-\param[in] createCallF	(C-API) instance constructor function
-\param[in] createData	(C-API) instance constructor data
+\param[in] ident		the factory identifier
+\param[in] createCallF		(C-API) instance constructor function
+\param[in] createData		(C-API) instance constructor data
 \param[in] createDataFreeF	(C-API) instance constructor data free function
 \param[in] createDataCopyF	(C-API) instance copy-constructor data free function
-\param[in] deleteCallF	(C-API) instance destructor function
-\param[in] deleteData	(C-API) instance destructor data
+\param[in] deleteCallF		(C-API) instance destructor function
+\param[in] deleteData		(C-API) instance destructor data
 \param[in] deleteDataFreeF	(C-API) instance destructor data free function
 \param[in] deleteDataCopyF	(C-API) instance copy-constructor data free function
 \return the new \e MqFactoryS-instance or \c NULL on error
 **/
 MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryAdd (
-  struct MqS *	      const error,
-  MQ_CST	      const ident,
-  MqFactoryCreateF    const createCallF,
-  MQ_PTR	      const createData,
-  MqFactoryDataFreeF  const createDataFreeF,
-  MqFactoryDataCopyF  const createDataCopyF,
-  MqFactoryDeleteF    const deleteCallF,
-  MQ_PTR	      const deleteData,
-  MqFactoryDataFreeF  const deleteDataFreeF,
-  MqFactoryDataCopyF  const deleteDataCopyF
+  struct MqS *		const error,
+  MQ_CST		const ident,
+  MqFactoryCreateF	const createCallF,
+  MQ_PTR		const createData,
+  MqFactoryDataFreeF	const createDataFreeF,
+  MqFactoryDataCopyF	const createDataCopyF,
+  MqFactoryDeleteF	const deleteCallF,
+  MQ_PTR		const deleteData,
+  MqFactoryDataFreeF	const deleteDataFreeF,
+  MqFactoryDataCopyF	const deleteDataCopyF
 );
 
 /// \brief add a new \e default-MqFactoryS-instance identified by \e ident
@@ -1484,7 +1478,7 @@ MQ_EXTERN struct MqFactoryS * MQ_DECL MqFactoryAdd (
 /// factory is available
 /// \param[in] error (C-API only) flag to signal how to report an error. valid values are: #MQ_ERROR_PANIC,
 ///                  #MQ_ERROR_PRINT, #MQ_ERROR_IGNORE or an other \e MqS-instance
-/// \param[in] ident  the factory identifier
+/// \param[in] ident		the factory identifier
 /// \param[in] createCallF	(C-API) instance constructor function
 /// \param[in] createData	(C-API) instance constructor data
 /// \param[in] createDataFreeF	(C-API) instance constructor data free function
@@ -3047,8 +3041,7 @@ int
 main ( int argc, char **argv)
 {
   // the command-line-arguments before (largv) and after (lalfa) the first MQ_ALFA
-  struct MqBufferLS * largv, lalfa;
-  MqBufferLCreateArgs(argc, argv);
+  struct MqBufferLS * largs = MqBufferLCreateArgs(argc, argv);
 ....
  * \endcode
  */
