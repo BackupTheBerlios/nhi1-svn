@@ -29,6 +29,28 @@ namespace ccmsgque {
     MqCleanup();
   }
 
+  MqC** MqC::Resolve (MQ_CST ident) {
+    static MqThreadLocal MqC ** ret = NULL;
+    static MqThreadLocal MQ_SIZE size = 0;
+
+    struct MqS ** res = MqResolve(ident);
+    MQ_SIZE num;
+
+    if (ret == NULL) {
+      ret = (MqC**) MqSysCalloc(MQ_ERROR_PANIC,10,sizeof(*ret));
+      size = 10;
+    }
+    for (num=0; *res != NULL; res++, num++) {
+      if (num+1 > size) {
+	size+=10;
+	ret = (MqC**) MqSysRealloc(MQ_ERROR_PANIC, ret, size*sizeof(*ret));
+      }
+      ret[num] = GetThis(*res);
+    }
+    ret[num] = NULL;
+    return ret;
+  }
+
   MqC::MqC (struct MqS * const tmpl) {
     MqContextInit (&context, 0, tmpl);
     MqConfigSetSelf (&context, this);

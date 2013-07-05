@@ -1255,7 +1255,7 @@ error:
 }
 
 static enum MqErrorE
-Ot_CFG2 (
+Ot_ROUT (
   struct MqS * const mqctx,
   MQ_PTR data
 )
@@ -1268,6 +1268,12 @@ Ot_CFG2 (
 
   if (!strncmp (cmd, "Ident", 5)) {
     MqSendC(mqctx,  MqFactoryCtxIdentGet (mqctx));
+  } else if (!strncmp (cmd, "Resolve", 5)) {
+    MQ_CST rmtIdent;
+    MqErrorCheck (MqReadC (mqctx, &rmtIdent));
+    for (struct MqS ** ret=MqResolve(rmtIdent); *ret != NULL; ret++) {
+      MqSendC(mqctx, MqLinkGetTargetIdent(*ret));
+    }
   } else {
     MqSendC(mqctx,  "nothing");
   }
@@ -1453,7 +1459,7 @@ ServerSetup (
     MqErrorCheck (MqServiceCreate (mqctx, "ERLR", Ot_ERLR, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "ERLS", Ot_ERLS, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "CFG1", Ot_CFG1, NULL, NULL));
-    MqErrorCheck (MqServiceCreate (mqctx, "CFG2", Ot_CFG2, NULL, NULL));
+    MqErrorCheck (MqServiceCreate (mqctx, "ROUT", Ot_ROUT, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "PRNT", Ot_PRNT, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "TRNS", Ot_TRNS, NULL, NULL));
     MqErrorCheck (MqServiceCreate (mqctx, "TRN2", Ot_TRN2, NULL, NULL));

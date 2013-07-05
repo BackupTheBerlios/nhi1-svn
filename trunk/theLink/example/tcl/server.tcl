@@ -617,6 +617,27 @@ proc Ot_CFG1 {ctx} {
   $ctx SendRETURN
 }
 
+proc Ot_ROUT {ctx} {
+  set cmd [$ctx ReadC]
+
+  $ctx SendSTART
+
+  switch -exact $cmd {
+    "Ident" {
+      $ctx SendC [$ctx FactoryCtxIdentGet]
+    }
+    "Resolve" {
+      foreach myctx [tclmsgque Resolve [$ctx ReadC]] {
+	$ctx SendC [$myctx LinkGetTargetIdent]
+      }
+    }
+    default {
+      $ctx SendC nothing
+    }
+  }
+  $ctx SendRETURN
+}
+
 proc Ot_PRNT {ctx} {
   $ctx SendSTART
   $ctx SendC "[$ctx LinkGetCtxId] - [$ctx ReadC]"
@@ -719,6 +740,7 @@ proc ServerSetup {ctx} {
     $ctx ServiceCreate ERLR Ot_ERLR
     $ctx ServiceCreate ERLS Ot_ERLS
     $ctx ServiceCreate CFG1 Ot_CFG1
+    $ctx ServiceCreate ROUT Ot_ROUT
     $ctx ServiceCreate PRNT Ot_PRNT
     $ctx ServiceCreate TRN2 Ot_TRN2
     $ctx ServiceCreate TRNS Ot_TRNS
@@ -750,12 +772,10 @@ proc ServerFactory {tmpl} {
 # only used to start the initial process
 tclmsgque Main {
 
-  tclmsgque InitArgs {*}$argv
-  
   set srv [[tclmsgque FactoryAdd "server" ServerFactory] New]
   if {[catch {
     # create the initial parent-context and wait forever for events
-    $srv LinkCreate
+    $srv LinkCreate {*}$argv
     $srv LogC "test" 1 "this is the log test\n"
     $srv ProcessEvent -wait FOREVER
   }]} {
@@ -766,5 +786,4 @@ tclmsgque Main {
 
 # the end, do !not! use the tcl "exit" command because in "thread" mode 
 # this will kill the entire server and not only the "thread"
-
 

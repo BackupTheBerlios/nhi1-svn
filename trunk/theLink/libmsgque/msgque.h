@@ -1787,7 +1787,7 @@ MQ_EXTERN void MQ_DECL MqMark (
 /// \return an array of MqS* items, the last item is a NULL.
 /// \attention 
 ///   - the \e return-value is owned by \libmsgque -> do not free !!
-///   - the live-time of the \e return-value is up to the next call of \e MqResolve
+///   - the live-time of the \e return-value is up to the next call of \e MqResolve in the current thread.
 MQ_EXTERN struct MqS ** MQ_DECL MqResolve (
   MQ_CST ident
 );

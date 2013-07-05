@@ -66,7 +66,7 @@ Setup $J $B $C $S
 
 test route-1-($J|$B|$C|$S) {Route Setup} \
     -body           {
-      Echo1 $FH_LAST CFG2 ReadC SendC Ident
+      Echo1 $FH_LAST ROUT ReadC SendC Ident
     } \
     -returnCodes    ok \
     -result         sv-[expr $parents - 1]
@@ -74,23 +74,36 @@ test route-1-($J|$B|$C|$S) {Route Setup} \
 test route-2-($J|$B|$C|$S) {Route multiple Setup} \
     -body           {
       list \
-	[Echo1 $FH(0-0) CFG2 ReadC SendC Ident] \
-	[Echo1 $FH(1-0) CFG2 ReadC SendC Ident] \
-	[Echo1 $FH(2-0) CFG2 ReadC SendC Ident] 
+	[Echo1 $FH(0-0) ROUT ReadC SendC Ident] \
+	[Echo1 $FH(1-0) ROUT ReadC SendC Ident] \
+	[Echo1 $FH(2-0) ROUT ReadC SendC Ident] 
     } \
     -returnCodes    ok \
     -result         {sv-0 sv-1 sv-2}
 
-test route-3-($J|$B|$C|$S) {Route resolv a factory} \
+test route-3-($J|$B|$C|$S) {Route resolv a server factory} \
     -body           {
       set RET [list]
       foreach FHr [tclmsgque Resolve sv-1] {
-	lappend RET [Echo1 $FHr CFG2 ReadC SendC Ident]
+	lappend RET [Echo1 $FHr ROUT ReadC SendC Ident]
       }
       set RET
     } \
     -returnCodes    ok \
     -result         {sv-1}
+
+test route-4-($J|$B|$C|$S) {Route resolv the client factory} \
+    -setup	    {
+      set ident [$FH_LAST FactoryCtxIdentGet]
+    } \
+    -body           {
+      list \
+	[Echo1 $FH(0-0) ROUT ReadC SendC Resolve SendC $ident] \
+	[Echo1 $FH(1-0) ROUT ReadC SendC Resolve SendC $ident] \
+	[Echo1 $FH(2-0) ROUT ReadC SendC Resolve SendC $ident]
+    } \
+    -returnCodes    ok \
+    -result         {tclmsgque tclmsgque tclmsgque}
 
 # cleanup ---------------------------
 Cleanup

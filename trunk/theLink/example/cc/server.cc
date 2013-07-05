@@ -202,7 +202,7 @@ namespace example {
       }
 
       void INIT() {
-	struct MqBufferLS * initB = MqInitArg0();
+	struct MqBufferLS * initB = MqInitArg0(NULL,NULL);
 	SendSTART   (); 
 	while (ReadItemExists()) {
 	  MqBufferLAppendC(initB, ReadC());
@@ -608,6 +608,23 @@ namespace example {
 	SendRETURN();
       }
 
+      void ROUT () {
+	MQ_CST cmd = ReadC();
+
+	SendSTART();
+
+	if (!strncmp(cmd, "Ident", 5)) {
+	  SendC (FactoryCtxIdentGet());
+	} else if (!strncmp(cmd, "Resolve", 7)) {
+	  for (MqC ** ret=Resolve(ReadC()); *ret != NULL; ret++) {
+	    SendC((*ret)->LinkGetTargetIdent());
+	  }
+	} else {
+	  SendC ("nothing");
+	}
+	SendRETURN();
+      }
+
       void PRNT () {
 	SendSTART();
 	SendV("%d - %s", LinkGetCtxId(), ReadC());
@@ -717,6 +734,7 @@ namespace example {
 	  ServiceCreate("ERLR", CallbackF(&Server::ERLR));
 	  ServiceCreate("ERLS", CallbackF(&Server::ERLS));
 	  ServiceCreate("CFG1", CallbackF(&Server::CFG1));
+	  ServiceCreate("ROUT", CallbackF(&Server::ROUT));
 	  ServiceCreate("PRNT", CallbackF(&Server::PRNT));
 	  ServiceCreate("TRNS", CallbackF(&Server::TRNS));
 	  ServiceCreate("TRN2", CallbackF(&Server::TRN2));
@@ -749,6 +767,4 @@ int MQ_CDECL main (int argc, MQ_CST argv[])
   // report error to client, shutdown the link and exit the application
   server->Exit ();
 }
-
-
 

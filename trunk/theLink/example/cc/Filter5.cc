@@ -101,7 +101,7 @@ class F3 : public MqC, public IServerSetup {
 int MQ_CDECL main (int argc, MQ_CST argv[])
 {
   // init libmsgque global data
-  MqBufferLAppendC(MqInitArg0(), argv[0]);
+  MqInitArg0(argv[0],NULL);
 
   // define factories
   MqFactoryC<F1>::Add("F1");
