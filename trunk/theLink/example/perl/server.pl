@@ -682,6 +682,27 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->SendRETURN();
   }
 
+  sub ROUT {
+    my $ctx = shift;
+    my $cmd = $ctx->ReadC();
+
+    $ctx->SendSTART();
+    switch ($cmd) {
+      case "Ident" {
+	$ctx->SendC ($ctx->FactoryCtxIdentGet());
+      }
+      case "Resolve" {
+	foreach my $lctx (Net::PerlMsgque::Resolve($ctx->ReadC())) {
+	  $ctx->SendC ($lctx->LinkGetTargetIdent);
+	}
+      }
+      default {
+	$ctx->SendC ("nothing");
+      }
+    }
+    $ctx->SendRETURN();
+  }
+
   sub PRNT {
     my $ctx = shift;
     $ctx->SendSTART();
@@ -796,6 +817,7 @@ use base qw(Net::PerlMsgque::MqS);
       $ctx->ServiceCreate("REDI", \&REDI);
       $ctx->ServiceCreate("GTCX", \&GTCX);
       $ctx->ServiceCreate("CFG1", \&CFG1);
+      $ctx->ServiceCreate("ROUT", \&ROUT);
       $ctx->ServiceCreate("PRNT", \&PRNT);
       $ctx->ServiceCreate("TRNS", \&TRNS);
       $ctx->ServiceCreate("TRN2", \&TRN2);

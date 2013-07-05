@@ -410,9 +410,18 @@ void
 Init(...)
   CODE:
     int i;
-    struct MqBufferLS * args = MqInitCreate ();
+    struct MqBufferLS * args = MqInitArg0(NULL,NULL);
     for (i=0; i<items; i++) {
       MqBufferLAppendC (args, (char *)SvPV_nolen(ST(i)));
+    }
+
+void
+Resolve(MQ_CST ident)
+  PREINIT:
+    MqS ** ctxP;
+  PPCODE:
+    for (ctxP=MqResolve(ident); *ctxP != NULL; ctxP++) {
+      XPUSHs((SV*)ctxP[0]->self);
     }
 
 void
@@ -645,7 +654,7 @@ MqLinkCreate(MqS * context, ...)
 	str = (char *)SvPV_nolen(ST(i));
 	if (i==1 && (str[0] == '-' || str[0] == MQ_ALFA)) {
 	  // "MqInitGet" set in lib/Net/PerlMsgque.pm -> Init
-	  MqBufferLAppendC (args, MqInitGet()->data[2]->cur.C);
+	  MqBufferLAppendC (args, MqInitGetArg0()->data[2]->cur.C);
 	}
 	MqBufferLAppendC (args, str);
       }
@@ -665,7 +674,7 @@ MqLinkCreateChild(MqS *context, MqS *parent, ...)
 	str = (char *)SvPV_nolen(ST(i));
 	if (i==2 && (str[0] == '-' || str[0] == MQ_ALFA)) {
 	  // "MqInitGet" set in lib/Net/PerlMsgque.pm -> Init
-	  MqBufferLAppendC (args, MqInitGet()->data[2]->cur.C);
+	  MqBufferLAppendC (args, MqInitGetArg0()->data[2]->cur.C);
 	}
 	MqBufferLAppendC (args, (char *)SvPV_nolen(ST(i)));
       }
