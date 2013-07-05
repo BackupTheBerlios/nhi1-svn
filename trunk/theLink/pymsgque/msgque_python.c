@@ -31,7 +31,7 @@ static PyObject* NS(Init) (
 )
 {
   Py_ssize_t len;
-  struct MqBufferLS * initB = MqInitArg0();
+  struct MqBufferLS * initB = MqInitArg0(NULL,NULL);
   PyObject *item, *utf8;
   Py_ssize_t i;
   if (!PyList_Check(list)) goto error;
@@ -45,6 +45,30 @@ static PyObject* NS(Init) (
   Py_DECREF(list);
 
   SETUP_RETURN
+}
+
+#define Resolve_DOC  "[ident] return a list of objects belonging to the 'ident' identifier"
+
+static PyObject* NS(Resolve) (
+  PyObject    *class,
+  PyObject    *ident
+)
+{
+  MQ_STR id;
+  struct MqS **rsv;
+  PyObject* ret = PyList_New(0);
+  if (PyErr_Occurred() != NULL) return NULL;
+  id = PyO2C_START (&ident);
+  if (PyErr_Occurred() != NULL) return NULL;
+  rsv = MqResolve(id);
+  PyO2C_STOP (&ident);
+  for (; *rsv != NULL; rsv++) {
+    PyErrorCheck(PyList_Append(ret, ((PyObject *)rsv[0]->self)));
+  }
+  Py_INCREF(ret);
+  return ret;
+error:
+  return NULL;
 }
 
 // ************************************************************
@@ -74,6 +98,7 @@ PyObject* NS(FactoryGetCalled) ( PyObject    *class, PyObject   *args);
 #define ARG(N,M) { #N , (PyCFunction) NS(N), M, N ## _DOC}
 static PyMethodDef NS(Methods)[] = {
     ARG(Init,		      METH_O),
+    ARG(Resolve,	      METH_O),
     ARG(FactoryAdd,	      METH_VARARGS),
     ARG(FactoryDefault,	      METH_VARARGS),
     ARG(FactoryDefaultIdent,  METH_NOARGS),
@@ -146,7 +171,7 @@ PyInit_pymsgque(void)
 
   // init libmsgque global data
   if (MqInitGetArg0() == NULL && Py_GetProgramName() != NULL) {
-    struct MqBufferLS * initB = MqInitArg0();
+    struct MqBufferLS * initB = MqInitArg0(NULL,NULL);
     char * buf1 = MqSysMalloc(MQ_ERROR_IGNORE, 250);
     PyObject *sys, *list, *item, *utf8;
     if (buf1 == NULL) return PyErr_NoMemory();

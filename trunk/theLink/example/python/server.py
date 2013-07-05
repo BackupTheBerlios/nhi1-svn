@@ -114,6 +114,7 @@ class Server(MqS):
       self.ServiceCreate("ERLR", self.ERLR)
       self.ServiceCreate("ERLS", self.ERLS)
       self.ServiceCreate("CFG1", self.CFG1)
+      self.ServiceCreate("ROUT", self.ROUT)
       self.ServiceCreate("PRNT", self.PRNT)
       self.ServiceCreate("TRNS", self.TRNS)
       self.ServiceCreate("TRN2", self.TRN2)
@@ -242,6 +243,18 @@ class Server(MqS):
       self.SendC (FactoryDefaultIdent())
     else:
       self.ErrorC ("CFG1", 1, "invalid command: " + cmd)
+    self.SendRETURN();
+
+  def ROUT(self):
+    cmd = self.ReadC()
+    self.SendSTART()
+    if cmd == "Ident":
+      self.SendC(self.FactoryCtxIdentGet())
+    elif cmd == "Resolve":
+      for lctx in Resolve(self.ReadC()):
+        self.SendC (lctx.LinkGetTargetIdent())
+    else:
+      self.SendC("nothing")
     self.SendRETURN();
 
   def ERLR (self):
