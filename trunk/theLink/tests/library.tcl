@@ -1220,10 +1220,10 @@ proc Setup {num mode com server args} {
 	if {$filter_server ne "NO"} {
 	  set sl [list \
 	    {*}[getFilter $filter_server.$server] {*}$filter_args {*}$DAEMON \
-	      --name fs {*}$scomargs @ {*}[getServerOnly $server] {*}$sargs --factory sv-$PNO \
+	      --name fs {*}$scomargs @ {*}[getServerOnly $server] --factory sv-$PNO {*}$sargs \
 	  ]
 	} else {
-	  set sl [list {*}[getServer $server] {*}$DAEMON {*}$sargs --factory sv-$PNO {*}$scomargs] 
+	  set sl [list {*}[getServer $server] {*}$DAEMON --factory sv-$PNO {*}$sargs {*}$scomargs] 
 	}
 	if {$env(TS_SETUP)} {
 	  puts "Setup: start server"
@@ -1248,9 +1248,9 @@ proc Setup {num mode com server args} {
       if {$filter_server ne "NO"} {
 	lappend cl @ {*}[getFilter $filter_server.$server] {*}$filter_args --name fs {*}$scomargs {*}$ccomargs
 	if {$serverSilent} { lappend cl --silent }
-	lappend cl @ {*}[getServerOnly $server] {*}$sargs --factory sv-$PNO
+	lappend cl @ {*}[getServerOnly $server] --factory sv-$PNO {*}$sargs
       } else {
-	lappend cl @ {*}[getServer $server] {*}$sargs --factory sv-$PNO
+	lappend cl @ {*}[getServer $server] --factory sv-$PNO {*}$sargs
 	if {$serverSilent} { lappend cl --silent }
       }
     }

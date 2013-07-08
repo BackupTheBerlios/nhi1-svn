@@ -116,6 +116,58 @@ unset -nocomplain I B C S
 
 }; # false
 
+if {[Block 2]} {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [getNum 1] {
+
+ # transport-type: string or binary
+  foreach B [getEnv BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [getEnv COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filter SRV_LST $C] {
+
+      # "spawn" does not set the factory commandline-option
+      if {[string match *spawn* $S]} continue
+
+      set J [list $parents $I]
+
+      SetConstraints $J $B $S
+
+# startup binary --------------------------
+
+Setup $J $B $C $S --server-arg "--factory myfactory"
+
+# tests ----------------------------
+
+test route-X1-($J|$B|$C|$S) {Route resolv a server factory} \
+    -constraints    {
+      c
+    } \
+    -body           {
+      set RET [list]
+      foreach FHr [tclmsgque Resolve myfactory ] {
+	lappend RET [Echo1 $FHr ROUT ReadC SendC Ident]
+      }
+      set RET
+    } \
+    -returnCodes    ok \
+    -result         {myfactory myfactory myfactory}
+
+# cleanup ---------------------------
+Cleanup
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}; # false
+
 ##
 ## -----------------------------------------------------------------------
 ## finish

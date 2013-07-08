@@ -66,9 +66,21 @@ PHP_METHOD(MsgqueForPhp_MqS, Info)
 static
 PHP_METHOD(MsgqueForPhp_MqS, Init)
 {
-  NS(Argument2MqBufferLS)(MqInitArg0(), ZEND_NUM_ARGS() TSRMLS_CC) ;
+  NS(Argument2MqBufferLS)(MqInitArg0(NULL,NULL), ZEND_NUM_ARGS() TSRMLS_CC) ;
 }
 
+static
+PHP_METHOD(MsgqueForPhp_MqS, Resolve)
+{
+  zval *ret;
+  struct MqS **ctxL;
+  ARG2CST(Resolve,ident);
+  array_init(return_value);
+  ctxL = MqResolve(ident);
+  for (int i=0; ctxL[i] != NULL; i++) {
+    add_next_index_zval(return_value, (zval*) ctxL[i]->self);
+  }
+}
 
 #define CB(name) \
   if (instanceof_function(Z_OBJCE_P(getThis()), NS(i ## name) TSRMLS_CC)) { \
@@ -375,6 +387,7 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, Info,		    val_arg,		  ZEND_ACC_PUBLIC)
 #endif
   PHP_ME(MsgqueForPhp_MqS, Init,		    NULL,		  ZEND_ACC_PUBLIC|ZEND_ACC_STATIC)
+  PHP_ME(MsgqueForPhp_MqS, Resolve,		    ident_arg,		  ZEND_ACC_PUBLIC|ZEND_ACC_STATIC)
 
   PHP_ME(MsgqueForPhp_MqS, FactoryCtxGet,	    no_arg,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, FactoryCtxSet,	    MqFactoryS_arg,	  ZEND_ACC_PUBLIC)

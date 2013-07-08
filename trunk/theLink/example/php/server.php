@@ -89,6 +89,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
       $this->ServiceCreate("SLEP", array(&$this, 'SLEP'));
       $this->ServiceCreate("USLP", array(&$this, 'USLP'));
       $this->ServiceCreate("CFG1", array(&$this, 'CFG1'));
+      $this->ServiceCreate("ROUT", array(&$this, 'ROUT'));
       $this->ServiceCreate("INIT", array(&$this, 'INITX'));
       $this->ServiceCreate("LST1", array(&$this, 'LST1'));
       $this->ServiceCreate("LST2", array(&$this, 'LST2'));
@@ -591,6 +592,24 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
 	break;
       default:
         ErrorC("CFG1", 1, "invalid command: " + cmd);
+    }
+    $this->SendRETURN();
+  }
+
+  public function ROUT() {
+    $cmd = $this->ReadC();
+    $this->SendSTART();
+    switch ($cmd) {
+      case "Ident":
+        $this->SendC($this->FactoryCtxIdentGet());
+	break;
+      case "Resolve":
+	foreach(MqS::Resolve($this->ReadC()) as $myctx) {
+	  $this->SendC($myctx->LinkGetTargetIdent());
+	}
+	break;
+      default:
+        $this->SendC("nothing");
     }
     $this->SendRETURN();
   }
