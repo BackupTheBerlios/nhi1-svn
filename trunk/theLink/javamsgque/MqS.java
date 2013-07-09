@@ -60,6 +60,8 @@ public class MqS {
 
   /// \api #MqInitCreate
   public static native void	Init	      (String... argv);
+  /// \api #MqResolve
+  public static native MqS[]	Resolve	      (String ident);
 
   /// \api #MqConfigSetName
   public native void ConfigSetName	      (String val);

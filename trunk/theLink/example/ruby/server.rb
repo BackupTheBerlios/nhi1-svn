@@ -94,6 +94,7 @@ class Server < MqS
       ServiceCreate("SLEP", method(:SLEP))
       ServiceCreate("USLP", method(:USLP))
       ServiceCreate("CFG1", method(:CFG1))
+      ServiceCreate("ROUT", method(:ROUT))
       ServiceCreate("INIT", method(:INIT))
       ServiceCreate("LST1", method(:LST1))
       ServiceCreate("LST2", method(:LST2))
@@ -244,7 +245,7 @@ class Server < MqS
     while ReadItemExists()
       list << ReadC()
     end
-    Init(list)
+    MqS.Init(list)
     SendRETURN()
   end
 
@@ -334,6 +335,22 @@ class Server < MqS
         SendC(FactoryDefaultIdent())
       else
         ErrorC("CFG1", 1, "invalid command: " + cmd)
+    end
+    SendRETURN();
+  end
+
+  def ROUT
+    cmd = ReadC()
+    SendSTART()
+    case cmd
+      when "Ident"
+        SendC(FactoryCtxIdentGet())
+      when "Resolve"
+        MqS.Resolve(ReadC()).each do |myctx|
+          SendC(myctx.LinkGetTargetIdent())
+        end
+      else
+        SendC("unknown")
     end
     SendRETURN();
   end

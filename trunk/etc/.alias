@@ -40,6 +40,7 @@ alias ik='info make'
 alias ic='info gcc'
 
 alias scr="cd ~/Project/NHI1 && screen -h 1000"
+alias scrk="cd ~/Project/NHI1 && exec ssh-agent screen -h 1000"
 alias lgdu="export LANG=de_DE.UTF-8"
 alias lgd="export LANG=de_DE"
 

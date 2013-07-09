@@ -128,8 +128,18 @@ static VALUE USleep(VALUE self, VALUE usec)
 
 static VALUE Init(int argc, VALUE *argv, VALUE self)
 {
-  NS(argv2bufl) (NULL, MqInitArg0(), argc, argv);
+  NS(argv2bufl) (NULL, MqInitArg0(NULL,NULL), argc, argv);
   return Qnil;
+}
+
+static VALUE Resolve(VALUE ident)
+{
+  VALUE ret = rb_ary_new();
+  struct MqS **ctxL = MqResolve(VAL2CST(ident));
+  for (; *ctxL != NULL; ctxL++) {
+    rb_ary_push(ret, (VALUE)(*ctxL)->self);
+  }
+  return ret;
 }
 
 /*****************************************************************************/
@@ -154,8 +164,9 @@ void NS(MqS_Init) (void) {
   // define class MqS
   cMqS = rb_define_class("MqS", rb_cObject);
 
-  rb_define_singleton_method(cMqS, "new",  new,  -1);
-  rb_define_method(cMqS, "Init",      Init, -1);
+  rb_define_singleton_method(cMqS, "new",	new,	  -1);
+  rb_define_singleton_method(cMqS, "Init",      Init,	  -1);
+  rb_define_singleton_method(cMqS, "Resolve",   Resolve,  1);
 
   rb_define_method(cMqS, "Exit",      Exit,	0);
   rb_define_method(cMqS, "Delete",    Delete,	0);

@@ -116,7 +116,7 @@ unset -nocomplain I B C S
 
 }; # false
 
-if {[Block 2]} {
+if {[Block 2] && [testConstraint c]} {
 
 # 1,2, ... tclmsgque (parent/child)
  foreach I [getNum 1] {

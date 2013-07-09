@@ -122,6 +122,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
       ServiceCreate("ERLR", new ERLR());
       ServiceCreate("ERLS", new ERLS());
       ServiceCreate("CFG1", new CFG1());
+      ServiceCreate("ROUT", new ROUT());
       ServiceCreate("PRNT", new PRNT());
       ServiceCreate("TRNS", new TRNS());
       ServiceCreate("TRN2", new TRN2());
@@ -218,6 +219,23 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 	SendC (MqFactoryS.DefaultIdent());
       } else {
 	ErrorC ("CFG1", 1, "invalid command: " + cmd);
+      }
+      SendRETURN();
+    }
+  }
+
+  class ROUT implements IService {
+    public void Service (MqS ctx) throws MqSException {
+      String cmd = ReadC();
+      SendSTART();
+      if (cmd.equals("Ident")) {
+	SendC (FactoryCtxIdentGet());
+      } else if (cmd.equals("Resolve")) {
+	for (MqS myctx: MqS.Resolve(ReadC())) {
+	  SendC(myctx.LinkGetTargetIdent());
+	}
+      } else {
+	SendC("unknown");
       }
       SendRETURN();
     }

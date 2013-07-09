@@ -22,8 +22,8 @@ SUFFIXES = .java .class
 
 JAVA_FILES = $(srcdir)/*.java
 
-example/Server.class: $(JAVA_FILES) $(JAR_FILE)
-	"$(JAVAC)" -classpath "$(JAR_FILE)" $(JAVA_DEBUG) -d . -Xlint:unchecked $(srcdir_m)/*.java
+$(builddir)/example/%.class: $(srcdir)/%.java $(JAR_FILE)
+	"$(JAVAC)" -classpath "$(JAR_FILE)" $(JAVA_DEBUG) -d . -Xlint:unchecked $(srcdir_m)/$(<F)
 
 ##
 ## ==========================================================================
@@ -32,7 +32,7 @@ example/Server.class: $(JAVA_FILES) $(JAR_FILE)
 
 EXTRA_DIST = $(JAVA_FILES)
 
-all-local: example/Server.class
+all-local: $(patsubst $(srcdir)/%.java, $(builddir)/example/%.class, $(wildcard $(srcdir)/*.java))
 
 clean-local:
 	-rm -fr example

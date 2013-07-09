@@ -206,6 +206,7 @@ foreach C pipe {
   if {[Block 3]} {
 
     test startup-$C-17 {wrong server} \
+	-constraints {tcl} \
 	-setup	      {set FH0 [tclmsgque MqS] } \
 	-body	      {$FH0 LinkCreate --timeout 1 --name otto @ unknown_server_executable} \
 	-cleanup      {rename $FH0 ""} \
@@ -214,24 +215,28 @@ foreach C pipe {
 	-result	      {C> (otto) \[*\] can not start server 'unknown_server_executable'*}
 
     test startup-$C-19 {no subcommand} \
+	-constraints {tcl} \
 	-body   {tclmsgque} \
 	-returnCodes error \
 	-result {wrong # args: should be "tclmsgque subcommand ..."}
 
     test startup-$C-20 {wrong subcommand} \
+	-constraints {tcl} \
 	-body   {tclmsgque xxx} \
 	-returnCodes error \
-	-result {bad subcommand "xxx": must be MqS, print, Main, const, support, help, Init, FactoryAdd, FactoryGet, FactoryGetCalled, FactoryDefault, or FactoryDefaultIdent}
+	-result {bad subcommand "xxx": must be MqS, Resolve, print, Main, const, support, help, Init, FactoryAdd, FactoryGet, FactoryGetCalled, FactoryDefault, or FactoryDefaultIdent}
 
     foreach S [filter SRV_LST pipe] {
 
 	test startup-21-($S) {good startup} \
+	    -constraints {tcl} \
 	    -body {set FH0 [Start $S LinkCreate --pipe]} \
 	    -cleanup {rename $FH0 ""} \
 	    -match glob \
 	    -result {<MqS-*>}
 
 	test startup-22-($S) {no subcommand} \
+	    -constraints {tcl} \
 	    -setup {set FH0 [Start $S LinkCreate --pipe]} \
 	    -cleanup {rename $FH0 ""} \
 	    -body {$FH0} \
@@ -240,6 +245,7 @@ foreach C pipe {
 	    -result {wrong # args: should be "<MqS-*> subcommand ..."}
 
 	test startup-23-($S) {wrong subcommand} \
+	    -constraints {tcl} \
 	    -setup {set FH0 [Start $S LinkCreate --pipe]} \
 	    -cleanup {rename $FH0 ""} \
 	    -body {$FH0 xxx} \

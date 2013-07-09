@@ -204,7 +204,7 @@ JNIEXPORT void JNICALL NS(Init) (
   jobject obj;
   const char *str; 
   jsize argc = (*env)->GetArrayLength(env, argv);
-  struct MqBufferLS *initB = MqInitArg0();
+  struct MqBufferLS *initB = MqInitArg0(NULL,NULL);
   jsize i;
   for (i=0; i<argc; i++) {
     obj = (*env)->GetObjectArrayElement(env, argv, i);
@@ -212,6 +212,25 @@ JNIEXPORT void JNICALL NS(Init) (
     MqBufferLAppendC(initB,str);
     JO2C_STOP(env,obj,str);
   }
+}
+
+JNIEXPORT jobjectArray JNICALL NS(Resolve) (
+  JNIEnv *	env, 
+  jclass	cls,
+  jobject	identO
+)
+{
+  jsize size;
+  jobjectArray ret;
+  const char* ident = JO2C_START(env, identO);
+  struct MqS** ctxL = MqResolve(ident);
+  JO2C_STOP(env,identO,ident);
+  for (size=0; ctxL[size] != NULL; size++);
+  ret = (*env)->NewObjectArray(env, size, NS(Class_MqS), NULL);
+  for (size=0; ctxL[size] != NULL; size++) {
+    (*env)->SetObjectArrayElement(env, ret, size, (jobject) ctxL[size]->self);
+  }
+  return ret;
 }
 
 JNIEXPORT void JNICALL NS(ContextCreate) (
