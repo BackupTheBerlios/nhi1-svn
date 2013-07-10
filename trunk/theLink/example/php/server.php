@@ -600,6 +600,10 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
     $cmd = $this->ReadC();
     $this->SendSTART();
     switch ($cmd) {
+      case "Create":
+	$id = $this->ReadI();
+        $this->SlaveWorker($id, "--name", "wk-cl-" . $id, "@", "--name", "wk-sv-" . $id, "--factory", $this->ReadC());
+	break;
       case "Ident":
         $this->SendC($this->FactoryCtxIdentGet());
 	break;

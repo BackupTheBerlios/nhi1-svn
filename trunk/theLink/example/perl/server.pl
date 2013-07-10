@@ -688,6 +688,10 @@ use base qw(Net::PerlMsgque::MqS);
 
     $ctx->SendSTART();
     switch ($cmd) {
+      case "Create" {
+	my $id = $ctx->ReadI();
+	$ctx->SlaveWorker($id, "--name", "wk-cl-" . $id , "@", "--name", "wk-sv-" . $id, "--factory", $ctx->ReadC());
+      } 
       case "Ident" {
 	$ctx->SendC ($ctx->FactoryCtxIdentGet());
       }

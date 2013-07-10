@@ -623,6 +623,10 @@ proc Ot_ROUT {ctx} {
   $ctx SendSTART
 
   switch -exact $cmd {
+    "Create" {
+      set id  [$ctx ReadI]
+      $ctx SlaveWorker $id --name wk-cl-$id @ --name wk-sv-$id --factory [$ctx ReadC]
+    }
     "Ident" {
       $ctx SendC [$ctx FactoryCtxIdentGet]
     }

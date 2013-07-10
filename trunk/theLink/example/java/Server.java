@@ -228,7 +228,10 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
     public void Service (MqS ctx) throws MqSException {
       String cmd = ReadC();
       SendSTART();
-      if (cmd.equals("Ident")) {
+      if (cmd.equals("Create")) {
+	int id = ReadI();
+	SlaveWorker(id, "--name", "wk-cl-" + id, "@", "--name", "wk-sv-" + id, "--factory", ReadC());
+      } else if (cmd.equals("Ident")) {
 	SendC (FactoryCtxIdentGet());
       } else if (cmd.equals("Resolve")) {
 	for (MqS myctx: MqS.Resolve(ReadC())) {

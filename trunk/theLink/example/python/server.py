@@ -248,7 +248,10 @@ class Server(MqS):
   def ROUT(self):
     cmd = self.ReadC()
     self.SendSTART()
-    if cmd == "Ident":
+    if cmd == "Create" :
+      id = self.ReadI()
+      self.SlaveWorker(id, ["--name", "wk-cl-" + str(id), "@", "--name", "wk-sv-" + str(id), "--factory", self.ReadC()])
+    elif cmd == "Ident":
       self.SendC(self.FactoryCtxIdentGet())
     elif cmd == "Resolve":
       for lctx in Resolve(self.ReadC()):

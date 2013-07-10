@@ -57,6 +57,8 @@ set -x
     ' | while read path ; do
 	  test -d "$path" && find "$path" -type f -name "*.h" | xargs ctags -a 
 	done
+    find "/usr/include/c++" -type f -name "*.h" | xargs ctags --language-force=c++ -a
+    find "/usr/include/c++" -type f -name "*.tcc" | xargs ctags --language-force=c++ -a
   else
     echo "unable to find compiler setup.... skip setup global-header tags file"
 

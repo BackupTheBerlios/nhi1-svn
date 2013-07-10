@@ -613,7 +613,13 @@ namespace example {
 
 	SendSTART();
 
-	if (!strncmp(cmd, "Ident", 5)) {
+	if (!strncmp(cmd, "Create", 6)) {
+	  MQ_INT id = ReadI();
+	  char cl[10], sv[10];
+	  sprintf(cl, "wk-cl-%d", id);
+	  sprintf(sv, "wk-sv-%d", id);
+	  SlaveWorkerV (id, "--name", cl, "@", "--name", sv, "--factory", ReadC(), NULL);
+	} else if (!strncmp(cmd, "Ident", 5)) {
 	  SendC (FactoryCtxIdentGet());
 	} else if (!strncmp(cmd, "Resolve", 7)) {
 	  for (MqC ** ret=Resolve(ReadC(),NULL); *ret != NULL; ret++) {

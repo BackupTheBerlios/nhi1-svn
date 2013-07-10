@@ -343,6 +343,9 @@ class Server < MqS
     cmd = ReadC()
     SendSTART()
     case cmd
+      when "Create"
+        id = ReadI()
+        SlaveWorker(id, "--name", "wk-cl-" + id.to_s, "@", "--name", "wk-sv-" + id.to_s, "--factory", ReadC())
       when "Ident"
         SendC(FactoryCtxIdentGet())
       when "Resolve"

@@ -232,7 +232,10 @@ namespace example {
     private void ROUT () {
       String cmd = ReadC();
       SendSTART();
-      if (cmd == "Ident") {
+      if (cmd == "Create") {
+	int id = ReadI();
+	SlaveWorker(id, "--name", "wk-cl-" + id, "@", "--name", "wk-sv-" + id, "--factory", ReadC());
+      } else if (cmd == "Ident") {
 	SendC (FactoryCtxIdentGet ());
       } else if (cmd == "Resolve") {
 	foreach (MqS myctx in MqS.Resolve(ReadC())) {
