@@ -126,16 +126,16 @@ static VALUE USleep(VALUE self, VALUE usec)
   return Qnil;
 }
 
-static VALUE Init(int argc, VALUE *argv, VALUE self)
+static VALUE Init(int argc, VALUE *argv, VALUE class)
 {
   NS(argv2bufl) (NULL, MqInitArg0(NULL,NULL), argc, argv);
   return Qnil;
 }
 
-static VALUE Resolve(VALUE ident)
+static VALUE Resolve(VALUE class, VALUE ident)
 {
   VALUE ret = rb_ary_new();
-  struct MqS **ctxL = MqResolve(VAL2CST(ident));
+  struct MqS **ctxL = MqResolve(VAL2CST(ident),NULL);
   for (; *ctxL != NULL; ctxL++) {
     rb_ary_push(ret, (VALUE)(*ctxL)->self);
   }

@@ -126,6 +126,7 @@ func (this *Server) ServerSetup() {
     this.ServiceCreate("ERRT", (*ERRT)(this))
 
     this.ServiceCreate("CFG1", (*CFG1)(this))
+    this.ServiceCreate("ROUT", (*ROUT)(this))
 
     this.ServiceCreate("BUF1", (*BUF1)(this))
     this.ServiceCreate("BUF2", (*BUF2)(this))
@@ -709,6 +710,30 @@ type CFG1 Server
       }
       default: {
 	this.ErrorC ("CFG1", 1, "invalid command: ")
+      }
+    }
+    this.SendRETURN()
+  }
+
+type ROUT Server
+  func (this *ROUT) Call() {
+    this.SendSTART()
+    switch this.ReadC() {
+      case "Create": {
+	id := this.ReadI()
+	sid := fmt.Sprintf("%d", id)
+	this.SlaveWorker(id, "--name", "wk-cl" + sid, "@", "--name", "wk-sv-" + sid, "--factory", this.ReadC())
+      }
+      case "Ident": {
+	this.SendC (this.FactoryCtxIdentGet())
+      }
+      case "Resolve": {
+	for _,myctx := range Resolve(this.ReadC()) {
+	  this.SendC(myctx.LinkGetTargetIdent())
+	}
+      }
+      default: {
+	this.SendC ("unknown")
       }
     }
     this.SendRETURN()

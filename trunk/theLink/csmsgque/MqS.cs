@@ -13,6 +13,7 @@
 using System;
 using System.Text;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
@@ -88,7 +89,7 @@ namespace csmsgque {
     static MqS() {
 
       // init the application "spawn" starter
-      IntPtr initB = MqInitCreate();
+      IntPtr initB = MqInitArg0();
       if(Type.GetType ("Mono.Runtime") != null) MqBufferLAppendC(initB, "mono");
       MqBufferLAppendC(initB, APP);
     }
@@ -133,15 +134,34 @@ namespace csmsgque {
   /*                                                                           */
   /*****************************************************************************/
 
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqInitCreate")]
-    private static extern IntPtr MqInitCreate();
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqInitArg0")]
+    private static extern IntPtr MqInitArg0(
+      [In,MarshalAs(UnmanagedType.LPStr)]string arg0=null, 
+      [In,MarshalAs(UnmanagedType.LPStr)]string arg2=null,
+      [In,MarshalAs(UnmanagedType.LPStr)]string arg1=null
+    );
 
-    /// \api #MqInitCreate
+    /// \api #MqInitArg0
     protected static void Init(params string[] argv) {
-      IntPtr initB = MqInitCreate();
+      IntPtr initB = MqInitArg0();
       foreach (string s in argv) {
 	MqBufferLAppendC(initB, s);
       }
+    }
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqResolve")]
+    private static extern IntPtr MqResolve([In,MarshalAs(UnmanagedType.LPStr)]string ident, [In,Out]ref Int32 size);
+
+    /// \api #MqResolve
+    protected static MqS[] Resolve(string ident) {
+      Int32 size = 0;
+      int elementSize = Marshal.SizeOf(typeof(IntPtr));
+      IntPtr ctxL = MqResolve(ident,ref size);
+      MqS[] ret = new MqS[size];
+      for(int i=0; i<size; i++) {
+	ret[i] = GetSelf(Marshal.ReadIntPtr(ctxL,i*elementSize));
+      }
+      return ret;
     }
 
   /*****************************************************************************/
@@ -150,7 +170,7 @@ namespace csmsgque {
   /*                                                                           */
   /*****************************************************************************/
 
-          [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryAdd")]
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqFactoryAdd")]
     internal static extern IntPtr MqFactoryAdd([In]IntPtr error, [In]string ident,
       [In]FactoryCreateF FactoryCreate, [In]IntPtr CreateData, [In]FactoryDataFreeF CreateFree, [In]FactoryDataCopyF CreateCopy,
       [In]FactoryDeleteF FactoryDelete, [In]IntPtr DeleteData, [In]FactoryDataFreeF DeleteFree, [In]FactoryDataCopyF DeleteCopy

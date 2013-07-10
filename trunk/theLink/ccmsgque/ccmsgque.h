@@ -306,7 +306,7 @@ namespace ccmsgque {
       MQ_EXTERN void objInit ();
       static void Setup (void) __attribute__ ((constructor));
       static void Cleanup (void) __attribute__ ((destructor));
-      static MqC** Resolve (MQ_CST iden);
+      static MqC** Resolve (MQ_CST iden, MQ_SIZE *size);
 
     private:
       static inline MqC* GetThis(struct MqS const * const context) {

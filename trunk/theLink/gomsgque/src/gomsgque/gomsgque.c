@@ -56,6 +56,13 @@ gomsgque_ConfigSetServerSetup (
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+struct MqBufferLS * gomsgque_InitArg0 ()
+{
+  return MqInitArg0(NULL,NULL);
+}
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 static enum MqErrorE
 sServerCleanup (
   struct MqS * const context,

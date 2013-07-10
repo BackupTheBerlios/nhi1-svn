@@ -31,7 +31,7 @@ $(abs_builddir)/src/gomsgque/%: $(abs_srcdir)/src/gomsgque/% | $(abs_builddir)/s
 	cp $< $@
 
 all-local: $(subst $(abs_srcdir), $(abs_builddir), $(wildcard $(abs_srcdir)/src/gomsgque/*))
-	test -n "$(GO)" && $(GO) install gomsgque
+	test -n "$(GO)" && $(GO) install -work gomsgque
 
 clean-local: 
 	test -n "$(GO)" && $(GO) clean || true

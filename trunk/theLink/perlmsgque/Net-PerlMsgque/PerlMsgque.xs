@@ -420,7 +420,7 @@ Resolve(MQ_CST ident)
   PREINIT:
     MqS ** ctxP;
   PPCODE:
-    for (ctxP=MqResolve(ident); *ctxP != NULL; ctxP++) {
+    for (ctxP=MqResolve(ident,NULL); *ctxP != NULL; ctxP++) {
       XPUSHs((SV*)ctxP[0]->self);
     }
 

@@ -60,7 +60,7 @@ static PyObject* NS(Resolve) (
   if (PyErr_Occurred() != NULL) return NULL;
   id = PyO2C_START (&ident);
   if (PyErr_Occurred() != NULL) return NULL;
-  rsv = MqResolve(id);
+  rsv = MqResolve(id,NULL);
   PyO2C_STOP (&ident);
   for (; *rsv != NULL; rsv++) {
     PyErrorCheck(PyList_Append(ret, ((PyObject *)rsv[0]->self)));

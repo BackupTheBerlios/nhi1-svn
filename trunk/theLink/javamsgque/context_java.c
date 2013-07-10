@@ -220,15 +220,14 @@ JNIEXPORT jobjectArray JNICALL NS(Resolve) (
   jobject	identO
 )
 {
-  jsize size;
+  MQ_SIZE size;
   jobjectArray ret;
   const char* ident = JO2C_START(env, identO);
-  struct MqS** ctxL = MqResolve(ident);
+  struct MqS** ctxL = MqResolve(ident,&size);
   JO2C_STOP(env,identO,ident);
-  for (size=0; ctxL[size] != NULL; size++);
-  ret = (*env)->NewObjectArray(env, size, NS(Class_MqS), NULL);
-  for (size=0; ctxL[size] != NULL; size++) {
-    (*env)->SetObjectArrayElement(env, ret, size, (jobject) ctxL[size]->self);
+  ret = (*env)->NewObjectArray(env, (jsize)size, NS(Class_MqS), NULL);
+  for (int i=0; i<size; i++) {
+    (*env)->SetObjectArrayElement(env, ret, i, (jobject) ctxL[i]->self);
   }
   return ret;
 }

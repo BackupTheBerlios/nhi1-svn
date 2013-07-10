@@ -168,6 +168,53 @@ unset -nocomplain I B C S
 
 }; # false
 
+if {[Block 3]} {
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [getNum 1] {
+
+ # transport-type: string or binary
+  foreach B [getEnv BIN_LST] {
+
+  # socket-type: pipe, uds or tcp
+   foreach C [getEnv COM_LST] {
+
+    # server-type: server server.tcl
+    foreach S [filter SRV_LST $C] {
+
+      # "spawn" does not set the factory commandline-option
+      if {[string match *spawn* $S]} continue
+
+      SetConstraints $I $B $S
+
+# startup binary --------------------------
+
+Setup $I $B $C $S --setup-parent {
+  Call $FH_LAST SendEND_AND_WAIT ROUT SendC Create SendI 0 SendC worker-factory
+  Call $FH_LAST SendEND_AND_WAIT ROUT SendC Create SendI 1 SendC worker-factory
+  Call $FH_LAST SendEND_AND_WAIT ROUT SendC Create SendI 2 SendC worker-factory
+}
+
+# tests ----------------------------
+
+test route-Y1-($I|$B|$C|$S) {Route resolv in a native worker} \
+    -body           {
+      EchoL $FH_LAST ROUT SendC Resolve SendC worker-factory
+    } \
+    -returnCodes    ok \
+    -result         {worker-factory worker-factory worker-factory}
+
+# cleanup ---------------------------
+Cleanup
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset -nocomplain I B C S
+
+}; # false
+
 ##
 ## -----------------------------------------------------------------------
 ## finish

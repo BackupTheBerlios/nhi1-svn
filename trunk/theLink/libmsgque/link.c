@@ -175,8 +175,9 @@ pMqCheckOpt (
     }
     case 'f': {
       switch (argC[1]) {
-	case 'o': return !strncmp(argC, "fork", sizeof("fork")-1   );
-	case 'i': return !strncmp(argC, "file", sizeof("file")-1   );
+	case 'o': return !strncmp(argC, "fork",	    sizeof("fork")-1   );
+	case 'i': return !strncmp(argC, "file",	    sizeof("file")-1   );
+	case 'a': return !strncmp(argC, "factory",  sizeof("factory")-1   );
       }
       return 0;
     }

@@ -616,7 +616,7 @@ namespace example {
 	if (!strncmp(cmd, "Ident", 5)) {
 	  SendC (FactoryCtxIdentGet());
 	} else if (!strncmp(cmd, "Resolve", 7)) {
-	  for (MqC ** ret=Resolve(ReadC()); *ret != NULL; ret++) {
+	  for (MqC ** ret=Resolve(ReadC(),NULL); *ret != NULL; ret++) {
 	    SendC((*ret)->LinkGetTargetIdent());
 	  }
 	} else {

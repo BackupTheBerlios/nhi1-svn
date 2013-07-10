@@ -868,7 +868,8 @@ static enum MqErrorE
 CreateWorker (
   struct MqS * const errorctx,
   struct MqS * const master,
-  MQ_INT master_id
+  MQ_INT master_id,
+  MQ_CST factory
 )
 {
   struct MqBufferLS * argv = MqBufferLCreate(5+MqReadGetNumItems(master));
@@ -878,6 +879,10 @@ CreateWorker (
   MqBufferLAppendC(argv, "@");
   MqBufferLAppendC(argv, "--name");
   MqBufferLAppendU(argv, MqBufferSetV(MqBufferCreate(MQ_ERROR_PANIC,20), "wk-sv-%d", master_id));
+  if (factory != NULL) {
+    MqBufferLAppendC(argv, "--factory");
+    MqBufferLAppendC(argv, factory);
+  }
   MqSlaveWorker (master, master_id, &argv);
 error:
   MqBufferLDelete(&argv);
@@ -928,7 +933,7 @@ Ot_SND1 (
 	MqErrorCopy(mqctx, srvctx->cl[clid]);
       }
     } else if (!strcmp(s,"START5")) {
-      MqErrorCheck (CreateWorker(mqctx, mqctx, clid));
+      MqErrorCheck (CreateWorker(mqctx, mqctx, clid, NULL));
     } else if (!strcmp(s,"STOP")) {
       MqLinkDelete(srvctx->cl[clid]);
     } else if (!strcmp(s,"SEND")) {
@@ -988,7 +993,7 @@ Ot_SND2 (
   clmqctx = MqSlaveGet(mqctx, clid);
   MqSendSTART(mqctx);
     if (!strcmp(s,"CREATE")) {
-      MqErrorCheck (CreateWorker (mqctx, mqctx, clid));
+      MqErrorCheck (CreateWorker (mqctx, mqctx, clid, NULL));
     } else if (!strcmp(s,"CREATE2")) {
       struct MqS * clmqctx = MqContextCreate (sizeof (struct ClientCtxS), NULL);
       MqErrorCheck (ClientCreateParent(mqctx, clmqctx, mqctx->config.debug));
@@ -1266,12 +1271,18 @@ Ot_ROUT (
 
   MqSendSTART(mqctx);
 
-  if (!strncmp (cmd, "Ident", 5)) {
+  if (!strncmp (cmd, "Create", 6)) {
+    MQ_INT  id;
+    MQ_CST  factory;
+    MqErrorCheck(MqReadI(mqctx, &id));
+    MqErrorCheck(MqReadC(mqctx, &factory));
+    MqErrorCheck (CreateWorker (mqctx, mqctx, id, factory));
+  } else if (!strncmp (cmd, "Ident", 5)) {
     MqSendC(mqctx,  MqFactoryCtxIdentGet (mqctx));
-  } else if (!strncmp (cmd, "Resolve", 5)) {
+  } else if (!strncmp (cmd, "Resolve", 7)) {
     MQ_CST rmtIdent;
     MqErrorCheck (MqReadC (mqctx, &rmtIdent));
-    for (struct MqS ** ret=MqResolve(rmtIdent); *ret != NULL; ret++) {
+    for (struct MqS ** ret=MqResolve(rmtIdent,NULL); *ret != NULL; ret++) {
       MqSendC(mqctx, MqLinkGetTargetIdent(*ret));
     }
   } else {

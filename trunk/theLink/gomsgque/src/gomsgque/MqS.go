@@ -21,6 +21,7 @@ import (
   "os"
   "runtime"
   //"time"
+  "reflect"
 )
 
 func init() {
@@ -139,12 +140,25 @@ func ThreadExit (num int32) {
 //
 
 func Init(argv ... string) {
-  initB := C.MqInitCreate()
+  initB := C.gomsgque_InitArg0()
   for _,arg := range argv {
       s := C.CString(arg)
     C.MqBufferLAppendC(initB, s)
       C.free(unsafe.Pointer(s))
   }
+}
+
+func Resolve(ident string) []*MqS {
+  var size C.MQ_SIZE
+      s := C.CString(ident)
+  ctxL := C.MqResolve(s,&size)
+      C.free(unsafe.Pointer(s))
+  var ret []*MqS
+  sliceHeader := (*reflect.SliceHeader)((unsafe.Pointer(&ret)))
+  sliceHeader.Cap = int(size)
+  sliceHeader.Len = int(size)
+  sliceHeader.Data = uintptr(unsafe.Pointer(ctxL))
+  return ret
 }
 
 /*

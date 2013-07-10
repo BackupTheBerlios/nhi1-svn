@@ -419,7 +419,8 @@ MqMark (
 
 struct MqS **
 MqResolve (
-  MQ_CST const ident
+  MQ_CST const ident,
+  MQ_SIZE *retsize
 )
 {
   static MqThreadLocal struct MqS ** ret = NULL;
@@ -445,6 +446,7 @@ MqResolve (
     }
   }
   ret[DataRetCur] = NULL;
+  if (retsize != NULL) *retsize = DataRetCur;
   return ret;
 }
 

@@ -117,6 +117,7 @@ namespace example {
 	ServiceCreate("ERLR", ERLR);
 	ServiceCreate("ERLS", ERLS);
 	ServiceCreate("CFG1", CFG1);
+	ServiceCreate("ROUT", ROUT);
 	ServiceCreate("PRNT", PRNT);
 	ServiceCreate("TRNS", TRNS);
 	ServiceCreate("TRN2", TRN2);
@@ -224,6 +225,21 @@ namespace example {
 	SendC (MqFactoryS<Server>.DefaultIdent());
       } else {
 	ErrorC ("CFG1", 1, "invalid command: " + cmd);
+      }
+      SendRETURN();
+    }
+
+    private void ROUT () {
+      String cmd = ReadC();
+      SendSTART();
+      if (cmd == "Ident") {
+	SendC (FactoryCtxIdentGet ());
+      } else if (cmd == "Resolve") {
+	foreach (MqS myctx in MqS.Resolve(ReadC())) {
+	  SendC(myctx.LinkGetTargetIdent());
+	}
+      } else {
+	SendC("unknown");
       }
       SendRETURN();
     }

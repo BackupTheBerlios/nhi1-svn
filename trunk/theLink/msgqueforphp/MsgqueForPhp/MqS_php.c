@@ -76,7 +76,7 @@ PHP_METHOD(MsgqueForPhp_MqS, Resolve)
   struct MqS **ctxL;
   ARG2CST(Resolve,ident);
   array_init(return_value);
-  ctxL = MqResolve(ident);
+  ctxL = MqResolve(ident,NULL);
   for (int i=0; ctxL[i] != NULL; i++) {
     add_next_index_zval(return_value, (zval*) ctxL[i]->self);
   }

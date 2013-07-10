@@ -1783,13 +1783,15 @@ MQ_EXTERN void MQ_DECL MqMark (
 );
 
 /// \brief return a list of all \e context belonging to \e ident
-/// \param ident the identifier to search the context for
+/// \param[in] ident the identifier to search the context for
+/// \param[out] size if not \c NULL the length of the result-array will be added.
 /// \return an array of MqS* items, the last item is a NULL.
 /// \attention 
 ///   - the \e return-value is owned by \libmsgque -> do not free !!
 ///   - the live-time of the \e return-value is up to the next call of \e MqResolve in the current thread.
 MQ_EXTERN struct MqS ** MQ_DECL MqResolve (
-  MQ_CST ident
+  MQ_CST ident,
+  MQ_SIZE *size
 );
 
 #if defined(_DEBUG)
@@ -3867,17 +3869,23 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadD (
 ) __attribute__((nonnull(1)));
 
 /// \brief generic function to read an #MQ_STR object from the \e Read-Buffer object
+///
+/// The object returned is owned by the \e read-data-package and is \b only valid
+/// up to the next call of any \RNS{ReadData} function. If a long-term object is required
+/// the string have-to-be duplicated.
 /// \context
 /// \retval out the string to return
 /// \retMqErrorE
-/// \attention the string returned has \e static allocation and have to be
-/// duplicated for long term storage.
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadC (
   struct MqS * const context,
   MQ_CST * const out
 ) __attribute__((nonnull(1)));
 
 /// \brief generic function to read an #MQ_BIN object from the \e Read-Buffer object
+///
+/// The object returned is owned by the \e read-data-package and is \b only valid
+/// up to the next call of any \RNS{ReadData} function. If a long-term object is required
+/// the string have-to-be duplicated.
 /// \context
 /// \retval out the \e byte-array data to return
 /// \retval len the length of the \e byte-array data
@@ -3903,7 +3911,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
   MQ_SIZE * const len
 ) __attribute__((nonnull(1)));
 
-/// \brief signature used in \ref MqFactoryS::signature
+/// \brief signature used in \ref MqDumpS::signature
 #define MQ_MqDumpS_SIGNATURE 0x00127364
 
 /// \brief dump the \e read-data-package suitable to store into an external storage
@@ -3946,7 +3954,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadLOAD (
 /// up to the next call of any \RNS{ReadData} function. If a long-term object is required
 /// use \RNS{BufferDup} and \RNS{BufferDelete} later.
 /// \ctx
-/// \param[out] val the buffer
+/// \param[out] val the buffer as output
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadU (
   struct MqS * const ctx,

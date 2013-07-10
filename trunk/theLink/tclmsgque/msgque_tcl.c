@@ -350,7 +350,7 @@ static int NS(Resolve) (
   CHECK_C(ident)
   CHECK_NOARGS
   RET = Tcl_NewListObj(0,NULL);
-  ctxL = MqResolve(ident);
+  ctxL = MqResolve(ident,NULL);
   for (int i=0; ctxL[i] != NULL; i++) {
     TclErrorCheck (Tcl_ListObjAppendElement(interp, RET, (Tcl_Obj*)ctxL[i]->self));
   }

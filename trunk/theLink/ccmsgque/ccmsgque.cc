@@ -29,11 +29,11 @@ namespace ccmsgque {
     MqCleanup();
   }
 
-  MqC** MqC::Resolve (MQ_CST ident) {
+  MqC** MqC::Resolve (MQ_CST ident, MQ_SIZE *retsize) {
     static MqThreadLocal MqC ** ret = NULL;
     static MqThreadLocal MQ_SIZE size = 0;
 
-    struct MqS ** res = MqResolve(ident);
+    struct MqS ** res = MqResolve(ident,retsize);
     MQ_SIZE num;
 
     if (ret == NULL) {
