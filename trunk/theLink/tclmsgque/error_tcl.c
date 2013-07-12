@@ -14,35 +14,35 @@
 
 #define MQ_CONTEXT_S MQCTX
 
-int NS(ErrorGetText) (NS_ARGS)
+int NS(ErrorGetText) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult (interp, Tcl_NewStringObj(MqErrorGetText(MQCTX), -1));
   RETURN_TCL
 }
 
-int NS(ErrorGetNum) (NS_ARGS)
+int NS(ErrorGetNum) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult (interp, Tcl_NewIntObj(MqErrorGetNumI(MQCTX)));
   RETURN_TCL
 }
 
-int NS(ErrorGetCode) (NS_ARGS)
+int NS(ErrorGetCode) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult (interp, Tcl_NewIntObj((int)MqErrorGetCodeI(MQCTX)));
   RETURN_TCL
 }
 
-int NS(ErrorSetEXIT) (NS_ARGS)
+int NS(ErrorSetEXIT) (MqS_ARGS)
 {
   CHECK_NOARGS
   MqErrorSetEXIT(MQCTX);
   RETURN_TCL
 }
 
-int NS(ErrorC) (NS_ARGS)
+int NS(ErrorC) (MqS_ARGS)
 {
   MQ_INT errnum;
   MQ_STR prefix, error_message;
@@ -55,21 +55,21 @@ int NS(ErrorC) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ErrorRaise) (NS_ARGS)
+int NS(ErrorRaise) (MqS_ARGS)
 {
   SETUP_mqctx
   ErrorMqToTclWithCheck(MqErrorGetCodeI(mqctx));
   RETURN_TCL
 }
 
-int NS(ErrorSet) (NS_ARGS)
+int NS(ErrorSet) (MqS_ARGS)
 {
   CHECK_NOARGS
   NS(ProcError) (tclctx, __func__);
   RETURN_TCL
 }
 
-int NS(ErrorSetCONTINUE) (NS_ARGS)
+int NS(ErrorSetCONTINUE) (MqS_ARGS)
 {
   SETUP_mqctx
   CHECK_NOARGS
@@ -77,14 +77,14 @@ int NS(ErrorSetCONTINUE) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ErrorIsEXIT) (NS_ARGS)
+int NS(ErrorIsEXIT) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewBooleanObj (MqErrorIsEXIT(MQCTX)));
   RETURN_TCL
 }
 
-int NS(ErrorReset) (NS_ARGS)
+int NS(ErrorReset) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_ResetResult (interp);
@@ -92,10 +92,11 @@ int NS(ErrorReset) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ErrorPrint) (NS_ARGS)
+int NS(ErrorPrint) (MqS_ARGS)
 {
   CHECK_NOARGS
   MqErrorPrint (MQCTX);
   RETURN_TCL
 }
+
 

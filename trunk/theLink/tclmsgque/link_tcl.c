@@ -14,28 +14,28 @@
 
 #define MQ_CONTEXT_S MQCTX
 
-int NS(LinkGetCtxId) (NS_ARGS)
+int NS(LinkGetCtxId) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewIntObj (MqLinkGetCtxIdI(MQCTX)));
   RETURN_TCL
 }
 
-int NS(LinkIsParent) (NS_ARGS)
+int NS(LinkIsParent) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewBooleanObj (MqLinkIsParentI(MQCTX)));
   RETURN_TCL
 }
 
-int NS(LinkIsConnected) (NS_ARGS)
+int NS(LinkIsConnected) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewBooleanObj (MqLinkIsConnected(MQCTX)));
   RETURN_TCL
 }
 
-int NS(LinkGetParent) (NS_ARGS)
+int NS(LinkGetParent) (MqS_ARGS)
 {
   struct MqS * const parent = MqLinkGetParentI(MQCTX);
   CHECK_NOARGS
@@ -47,21 +47,21 @@ int NS(LinkGetParent) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(LinkGetTargetIdent) (NS_ARGS)
+int NS(LinkGetTargetIdent) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewStringObj(MqLinkGetTargetIdent (MQCTX), -1));
   RETURN_TCL
 }
 
-int NS(LinkDelete) (NS_ARGS)
+int NS(LinkDelete) (MqS_ARGS)
 {
   CHECK_NOARGS
   MqLinkDelete (MQCTX);
   RETURN_TCL
 }
 
-int NS(LinkConnect) (NS_ARGS)
+int NS(LinkConnect) (MqS_ARGS)
 {
   SETUP_mqctx
   CHECK_NOARGS
@@ -69,7 +69,7 @@ int NS(LinkConnect) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(LinkCreate) (NS_ARGS)
+int NS(LinkCreate) (MqS_ARGS)
 {
   SETUP_mqctx
   struct MqBufferLS * args = NULL;
@@ -92,7 +92,7 @@ int NS(LinkCreate) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(LinkCreateChild) (NS_ARGS)
+int NS(LinkCreateChild) (MqS_ARGS)
 {
   // check for connected
   struct MqS * parent;
@@ -126,3 +126,4 @@ int NS(LinkCreateChild) (NS_ARGS)
     RETURN_TCL
   }
 }
+

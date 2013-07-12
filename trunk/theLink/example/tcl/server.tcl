@@ -422,6 +422,30 @@ proc Ot_ROT1 {ctx} {
   $ctx SendRETURN
 }
 
+proc Ot_BUFE {ctx} {
+  set cmd   [$ctx ReadC]
+  $ctx SendSTART
+  switch -exact $cmd {
+    ctxbuf {
+      set tmp [$ctx ContextGetBuffer]
+      set buf [$ctx ReadU]
+      switch -exact [$buf GetType] {
+	"Y"   { $tmp SetY [$buf GetY] }
+	"O"   { $tmp SetO [$buf GetO] }
+	"S"   { $tmp SetS [$buf GetS] }
+	"I"   { $tmp SetI [$buf GetI] }
+	"F"   { $tmp SetF [$buf GetF] }
+	"W"   { $tmp SetW [$buf GetW] }
+	"D"   { $tmp SetD [$buf GetD] }
+	"B"   { $tmp SetB [$buf GetB] }
+	"C"   { $tmp SetC [$buf GetC] }
+      }
+      $ctx SendU $tmp
+    }
+  }
+  $ctx SendRETURN
+}
+
 proc Ot_BUF1 {ctx} {
   set buf [$ctx ReadU]
   set typ [$buf GetType]
@@ -748,6 +772,7 @@ proc ServerSetup {ctx} {
     $ctx ServiceCreate DMPL Ot_DMPL
 
     $ctx ServiceCreate ROT1 Ot_ROT1
+    $ctx ServiceCreate BUFE Ot_BUFE
   }
 }
 

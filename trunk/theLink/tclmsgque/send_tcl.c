@@ -12,7 +12,7 @@
 
 #include "msgque_tcl.h"
 
-int NS(SendSTART) (NS_ARGS)
+int NS(SendSTART) (MqS_ARGS)
 {
   SETUP_mqctx
   CHECK_NOARGS
@@ -20,7 +20,7 @@ int NS(SendSTART) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendEND) (NS_ARGS)
+int NS(SendEND) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_STR token;
@@ -30,7 +30,7 @@ int NS(SendEND) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendEND_AND_WAIT) (NS_ARGS)
+int NS(SendEND_AND_WAIT) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_STR token;
@@ -42,7 +42,7 @@ int NS(SendEND_AND_WAIT) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendEND_AND_CALLBACK) (NS_ARGS)
+int NS(SendEND_AND_CALLBACK) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_STR token;
@@ -55,7 +55,7 @@ int NS(SendEND_AND_CALLBACK) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendRETURN) (NS_ARGS)
+int NS(SendRETURN) (MqS_ARGS)
 {
   SETUP_mqctx
   CHECK_NOARGS
@@ -63,7 +63,7 @@ int NS(SendRETURN) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendERROR) (NS_ARGS)
+int NS(SendERROR) (MqS_ARGS)
 {
   SETUP_mqctx
   CHECK_NOARGS
@@ -71,7 +71,7 @@ int NS(SendERROR) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendY) (NS_ARGS)
+int NS(SendY) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_BYT val;
@@ -81,7 +81,7 @@ int NS(SendY) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendO) (NS_ARGS)
+int NS(SendO) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_BOL val;
@@ -91,7 +91,7 @@ int NS(SendO) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendS) (NS_ARGS)
+int NS(SendS) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_SRT val;
@@ -101,7 +101,7 @@ int NS(SendS) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendI) (NS_ARGS)
+int NS(SendI) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_INT val;
@@ -111,7 +111,7 @@ int NS(SendI) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendF) (NS_ARGS)
+int NS(SendF) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_FLT val;
@@ -121,7 +121,7 @@ int NS(SendF) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendW) (NS_ARGS)
+int NS(SendW) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_WID val;
@@ -131,7 +131,7 @@ int NS(SendW) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendD) (NS_ARGS)
+int NS(SendD) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_DBL val;
@@ -141,7 +141,7 @@ int NS(SendD) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendC) (NS_ARGS)
+int NS(SendC) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_STR val;
@@ -151,7 +151,7 @@ int NS(SendC) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendB) (NS_ARGS)
+int NS(SendB) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_BIN val;
@@ -162,7 +162,7 @@ int NS(SendB) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendN) (NS_ARGS)
+int NS(SendN) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_BIN val;
@@ -173,7 +173,7 @@ int NS(SendN) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendU) (NS_ARGS)
+int NS(SendU) (MqS_ARGS)
 {
   SETUP_mqctx
   struct MqBufferS * MqBufferS_obj;
@@ -183,7 +183,7 @@ int NS(SendU) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendL_START) (NS_ARGS)
+int NS(SendL_START) (MqS_ARGS)
 {
   SETUP_mqctx
   CHECK_NOARGS
@@ -191,7 +191,7 @@ int NS(SendL_START) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendL_END) (NS_ARGS)
+int NS(SendL_END) (MqS_ARGS)
 {
   SETUP_mqctx
   CHECK_NOARGS
@@ -199,7 +199,7 @@ int NS(SendL_END) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendT_START) (NS_ARGS)
+int NS(SendT_START) (MqS_ARGS)
 {
   SETUP_mqctx
   CHECK_NOARGS
@@ -207,7 +207,7 @@ int NS(SendT_START) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendT_END) (NS_ARGS)
+int NS(SendT_END) (MqS_ARGS)
 {
   MQ_STR callback;
   SETUP_mqctx
@@ -217,7 +217,7 @@ int NS(SendT_END) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SendAll) (NS_ARGS)
+int NS(SendAll) (MqS_ARGS)
 {
   SETUP_mqctx
   for (;skip<objc;skip++) {
@@ -225,3 +225,4 @@ int NS(SendAll) (NS_ARGS)
   }
   RETURN_TCL
 }
+

@@ -142,14 +142,14 @@ void NS(FactoryDelete) (
   }
 }
 
-int NS(ConfigReset) (NS_ARGS)
+int NS(ConfigReset) (MqS_ARGS)
 {
   CHECK_NOARGS
   MqConfigReset (MQCTX);
   RETURN_TCL
 }
 
-int NS(ConfigSetBuffersize) (NS_ARGS)
+int NS(ConfigSetBuffersize) (MqS_ARGS)
 {
   MQ_INT buffersize;
   CHECK_I(buffersize)
@@ -158,7 +158,7 @@ int NS(ConfigSetBuffersize) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetDebug) (NS_ARGS)
+int NS(ConfigSetDebug) (MqS_ARGS)
 {
   MQ_INT debug;
   CHECK_I(debug)
@@ -167,7 +167,7 @@ int NS(ConfigSetDebug) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetTimeout) (NS_ARGS)
+int NS(ConfigSetTimeout) (MqS_ARGS)
 {
   MQ_WID timeout;
   CHECK_W(timeout)
@@ -176,7 +176,7 @@ int NS(ConfigSetTimeout) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetName) (NS_ARGS)
+int NS(ConfigSetName) (MqS_ARGS)
 {
   MQ_CST name;
   CHECK_C(name)
@@ -185,7 +185,7 @@ int NS(ConfigSetName) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetSrvName) (NS_ARGS)
+int NS(ConfigSetSrvName) (MqS_ARGS)
 {
   MQ_CST srvname;
   CHECK_C(srvname)
@@ -194,7 +194,7 @@ int NS(ConfigSetSrvName) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetStorage) (NS_ARGS)
+int NS(ConfigSetStorage) (MqS_ARGS)
 {
   MQ_CST storage;
   CHECK_C(storage)
@@ -203,7 +203,7 @@ int NS(ConfigSetStorage) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetIsSilent) (NS_ARGS)
+int NS(ConfigSetIsSilent) (MqS_ARGS)
 {
   MQ_BOL isSilent;
   CHECK_O(isSilent)
@@ -212,7 +212,7 @@ int NS(ConfigSetIsSilent) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetIsServer) (NS_ARGS)
+int NS(ConfigSetIsServer) (MqS_ARGS)
 {
   MQ_BOL isSilent;
   CHECK_O(isSilent)
@@ -221,7 +221,7 @@ int NS(ConfigSetIsServer) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetIsString) (NS_ARGS)
+int NS(ConfigSetIsString) (MqS_ARGS)
 {
   MQ_BOL isString;
   CHECK_O(isString)
@@ -230,7 +230,7 @@ int NS(ConfigSetIsString) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetIgnoreExit) (NS_ARGS)
+int NS(ConfigSetIgnoreExit) (MqS_ARGS)
 {
   MQ_BOL ignoreExit;
   CHECK_O(ignoreExit)
@@ -239,7 +239,7 @@ int NS(ConfigSetIgnoreExit) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetServerSetup) (NS_ARGS)
+int NS(ConfigSetServerSetup) (MqS_ARGS)
 {
   Tcl_Obj *srvSetup;
   CHECK_PROC(srvSetup, "ConfigSetServerSetup setup-proc")
@@ -249,7 +249,7 @@ int NS(ConfigSetServerSetup) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetEvent) (NS_ARGS)
+int NS(ConfigSetEvent) (MqS_ARGS)
 {
   Tcl_Obj *event;
   CHECK_PROC(event, "ConfigSetEvent event-proc")
@@ -259,7 +259,7 @@ int NS(ConfigSetEvent) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetServerCleanup) (NS_ARGS)
+int NS(ConfigSetServerCleanup) (MqS_ARGS)
 {
   Tcl_Obj *srvCleanup;
   CHECK_PROC(srvCleanup, "ConfigSetServerCleanup cleanup-proc")
@@ -269,7 +269,7 @@ int NS(ConfigSetServerCleanup) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetBgError) (NS_ARGS)
+int NS(ConfigSetBgError) (MqS_ARGS)
 {
   Tcl_Obj *bgerror;
   CHECK_PROC(bgerror, "ConfigSetBgError bgerror-proc")
@@ -279,7 +279,7 @@ int NS(ConfigSetBgError) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetIoUdsFile) (NS_ARGS)
+int NS(ConfigSetIoUdsFile) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_CST file;
@@ -289,7 +289,7 @@ int NS(ConfigSetIoUdsFile) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetIoTcp) (NS_ARGS)
+int NS(ConfigSetIoTcp) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_CST host, port, myhost, myport;
@@ -302,7 +302,7 @@ int NS(ConfigSetIoTcp) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetIoPipeSocket) (NS_ARGS)
+int NS(ConfigSetIoPipeSocket) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_SOCK socket;
@@ -312,7 +312,7 @@ int NS(ConfigSetIoPipeSocket) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetStartAs) (NS_ARGS)
+int NS(ConfigSetStartAs) (MqS_ARGS)
 {
   int startAs;
   static const char *optA[] = { "DEFAULT", "FORK", "THREAD", "SPAWN", NULL };
@@ -331,7 +331,7 @@ int NS(ConfigSetStartAs) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigSetDaemon) (NS_ARGS)
+int NS(ConfigSetDaemon) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_CST pidfile;
@@ -341,56 +341,56 @@ int NS(ConfigSetDaemon) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigGetDebug) (NS_ARGS)
+int NS(ConfigGetDebug) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewIntObj (tclctx->mqctx.config.debug));
   RETURN_TCL
 }
 
-int NS(ConfigGetBuffersize) (NS_ARGS)
+int NS(ConfigGetBuffersize) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewIntObj (tclctx->mqctx.config.io.buffersize));
   RETURN_TCL
 }
 
-int NS(ConfigGetTimeout) (NS_ARGS)
+int NS(ConfigGetTimeout) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewIntObj ((int)tclctx->mqctx.config.io.timeout));
   RETURN_TCL
 }
 
-int NS(ConfigGetIsString) (NS_ARGS)
+int NS(ConfigGetIsString) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewBooleanObj (tclctx->mqctx.config.isString));
   RETURN_TCL
 }
 
-int NS(ConfigGetIsSilent) (NS_ARGS)
+int NS(ConfigGetIsSilent) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewBooleanObj (tclctx->mqctx.config.isSilent));
   RETURN_TCL
 }
 
-int NS(ConfigGetIsServer) (NS_ARGS)
+int NS(ConfigGetIsServer) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewBooleanObj (tclctx->mqctx.setup.isServer));
   RETURN_TCL
 }
 
-int NS(ConfigGetName) (NS_ARGS)
+int NS(ConfigGetName) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetResult(interp, (MQ_STR) tclctx->mqctx.config.name, TCL_STATIC);
   RETURN_TCL
 }
 
-int NS(ConfigGetSrvName) (NS_ARGS)
+int NS(ConfigGetSrvName) (MqS_ARGS)
 {
   MQ_CST str;
   CHECK_NOARGS
@@ -399,14 +399,14 @@ int NS(ConfigGetSrvName) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigGetStorage) (NS_ARGS)
+int NS(ConfigGetStorage) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetResult(interp, (MQ_STR) MqConfigGetStorage(&tclctx->mqctx), TCL_STATIC);
   RETURN_TCL
 }
 
-int NS(ConfigGetIoUdsFile) (NS_ARGS)
+int NS(ConfigGetIoUdsFile) (MqS_ARGS)
 {
   MQ_STR file = (MQ_STR)MqConfigGetIoUdsFile(&tclctx->mqctx);
   CHECK_NOARGS
@@ -414,54 +414,55 @@ int NS(ConfigGetIoUdsFile) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ConfigGetIoTcpHost) (NS_ARGS)
+int NS(ConfigGetIoTcpHost) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetResult(interp, (MQ_STR)MqConfigGetIoTcpHost(&tclctx->mqctx), TCL_STATIC);
   RETURN_TCL
 }
 
-int NS(ConfigGetIoTcpPort) (NS_ARGS)
+int NS(ConfigGetIoTcpPort) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetResult(interp, (MQ_STR)MqConfigGetIoTcpPort(&tclctx->mqctx), TCL_STATIC);
   RETURN_TCL
 }
 
-int NS(ConfigGetIoTcpMyHost) (NS_ARGS)
+int NS(ConfigGetIoTcpMyHost) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetResult(interp, (MQ_STR)MqConfigGetIoTcpMyHost(&tclctx->mqctx), TCL_STATIC);
   RETURN_TCL
 }
 
-int NS(ConfigGetIoTcpMyPort) (NS_ARGS)
+int NS(ConfigGetIoTcpMyPort) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetResult(interp, (MQ_STR)MqConfigGetIoTcpMyPort(&tclctx->mqctx), TCL_STATIC);
   RETURN_TCL
 }
 
-int NS(ConfigGetIoPipeSocket) (NS_ARGS)
+int NS(ConfigGetIoPipeSocket) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewIntObj (MqConfigGetIoPipeSocket(&tclctx->mqctx)));
   RETURN_TCL
 }
 
-int NS(ConfigGetStartAs) (NS_ARGS)
+int NS(ConfigGetStartAs) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewIntObj (MqConfigGetStartAs(&tclctx->mqctx)));
   RETURN_TCL
 }
 
-int NS(ConfigGetStatusIs) (NS_ARGS)
+int NS(ConfigGetStatusIs) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewIntObj (MqConfigGetStatusIs(&tclctx->mqctx)));
   RETURN_TCL
 }
+
 
 
 

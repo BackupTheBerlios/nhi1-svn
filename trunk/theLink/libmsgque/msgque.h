@@ -1771,6 +1771,13 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqCheckForLeftOverArguments (
   struct MqBufferLS ** argvP
 );
 
+/// \brief get the \ref MqS::ctxbuf object
+/// \context
+/// \return the \c context->ctxbuf object
+MQ_EXTERN MQ_BUF MqContextGetBuffer (
+  struct MqS * const context
+);
+
 /// \brief Mark objects as \e used to avoid to free used external memory in an external Garbage-Collection
 /// \details An external Garbage-Collection (GC) need information about external objects 
 /// referenced by \libmsgque. This objects are the <TT>MQ_PTR data</TT> parameter required

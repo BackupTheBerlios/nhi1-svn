@@ -14,7 +14,7 @@
 
 #define MSGQUE msgque
 
-int NS(ReadL_START) (NS_ARGS)
+int NS(ReadL_START) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_BUF MqBufferS_obj = NULL;
@@ -26,7 +26,7 @@ int NS(ReadL_START) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadL_END) (NS_ARGS)
+int NS(ReadL_END) (MqS_ARGS)
 {
   SETUP_mqctx
   CHECK_NOARGS
@@ -34,7 +34,7 @@ int NS(ReadL_END) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadT_START) (NS_ARGS)
+int NS(ReadT_START) (MqS_ARGS)
 {
   SETUP_mqctx
   CHECK_NOARGS
@@ -42,7 +42,7 @@ int NS(ReadT_START) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadT_END) (NS_ARGS)
+int NS(ReadT_END) (MqS_ARGS)
 {
   SETUP_mqctx
   CHECK_NOARGS
@@ -50,7 +50,7 @@ int NS(ReadT_END) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadY) (NS_ARGS)
+int NS(ReadY) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_BYT val;
@@ -60,7 +60,7 @@ int NS(ReadY) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadO) (NS_ARGS)
+int NS(ReadO) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_BOL val;
@@ -70,7 +70,7 @@ int NS(ReadO) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadS) (NS_ARGS)
+int NS(ReadS) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_SRT val;
@@ -80,7 +80,7 @@ int NS(ReadS) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadI) (NS_ARGS)
+int NS(ReadI) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_INT val;
@@ -90,7 +90,7 @@ int NS(ReadI) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadF) (NS_ARGS)
+int NS(ReadF) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_FLT val;
@@ -100,7 +100,7 @@ int NS(ReadF) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadW) (NS_ARGS)
+int NS(ReadW) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_WID val;
@@ -110,7 +110,7 @@ int NS(ReadW) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadD) (NS_ARGS)
+int NS(ReadD) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_DBL val;
@@ -120,7 +120,7 @@ int NS(ReadD) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadC) (NS_ARGS)
+int NS(ReadC) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_CST val;
@@ -130,7 +130,7 @@ int NS(ReadC) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadB) (NS_ARGS)
+int NS(ReadB) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_BIN val;
@@ -141,7 +141,7 @@ int NS(ReadB) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadN) (NS_ARGS)
+int NS(ReadN) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_CBI val;
@@ -152,7 +152,7 @@ int NS(ReadN) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadDUMP) (NS_ARGS)
+int NS(ReadDUMP) (MqS_ARGS)
 {
   SETUP_mqctx
   struct MqDumpS *val;
@@ -162,7 +162,7 @@ int NS(ReadDUMP) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadLOAD) (NS_ARGS)
+int NS(ReadLOAD) (MqS_ARGS)
 {
   struct MqDumpS *dump;
   SETUP_mqctx
@@ -172,7 +172,7 @@ int NS(ReadLOAD) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadU) (NS_ARGS)
+int NS(ReadU) (MqS_ARGS)
 {
   SETUP_mqctx
   struct MqBufferS * buf = NULL;
@@ -184,7 +184,7 @@ error:
   return TCL_ERROR;
 }
 
-int NS(ReadGetNumItems) (NS_ARGS)
+int NS(ReadGetNumItems) (MqS_ARGS)
 {
   SETUP_mqctx
   CHECK_NOARGS
@@ -192,7 +192,7 @@ int NS(ReadGetNumItems) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadItemExists) (NS_ARGS)
+int NS(ReadItemExists) (MqS_ARGS)
 {
   SETUP_mqctx
   CHECK_NOARGS
@@ -200,7 +200,7 @@ int NS(ReadItemExists) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadUndo) (NS_ARGS)
+int NS(ReadUndo) (MqS_ARGS)
 {
   SETUP_mqctx
   CHECK_NOARGS
@@ -208,7 +208,7 @@ int NS(ReadUndo) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadProxy) (NS_ARGS)
+int NS(ReadProxy) (MqS_ARGS)
 {
   SETUP_mqctx
   struct MqS * MqS_object;
@@ -218,7 +218,7 @@ int NS(ReadProxy) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadForward) (NS_ARGS)
+int NS(ReadForward) (MqS_ARGS)
 {
   SETUP_mqctx
   struct MqS * target;
@@ -230,7 +230,7 @@ int NS(ReadForward) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ReadALL) (NS_ARGS)
+int NS(ReadALL) (MqS_ARGS)
 {
   SETUP_mqctx
   Tcl_Obj *RET = Tcl_NewListObj(0,NULL);
@@ -293,4 +293,5 @@ int NS(ReadALL) (NS_ARGS)
   Tcl_SetObjResult(interp, RET);
   RETURN_TCL
 }
+
 

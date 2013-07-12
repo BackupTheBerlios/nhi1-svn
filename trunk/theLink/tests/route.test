@@ -1,10 +1,10 @@
 #+
-#:  \file       theLink/tests/slave.test
-#:  \brief      \$Id: slave.test 695 2013-04-29 08:35:45Z aotto1968 $
+#:  \file       theLink/tests/route.test
+#:  \brief      \$Id$
 #:  
 #:  (C) 2002 - NHI - #1 - Project - Group
 #:  
-#:  \version    \$Rev: 695 $
+#:  \version    \$Rev$
 #:  \author     EMail: aotto1968 at users.berlios.de
 #:  \attention  this software has GPL permissions to copy
 #:              please contact AUTHORS for additional information

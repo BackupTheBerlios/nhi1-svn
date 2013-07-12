@@ -36,7 +36,7 @@ struct LookupKeyword {
 /*****************************************************************************/
 
 static
-int NS(RenameTo) (NS_ARGS)
+int NS(RenameTo) (MqS_ARGS)
 {
   Tcl_Obj * lobjv[3], *new;
   int ret;
@@ -92,7 +92,7 @@ NS(ThreadExit) (
 /*                                                                           */
 /*****************************************************************************/
 
-static int NS(StorageOpen) (NS_ARGS)
+static int NS(StorageOpen) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_CST storageDir = NULL;
@@ -102,7 +102,7 @@ static int NS(StorageOpen) (NS_ARGS)
   RETURN_TCL
 }
 
-static int NS(StorageClose) (NS_ARGS)
+static int NS(StorageClose) (MqS_ARGS)
 {
   SETUP_mqctx
   CHECK_NOARGS
@@ -110,7 +110,7 @@ static int NS(StorageClose) (NS_ARGS)
   RETURN_TCL
 }
 
-static int NS(StorageInsert) (NS_ARGS)
+static int NS(StorageInsert) (MqS_ARGS)
 {
   MQ_WID transId;
   SETUP_mqctx
@@ -120,7 +120,7 @@ static int NS(StorageInsert) (NS_ARGS)
   RETURN_TCL
 }
 
-static int NS(StorageCount) (NS_ARGS)
+static int NS(StorageCount) (MqS_ARGS)
 {
   MQ_WID count;
   SETUP_mqctx
@@ -130,7 +130,7 @@ static int NS(StorageCount) (NS_ARGS)
   RETURN_TCL
 }
 
-static int NS(StorageSelect) (NS_ARGS)
+static int NS(StorageSelect) (MqS_ARGS)
 {
   MQ_WID transId = 0LL;
   SETUP_mqctx
@@ -141,7 +141,7 @@ static int NS(StorageSelect) (NS_ARGS)
   RETURN_TCL
 }
 
-static int NS(StorageDelete) (NS_ARGS)
+static int NS(StorageDelete) (MqS_ARGS)
 {
   MQ_WID transId;
   SETUP_mqctx
@@ -157,7 +157,7 @@ static int NS(StorageDelete) (NS_ARGS)
 /*                                                                           */
 /*****************************************************************************/
 
-static int NS(LogC) (NS_ARGS)
+static int NS(LogC) (MqS_ARGS)
 {
   MQ_CST str,proc;
   MQ_INT level;
@@ -169,21 +169,28 @@ static int NS(LogC) (NS_ARGS)
   RETURN_TCL
 }
 
-static int NS(Exit) (NS_ARGS)
+static int NS(ContextGetBuffer) (MqS_ARGS)
+{
+  CHECK_NOARGS
+  NS(MqBufferS_New) (interp, MqContextGetBuffer(MQCTX));
+  RETURN_TCL
+}
+
+static int NS(Exit) (MqS_ARGS)
 {
   CHECK_NOARGS
   MqExit (MQCTX);
   RETURN_TCL
 }
 
-static int NS(Delete) (NS_ARGS)
+static int NS(Delete) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_DeleteCommandFromToken (interp, tclctx->command);
   RETURN_TCL
 }
 
-static int NS(dict) (NS_ARGS)
+static int NS(dict) (MqS_ARGS)
 {
   enum commandE { SET, GET, UNSET, EXISTS, LAPPEND };
   static MQ_CST commandA[] = { "set", "get", "unset", "exists", "lappend", NULL };
@@ -274,132 +281,132 @@ static int NS(dict) (NS_ARGS)
 
 // public interfaces
 
-int NS(ReadY) (NS_ARGS);
-int NS(ReadO) (NS_ARGS);
-int NS(ReadS) (NS_ARGS);
-int NS(ReadI) (NS_ARGS);
-int NS(ReadF) (NS_ARGS);
-int NS(ReadW) (NS_ARGS);
-int NS(ReadD) (NS_ARGS);
-int NS(ReadC) (NS_ARGS);
-int NS(ReadB) (NS_ARGS);
-int NS(ReadN) (NS_ARGS);
-int NS(ReadDUMP) (NS_ARGS);
-int NS(ReadLOAD) (NS_ARGS);
-int NS(ReadU) (NS_ARGS);
-int NS(ReadL_START) (NS_ARGS);
-int NS(ReadL_END) (NS_ARGS);
-int NS(ReadT_START) (NS_ARGS);
-int NS(ReadT_END) (NS_ARGS);
-int NS(ReadGetNumItems) (NS_ARGS);
-int NS(ReadItemExists) (NS_ARGS);
-int NS(ReadUndo) (NS_ARGS);
-int NS(ReadALL) (NS_ARGS);
-int NS(ReadProxy) (NS_ARGS);
-int NS(ReadForward) (NS_ARGS);
+int NS(ReadY) (MqS_ARGS);
+int NS(ReadO) (MqS_ARGS);
+int NS(ReadS) (MqS_ARGS);
+int NS(ReadI) (MqS_ARGS);
+int NS(ReadF) (MqS_ARGS);
+int NS(ReadW) (MqS_ARGS);
+int NS(ReadD) (MqS_ARGS);
+int NS(ReadC) (MqS_ARGS);
+int NS(ReadB) (MqS_ARGS);
+int NS(ReadN) (MqS_ARGS);
+int NS(ReadDUMP) (MqS_ARGS);
+int NS(ReadLOAD) (MqS_ARGS);
+int NS(ReadU) (MqS_ARGS);
+int NS(ReadL_START) (MqS_ARGS);
+int NS(ReadL_END) (MqS_ARGS);
+int NS(ReadT_START) (MqS_ARGS);
+int NS(ReadT_END) (MqS_ARGS);
+int NS(ReadGetNumItems) (MqS_ARGS);
+int NS(ReadItemExists) (MqS_ARGS);
+int NS(ReadUndo) (MqS_ARGS);
+int NS(ReadALL) (MqS_ARGS);
+int NS(ReadProxy) (MqS_ARGS);
+int NS(ReadForward) (MqS_ARGS);
 
-int NS(SendSTART) (NS_ARGS);
-int NS(SendEND) (NS_ARGS);
-int NS(SendEND_AND_WAIT) (NS_ARGS);
-int NS(SendEND_AND_CALLBACK) (NS_ARGS);
-int NS(SendRETURN) (NS_ARGS);
-int NS(SendERROR) (NS_ARGS);
-int NS(SendY) (NS_ARGS);
-int NS(SendO) (NS_ARGS);
-int NS(SendS) (NS_ARGS);
-int NS(SendI) (NS_ARGS);
-int NS(SendF) (NS_ARGS);
-int NS(SendW) (NS_ARGS);
-int NS(SendD) (NS_ARGS);
-int NS(SendC) (NS_ARGS);
-int NS(SendB) (NS_ARGS);
-int NS(SendN) (NS_ARGS);
-int NS(SendU) (NS_ARGS);
-int NS(SendL_START) (NS_ARGS);
-int NS(SendL_END) (NS_ARGS);
-int NS(SendT_START) (NS_ARGS);
-int NS(SendT_END) (NS_ARGS);
-int NS(SendAll) (NS_ARGS);
+int NS(SendSTART) (MqS_ARGS);
+int NS(SendEND) (MqS_ARGS);
+int NS(SendEND_AND_WAIT) (MqS_ARGS);
+int NS(SendEND_AND_CALLBACK) (MqS_ARGS);
+int NS(SendRETURN) (MqS_ARGS);
+int NS(SendERROR) (MqS_ARGS);
+int NS(SendY) (MqS_ARGS);
+int NS(SendO) (MqS_ARGS);
+int NS(SendS) (MqS_ARGS);
+int NS(SendI) (MqS_ARGS);
+int NS(SendF) (MqS_ARGS);
+int NS(SendW) (MqS_ARGS);
+int NS(SendD) (MqS_ARGS);
+int NS(SendC) (MqS_ARGS);
+int NS(SendB) (MqS_ARGS);
+int NS(SendN) (MqS_ARGS);
+int NS(SendU) (MqS_ARGS);
+int NS(SendL_START) (MqS_ARGS);
+int NS(SendL_END) (MqS_ARGS);
+int NS(SendT_START) (MqS_ARGS);
+int NS(SendT_END) (MqS_ARGS);
+int NS(SendAll) (MqS_ARGS);
 
-int NS(ConfigReset) (NS_ARGS);
-int NS(ConfigSetBuffersize) (NS_ARGS);
-int NS(ConfigSetDebug) (NS_ARGS);
-int NS(ConfigSetTimeout) (NS_ARGS);
-int NS(ConfigSetName) (NS_ARGS);
-int NS(ConfigSetSrvName) (NS_ARGS);
-int NS(ConfigSetStorage) (NS_ARGS);
-int NS(ConfigSetIsSilent) (NS_ARGS);
-int NS(ConfigSetIsServer) (NS_ARGS);
-int NS(ConfigSetIsString) (NS_ARGS);
-int NS(ConfigSetIgnoreExit) (NS_ARGS);
-int NS(ConfigSetEvent) (NS_ARGS);
-int NS(ConfigSetServerSetup) (NS_ARGS);
-int NS(ConfigSetServerCleanup) (NS_ARGS);
-int NS(ConfigSetBgError) (NS_ARGS);
-int NS(ConfigSetIoUdsFile) (NS_ARGS);
-int NS(ConfigSetIoTcp) (NS_ARGS);
-int NS(ConfigSetIoPipeSocket) (NS_ARGS);
-int NS(ConfigSetStartAs) (NS_ARGS);
-int NS(ConfigSetDaemon) (NS_ARGS);
-int NS(ConfigGetIsString) (NS_ARGS);
-int NS(ConfigGetIsSilent) (NS_ARGS);
-int NS(ConfigGetIsServer) (NS_ARGS);
-int NS(ConfigGetDebug) (NS_ARGS);
-int NS(ConfigGetBuffersize) (NS_ARGS);
-int NS(ConfigGetTimeout) (NS_ARGS);
-int NS(ConfigGetName) (NS_ARGS);
-int NS(ConfigGetSrvName) (NS_ARGS);
-int NS(ConfigGetStorage) (NS_ARGS);
-int NS(ConfigGetIoUdsFile) (NS_ARGS);
-int NS(ConfigGetIoTcpHost) (NS_ARGS);
-int NS(ConfigGetIoTcpPort) (NS_ARGS);
-int NS(ConfigGetIoTcpMyHost) (NS_ARGS);
-int NS(ConfigGetIoTcpMyPort) (NS_ARGS);
-int NS(ConfigGetIoPipeSocket) (NS_ARGS);
-int NS(ConfigGetStartAs) (NS_ARGS);
-int NS(ConfigGetStatusIs) (NS_ARGS);
+int NS(ConfigReset) (MqS_ARGS);
+int NS(ConfigSetBuffersize) (MqS_ARGS);
+int NS(ConfigSetDebug) (MqS_ARGS);
+int NS(ConfigSetTimeout) (MqS_ARGS);
+int NS(ConfigSetName) (MqS_ARGS);
+int NS(ConfigSetSrvName) (MqS_ARGS);
+int NS(ConfigSetStorage) (MqS_ARGS);
+int NS(ConfigSetIsSilent) (MqS_ARGS);
+int NS(ConfigSetIsServer) (MqS_ARGS);
+int NS(ConfigSetIsString) (MqS_ARGS);
+int NS(ConfigSetIgnoreExit) (MqS_ARGS);
+int NS(ConfigSetEvent) (MqS_ARGS);
+int NS(ConfigSetServerSetup) (MqS_ARGS);
+int NS(ConfigSetServerCleanup) (MqS_ARGS);
+int NS(ConfigSetBgError) (MqS_ARGS);
+int NS(ConfigSetIoUdsFile) (MqS_ARGS);
+int NS(ConfigSetIoTcp) (MqS_ARGS);
+int NS(ConfigSetIoPipeSocket) (MqS_ARGS);
+int NS(ConfigSetStartAs) (MqS_ARGS);
+int NS(ConfigSetDaemon) (MqS_ARGS);
+int NS(ConfigGetIsString) (MqS_ARGS);
+int NS(ConfigGetIsSilent) (MqS_ARGS);
+int NS(ConfigGetIsServer) (MqS_ARGS);
+int NS(ConfigGetDebug) (MqS_ARGS);
+int NS(ConfigGetBuffersize) (MqS_ARGS);
+int NS(ConfigGetTimeout) (MqS_ARGS);
+int NS(ConfigGetName) (MqS_ARGS);
+int NS(ConfigGetSrvName) (MqS_ARGS);
+int NS(ConfigGetStorage) (MqS_ARGS);
+int NS(ConfigGetIoUdsFile) (MqS_ARGS);
+int NS(ConfigGetIoTcpHost) (MqS_ARGS);
+int NS(ConfigGetIoTcpPort) (MqS_ARGS);
+int NS(ConfigGetIoTcpMyHost) (MqS_ARGS);
+int NS(ConfigGetIoTcpMyPort) (MqS_ARGS);
+int NS(ConfigGetIoPipeSocket) (MqS_ARGS);
+int NS(ConfigGetStartAs) (MqS_ARGS);
+int NS(ConfigGetStatusIs) (MqS_ARGS);
 
-int NS(LinkIsParent) (NS_ARGS);
-int NS(LinkIsConnected) (NS_ARGS);
-int NS(LinkGetCtxId) (NS_ARGS);
-int NS(LinkGetParent) (NS_ARGS);
-int NS(LinkGetTargetIdent) (NS_ARGS);
-int NS(LinkCreate) (NS_ARGS);
-int NS(LinkCreateChild) (NS_ARGS);
-int NS(LinkDelete) (NS_ARGS);
-int NS(LinkConnect) (NS_ARGS);
+int NS(LinkIsParent) (MqS_ARGS);
+int NS(LinkIsConnected) (MqS_ARGS);
+int NS(LinkGetCtxId) (MqS_ARGS);
+int NS(LinkGetParent) (MqS_ARGS);
+int NS(LinkGetTargetIdent) (MqS_ARGS);
+int NS(LinkCreate) (MqS_ARGS);
+int NS(LinkCreateChild) (MqS_ARGS);
+int NS(LinkDelete) (MqS_ARGS);
+int NS(LinkConnect) (MqS_ARGS);
 
-int NS(ServiceGetToken) (NS_ARGS);
-int NS(ServiceIsTransaction) (NS_ARGS);
-int NS(ServiceGetFilter) (NS_ARGS);
-int NS(ServiceProxy) (NS_ARGS);
-int NS(ServiceStorage) (NS_ARGS);
-int NS(ServiceCreate) (NS_ARGS);
-int NS(ServiceDelete) (NS_ARGS);
-int NS(ProcessEvent) (NS_ARGS);
+int NS(ServiceGetToken) (MqS_ARGS);
+int NS(ServiceIsTransaction) (MqS_ARGS);
+int NS(ServiceGetFilter) (MqS_ARGS);
+int NS(ServiceProxy) (MqS_ARGS);
+int NS(ServiceStorage) (MqS_ARGS);
+int NS(ServiceCreate) (MqS_ARGS);
+int NS(ServiceDelete) (MqS_ARGS);
+int NS(ProcessEvent) (MqS_ARGS);
 
-int NS(ErrorC) (NS_ARGS);
-int NS(ErrorSet) (NS_ARGS);
-int NS(ErrorSetCONTINUE) (NS_ARGS);
-int NS(ErrorSetEXIT) (NS_ARGS);
-int NS(ErrorIsEXIT) (NS_ARGS);
-int NS(ErrorGetText) (NS_ARGS);
-int NS(ErrorGetNum) (NS_ARGS);
-int NS(ErrorGetCode) (NS_ARGS);
-int NS(ErrorReset) (NS_ARGS);
-int NS(ErrorPrint) (NS_ARGS);
+int NS(ErrorC) (MqS_ARGS);
+int NS(ErrorSet) (MqS_ARGS);
+int NS(ErrorSetCONTINUE) (MqS_ARGS);
+int NS(ErrorSetEXIT) (MqS_ARGS);
+int NS(ErrorIsEXIT) (MqS_ARGS);
+int NS(ErrorGetText) (MqS_ARGS);
+int NS(ErrorGetNum) (MqS_ARGS);
+int NS(ErrorGetCode) (MqS_ARGS);
+int NS(ErrorReset) (MqS_ARGS);
+int NS(ErrorPrint) (MqS_ARGS);
 
-int NS(SlaveWorker) (NS_ARGS);
-int NS(SlaveCreate) (NS_ARGS);
-int NS(SlaveDelete) (NS_ARGS);
-int NS(SlaveGet) (NS_ARGS);
-int NS(SlaveGetMaster) (NS_ARGS);
-int NS(SlaveIs) (NS_ARGS);
+int NS(SlaveWorker) (MqS_ARGS);
+int NS(SlaveCreate) (MqS_ARGS);
+int NS(SlaveDelete) (MqS_ARGS);
+int NS(SlaveGet) (MqS_ARGS);
+int NS(SlaveGetMaster) (MqS_ARGS);
+int NS(SlaveIs) (MqS_ARGS);
 
-int NS(FactoryCtxSet) (NS_ARGS);
-int NS(FactoryCtxGet) (NS_ARGS);
-int NS(FactoryCtxIdentSet) (NS_ARGS);
-int NS(FactoryCtxIdentGet) (NS_ARGS);
+int NS(FactoryCtxSet) (MqS_ARGS);
+int NS(FactoryCtxGet) (MqS_ARGS);
+int NS(FactoryCtxIdentSet) (MqS_ARGS);
+int NS(FactoryCtxIdentGet) (MqS_ARGS);
 
 int NS(MqS_Cmd) (
   ClientData clientData,
@@ -522,6 +529,7 @@ int NS(MqS_Cmd) (
     { "Exit",			  NS(Exit)		      },
     { "Delete",			  NS(Delete)		      },
     { "LogC",			  NS(LogC)		      },
+    { "ContextGetBuffer",	  NS(ContextGetBuffer)	      },
 
     { "dict",			  NS(dict)		      },
 
@@ -656,4 +664,5 @@ NS(MqS_Init) (
 
   RETURN_TCL
 }
+
 

@@ -1084,6 +1084,84 @@ error:
   return MqSendRETURN (mqctx);
 }
 
+/// \brief test the "MqBufferS" feature
+/// \service
+static enum MqErrorE
+Ot_BUFE (
+  struct MqS * const mqctx,
+  MQ_PTR data
+)
+{
+  MQ_CST cmd;
+  MqErrorCheck(MqReadC(mqctx, &cmd));
+  MqSendSTART(mqctx);
+    if (!strcmp(cmd,"ctxbuf")) {
+      MQ_BUF tmp = MqContextGetBuffer(mqctx);
+      MQ_BUF buf;
+      MqErrorCheck(MqReadU(mqctx, &buf));
+      switch (MqBufferGetType(buf)) {
+	case 'Y': {
+	  MQ_BYT t;
+	  MqErrorCheck(MqBufferGetY(buf,&t));
+	  MqBufferSetY(tmp,t); 
+	  break;
+	}
+	case 'O': {
+	  MQ_BOL t;
+	  MqErrorCheck(MqBufferGetO(buf,&t));
+	  MqBufferSetO(tmp,t); 
+	  break;
+	}
+	case 'S': {
+	  MQ_SRT t;
+	  MqErrorCheck(MqBufferGetS(buf,&t));
+	  MqBufferSetS(tmp,t); 
+	  break;
+	}
+	case 'I': {
+	  MQ_INT t;
+	  MqErrorCheck(MqBufferGetI(buf,&t));
+	  MqBufferSetI(tmp,t); 
+	  break;
+	}
+	case 'F': {
+	  MQ_FLT t;
+	  MqErrorCheck(MqBufferGetF(buf,&t));
+	  MqBufferSetF(tmp,t); 
+	  break;
+	}
+	case 'W': {
+	  MQ_WID t;
+	  MqErrorCheck(MqBufferGetW(buf,&t));
+	  MqBufferSetW(tmp,t); 
+	  break;
+	}
+	case 'D': {
+	  MQ_DBL t;
+	  MqErrorCheck(MqBufferGetD(buf,&t));
+	  MqBufferSetD(tmp,t); 
+	  break;
+	}
+	case 'B': {
+	  MQ_BIN t;
+	  MQ_SIZE l;
+	  MqErrorCheck(MqBufferGetB(buf,&t,&l));
+	  MqBufferSetB(tmp,t,l); 
+	  break;
+	}
+	case 'C': {
+	  MQ_CST t;
+	  MqErrorCheck(MqBufferGetC(buf,&t));
+	  MqBufferSetC(tmp,t); 
+	  break;
+	}
+      }
+      MqErrorCheck(MqSendU(mqctx, tmp));
+    }
+error:
+  return MqSendRETURN (mqctx);
+}
+
 /// \brief test the "Init" feature
 /// \service
 static enum MqErrorE
@@ -1477,6 +1555,7 @@ ServerSetup (
     MqErrorCheck (MqServiceCreate (mqctx, "DMPL", Ot_DMPL, NULL, NULL));
 
     MqErrorCheck (MqServiceCreate (mqctx, "ROT1", Ot_ROT1, NULL, NULL));
+    MqErrorCheck (MqServiceCreate (mqctx, "BUFE", Ot_BUFE, NULL, NULL));
   }
 
 error:

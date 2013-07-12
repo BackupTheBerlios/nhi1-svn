@@ -14,7 +14,7 @@
 
 #define MQ_CONTEXT_S mqctx
 
-int NS(SlaveWorker) (NS_ARGS)
+int NS(SlaveWorker) (MqS_ARGS)
 {
   SETUP_mqctx
   struct MqBufferLS * argv;
@@ -27,7 +27,7 @@ int NS(SlaveWorker) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SlaveCreate) (NS_ARGS)
+int NS(SlaveCreate) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_SIZE id;
@@ -39,7 +39,7 @@ int NS(SlaveCreate) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SlaveDelete) (NS_ARGS)
+int NS(SlaveDelete) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_SIZE id;
@@ -49,7 +49,7 @@ int NS(SlaveDelete) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SlaveGet) (NS_ARGS)
+int NS(SlaveGet) (MqS_ARGS)
 {
   SETUP_mqctx
   struct MqS * slave;
@@ -64,7 +64,7 @@ int NS(SlaveGet) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SlaveGetMaster) (NS_ARGS)
+int NS(SlaveGetMaster) (MqS_ARGS)
 {
   struct MqS * const master = MqSlaveGetMasterI(MQCTX);
   CHECK_NOARGS
@@ -75,9 +75,10 @@ int NS(SlaveGetMaster) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(SlaveIs) (NS_ARGS)
+int NS(SlaveIs) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewBooleanObj (MqSlaveIs(MQCTX)));
   RETURN_TCL
 }
+

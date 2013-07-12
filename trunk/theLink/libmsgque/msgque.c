@@ -312,6 +312,14 @@ MqCheckForLeftOverArguments (
   return MqErrorGetCodeI(context);
 }
 
+MQ_BUF
+MqContextGetBuffer (
+  struct MqS * const context
+)
+{
+  return context->ctxbuf;
+}
+
 /*****************************************************************************/
 /*                                                                           */
 /*                                misc                                       */

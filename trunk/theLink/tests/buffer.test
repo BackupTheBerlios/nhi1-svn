@@ -1,0 +1,86 @@
+#+
+#:  \file       theLink/tests/buffer.test
+#:  \brief      \$Id$
+#:  
+#:  (C) 2002 - NHI - #1 - Project - Group
+#:  
+#:  \version    \$Rev$
+#:  \author     EMail: aotto1968 at users.berlios.de
+#:  \attention  this software has GPL permissions to copy
+#:              please contact AUTHORS for additional information
+#:
+
+set self [info script]
+
+if {[info exists env(TS_LIBRARY)]} {
+  source $env(TS_LIBRARY)
+} else {
+  source [file join [file dirname [info script]] library.tcl]
+}
+
+##  
+## -----------------------------------------------------------------------
+## Master/Child + Binary yes/no
+##
+
+#set tcl_traceExec 1
+#set env(BIN_LST) {no}
+#set env(COM_LST) {tcp}
+
+# 1,2, ... tclmsgque (parent/child)
+ foreach I [getNum 3] {
+
+ # transport-type: string or binary
+  foreach B [getEnv BIN_LST] {
+
+  # socket-type: uds or tcp
+   foreach C [getEnv COM_LST] {
+
+    # server-type: server server.tcl
+     foreach S [filter SRV_LST $C] {
+
+##
+## -----------------------------------------------------------------------
+## ECHO
+##
+
+# startup binary --------------------------
+
+Setup $I $B $C $S
+
+SetConstraints $I $B $S
+
+# tests ----------------------------
+
+foreach {typ val} {Y 5 O 1 S 1287 I 25279 F 2.66000008583 W 2236393003 D 262673.8236 B 562728929 C "Hallo Welt" } {
+
+  test buffer-1-($I|$B|$C|$S|$typ|$val) {create and retun a temporary buffer object} \
+    -body     { Echo1 $FH_LAST BUFE Read$typ SendC ctxbuf Send$typ $val } \
+    -result   $val
+
+}
+
+
+
+# cleanup ---------------------------
+Cleanup
+
+##
+## -----------------------------------------------------------------------
+## finish loop
+## 
+
+    }; # SRV_LST
+   }; # COM_LST
+  }; # BIN_LST
+ }; # Master/Child  
+unset I B C S
+
+##
+## -----------------------------------------------------------------------
+## finish
+##
+
+freeTests
+
+# vim: set syn=tcl:

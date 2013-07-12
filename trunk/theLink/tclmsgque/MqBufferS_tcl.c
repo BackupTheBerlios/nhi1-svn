@@ -19,11 +19,24 @@
     goto error; \
   }
 
+#define SET(T,L) \
+static int NS(Set ## T) (MqBufferS_ARGS) \
+{ \
+  L val; \
+  CHECK_ ## T(val) \
+  CHECK_NOARGS \
+  MqBufferSet ## T (buf, val); \
+  RETURN_TCL \
+}
+
 typedef int (
   *LookupKeywordF
 ) (
   Tcl_Interp  *		      interp,
-  struct MqBufferS * const    buf
+  struct MqBufferS * const    buf,
+  int                         skip,
+  int                         objc,
+  struct Tcl_Obj *const *     objv
 );
 
 struct LookupKeyword {
@@ -31,96 +44,127 @@ struct LookupKeyword {
   LookupKeywordF  keyF;
 };
 
-static HDB(GetType)
+static int NS(GetType) (MqBufferS_ARGS)
 {
+  CHECK_NOARGS
   char str[2] = {MqBufferGetType(buf), '\0'};
   Tcl_SetResult (interp, str, TCL_VOLATILE);
-  return TCL_OK;
+  RETURN_TCL
 }
 
-static HDB(GetY)
+SET(Y,MQ_BYT)
+SET(O,MQ_BOL)
+SET(S,MQ_SRT)
+SET(I,MQ_INT)
+SET(W,MQ_WID)
+SET(F,MQ_FLT)
+SET(D,MQ_DBL)
+SET(C,MQ_CST)
+
+static int NS(SetB) (MqBufferS_ARGS)
+{
+  MQ_BIN val;
+  MQ_SIZE len;
+  CHECK_B(val,len)
+  CHECK_NOARGS
+  MqBufferSetB (buf, val, len);
+  RETURN_TCL
+}
+
+static int NS(GetY) (MqBufferS_ARGS)
 {
   MQ_BYT val;
+  CHECK_NOARGS
   ErrorBufToTclWithCheck (MqBufferGetY (buf, &val));
   Tcl_SetObjResult(interp, Tcl_NewIntObj(val));
   RETURN_TCL
 }
 
-static HDB(GetO)
+static int NS(GetO) (MqBufferS_ARGS)
 {
   MQ_BOL val;
+  CHECK_NOARGS
   ErrorBufToTclWithCheck (MqBufferGetO (buf, &val));
   Tcl_SetObjResult(interp, Tcl_NewBooleanObj(val == MQ_YES));
   RETURN_TCL
 }
 
-static HDB(GetS)
+static int NS(GetS) (MqBufferS_ARGS)
 {
   MQ_SRT val;
+  CHECK_NOARGS
   ErrorBufToTclWithCheck (MqBufferGetS (buf, &val));
   Tcl_SetObjResult(interp, Tcl_NewIntObj(val));
   RETURN_TCL
 }
 
-static HDB(GetI)
+static int NS(GetI) (MqBufferS_ARGS)
 {
   MQ_INT val;
+  CHECK_NOARGS
   ErrorBufToTclWithCheck (MqBufferGetI (buf, &val));
   Tcl_SetObjResult(interp, Tcl_NewIntObj(val));
   RETURN_TCL
 }
 
-static HDB(GetF)
+static int NS(GetF) (MqBufferS_ARGS)
 {
   MQ_FLT val;
+  CHECK_NOARGS
   ErrorBufToTclWithCheck (MqBufferGetF (buf, &val));
   Tcl_SetObjResult(interp, Tcl_NewDoubleObj(val));
   RETURN_TCL
 }
 
-static HDB(GetW)
+static int NS(GetW) (MqBufferS_ARGS)
 {
   MQ_WID val;
+  CHECK_NOARGS
   ErrorBufToTclWithCheck (MqBufferGetW (buf, &val));
   Tcl_SetObjResult(interp, Tcl_NewWideIntObj(val));
   RETURN_TCL
 }
 
-static HDB(GetD)
+static int NS(GetD) (MqBufferS_ARGS)
 {
   MQ_DBL val;
+  CHECK_NOARGS
   ErrorBufToTclWithCheck (MqBufferGetD (buf, &val));
   Tcl_SetObjResult(interp, Tcl_NewDoubleObj(val));
   RETURN_TCL
 }
 
-static HDB(GetB)
+static int NS(GetB) (MqBufferS_ARGS)
 {
+  CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewByteArrayObj(buf->data,buf->cursize));
-  return TCL_OK;
+  RETURN_TCL
 }
 
-static HDB(GetC)
+static int NS(GetC) (MqBufferS_ARGS)
 {
   MQ_CST val;
+  CHECK_NOARGS
   ErrorBufToTclWithCheck (MqBufferGetC (buf, &val));
   Tcl_SetObjResult(interp, Tcl_NewStringObj(val,-1));
   RETURN_TCL
 }
 
-static HDB(Dup)
+static int NS(Dup) (MqBufferS_ARGS)
 {
+  CHECK_NOARGS
   NS(MqBufferS_New) (interp, MqBufferDup(buf));
-  return TCL_OK;
+  RETURN_TCL
 }
 
-static HDB(Delete)
+static int NS(Delete) (MqBufferS_ARGS)
 {
   char buffer[30];
+  CHECK_NOARGS
   sprintf(buffer, "<MqBufferS-%p>", buf);
   MqBufferDelete((MQ_BUF*)&buf);
   Tcl_DeleteCommand (interp, buffer);
-  return TCL_OK;
+  RETURN_TCL
 }
 
 /** \brief create the \b $buffer tcl command
@@ -145,6 +189,7 @@ static int NS(MqBufferS_Cmd) (
 
   const static struct LookupKeyword keys[] = {
     { "GetType",    NS(GetType)	  },
+
     { "GetY",	    NS(GetY)	  },
     { "GetO",	    NS(GetO)	  },
     { "GetS",	    NS(GetS)	  },
@@ -154,20 +199,31 @@ static int NS(MqBufferS_Cmd) (
     { "GetD",	    NS(GetD)	  },
     { "GetB",	    NS(GetB)	  },
     { "GetC",	    NS(GetC)	  },
+
+    { "SetY",	    NS(SetY)	  },
+    { "SetO",	    NS(SetO)	  },
+    { "SetS",	    NS(SetS)	  },
+    { "SetI",	    NS(SetI)	  },
+    { "SetF",	    NS(SetF)	  },
+    { "SetW",	    NS(SetW)	  },
+    { "SetD",	    NS(SetD)	  },
+    { "SetB",	    NS(SetB)	  },
+    { "SetC",	    NS(SetC)	  },
+
     { "Dup",	    NS(Dup)	  },
     { "Delete",	    NS(Delete)	  },
     { NULL,	    NULL	  }
   };
 
-  if (objc != 2) {
-    Tcl_WrongNumArgs (interp, 1, objv, "Get...");
+  if (objc < 2) {
+    Tcl_WrongNumArgs (interp, 1, objv, "subcommand ...");
     return TCL_ERROR;
   }
 
   TclErrorCheck (Tcl_GetIndexFromObjStruct (interp, objv[1], &keys, 
       sizeof(struct LookupKeyword), "subcommand", 0, &index));
 
-  return (*keys[index].keyF) (interp, buf);
+  return (*keys[index].keyF) (interp, buf, 2, objc, objv);
 }
 
 /** \brief delete a \e MqBufferS object (called by "rename $buf {}")
@@ -180,6 +236,7 @@ static void NS(MqBufferS_Free) (
 {
   struct MqBufferS *buf = (struct MqBufferS *) clientData;
   Tcl_DeleteExitHandler (NS(MqBufferS_Free), buf);
+  MqBufferDelete(&buf);
 }
 
 void NS(MqBufferS_New) (

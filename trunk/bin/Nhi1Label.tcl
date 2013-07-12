@@ -1,6 +1,6 @@
-#!/usr/bin/env tclsh
+#!/usr/bin/env Nhi1Exec
 #+
-#:  \file       bin/Nhi1Label
+#:  \file       bin/Nhi1Label.tcl
 #:  \brief      \$Id$
 #:  
 #:  (C) 2009 - NHI - #1 - Project - Group
@@ -34,6 +34,7 @@ array set LABELUSE {
 }
 
 array set LABELIGNORE {
+    ./build				{ * }
     ./bin				{ *.sw* Makefile Makefile.in tags }
     ./etc				{ *.sw* Makefile Makefile.in tags }
     ./sbin				{ *.sw* Makefile Makefile.in tags }

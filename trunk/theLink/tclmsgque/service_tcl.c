@@ -12,7 +12,7 @@
 
 #include "msgque_tcl.h"
 
-int NS(ServiceGetFilter) (NS_ARGS)
+int NS(ServiceGetFilter) (MqS_ARGS)
 {
   SETUP_mqctx
   struct MqS * ftr;
@@ -28,21 +28,21 @@ int NS(ServiceGetFilter) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ServiceGetToken) (NS_ARGS)
+int NS(ServiceGetToken) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetResult(interp, (char *)MqServiceGetToken(MQCTX), TCL_VOLATILE);
   RETURN_TCL
 }
 
-int NS(ServiceIsTransaction) (NS_ARGS)
+int NS(ServiceIsTransaction) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetObjResult(interp, Tcl_NewBooleanObj (MqServiceIsTransaction(MQCTX)));
   RETURN_TCL
 }
 
-int NS(ServiceCreate) (NS_ARGS)
+int NS(ServiceCreate) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_STR token;
@@ -59,7 +59,7 @@ int NS(ServiceCreate) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ServiceDelete) (NS_ARGS)
+int NS(ServiceDelete) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_STR token;
@@ -69,7 +69,7 @@ int NS(ServiceDelete) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ServiceProxy) (NS_ARGS)
+int NS(ServiceProxy) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_STR token;
@@ -81,7 +81,7 @@ int NS(ServiceProxy) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ServiceStorage) (NS_ARGS)
+int NS(ServiceStorage) (MqS_ARGS)
 {
   SETUP_mqctx
   MQ_STR token;
@@ -91,7 +91,7 @@ int NS(ServiceStorage) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(ProcessEvent) (NS_ARGS)
+int NS(ProcessEvent) (MqS_ARGS)
 {
   SETUP_mqctx
   int timeout = MQ_TIMEOUT_DEFAULT;
@@ -138,3 +138,4 @@ int NS(ProcessEvent) (NS_ARGS)
   ErrorMqToTclWithCheck (MqProcessEvent (mqctx, timeout, wait));
   RETURN_TCL
 }
+

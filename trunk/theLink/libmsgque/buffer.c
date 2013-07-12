@@ -918,8 +918,8 @@ MqBufferSetY (
   MQ_BYT const val
 )
 {
-	union MqBufferAtomU ato;
-	ato.Y = val;
+  union MqBufferAtomU ato;
+  ato.Y = val;
   return sBufferSetA1(buf,ato,MQ_BYTT);
 }
 

@@ -218,7 +218,7 @@ int NS(FactoryDefaultIdent) (TCL_ARGS)
 /*                                                                           */
 /*****************************************************************************/
 
-int NS(FactoryCtxSet) (NS_ARGS)
+int NS(FactoryCtxSet) (MqS_ARGS)
 {
   struct MqFactoryS *factory;
   SETUP_mqctx;
@@ -228,7 +228,7 @@ int NS(FactoryCtxSet) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(FactoryCtxGet) (NS_ARGS)
+int NS(FactoryCtxGet) (MqS_ARGS)
 {
   CHECK_NOARGS
   return FS(Create) (interp, MqFactoryCtxGet(MQCTX));
@@ -236,7 +236,7 @@ error:
   return TCL_ERROR;
 }
 
-int NS(FactoryCtxIdentSet) (NS_ARGS)
+int NS(FactoryCtxIdentSet) (MqS_ARGS)
 {
   MQ_CST ident;
   SETUP_mqctx;
@@ -246,9 +246,10 @@ int NS(FactoryCtxIdentSet) (NS_ARGS)
   RETURN_TCL
 }
 
-int NS(FactoryCtxIdentGet) (NS_ARGS)
+int NS(FactoryCtxIdentGet) (MqS_ARGS)
 {
   CHECK_NOARGS
   Tcl_SetResult(interp, (MQ_STR) MqFactoryCtxIdentGet(&tclctx->mqctx), TCL_STATIC);
   RETURN_TCL
 }
+

@@ -34,10 +34,11 @@
 /*****************************************************************************/
 
 #define NS(n)    Tclmsgque_ ## n
-#define NS_ARGS	 Tcl_Interp * interp, struct TclContextS * const tclctx, \
-		    int skip, int objc, struct Tcl_Obj *const *objv
-#define TCL_ARGS Tcl_Interp * interp, int objc, struct Tcl_Obj *const *objv
-#define HDB(name) int NS(name) ( Tcl_Interp * interp, struct MqBufferS * const buf )
+#define MqS_ARGS	Tcl_Interp * interp, struct TclContextS * const tclctx, \
+			  int skip, int objc, struct Tcl_Obj *const *objv
+#define TCL_ARGS	Tcl_Interp * interp, int objc, struct Tcl_Obj *const *objv
+#define MqBufferS_ARGS	Tcl_Interp * interp, struct MqBufferS * const buf, \
+			  int skip, int objc, struct Tcl_Obj *const *objv
 #define HDD(name) int NS(name) ( Tcl_Interp * interp, struct MqDumpS * const dump )
 
 #define SETUP_mqctx	struct MqS * const mqctx = (struct MqS * const) tclctx;
