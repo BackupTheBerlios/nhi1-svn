@@ -21,7 +21,7 @@ using namespace std;
 using namespace ccmsgque;
 
 static string Get( MqC& ctx) {
-  MqBufferC RET = ctx.GetTempBuffer();
+  MqBufferC RET = ctx.ContextGetBuffer();
   ctx.SendSTART();
   ctx.SendEND_AND_WAIT("GTCX", MQ_TIMEOUT_USER);
   RET.Reset();

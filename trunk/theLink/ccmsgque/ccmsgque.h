@@ -166,11 +166,21 @@ namespace ccmsgque {
 	return out;
       }
 
+      /// \api #MqBufferSetY
+      inline void SetY (MQ_BYT val) const {
+	MqBufferSetY (hdl, val);
+      }
+
       /// \api #MqBufferGetO
       inline MQ_BOL GetO () const throw(MqCException) {
 	MQ_BOL out;
 	ErrorCheck (MqBufferGetO (hdl, &out));
 	return out;
+      }
+
+      /// \api #MqBufferSetO
+      inline void SetO (MQ_BOL val) const {
+	MqBufferSetO (hdl, val);
       }
 
       /// \api #MqBufferGetS
@@ -180,11 +190,21 @@ namespace ccmsgque {
 	return out;
       }
 
+      /// \api #MqBufferSetS
+      inline void SetS (MQ_SRT val) const {
+	MqBufferSetS (hdl, val);
+      }
+
       /// \api #MqBufferGetI
       inline MQ_INT GetI () const throw(MqCException) {
 	MQ_INT out;
 	ErrorCheck (MqBufferGetI (hdl, &out));
 	return out;
+      }
+
+      /// \api #MqBufferSetI
+      inline void SetI (MQ_INT val) const {
+	MqBufferSetI (hdl, val);
       }
 
       /// \api #MqBufferGetF
@@ -194,11 +214,21 @@ namespace ccmsgque {
 	return out;
       }
 
+      /// \api #MqBufferSetF
+      inline void SetF (MQ_BOL val) const {
+	MqBufferSetF (hdl, val);
+      }
+
       /// \api #MqBufferGetW
       inline MQ_WID GetW () const throw(MqCException) {
 	MQ_WID out;
 	ErrorCheck (MqBufferGetW (hdl, &out));
 	return out;
+      }
+
+      /// \api #MqBufferSetW
+      inline void SetW (MQ_BOL val) const {
+	MqBufferSetF (hdl, val);
       }
 
       /// \api #MqBufferGetD
@@ -208,11 +238,21 @@ namespace ccmsgque {
 	return out;
       }
 
+      /// \api #MqBufferSetD
+      inline void SetD (MQ_BOL val) const {
+	MqBufferSetD (hdl, val);
+      }
+
       /// \api #MqBufferGetC
       inline MQ_CST GetC () const throw(MqCException) {
 	MQ_CST out;
 	ErrorCheck (MqBufferGetC (hdl, &out));
 	return out;
+      }
+
+      /// \api #MqBufferSetC
+      inline void SetC (MQ_CST val) const {
+	MqBufferSetC (hdl, val);
       }
 
       /// \return handle
@@ -223,6 +263,11 @@ namespace ccmsgque {
       /// \api #MqBufferGetB
       inline void GetB (MQ_BIN *outP, MQ_SIZE *sizeP) const throw(MqCException) {
 	ErrorCheck (MqBufferGetB (hdl, outP, sizeP));
+      }
+
+      /// \api #MqBufferSetB
+      inline void SetB (MQ_BIN val, MQ_SIZE len) {
+	MqBufferSetB (hdl, val, len);
       }
 
       /// \api #MqBufferGetB
@@ -355,7 +400,7 @@ namespace ccmsgque {
 
     public:
       /// \brief get access to an internal buffer
-      inline MQ_BUF GetTempBuffer() { return context.ctxbuf; }
+      inline MQ_BUF ContextGetBuffer () { return context.ctxbuf; }
       /// \api #MqExit
       inline void Exit () __attribute__((noreturn)) { MqExit(&context); } 
       /// \api #MqSysSleep

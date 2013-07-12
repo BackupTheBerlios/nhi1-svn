@@ -29,7 +29,7 @@ class Filter1 : public MqC {
     // service definition
     void fFTR () {
       MQ_ROW d;
-      MQ_BUF buf = GetTempBuffer();
+      MQ_BUF buf = ContextGetBuffer();
       while (ReadItemExists()) {
 	d.push_back(SysStrDup(MqBufferSetV (buf, "<%s>", ReadC())->cur.C));
       }

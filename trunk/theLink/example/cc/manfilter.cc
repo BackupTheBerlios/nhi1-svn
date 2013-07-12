@@ -19,7 +19,7 @@ class manfilter : public MqC {
   public:
     void fFTR () {
       MqC *ftr = ServiceGetFilter();
-      MQ_BUF temp = GetTempBuffer();
+      MQ_BUF temp = ContextGetBuffer();
       ftr->SendSTART();
       while (ReadItemExists()) {
 	ftr->SendU(MqBufferSetV(temp, "<%s>", ReadC()));

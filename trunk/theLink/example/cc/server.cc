@@ -689,7 +689,7 @@ namespace example {
 	if (SlaveIs()) {
 	  // add "slave" services here
 	} else {
-	  MQ_BUF buf = GetTempBuffer();
+	  MQ_BUF buf = ContextGetBuffer();
 	  // Initialize context variables
 	  int i=0;
 	  for (i=0; i<3; i++) {
