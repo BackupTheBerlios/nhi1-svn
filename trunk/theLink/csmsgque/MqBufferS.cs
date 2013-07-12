@@ -52,11 +52,11 @@ namespace csmsgque {
       buf = data;
     }
 
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferDeleteSave")]
-    private  static extern IntPtr MqBufferDeleteSave([In] IntPtr buf);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferDelete")]
+    private  static extern IntPtr MqBufferDelete([In,Out] ref IntPtr buf);
 
     public void Delete () {
-      buf = MqBufferDeleteSave(buf);
+      MqBufferDelete(ref buf);
     }
 
     // PRIVAT

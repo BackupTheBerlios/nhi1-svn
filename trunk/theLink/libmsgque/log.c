@@ -386,7 +386,7 @@ pLogMqBuffer (
   MqLogV (context, header, level,
       "pointer<%p> type<%c>, alloc<%s>, size<" MQ_FORMAT_Z ">, cursize<" MQ_FORMAT_Z ">, data<%s>\n",
       (void*) buf, buf->type,
-      (buf->alloc == MQ_ALLOC_DYNAMIC	? "DYNAMIC"   : "STATIC"), 
+      (buf->bits.alloc == MQ_ALLOC_DYNAMIC	? "DYNAMIC"   : "STATIC"), 
       buf->size, buf->cursize, buf->data);
 }
 #endif

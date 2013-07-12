@@ -93,6 +93,7 @@ These are the options for the 'libmsgque' library passed by
 the second argument (argv) of 'MqLinkCreate'
 
  msgque wrapper \[OPTION]:
+  --factory str      the name of the factory             (default: app-specific)
   --name str         the display name of the msgque      (default: executable)
   --srvname str      the display name of the server      (default: executable)
   --string           use string based protocol           (default: no=binary)

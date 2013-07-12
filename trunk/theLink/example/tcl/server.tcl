@@ -17,11 +17,7 @@ package require TclMsgque
 
 proc Ot_INIT {ctx} {
   $ctx SendSTART
-  set LIST [list]
-  while {[$ctx ReadItemExists]} {
-    lappend LIST [$ctx ReadC]
-  }
-  tclmsgque Init {*}$LIST
+  tclmsgque Init {*}[$ctx ReadAll]
   $ctx SendRETURN
 }
 

@@ -70,7 +70,6 @@ ServerHelp (const char * base)
     fputs(MqHelp (NULL), stderr);
     fputs("\n", stderr);
     fprintf(stderr,"  %s [OPTION]:\n", base);
-    fputs("    --factory        identification of the factory", stderr);
     fputs("    -h, --help       print this help\n", stderr);
     fputs("\n", stderr);
 
@@ -175,8 +174,8 @@ Ot_ECON (
   MQ_CST str;
   MqSendSTART (mqctx);
   MqErrorCheck (MqReadC (mqctx, &str));
-  MqBufferSetV(mqctx->temp,"%s-%s", str, mqctx->config.name);
-  MqSendC (mqctx, mqctx->temp->cur.C);
+  MqBufferSetV(mqctx->ctxbuf,"%s-%s", str, mqctx->config.name);
+  MqSendC (mqctx, mqctx->ctxbuf->cur.C);
 
 error:
   return MqSendRETURN (mqctx);
@@ -625,18 +624,18 @@ Ot_GTSI (
   MQ_PTR data
 )
 {
-  MqBufferReset(mqctx->temp);
+  MqBufferReset(mqctx->ctxbuf);
 
   MqSendSTART (mqctx);
   if (mqctx->statusIs & MQ_STATUS_IS_DUP)
-    MqBufferAppendC(mqctx->temp, "DUP-");
+    MqBufferAppendC(mqctx->ctxbuf, "DUP-");
   if (mqctx->statusIs & MQ_STATUS_IS_THREAD)
-    MqBufferAppendC(mqctx->temp, "THREAD-");
+    MqBufferAppendC(mqctx->ctxbuf, "THREAD-");
   if (mqctx->statusIs & MQ_STATUS_IS_FORK)
-    MqBufferAppendC(mqctx->temp, "FORK-");
+    MqBufferAppendC(mqctx->ctxbuf, "FORK-");
   if (mqctx->statusIs & MQ_STATUS_IS_SPAWN)
-    MqBufferAppendC(mqctx->temp, "SPAWN-");
-  MqSendU(mqctx, mqctx->temp);
+    MqBufferAppendC(mqctx->ctxbuf, "SPAWN-");
+  MqSendU(mqctx, mqctx->ctxbuf);
   return MqSendRETURN (mqctx);
 }
 
@@ -1414,7 +1413,7 @@ ServerSetup (
   } else {
     // create the context data
     int i;
-    MQ_BUF buf = mqctx->temp;
+    MQ_BUF buf = mqctx->ctxbuf;
     struct ServerCtxS * srvctx = SRVCTX;
     for (i=0; i<3; i++) {
       srvctx->cl[i] = MqContextCreate (sizeof (struct ClientCtxS), NULL);

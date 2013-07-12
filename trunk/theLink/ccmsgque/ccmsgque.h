@@ -151,7 +151,7 @@ namespace ccmsgque {
       }
 
       virtual ~MqBufferC () {
-	if (hdl->context->temp != hdl) MqBufferDelete(&hdl);
+	MqBufferDelete(&hdl);
       }
 
       /// \api \ref MqBufferS::type
@@ -355,7 +355,7 @@ namespace ccmsgque {
 
     public:
       /// \brief get access to an internal buffer
-      inline MQ_BUF GetTempBuffer() { return context.temp; }
+      inline MQ_BUF GetTempBuffer() { return context.ctxbuf; }
       /// \api #MqExit
       inline void Exit () __attribute__((noreturn)) { MqExit(&context); } 
       /// \api #MqSysSleep

@@ -1648,7 +1648,7 @@ struct MqS {
   struct MqSetupS setup;	    ///< the setup data is used to link the object with the user application
   struct MqErrorS error;	    ///< error object data
   struct MqLinkS link;		    ///< link object data
-  struct MqBufferS * temp;	    ///< misc temporary #MqBufferS object
+  struct MqBufferS * ctxbuf;	    ///< misc temporary #MqBufferS object
   enum MqStatusIsE statusIs;	    ///< how the context was created?
   struct {
     MQ_BOL MqContextDelete_LOCK :1; ///< protect MqContextDelete against double-call
@@ -2509,12 +2509,6 @@ union MqBufferU {
   MQ_LST  T;			///< transaction object type data
 };
 
-/// \brief allocation style used for the data-segment in #MqBufferS.
-enum MqAllocE {
-  MQ_ALLOC_STATIC     = 0,	///< opposite from MQ_ALLOC_DYNAMIC)
-  MQ_ALLOC_DYNAMIC    = 1,	///< dynamic allocation (e.g. SysMalloc, ...)
-};
-
 /// \brief initial size of the \ref MqBufferS::bls object
 #define MQ_BLS_SIZE 50
 
@@ -2536,7 +2530,19 @@ struct MqBufferS {
   MQ_SIZE numItems;             ///< the number of items in the data-segment (only if it is a package)
   union MqBufferU cur;		///< point to current position, used for 'appending to' or 'reading from' 
 				///< a package (always: data <= cur.B <= data+cursize)
-  enum MqAllocE alloc;		///< allocation style, MQ_DYNAMIC or MQ_STATIC
+
+  /// \brief bit-field to represent different flags
+  struct {
+#define MQ_ALLOC_STATIC	  0
+#define MQ_ALLOC_DYNAMIC  1
+    MQ_BOL alloc	  : 1 ; ///< allocation MQ_ALLOC_STATIC or MQ_ALLOC_DYNAMIC
+#define MQ_REF_LOCAL	  0
+#define MQ_REF_GLOBAL	  1
+    MQ_BOL ref		  : 1 ; ///< reference is MQ_REF_LOCAL or MQ_REF_GLOBAL
+    MQ_BOL user_1	  : 1 ; ///< free to use by programmer
+    MQ_BOL user_2	  : 1 ; ///< free to use by programmer
+  } bits;
+
   enum MqTypeE type;            ///< type of the item stored into the data-segment
 
   /// \brief B)uffer L)ocal S)torage used in #MqBufferGetC to get a string from a #MQ_ATO data
@@ -2588,11 +2594,6 @@ MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferCreate (
 /// \attention \attDelete
 MQ_EXTERN void MQ_DECL MqBufferDelete (
   struct MqBufferS ** const bufP
-);
-
-/// \attention this funcation can \b only be called as long as the \e buffer-context is \b alive
-MQ_EXTERN struct MqBufferS*  MQ_DECL MqBufferDeleteSave (
-  struct MqBufferS * buf
 );
 
 /// \brief reset a #MqBufferS to the length zero

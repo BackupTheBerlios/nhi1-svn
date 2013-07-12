@@ -20,8 +20,8 @@ static enum MqErrorE  FTR( struct MqS *ctx, MQ_PTR data) {
   MqSendSTART(ftr);
   while (MqReadItemExists(ctx)) {
     MqErrorCheck (MqReadC(ctx, &str));
-    MqBufferSetV(ctx->temp,"<%s>", str);
-    MqSendU(ftr, ctx->temp);
+    MqBufferSetV(ctx->ctxbuf,"<%s>", str);
+    MqSendU(ftr, ctx->ctxbuf);
   }
   MqErrorCheck (MqSendEND_AND_WAIT(ftr, "+FTR", MQ_TIMEOUT_USER));
 error:

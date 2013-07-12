@@ -174,11 +174,11 @@ MqBufferCreate (
   if (size > MQ_BLS_SIZE) {
     buf->data = (MQ_BIN) MqSysCalloc(MQ_ERROR_PANIC, (size+1), sizeof (*buf->data));
     buf->size = size;
-    buf->alloc = MQ_ALLOC_DYNAMIC;
+    buf->bits.alloc = MQ_ALLOC_DYNAMIC;
   } else {
     buf->data = (MQ_BIN) memset(buf->bls,'\0',MQ_BLS_SIZE);
     buf->size = MQ_BLS_SIZE;
-    buf->alloc = MQ_ALLOC_STATIC;
+    buf->bits.alloc = MQ_ALLOC_STATIC;
   }
   buf->context = context;
   buf->cursize = 0;
@@ -186,6 +186,7 @@ MqBufferCreate (
   buf->cur.B = buf->data;
   buf->type = MQ_STRT;
   buf->signature = MQ_MqBufferS_SIGNATURE;
+  buf->bits.ref = MQ_REF_GLOBAL;
 
   return buf;
 }
@@ -238,7 +239,8 @@ pBufferCreateRef (
 {
   struct MqBufferS * const ret = (struct MqBufferS *) MqSysMalloc (MQ_ERROR_PANIC, sizeof (*ret));
   memcpy (ret, buf, sizeof (*ret));
-  ret->alloc = MQ_ALLOC_STATIC;
+  ret->bits.alloc = MQ_ALLOC_STATIC;
+  ret->bits.ref = MQ_REF_LOCAL;
   return ret;
 }
 
@@ -258,22 +260,19 @@ MqBufferDelete (
 )
 {
   struct MqBufferS *buf;
-  if (unlikely (bufP == NULL || (buf=*bufP) == NULL || buf->alloc == MQ_ALLOC_STATIC)) return;
-  if (buf->data && buf->data != buf->bls) {
+  // do NOT detete an invalid pointer
+  if (unlikely (bufP == NULL || (buf=*bufP) == NULL)) return;
+  // do not delete a local refernence
+  if (buf->bits.ref == MQ_REF_LOCAL) return;
+  // do NOT delete an invalid buffer object
+  if (buf->signature != MQ_MqBufferS_SIGNATURE) return;
+  // do NOT delete STATIC storage 
+  if (buf->data && buf->data != buf->bls && buf->bits.alloc == MQ_ALLOC_DYNAMIC ) {
     MqSysFree (buf->data);
   }
+  // NOW delete
   buf->signature = 0;
   MqSysFree (*bufP);
-}
-
-struct MqBufferS*
-MqBufferDeleteSave (
-  struct MqBufferS * buf
-)
-{
-  if (buf != NULL && buf->context->temp != buf && buf->alloc != MQ_ALLOC_STATIC) 
-    MqBufferDelete(&buf);
-  return NULL;
 }
 
 void
@@ -416,14 +415,14 @@ _pBufferNewSize (
 
   MQ_SIZE size = newSize + (newSize / 3);  // + 1/3 reserve
 
-  if (unlikely (buf->alloc == MQ_ALLOC_DYNAMIC)) {
+  if (unlikely (buf->bits.alloc == MQ_ALLOC_DYNAMIC)) {
     // this is "MQ_ALLOC_DYNAMIC"
     // the buf->size+1 is used to fit a string with '\0' and strlen() size into the buffer
     buf->data = (MQ_BIN) MqSysRealloc (MQ_ERROR_PANIC, buf->data, size+1);
   } else {
     // this is "MQ_ALLOC_STATIC"
     buf->data = (MQ_BIN)MqSysMalloc (MQ_ERROR_PANIC, size+1);
-    buf->alloc = MQ_ALLOC_DYNAMIC;
+    buf->bits.alloc = MQ_ALLOC_DYNAMIC;
   }
   buf->size = size;
   buf->cur.B = buf->data + buf->cursize;
@@ -1312,7 +1311,7 @@ MqBufferLog (
   MqBufferLogS(context, buf, prefix);
 
   MqLogV (context, prefix, 0, "alloc    = <%s>\n",
-     (buf->alloc == MQ_ALLOC_DYNAMIC   ? "DYNAMIC"   : "STATIC")
+     (buf->bits.alloc == MQ_ALLOC_DYNAMIC   ? "DYNAMIC"   : "STATIC")
   );
   MqLogV (context, prefix, 0, "<<<< MqBufferS\n");
 
@@ -1322,20 +1321,4 @@ MqBufferLog (
 //#endif
 
 END_C_DECLS
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

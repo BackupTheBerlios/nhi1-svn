@@ -719,7 +719,7 @@ static enum MqErrorE SysDaemonize (
   // step 3 -> fork the new process, parent write the pid
   MqErrorCheck(SysFork(context, &id));
   if (id.val != 0UL) {
-    MQ_BUF buf = context->temp;
+    MQ_BUF buf = context->ctxbuf;
     MqBufferSetV(buf,"%lu",id.val);
     write(fpid,buf->cur.C,buf->cursize);
     _exit(0);

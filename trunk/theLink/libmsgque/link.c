@@ -39,6 +39,7 @@ MqHelpMsgque ()
     MqBufferCreateStatic (buf, 2000);
 
     MqBufferAppendV (buf, " msgque wrapper [OPTION]:\n");
+    MqBufferAppendV (buf, "  --factory str      the name of the factory             (default: app-specific)\n");
     MqBufferAppendV (buf, "  --name str         the display name of the msgque      (default: executable)\n");
     MqBufferAppendV (buf, "  --srvname str      the display name of the server      (default: executable)\n");
     MqBufferAppendV (buf, "  --string           use string based protocol           (default: no=binary)\n");

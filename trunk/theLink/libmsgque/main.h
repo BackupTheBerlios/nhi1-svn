@@ -377,7 +377,12 @@ MQ_TRA pBufU2TRA ( union MqBufferU buf);
     0,			      /* cursize   */ \
     0,			      /* numItems  */ \
     {NULL},		      /* cur       */ \
-    MQ_ALLOC_STATIC,	      /* alloc     */ \
+    { \
+      MQ_ALLOC_STATIC,	      /* bits.alloc*/ \
+      MQ_REF_LOCAL,	      /* bits.ref  */ \
+      MQ_NO,		      /* user_2    */ \
+      MQ_NO		      /* user_3    */ \
+    }, \
     MQ_STRT		      /* type      */ \
   }; \
   struct MqBufferS *NAME = &tmp##NAME; \

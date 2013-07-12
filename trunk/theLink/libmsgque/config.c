@@ -221,7 +221,9 @@ MqContextInit (
   if (size == 0) size = sizeof(*context);
   memset(context,0,size);
   pConfigInit (context);
-  context->temp = MqBufferCreate(context, 250);
+  context->ctxbuf = MqBufferCreate(context, 250);
+  // make ctxbuf undeleteable
+  context->ctxbuf->bits.ref = MQ_REF_LOCAL;
   if (tmpl == NULL) {
     pFactoryCtxItemSet(context,defaultFactoryItem);
   } else {
@@ -256,7 +258,9 @@ MqContextFree (
       (*context->setup.BgError.fFree) (context, &context->setup.BgError.data);
     }
     pErrorCleanup(context);
-    MqBufferDelete(&context->temp);
+    // make ctxbuf deleteable
+    context->ctxbuf->bits.ref = MQ_REF_GLOBAL;
+    MqBufferDelete(&context->ctxbuf);
     
     MqSysFree(context->config.name);
     MqSysFree(context->config.srvname);

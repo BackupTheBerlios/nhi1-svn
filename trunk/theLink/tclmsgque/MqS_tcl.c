@@ -630,7 +630,7 @@ NS(MqS_Init) (
   {
     struct TclContextS * tclctx = (struct TclContextS *) MqContextCreate(sizeof (*tclctx), tmpl);
     struct MqS * mqctx = MQCTX;
-    struct MqBufferS * const buf = mqctx->temp;
+    struct MqBufferS * const buf = mqctx->ctxbuf;
 
     // create tcl command
     mqctx->threadData = (MQ_PTR)interp;

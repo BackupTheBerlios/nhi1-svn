@@ -862,7 +862,7 @@ MqBufferLLogS (
     MqLogV (context, func, 0, "++++ MqBufferLS (%s:NULL)\n", varname);
     return;
   } else {
-    MQ_BUF buf = (context ? context->temp : MqBufferCreate (MQ_ERROR_PANIC, 100));
+    MQ_BUF buf = (context ? context->ctxbuf : MqBufferCreate (MQ_ERROR_PANIC, 100));
     int i;
     int relsize = (MQ_SIZE) (bufL->cur - bufL->data);
     MqLogV (context, func, 0, ">>>> MqBufferLS (%s:%p) (dataP=%p|curP=%p|relsize=%i|cursize=%i|check=%s)\n", varname, (void*) bufL, 
@@ -879,17 +879,4 @@ MqBufferLLogS (
 //#endif /* _DEBUG */
 
 END_C_DECLS
-
-
-
-
-
-
-
-
-
-
-
-
-
 
