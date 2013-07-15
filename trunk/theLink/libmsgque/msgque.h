@@ -2790,9 +2790,11 @@ MQ_EXTERN char MQ_DECL MqBufferGetType (
 
 /// \brief return the #MqTypeE from a #MQ_BUF object
 /// \buf
-MQ_EXTERN enum MqTypeE MQ_DECL MqBufferGetType2 (
+inline enum MqTypeE MQ_DECL MqBufferGetType2 (
   struct MqBufferS * const buf
-);
+) {
+  return buf->type;
+}
 
 /// \brief return the \e type from a #MQ_BUF object as single character string
 /// \buf

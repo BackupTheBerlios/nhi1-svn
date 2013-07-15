@@ -262,10 +262,10 @@ MqBufferDelete (
   struct MqBufferS *buf;
   // do NOT detete an invalid pointer
   if (unlikely (bufP == NULL || (buf=*bufP) == NULL)) return;
-  // do not delete a local refernence
-  if (buf->bits.ref == MQ_REF_LOCAL) return;
   // do NOT delete an invalid buffer object
   if (buf->signature != MQ_MqBufferS_SIGNATURE) return;
+  // do not delete a local refernence
+  if (buf->bits.ref == MQ_REF_LOCAL) return;
   // do NOT delete STATIC storage 
   if (buf->data && buf->data != buf->bls && buf->bits.alloc == MQ_ALLOC_DYNAMIC ) {
     MqSysFree (buf->data);
@@ -797,14 +797,6 @@ MqBufferGetType (
   return '*';
 }
 
-enum MqTypeE
-MqBufferGetType2 (
-  struct MqBufferS * const buf
-)
-{
-  return buf->type;
-}
-
 MQ_CST
 MqBufferGetType3 (
   struct MqBufferS * const buf
@@ -1310,8 +1302,9 @@ MqBufferLog (
 
   MqBufferLogS(context, buf, prefix);
 
-  MqLogV (context, prefix, 0, "alloc    = <%s>\n",
-     (buf->bits.alloc == MQ_ALLOC_DYNAMIC   ? "DYNAMIC"   : "STATIC")
+  MqLogV (context, prefix, 0, "alloc    = <%s:%s>\n",
+   (buf->bits.alloc == MQ_ALLOC_DYNAMIC ? "DYNAMIC"   : "STATIC"),
+   (buf->bits.ref   == MQ_REF_LOCAL     ? "REF_LOCAL" : "REF_GLOBAL")
   );
   MqLogV (context, prefix, 0, "<<<< MqBufferS\n");
 

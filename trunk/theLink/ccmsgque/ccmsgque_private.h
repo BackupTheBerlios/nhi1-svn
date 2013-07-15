@@ -21,5 +21,16 @@
 //#define ErrorStringToCC(err) throw MqCException(-1, MQ_ERROR, __func__, __FILE__, __LINE__, err)
 #define ErrorStringToCC(err) throw runtime_error(err)
 
+#if defined (MQ_HAS_THREAD)
+# if defined(HAVE_PTHREAD) /* unix thread */
+#  define MqThreadLocal __thread
+# else /* windows THREAD */
+#  define MqThreadLocal __declspec(thread)
+# endif
+#else /* no THREAD */
+#  define MqThreadLocal
+#endif // MQ_HAS_THREAD
+
+
 #endif /* MQ_CCMSGQUE_PRIVATE_H */
 

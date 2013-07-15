@@ -192,6 +192,22 @@ namespace ccmsgque {
       return MqErrorC (&context, __func__, -1, e.what());
     }
   }
+
+  // MqBufferC *********************************************************************
+
+  std::vector<MQ_BINB>& MqBufferC::GetB () const throw(MqCException) {
+    static MqThreadLocal vector<MQ_BINB> *ret = NULL;
+    MQ_BIN out;
+    MQ_SIZE size;
+    ErrorCheck (MqBufferGetB (hdl, &out, &size));
+    if (ret == NULL) {
+      ret = new vector<MQ_BINB>(&out[0],&out[0]+size);
+    } else {
+      ret->assign(&out[0],&out[0]+size);
+    }
+    return (*ret);
+  }
+
 } // END - namespace "ccmsgque"
 
 #if defined(_MSC_VER)

@@ -155,7 +155,12 @@ namespace ccmsgque {
       }
 
       /// \api \ref MqBufferS::type
-      inline enum MqTypeE GetType () const {
+      inline char GetType () const {
+	return MqBufferGetType(hdl);
+      }
+
+      /// \api \ref MqBufferS::type
+      inline enum MqTypeE GetType2 () const {
 	return hdl->type;
       }
 
@@ -215,7 +220,7 @@ namespace ccmsgque {
       }
 
       /// \api #MqBufferSetF
-      inline void SetF (MQ_BOL val) const {
+      inline void SetF (MQ_FLT val) const {
 	MqBufferSetF (hdl, val);
       }
 
@@ -227,8 +232,8 @@ namespace ccmsgque {
       }
 
       /// \api #MqBufferSetW
-      inline void SetW (MQ_BOL val) const {
-	MqBufferSetF (hdl, val);
+      inline void SetW (MQ_WID val) const {
+	MqBufferSetW (hdl, val);
       }
 
       /// \api #MqBufferGetD
@@ -239,7 +244,7 @@ namespace ccmsgque {
       }
 
       /// \api #MqBufferSetD
-      inline void SetD (MQ_BOL val) const {
+      inline void SetD (MQ_DBL val) const {
 	MqBufferSetD (hdl, val);
       }
 
@@ -271,11 +276,12 @@ namespace ccmsgque {
       }
 
       /// \api #MqBufferGetB
-      inline vector<MQ_BINB>* GetB () const throw(MqCException) {
-	MQ_BIN out;
-	MQ_SIZE size;
-	ErrorCheck (MqBufferGetB (hdl, &out, &size));
-	return new vector<MQ_BINB> (out, out+size);
+      /// \attention the vector storage belongs to the GetB function
+      vector<MQ_BINB>& GetB () const throw(MqCException);
+
+      /// \api #MqBufferSetB
+      inline void SetB (vector<MQ_BINB>& val) {
+	MqBufferSetB (hdl, val.data(), val.size());
       }
 
       /// \api #MqBufferAppendC
@@ -862,6 +868,8 @@ namespace ccmsgque {
       }
       /// \api #MqSendU
       inline void SendU (MQ_BUF val) throw(MqCException) { ErrorCheck (MqSendU (&context, val)); }
+      /// \api #MqSendU
+      inline void SendU (MqBufferC& val) throw(MqCException) { ErrorCheck (MqSendU (&context, val.GetU())); }
       /// \api #MqSendN
       inline void SendN (MQ_CBI val, MQ_SIZE len) throw(MqCException) { ErrorCheck (MqSendN (&context, val, len)); }
       /// \api #MqSendB

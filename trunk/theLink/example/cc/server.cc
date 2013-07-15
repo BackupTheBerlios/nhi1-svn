@@ -335,7 +335,7 @@ namespace example {
 	const char typ[2] = { MqBufferGetType(buf.GetU()), '\0' };
 	SendSTART();
 	SendC(typ);
-	switch (buf.GetType()) {
+	switch (buf.GetType2()) {
 	  case MQ_BYTT: SendY(buf.GetY()); break;
 	  case MQ_BOLT: SendO(buf.GetO()); break;
 	  case MQ_SRTT: SendS(buf.GetS()); break;
@@ -631,6 +631,30 @@ namespace example {
 	SendRETURN();
       }
 
+      void BUFE () {
+	MQ_CST cmd = ReadC();
+
+	SendSTART();
+
+	if (!strncmp(cmd, "ctxbuf", 6)) {
+	  MqBufferC tmp = ContextGetBuffer();
+	  MqBufferC buf = ReadU();
+	  switch (buf.GetType()) {
+	    case 'Y': { tmp.SetY(buf.GetY()); break; }
+	    case 'O': { tmp.SetO(buf.GetO()); break; }
+	    case 'S': { tmp.SetS(buf.GetS()); break; }
+	    case 'I': { tmp.SetI(buf.GetI()); break; }
+	    case 'F': { tmp.SetF(buf.GetF()); break; }
+	    case 'W': { tmp.SetW(buf.GetW()); break; }
+	    case 'D': { tmp.SetD(buf.GetD()); break; }
+	    case 'B': { tmp.SetB(buf.GetB()); break; }
+	    case 'C': { tmp.SetC(buf.GetC()); break; }
+	  }
+	  SendU(tmp);
+	}
+	SendRETURN();
+      }
+
       void PRNT () {
 	SendSTART();
 	SendV("%d - %s", LinkGetCtxId(), ReadC());
@@ -741,6 +765,7 @@ namespace example {
 	  ServiceCreate("ERLS", CallbackF(&Server::ERLS));
 	  ServiceCreate("CFG1", CallbackF(&Server::CFG1));
 	  ServiceCreate("ROUT", CallbackF(&Server::ROUT));
+	  ServiceCreate("BUFE", CallbackF(&Server::BUFE));
 	  ServiceCreate("PRNT", CallbackF(&Server::PRNT));
 	  ServiceCreate("TRNS", CallbackF(&Server::TRNS));
 	  ServiceCreate("TRN2", CallbackF(&Server::TRN2));
