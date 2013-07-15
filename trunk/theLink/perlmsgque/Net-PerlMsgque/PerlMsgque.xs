@@ -555,8 +555,7 @@ MqFactoryNew(MqFactorySelf* factory)
       croak("MqFactoryS exception");
       XSRETURN(0);
     } else {
-      ST(0) = (SV*)ctx->self;
-      XSRETURN(1);
+      XPUSHs((SV*)ctx->self);
     }
 
 MqFactoryS*
@@ -569,6 +568,13 @@ void
 MqErrorSet(MqSelf* context, SV* err)
   CODE:
     ProcError (aTHX_ context, err);
+
+MqBufferS*
+ContextGetBuffer(MqSelf* context)
+  CODE:
+    RETVAL = MqContextGetBuffer(context);
+  OUTPUT:
+    RETVAL
 
 void
 MqErrorSetCONTINUE(MqSelf* context)
@@ -626,8 +632,7 @@ LinkGetParent(MqSelf* context)
     MqS* parent;
   PPCODE:
     parent = (MqS*) MqLinkGetParent(context);
-    ST(0) = (parent != NULL? (SV*)parent->self : &PL_sv_undef);
-    XSRETURN(1);
+    XPUSHs(parent != NULL? (SV*)parent->self : &PL_sv_undef);
 
 MQ_CST
 MqLinkGetTargetIdent (MqSelf* context)
@@ -1050,8 +1055,7 @@ MqServiceGetFilter(MqSelf* context, MQ_SIZE id = 0)
     struct MqS * filter = NULL;
   PPCODE:
     ErrorMqToPerlWithCheck (MqServiceGetFilter (context, id, &filter));
-    ST(0) = (SV*)filter->self;
-    XSRETURN(1);
+    XPUSHs((SV*)filter->self);
 
 mq_bool
 MqServiceIsTransaction (MqSelf* context)
@@ -1256,8 +1260,7 @@ MqSlaveGet (MqSelf* context, MQ_SIZE id)
     MqS* slave;
   PPCODE:
     slave = (MqS*) MqSlaveGet(context,id);
-    ST(0) = (slave ? (SV*)slave->self : &PL_sv_undef);
-    XSRETURN(1);
+    XPUSHs(slave ? (SV*)slave->self : &PL_sv_undef);
 
 void
 SlaveGetMaster(MqSelf* context)
@@ -1265,8 +1268,7 @@ SlaveGetMaster(MqSelf* context)
     MqS* master;
   PPCODE:
     master = (MqS*) MqSlaveGetMaster(context);
-    ST(0) = (master ? (SV*)master->self : &PL_sv_undef);
-    XSRETURN(1);
+    XPUSHs(master ? (SV*)master->self : &PL_sv_undef);
 
 mq_bool
 MqSlaveIs (MqSelf* context)
@@ -1319,10 +1321,24 @@ GetY (MqBufferSelf *buffer)
   OUTPUT:
     RETVAL
 
+MqBufferS*
+SetY (MqBufferSelf *buffer, MQ_BYT val)
+  CODE:
+    RETVAL = MqBufferSetY(buffer, val);
+  OUTPUT:
+    RETVAL
+
 MQ_BOL
 GetO (MqBufferSelf *buffer)
   CODE:
     ErrorBufferToPerlWithCheck(MqBufferGetO(buffer, &RETVAL));
+  OUTPUT:
+    RETVAL
+
+MqBufferS*
+SetO (MqBufferSelf *buffer, MQ_BOL val)
+  CODE:
+    RETVAL = MqBufferSetO(buffer, val);
   OUTPUT:
     RETVAL
 
@@ -1333,10 +1349,24 @@ GetS (MqBufferSelf *buffer)
   OUTPUT:
     RETVAL
 
+MqBufferS*
+SetS (MqBufferSelf *buffer, MQ_SRT val)
+  CODE:
+    RETVAL = MqBufferSetS(buffer, val);
+  OUTPUT:
+    RETVAL
+
 MQ_INT
 GetI (MqBufferSelf *buffer)
   CODE:
     ErrorBufferToPerlWithCheck(MqBufferGetI(buffer, &RETVAL));
+  OUTPUT:
+    RETVAL
+
+MqBufferS*
+SetI (MqBufferSelf *buffer, MQ_INT val)
+  CODE:
+    RETVAL = MqBufferSetI(buffer, val);
   OUTPUT:
     RETVAL
 
@@ -1347,10 +1377,24 @@ GetW (MqBufferSelf *buffer)
   OUTPUT:
     RETVAL
 
+MqBufferS*
+SetW (MqBufferSelf *buffer, MQ_WID val)
+  CODE:
+    RETVAL = MqBufferSetW(buffer, val);
+  OUTPUT:
+    RETVAL
+
 MQ_FLT
 GetF (MqBufferSelf *buffer)
   CODE:
     ErrorBufferToPerlWithCheck(MqBufferGetF(buffer, &RETVAL));
+  OUTPUT:
+    RETVAL
+
+MqBufferS*
+SetF (MqBufferSelf *buffer, MQ_FLT val)
+  CODE:
+    RETVAL = MqBufferSetF(buffer, val);
   OUTPUT:
     RETVAL
 
@@ -1361,10 +1405,24 @@ GetD (MqBufferSelf *buffer)
   OUTPUT:
     RETVAL
 
+MqBufferS*
+SetD (MqBufferSelf *buffer, MQ_DBL val)
+  CODE:
+    RETVAL = MqBufferSetD(buffer, val);
+  OUTPUT:
+    RETVAL
+
 MQ_CST
 GetC (MqBufferSelf *buffer)
   CODE:
     ErrorBufferToPerlWithCheck(MqBufferGetC(buffer, &RETVAL));
+  OUTPUT:
+    RETVAL
+
+MqBufferS*
+SetC (MqBufferSelf *buffer, MQ_CST val)
+  CODE:
+    RETVAL = MqBufferSetC(buffer, val);
   OUTPUT:
     RETVAL
 
@@ -1376,6 +1434,17 @@ GetB (MqBufferSelf *buffer)
   CODE:
     ErrorBufferToPerlWithCheck(MqBufferGetB(buffer, &bin, &len));
     RETVAL = newSVpvn((MQ_CST)bin, len);
+  OUTPUT:
+    RETVAL
+
+MqBufferS*
+SetB (MqBufferSelf *buffer, SV * val)
+  INIT:
+    MQ_CBI bin;
+    STRLEN len;
+  CODE:
+    bin = (MQ_BIN)SvPVbyte (val, len);
+    RETVAL = MqBufferSetB(buffer, bin, (MQ_SIZE)len);
   OUTPUT:
     RETVAL
 

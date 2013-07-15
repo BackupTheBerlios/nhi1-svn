@@ -707,6 +707,32 @@ use base qw(Net::PerlMsgque::MqS);
     $ctx->SendRETURN();
   }
 
+  sub BUFE {
+    my $ctx = shift;
+    my $cmd = $ctx->ReadC();
+
+    $ctx->SendSTART();
+    switch ($cmd) {
+      case "ctxbuf" {
+	my $tmp = $ctx->ContextGetBuffer;
+	my $buf = $ctx->ReadU();
+	switch ($buf->GetType) {
+	  case "Y"   { $tmp->SetY($buf->GetY()) }
+	  case "O"   { $tmp->SetO($buf->GetO()) }
+	  case "S"   { $tmp->SetS($buf->GetS()) }
+	  case "I"   { $tmp->SetI($buf->GetI()) }
+	  case "F"   { $tmp->SetF($buf->GetF()) }
+	  case "W"   { $tmp->SetW($buf->GetW()) }
+	  case "D"   { $tmp->SetD($buf->GetD()) }
+	  case "B"   { $tmp->SetB($buf->GetB()) }
+	  case "C"   { $tmp->SetC($buf->GetC()) }
+	}
+	$ctx->SendU($tmp);
+      } 
+    }
+    $ctx->SendRETURN();
+  }
+
   sub PRNT {
     my $ctx = shift;
     $ctx->SendSTART();
@@ -822,6 +848,7 @@ use base qw(Net::PerlMsgque::MqS);
       $ctx->ServiceCreate("GTCX", \&GTCX);
       $ctx->ServiceCreate("CFG1", \&CFG1);
       $ctx->ServiceCreate("ROUT", \&ROUT);
+      $ctx->ServiceCreate("BUFE", \&BUFE);
       $ctx->ServiceCreate("PRNT", \&PRNT);
       $ctx->ServiceCreate("TRNS", \&TRNS);
       $ctx->ServiceCreate("TRN2", \&TRN2);
