@@ -144,7 +144,7 @@ namespace example {
 
       void GETU () { 
 	SendSTART(); 
-	SendU(buf->GetU()); 
+	SendU(buf); 
 	buf->Delete();
 	delete(buf);
 	SendRETURN(); 
@@ -153,7 +153,7 @@ namespace example {
       void ECOL_Item (int incr) {
 	while (ReadItemExists()) {
 	  MqBufferC buf = ReadU();
-	  if (buf.GetType() == MQ_LSTT) {
+	  if (buf.GetType() == 'L') {
 	    ReadL_START (buf);
 	    SendL_START ();
 	    ECOL_Item	(incr);
@@ -162,7 +162,7 @@ namespace example {
 	  } else if (incr) {
 	    SendI (buf.GetI() + 1);
 	  } else {
-	    SendU (buf.GetU());
+	    SendU (buf);
 	  }
 	}
       }
@@ -180,8 +180,8 @@ namespace example {
       void ECLI() {
 	MQ_BOL doincr;
 
-	MqBufferC buf = MqBufferC(ReadU());
-	doincr = (buf.GetType() == MQ_STRT && strncmp(buf.GetC(),"--incr",6) == 0);
+	MqBufferC buf = ReadU();
+	doincr = (buf.GetType() == 'C' && strncmp(buf.GetC(),"--incr",6) == 0);
 	if (!doincr) ReadUndo();
 
 	SendSTART(); 
@@ -332,7 +332,7 @@ namespace example {
 
       void BUF1 () {
 	MqBufferC buf = ReadU();
-	const char typ[2] = { MqBufferGetType(buf.GetU()), '\0' };
+	const char typ[2] = { buf.GetType(), '\0' };
 	SendSTART();
 	SendC(typ);
 	switch (buf.GetType2()) {
@@ -358,8 +358,8 @@ namespace example {
       void BUF2 () {
 	SendSTART();
 	for (int i=0; i<3; i++) {
-	  MQ_BUF buf = ReadU();
-	  const char str[2] = {MqBufferGetType(buf), '\0'};
+	  MqBufferC buf = ReadU();
+	  const char str[2] = {buf.GetType(), '\0'};
 	  SendC(str);
 	  SendU(buf);
 	}
@@ -367,9 +367,9 @@ namespace example {
       }
 
       void BUF3 () {
-	MQ_BUF buf = ReadU();
+	MqBufferC buf = ReadU();
 	SendSTART();
-	const char str[2] = {MqBufferGetType(buf), '\0'};
+	const char str[2] = {buf.GetType(), '\0'};
 	SendC(str);
 	SendU(buf);
 	SendI(ReadI());

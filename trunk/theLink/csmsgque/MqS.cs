@@ -117,15 +117,19 @@ namespace csmsgque {
       return ((MqS)GCHandle.FromIntPtr(MqConfigGetSelf(context)).Target);
     }
 
-    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqConfigDup")]
-    private static extern MqErrorE MqConfigDup([In]IntPtr context, [In]IntPtr tmpl);
-
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqDLogX")]
     private static extern void MqDLogX([In]IntPtr context, [In]string prefix, [In]int level, [In]string fmt, [In]string val );
 
     public void DLogC (int level, string val) {
       System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame(1);
       MqDLogX (context, sf.GetMethod().Name, level, "%s", val);
+    }
+
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqContextGetBuffer")]
+    private static extern IntPtr MqContextGetBuffer([In]IntPtr context);
+
+    public MqBufferS ContextGetBuffer () {
+      return new MqBufferS(MqContextGetBuffer (context));
     }
 
   /*****************************************************************************/

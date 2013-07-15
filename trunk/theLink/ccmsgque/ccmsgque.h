@@ -150,6 +150,8 @@ namespace ccmsgque {
 	hdl = bufP;
       }
 
+      operator MQ_BUF() { return hdl; };
+
       virtual ~MqBufferC () {
 	MqBufferDelete(&hdl);
       }
@@ -869,7 +871,9 @@ namespace ccmsgque {
       /// \api #MqSendU
       inline void SendU (MQ_BUF val) throw(MqCException) { ErrorCheck (MqSendU (&context, val)); }
       /// \api #MqSendU
-      inline void SendU (MqBufferC& val) throw(MqCException) { ErrorCheck (MqSendU (&context, val.GetU())); }
+      inline void SendU (MqBufferC& val) throw(MqCException) { ErrorCheck (MqSendU (&context, val)); }
+      /// \api #MqSendU
+      inline void SendU (MqBufferC *val) throw(MqCException) { ErrorCheck (MqSendU (&context, val->GetU())); }
       /// \api #MqSendN
       inline void SendN (MQ_CBI val, MQ_SIZE len) throw(MqCException) { ErrorCheck (MqSendN (&context, val, len)); }
       /// \api #MqSendB

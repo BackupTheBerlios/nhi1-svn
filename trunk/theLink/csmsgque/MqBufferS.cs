@@ -80,6 +80,25 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferGetC")]
     private  static extern MqErrorE MqBufferGetC([In]IntPtr buf, out IntPtr outV);
 
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferSetY")]
+    private  static extern IntPtr MqBufferSetY([In]IntPtr buf, [In] byte val);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferSetO")]
+    private  static extern IntPtr MqBufferSetO([In]IntPtr buf, [In] MQ_BOL val);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferSetS")]
+    private  static extern IntPtr MqBufferSetS([In]IntPtr buf, [In] short val);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferSetI")]
+    private  static extern IntPtr MqBufferSetI([In]IntPtr buf, [In] int val);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferSetF")]
+    private  static extern IntPtr MqBufferSetF([In]IntPtr buf, [In] float val);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferSetW")]
+    private  static extern IntPtr MqBufferSetW([In]IntPtr buf, [In] long val);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferSetD")]
+    private  static extern IntPtr MqBufferSetD([In]IntPtr buf, [In] double val);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferSetB")]
+    private  static extern IntPtr MqBufferSetB([In]IntPtr buf, [In] byte[] val, [In] int size);
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferSetC")]
+    private  static extern IntPtr MqBufferSetC([In]IntPtr buf, [In] string val);
+
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferDup")]
     private  static extern IntPtr MqBufferDup([In]IntPtr buf);
 
@@ -114,71 +133,125 @@ namespace csmsgque {
       return MqBufferGetType(buf);
     }}
 
-    /// \api #MqBufferGetY
-    public byte Y { get {
-      byte outV;
-      ErrorBufToCsWithCheck(MqBufferGetY(buf, out outV));
-      return outV;
-    }}
+    public byte Y { 
+      /// \api #MqBufferGetY
+      get {
+	byte outV;
+	ErrorBufToCsWithCheck(MqBufferGetY(buf, out outV));
+	return outV;
+      }
+      /// \api #MqBufferSetY
+      set {
+	MqBufferSetY(buf, value);
+      }
+    }
 
-    /// \api #MqBufferGetO
-    public bool O { get {
-      MQ_BOL outV;
-      ErrorBufToCsWithCheck(MqBufferGetO(buf, out outV));
-      return (outV == MQ_BOL.MQ_YES ? true : false);
-    }}
+    public bool O { 
+      /// \api #MqBufferGetO
+      get {
+	MQ_BOL outV;
+	ErrorBufToCsWithCheck(MqBufferGetO(buf, out outV));
+	return (outV == MQ_BOL.MQ_YES ? true : false);
+      }
+      /// \api #MqBufferSetO
+      set {
+	MqBufferSetO(buf, value == true ? MQ_BOL.MQ_YES : MQ_BOL.MQ_NO);
+      }
+    }
 
-    /// \api #MqBufferGetS
-    public short S { get {
-      short outV;
-      ErrorBufToCsWithCheck(MqBufferGetS(buf, out outV));
-      return outV;
-    }}
+    public short S { 
+      /// \api #MqBufferGetS
+      get {
+	short outV;
+	ErrorBufToCsWithCheck(MqBufferGetS(buf, out outV));
+	return outV;
+      }
+      /// \api #MqBufferSetS
+      set {
+	MqBufferSetS(buf, value);
+      }
+    }
 
-    /// \api #MqBufferGetI
-    public int I { get {
-      int outV;
-      ErrorBufToCsWithCheck(MqBufferGetI(buf, out outV));
-      return outV;
-    }}
+    public int I { 
+      /// \api #MqBufferGetI
+      get {
+	int outV;
+	ErrorBufToCsWithCheck(MqBufferGetI(buf, out outV));
+	return outV;
+      }
+      /// \api #MqBufferSetI
+      set {
+	MqBufferSetI(buf, value);
+      }
+    }
 
-    /// \api #MqBufferGetF
-    public float F { get {
-      float outV;
-      ErrorBufToCsWithCheck(MqBufferGetF(buf, out outV));
-      return outV;
-    }}
+    public float F { 
+      /// \api #MqBufferGetF
+      get {
+	float outV;
+	ErrorBufToCsWithCheck(MqBufferGetF(buf, out outV));
+	return outV;
+      }
+      /// \api #MqBufferSetF
+      set {
+	MqBufferSetF(buf, value);
+      }
+    }
 
-    /// \api #MqBufferGetW
-    public long W { get {
-      long outV;
-      ErrorBufToCsWithCheck(MqBufferGetW(buf, out outV));
-      return outV;
-    }}
+    public long W { 
+      /// \api #MqBufferGetW
+      get {
+	long outV;
+	ErrorBufToCsWithCheck(MqBufferGetW(buf, out outV));
+	return outV;
+      }
+      /// \api #MqBufferSetW
+      set {
+	MqBufferSetW(buf, value);
+      }
+    }
 
-    /// \api #MqBufferGetD
-    public double D { get {
-      double outV;
-      ErrorBufToCsWithCheck(MqBufferGetD(buf, out outV));
-      return outV;
-    }}
+    public double D { 
+      /// \api #MqBufferGetD
+      get {
+	double outV;
+	ErrorBufToCsWithCheck(MqBufferGetD(buf, out outV));
+	return outV;
+      }
+      /// \api #MqBufferSetD
+      set {
+	MqBufferSetD(buf, value);
+      }
+    }
 
-    /// \api #MqBufferGetB
-    public byte[] B { get {
-      IntPtr outV;
-      int size;
-      ErrorBufToCsWithCheck(MqBufferGetB(buf, out outV, out size));
-      byte[] outB = new byte[size];
-      Marshal.Copy(outV,outB,0,size);
-      return outB;
-    }}
+    public byte[] B { 
+      /// \api #MqBufferGetB
+      get {
+	IntPtr outV;
+	int size;
+	ErrorBufToCsWithCheck(MqBufferGetB(buf, out outV, out size));
+	byte[] outB = new byte[size];
+	Marshal.Copy(outV,outB,0,size);
+	return outB;
+      }
+      /// \api #MqBufferSetB
+      set {
+	MqBufferSetB(buf, value, value.Length);
+      }
+    }
 
-    /// \api #MqBufferGetC
-    public string C { get {
-      IntPtr outV;
-      ErrorBufToCsWithCheck(MqBufferGetC(buf, out outV));
-      return Marshal.PtrToStringAnsi(outV);
-    }}
+    public string C { 
+      /// \api #MqBufferGetC
+      get {
+	IntPtr outV;
+	ErrorBufToCsWithCheck(MqBufferGetC(buf, out outV));
+	return Marshal.PtrToStringAnsi(outV);
+      }
+      /// \api #MqBufferSetC
+      set {
+	MqBufferSetC(buf, value);
+      }
+    }
 
     /// \api #MqBufferDup
     public MqBufferS Dup() {

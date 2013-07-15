@@ -81,7 +81,7 @@ test -f $abs_top_dir/tags && cp $abs_top_dir/tags .
 }
 
 [[ $BASE = "cc" ]] && {
-  ctags -a $ADD $abs_top_builddir/theLink/ccmsgque/*.h
+  ctags -a $ADD $abs_top_srcdir/theLink/ccmsgque/*.h
 }
 
 [[ $BASE = "ccmsgque" ]] && {

@@ -118,6 +118,7 @@ namespace example {
 	ServiceCreate("ERLS", ERLS);
 	ServiceCreate("CFG1", CFG1);
 	ServiceCreate("ROUT", ROUT);
+	ServiceCreate("BUFE", BUFE);
 	ServiceCreate("PRNT", PRNT);
 	ServiceCreate("TRNS", TRNS);
 	ServiceCreate("TRN2", TRN2);
@@ -243,6 +244,28 @@ namespace example {
 	}
       } else {
 	SendC("unknown");
+      }
+      SendRETURN();
+    }
+
+    private void BUFE () {
+      String cmd = ReadC();
+      SendSTART();
+      if (cmd == "ctxbuf") {
+	MqBufferS tmp = ContextGetBuffer();
+	MqBufferS buf = ReadU();
+	switch (buf.Type) {
+	  case 'Y': tmp.Y = buf.Y; break;
+	  case 'O': tmp.O = buf.O; break;
+	  case 'S': tmp.S = buf.S; break;
+	  case 'I': tmp.I = buf.I; break;
+	  case 'F': tmp.F = buf.F; break;
+	  case 'W': tmp.W = buf.W; break;
+	  case 'D': tmp.D = buf.D; break;
+	  case 'B': tmp.B = buf.B; break;
+	  case 'C': tmp.C = buf.C; break;
+	}
+	SendU(tmp);
       }
       SendRETURN();
     }
@@ -652,7 +675,6 @@ namespace example {
       EchoList(doincr);
       SendRETURN();
     }
-
 
     void ECOC () {
       SendSTART();
