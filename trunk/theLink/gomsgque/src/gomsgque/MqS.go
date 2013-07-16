@@ -103,6 +103,10 @@ func (this *MqS) Exit() {
   C.MqExitP(C.sGO, (*_Ctype_struct_MqS)(this))
 }
 
+func (this *MqS) ContextGetBuffer() *MqBufferS {
+  return (*MqBufferS) (C.MqContextGetBuffer((*_Ctype_struct_MqS)(this)))
+}
+
 // global lock for thread-channel objects
 // this lock is used by the thread-starter to wait for the exit of the thread-started
 var lockThread = make(map[*chan bool]bool)

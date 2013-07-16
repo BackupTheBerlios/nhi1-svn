@@ -42,10 +42,24 @@ func (this *MqBufferS)  GetO() bool {
   return tmp == C.MQ_YES
 }
 
+func (this *MqBufferS) SetO(val bool) *MqBufferS {
+  var v C.MQ_BOL
+  if val {
+    v = C.MQ_YES
+  } else {
+    v = C.MQ_NO
+  }
+  return (*MqBufferS) (C.MqBufferSetO((*_Ctype_struct_MqBufferS)(this), v))
+}
+
 func (this *MqBufferS)  GetY() int8 {
   var tmp C.MQ_BYT
   this.iErrorBufToGoWithCheck(C.MqBufferGetY((*_Ctype_struct_MqBufferS)(this), &tmp))
   return int8(tmp)
+}
+
+func (this *MqBufferS) SetY(val int8) *MqBufferS {
+  return (*MqBufferS) (C.MqBufferSetY((*_Ctype_struct_MqBufferS)(this), C.MQ_BYT(val)))
 }
 
 func (this *MqBufferS)  GetS() int16 {
@@ -54,10 +68,18 @@ func (this *MqBufferS)  GetS() int16 {
   return int16(tmp)
 }
 
+func (this *MqBufferS) SetS(val int16) *MqBufferS {
+  return (*MqBufferS) (C.MqBufferSetS((*_Ctype_struct_MqBufferS)(this), C.MQ_SRT(val)))
+}
+
 func (this *MqBufferS)  GetI() int32 {
   var tmp C.MQ_INT
   this.iErrorBufToGoWithCheck(C.MqBufferGetI((*_Ctype_struct_MqBufferS)(this), &tmp))
   return int32(tmp)
+}
+
+func (this *MqBufferS) SetI(val int32) *MqBufferS {
+  return (*MqBufferS) (C.MqBufferSetI((*_Ctype_struct_MqBufferS)(this), C.MQ_INT(val)))
 }
 
 func (this *MqBufferS)  GetW() int64 {
@@ -66,10 +88,18 @@ func (this *MqBufferS)  GetW() int64 {
   return int64(tmp)
 }
 
+func (this *MqBufferS) SetW(val int64) *MqBufferS {
+  return (*MqBufferS) (C.MqBufferSetW((*_Ctype_struct_MqBufferS)(this), C.MQ_WID(val)))
+}
+
 func (this *MqBufferS)  GetF() float32 {
   var tmp C.MQ_FLT
   this.iErrorBufToGoWithCheck(C.MqBufferGetF((*_Ctype_struct_MqBufferS)(this), &tmp))
   return float32(tmp)
+}
+
+func (this *MqBufferS) SetF(val float32) *MqBufferS {
+  return (*MqBufferS) (C.MqBufferSetF((*_Ctype_struct_MqBufferS)(this), C.MQ_FLT(val)))
 }
 
 func (this *MqBufferS)  GetD() float64 {
@@ -78,10 +108,21 @@ func (this *MqBufferS)  GetD() float64 {
   return float64(tmp)
 }
 
+func (this *MqBufferS) SetD(val float64) *MqBufferS {
+  return (*MqBufferS) (C.MqBufferSetD((*_Ctype_struct_MqBufferS)(this), C.MQ_DBL(val)))
+}
+
 func (this *MqBufferS)  GetC() string {
   var tmp C.MQ_CST
   this.iErrorBufToGoWithCheck(C.MqBufferGetC((*_Ctype_struct_MqBufferS)(this), &tmp))
   return C.GoString(tmp)
+}
+
+func (this *MqBufferS) SetC(val string) *MqBufferS {
+  s := C.CString(val)
+  ret := C.MqBufferSetC((*_Ctype_struct_MqBufferS)(this), C.MQ_CST(s))
+  C.free(unsafe.Pointer(s))
+  return (*MqBufferS) (ret)
 }
 
 func (this *MqBufferS)  GetB() *MqBinary {
@@ -89,6 +130,10 @@ func (this *MqBufferS)  GetB() *MqBinary {
   var len C.MQ_SIZE
   this.iErrorBufToGoWithCheck(C.MqBufferGetB((*_Ctype_struct_MqBufferS)(this), &tmp, &len))
   return &MqBinary{unsafe.Pointer(tmp), int(len)}
+}
+
+func (this *MqBufferS) SetB(val *MqBinary) *MqBufferS {
+  return (*MqBufferS) (C.MqBufferSetB((*_Ctype_struct_MqBufferS)(this), C.MQ_CBI(val.D), C.MQ_SIZE(val.L)))
 }
 
 func (this *MqBufferS)  GetType() string {

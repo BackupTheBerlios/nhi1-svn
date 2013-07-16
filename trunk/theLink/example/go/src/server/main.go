@@ -127,6 +127,7 @@ func (this *Server) ServerSetup() {
 
     this.ServiceCreate("CFG1", (*CFG1)(this))
     this.ServiceCreate("ROUT", (*ROUT)(this))
+    this.ServiceCreate("BUFE", (*BUFE)(this))
 
     this.ServiceCreate("BUF1", (*BUF1)(this))
     this.ServiceCreate("BUF2", (*BUF2)(this))
@@ -734,6 +735,29 @@ type ROUT Server
       }
       default: {
 	this.SendC ("unknown")
+      }
+    }
+    this.SendRETURN()
+  }
+
+type BUFE Server
+  func (this *BUFE) Call() {
+    this.SendSTART()
+    switch this.ReadC() {
+      case "ctxbuf": {
+	tmp := this.ContextGetBuffer()
+	buf := this.ReadU()
+	switch (buf.GetType()) {
+	  case "Y": { this.SendU(tmp.SetY(buf.GetY())) }
+	  case "O": { this.SendU(tmp.SetO(buf.GetO())) }
+	  case "S": { this.SendU(tmp.SetS(buf.GetS())) }
+	  case "I": { this.SendU(tmp.SetI(buf.GetI())) }
+	  case "F": { this.SendU(tmp.SetF(buf.GetF())) }
+	  case "W": { this.SendU(tmp.SetW(buf.GetW())) }
+	  case "D": { this.SendU(tmp.SetD(buf.GetD())) }
+	  case "C": { this.SendU(tmp.SetC(buf.GetC())) }
+	  case "B": { this.SendU(tmp.SetB(buf.GetB())) }
+	}
       }
     }
     this.SendRETURN()

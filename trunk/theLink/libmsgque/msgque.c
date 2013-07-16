@@ -312,7 +312,7 @@ MqCheckForLeftOverArguments (
   return MqErrorGetCodeI(context);
 }
 
-MQ_BUF
+struct MqBufferS *
 MqContextGetBuffer (
   struct MqS * const context
 )

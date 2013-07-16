@@ -115,6 +115,7 @@ class Server(MqS):
       self.ServiceCreate("ERLS", self.ERLS)
       self.ServiceCreate("CFG1", self.CFG1)
       self.ServiceCreate("ROUT", self.ROUT)
+      self.ServiceCreate("BUFE", self.BUFE)
       self.ServiceCreate("PRNT", self.PRNT)
       self.ServiceCreate("TRNS", self.TRNS)
       self.ServiceCreate("TRN2", self.TRN2)
@@ -259,6 +260,34 @@ class Server(MqS):
     else:
       self.SendC("nothing")
     self.SendRETURN();
+
+  def BUFE(self):
+    cmd = self.ReadC()
+    self.SendSTART()
+    if cmd == "ctxbuf" :
+      tmp = self.ContextGetBuffer()
+      buf = self.ReadU()
+      typ = buf.GetType()
+      if typ == "Y":
+        tmp.SetY (buf.GetY())
+      elif typ == "O":
+        tmp.SetO (buf.GetO())
+      elif typ == "S": 
+        tmp.SetS (buf.GetS())
+      elif typ == "I": 
+        tmp.SetI (buf.GetI())
+      elif typ == "F": 
+        tmp.SetF (buf.GetF())
+      elif typ == "W": 
+        tmp.SetW (buf.GetW())
+      elif typ == "D": 
+        tmp.SetD (buf.GetD())
+      elif typ == "C": 
+        tmp.SetC (buf.GetC())
+      elif typ == "B": 
+        tmp.SetB (buf.GetB())
+      self.SendU(tmp)
+    self.SendRETURN()
 
   def ERLR (self):
     self.SendSTART();

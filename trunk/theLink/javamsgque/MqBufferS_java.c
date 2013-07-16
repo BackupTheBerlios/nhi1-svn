@@ -31,96 +31,27 @@ error:
   return 0;
 }
 
-JNIEXPORT jbyte JNICALL NB(GetY) (
-  JNIEnv    *env, 
-  jobject   self
-)
-{
-  MQ_BYT v;
-  SETUP_buf(self);
-  ErrorMqBufferToJavaWithCheck(MqBufferGetY(buf,&v));
-  return (jbyte) v;
-error:
-  return 0;
+#define GET(T,L,J) \
+JNIEXPORT J JNICALL NB(Get ## T) ( \
+  JNIEnv    *env, \
+  jobject   self \
+) \
+{ \
+  L v; \
+  SETUP_buf(self); \
+  ErrorMqBufferToJavaWithCheck(MqBufferGet ## T(buf,&v)); \
+  return (J) v; \
+error: \
+  return (J) 0; \
 }
 
-JNIEXPORT jboolean JNICALL NB(GetO) (
-  JNIEnv    *env, 
-  jobject   self
-)
-{
-  MQ_BOL v;
-  SETUP_buf(self);
-  ErrorMqBufferToJavaWithCheck(MqBufferGetO(buf,&v));
-  return (jboolean) v;
-error:
-  return 0;
-}
-
-JNIEXPORT jshort JNICALL NB(GetS) (
-  JNIEnv    *env, 
-  jobject   self 
-)
-{
-  MQ_SRT v;
-  SETUP_buf(self);
-  ErrorMqBufferToJavaWithCheck(MqBufferGetS(buf,&v));
-  return (jshort) v;
-error:
-  return 0;
-}
-
-JNIEXPORT jint JNICALL NB(GetI) (
-  JNIEnv    *env, 
-  jobject   self 
-)
-{
-  MQ_INT v;
-  SETUP_buf(self);
-  ErrorMqBufferToJavaWithCheck(MqBufferGetI(buf,&v));
-  return (jint) v;
-error:
-  return 0;
-}
-
-JNIEXPORT jfloat JNICALL NB(GetF) (
-  JNIEnv    *env, 
-  jobject   self 
-)
-{
-  MQ_FLT v;
-  SETUP_buf(self);
-  ErrorMqBufferToJavaWithCheck(MqBufferGetF(buf,&v));
-  return (jfloat) v;
-error:
-  return 0;
-}
-
-JNIEXPORT jlong JNICALL NB(GetW) (
-  JNIEnv    *env, 
-  jobject   self 
-)
-{
-  MQ_WID v;
-  SETUP_buf(self);
-  ErrorMqBufferToJavaWithCheck(MqBufferGetW(buf,&v));
-  return (jlong) v;
-error:
-  return 0L;
-}
-
-JNIEXPORT jdouble JNICALL NB(GetD) (
-  JNIEnv    *env, 
-  jobject   self 
-)
-{
-  MQ_DBL v;
-  SETUP_buf(self);
-  ErrorMqBufferToJavaWithCheck(MqBufferGetD(buf,&v));
-  return (jdouble) v;
-error:
-  return 0.0;
-}
+GET(Y,MQ_BYT,jbyte)
+GET(O,MQ_BOL,jboolean)
+GET(S,MQ_SRT,jshort)
+GET(I,MQ_INT,jint)
+GET(F,MQ_FLT,jfloat)
+GET(W,MQ_WID,jlong)
+GET(D,MQ_DBL,jdouble)
 
 JNIEXPORT jobject JNICALL NB(GetC) (
   JNIEnv    *env, 
@@ -145,6 +76,61 @@ JNIEXPORT jobject JNICALL NB(GetB) (
   tmp = (*env)->NewByteArray(env,buf->cursize);
   (*env)->SetByteArrayRegion(env,tmp,0,buf->cursize,(jbyte*)buf->data);
   return tmp;
+error:
+  return NULL;
+}
+
+#define SET(T,L,J) \
+JNIEXPORT jobject JNICALL NB(Set ## T) ( \
+  JNIEnv *      env, \
+  jobject       self, \
+  J		val \
+) \
+{ \
+  SETUP_buf(self); \
+  return (*env)->NewObject(env, NS(Class_MqBufferS), NS(MID_MqBufferS_INIT), (jlong) MqBufferSet ## T (buf, (L) val)); \
+error: \
+  return NULL; \
+}
+
+SET(Y,MQ_BYT,jbyte)
+SET(O,MQ_BOL,jboolean)
+SET(S,MQ_SRT,jshort)
+SET(I,MQ_INT,jint)
+SET(F,MQ_FLT,jfloat)
+SET(W,MQ_WID,jlong)
+SET(D,MQ_DBL,jdouble)
+
+JNIEXPORT jobject JNICALL NB(SetC) (
+  JNIEnv *	env, 
+  jobject	self,
+  jstring	s
+)
+{
+  const char * str;
+  MQ_BUF ret;
+  SETUP_buf(self);
+  str = JO2C_START(env,s);
+  ret = MqBufferSetC(buf,str);
+  JO2C_STOP(env,s,str);
+  return (*env)->NewObject(env, NS(Class_MqBufferS), NS(MID_MqBufferS_INIT), (jlong) ret);
+error:
+  return NULL;
+}
+
+JNIEXPORT jobject JNICALL NB(SetB) (
+  JNIEnv *	env, 
+  jobject	self,
+  jbyteArray	b
+)
+{
+  jbyte * tmp;
+  MQ_BUF ret;
+  SETUP_buf(self);
+  tmp = (*env)->GetByteArrayElements(env,b,NULL);
+  ret = MqBufferSetB(buf,(MQ_BIN)tmp,(*env)->GetArrayLength(env,b));
+  (*env)->ReleaseByteArrayElements(env,b,tmp,0);
+  return (*env)->NewObject(env, NS(Class_MqBufferS), NS(MID_MqBufferS_INIT), (jlong) ret);
 error:
   return NULL;
 }

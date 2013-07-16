@@ -90,6 +90,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
       $this->ServiceCreate("USLP", array(&$this, 'USLP'));
       $this->ServiceCreate("CFG1", array(&$this, 'CFG1'));
       $this->ServiceCreate("ROUT", array(&$this, 'ROUT'));
+      $this->ServiceCreate("BUFE", array(&$this, 'BUFE'));
       $this->ServiceCreate("INIT", array(&$this, 'INITX'));
       $this->ServiceCreate("LST1", array(&$this, 'LST1'));
       $this->ServiceCreate("LST2", array(&$this, 'LST2'));
@@ -614,6 +615,29 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
 	break;
       default:
         $this->SendC("nothing");
+    }
+    $this->SendRETURN();
+  }
+
+  public function BUFE() {
+    $cmd = $this->ReadC();
+    $this->SendSTART();
+    switch ($cmd) {
+      case "ctxbuf":
+	$tmp = $this->ContextGetBuffer();
+	$buf = $this->ReadU();
+	switch ($buf->GetType()) {
+	  case "Y":   $this->SendU($tmp->SetY($buf->GetY())); break;
+	  case "O":   $this->SendU($tmp->SetO($buf->GetO())); break;
+	  case "S":   $this->SendU($tmp->SetS($buf->GetS())); break;
+	  case "I":   $this->SendU($tmp->SetI($buf->GetI())); break;
+	  case "F":   $this->SendU($tmp->SetF($buf->GetF())); break;
+	  case "W":   $this->SendU($tmp->SetW($buf->GetW())); break;
+	  case "D":   $this->SendU($tmp->SetD($buf->GetD())); break;
+	  case "B":   $this->SendU($tmp->SetB($buf->GetB())); break;
+	  case "C":   $this->SendU($tmp->SetC($buf->GetC())); break;
+	}
+	break;
     }
     $this->SendRETURN();
   }

@@ -95,6 +95,7 @@ class Server < MqS
       ServiceCreate("USLP", method(:USLP))
       ServiceCreate("CFG1", method(:CFG1))
       ServiceCreate("ROUT", method(:ROUT))
+      ServiceCreate("BUFE", method(:BUFE))
       ServiceCreate("INIT", method(:INIT))
       ServiceCreate("LST1", method(:LST1))
       ServiceCreate("LST2", method(:LST2))
@@ -354,6 +355,37 @@ class Server < MqS
         end
       else
         SendC("unknown")
+    end
+    SendRETURN();
+  end
+
+  def BUFE
+    cmd = ReadC()
+    SendSTART()
+    case cmd
+      when "ctxbuf"
+	tmp = ContextGetBuffer()
+	buf = ReadU()
+	case buf.GetType()
+	  when "Y"   
+            SendU(tmp.SetY(buf.GetY()))
+	  when "O"
+            SendU(tmp.SetO(buf.GetO()))
+	  when "S"
+            SendU(tmp.SetS(buf.GetS()))
+	  when "I"
+            SendU(tmp.SetI(buf.GetI()))
+	  when "F"
+            SendU(tmp.SetF(buf.GetF()))
+	  when "W"
+            SendU(tmp.SetW(buf.GetW()))
+	  when "D"
+            SendU(tmp.SetD(buf.GetD()))
+	  when "B"
+            SendU(tmp.SetB(buf.GetB()))
+	  when "C"
+            SendU(tmp.SetC(buf.GetC()))
+	end
     end
     SendRETURN();
   end

@@ -123,6 +123,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
       ServiceCreate("ERLS", new ERLS());
       ServiceCreate("CFG1", new CFG1());
       ServiceCreate("ROUT", new ROUT());
+      ServiceCreate("BUFE", new BUFE());
       ServiceCreate("PRNT", new PRNT());
       ServiceCreate("TRNS", new TRNS());
       ServiceCreate("TRN2", new TRN2());
@@ -239,6 +240,29 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 	}
       } else {
 	SendC("unknown");
+      }
+      SendRETURN();
+    }
+  }
+
+  class BUFE implements IService {
+    public void Service (MqS ctx) throws MqSException {
+      String cmd = ReadC();
+      SendSTART();
+      if (cmd.equals("ctxbuf")) {
+	MqBufferS tmp = ContextGetBuffer();
+	MqBufferS buf = ReadU();
+	switch (buf.GetType()) {
+	  case 'Y': SendU(tmp.SetY(buf.GetY())); break;
+	  case 'O': SendU(tmp.SetO(buf.GetO())); break;
+	  case 'S': SendU(tmp.SetS(buf.GetS())); break;
+	  case 'I': SendU(tmp.SetI(buf.GetI())); break;
+	  case 'F': SendU(tmp.SetF(buf.GetF())); break;
+	  case 'W': SendU(tmp.SetW(buf.GetW())); break;
+	  case 'D': SendU(tmp.SetD(buf.GetD())); break;
+	  case 'C': SendU(tmp.SetC(buf.GetC())); break;
+	  case 'B': SendU(tmp.SetB(buf.GetB())); break;
+	}
       }
       SendRETURN();
     }

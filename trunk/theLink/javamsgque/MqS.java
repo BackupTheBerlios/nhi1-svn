@@ -168,6 +168,9 @@ public class MqS {
   /// \api #MqExit
   public native void Exit ();
 
+  /// \api #MqContextGetBuffer
+  public native MqBufferS ContextGetBuffer ();
+
   /// \api #MqLogC
   public native void LogC (String prefix, int level, String text);
 

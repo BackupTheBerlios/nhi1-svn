@@ -158,11 +158,3 @@ PHP_METHOD(MsgqueForPhp_MqS, SendERROR)
 void NS(MqS_Send_Init)(void) {
 }
 
-
-
-
-
-
-
-
-

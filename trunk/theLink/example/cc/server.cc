@@ -640,17 +640,16 @@ namespace example {
 	  MqBufferC tmp = ContextGetBuffer();
 	  MqBufferC buf = ReadU();
 	  switch (buf.GetType()) {
-	    case 'Y': { tmp.SetY(buf.GetY()); break; }
-	    case 'O': { tmp.SetO(buf.GetO()); break; }
-	    case 'S': { tmp.SetS(buf.GetS()); break; }
-	    case 'I': { tmp.SetI(buf.GetI()); break; }
-	    case 'F': { tmp.SetF(buf.GetF()); break; }
-	    case 'W': { tmp.SetW(buf.GetW()); break; }
-	    case 'D': { tmp.SetD(buf.GetD()); break; }
-	    case 'B': { tmp.SetB(buf.GetB()); break; }
-	    case 'C': { tmp.SetC(buf.GetC()); break; }
+	    case 'Y': { SendU(tmp.SetY(buf.GetY())); break; }
+	    case 'O': { SendU(tmp.SetO(buf.GetO())); break; }
+	    case 'S': { SendU(tmp.SetS(buf.GetS())); break; }
+	    case 'I': { SendU(tmp.SetI(buf.GetI())); break; }
+	    case 'F': { SendU(tmp.SetF(buf.GetF())); break; }
+	    case 'W': { SendU(tmp.SetW(buf.GetW())); break; }
+	    case 'D': { SendU(tmp.SetD(buf.GetD())); break; }
+	    case 'B': { SendU(tmp.SetB(buf.GetB())); break; }
+	    case 'C': { SendU(tmp.SetC(buf.GetC())); break; }
 	  }
-	  SendU(tmp);
 	}
 	SendRETURN();
       }

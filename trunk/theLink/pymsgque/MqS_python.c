@@ -58,11 +58,13 @@ PyObject* NS(ProcessEvent)	    ( PyObject*, PyObject* );
 PyObject* NS(Delete)		    ( PyObject*		   );
 PyObject* NS(Exit)		    ( PyObject*            );
 PyObject* NS(LogC)		    ( PyObject*, PyObject* );
+PyObject* NS(ContextGetBuffer)	    ( PyObject* );
 
 #define ProcessEvent_DOC	    "[[timeout(sec),MqS::WAIT_(NO|ONCE|FOREVER)]]\nStart the eventloop and wait for incomming messages."
 #define Delete_DOC		    "[noARG] Delete the LibMsgque object, but keep the PyMqS object alive."
 #define Exit_DOC		    "exit the application or thread"
 #define LogC_DOC		    "write log-messages to stderr"
+#define ContextGetBuffer_DOC	    "return a temporaray writable buffer"
 
 // from link_python.c
 
@@ -354,6 +356,7 @@ static PyMethodDef NS(MqS_Methods)[] = {
     ARG(Delete,			METH_NOARGS),
     ARG(Exit,			METH_NOARGS),
     ARG(LogC,			METH_VARARGS),
+    ARG(ContextGetBuffer,	METH_NOARGS),
 
     ARG(LinkCreate,		METH_VARARGS),
     ARG(LinkCreateChild,	METH_VARARGS),

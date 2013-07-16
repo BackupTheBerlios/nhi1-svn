@@ -179,9 +179,7 @@ int NS(ReadU) (MqS_ARGS)
   CHECK_NOARGS
   ErrorMqToTclWithCheck(MqReadU(mqctx, &buf));
   NS(MqBufferS_New) (interp, buf);
-  return TCL_OK;
-error:
-  return TCL_ERROR;
+  RETURN_TCL
 }
 
 int NS(ReadGetNumItems) (MqS_ARGS)

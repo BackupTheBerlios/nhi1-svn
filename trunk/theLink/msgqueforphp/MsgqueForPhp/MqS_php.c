@@ -39,6 +39,13 @@ PHP_METHOD(MsgqueForPhp_MqS, Delete)
 }
 
 static
+PHP_METHOD(MsgqueForPhp_MqS, ContextGetBuffer)
+{
+  SETUP_mqctx;
+  MqBufferS2VAL(return_value, MqContextGetBuffer(mqctx));
+}
+
+static
 PHP_METHOD(MsgqueForPhp_MqS, LogC)
 {
   SETUP_mqctx;
@@ -382,6 +389,7 @@ static const zend_function_entry NS(MqS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqS, __destruct,		    NULL,		  ZEND_ACC_PUBLIC|ZEND_ACC_DTOR)
   PHP_ME(MsgqueForPhp_MqS, Exit,		    no_arg,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, Delete,		    no_arg,		  ZEND_ACC_PUBLIC)
+  PHP_ME(MsgqueForPhp_MqS, ContextGetBuffer,	    no_arg,		  ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqS, LogC,		    LogC_arg,		  ZEND_ACC_PUBLIC)
 #ifdef _DEBUG
   PHP_ME(MsgqueForPhp_MqS, Info,		    val_arg,		  ZEND_ACC_PUBLIC)

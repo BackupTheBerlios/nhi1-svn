@@ -182,6 +182,14 @@ JNIEXPORT void JNICALL NS(Exit) (
   MqExit(CONTEXT);
 }
 
+JNIEXPORT jobject JNICALL NS(ContextGetBuffer) (
+  JNIEnv *	env, 
+  jobject	self 
+)
+{
+  return (*env)->NewObject(env, NS(Class_MqBufferS), NS(MID_MqBufferS_INIT), (jlong) MqContextGetBuffer(CONTEXT));
+}
+
 JNIEXPORT void JNICALL NS(pProcessEvent) (
   JNIEnv *	env, 
   jobject	self, 

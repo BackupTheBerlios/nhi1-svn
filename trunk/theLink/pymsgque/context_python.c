@@ -65,6 +65,13 @@ PyObject* NS(Delete) (
   Py_RETURN_NONE;
 }
 
+PyObject* NS(ContextGetBuffer)(
+  PyObject  *self
+)
+{
+  return MqBufferS_New(MqContextGetBuffer(CONTEXT));
+}
+
 PyObject* NS(Exit)(
   PyObject  *self
 )

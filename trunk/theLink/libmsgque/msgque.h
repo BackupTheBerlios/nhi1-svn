@@ -1774,7 +1774,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqCheckForLeftOverArguments (
 /// \brief get the \ref MqS::ctxbuf object
 /// \context
 /// \return the \c context->ctxbuf object
-MQ_EXTERN MQ_BUF MqContextGetBuffer (
+MQ_EXTERN struct MqBufferS *  MqContextGetBuffer (
   struct MqS * const context
 );
 
@@ -2790,11 +2790,9 @@ MQ_EXTERN char MQ_DECL MqBufferGetType (
 
 /// \brief return the #MqTypeE from a #MQ_BUF object
 /// \buf
-inline enum MqTypeE MQ_DECL MqBufferGetType2 (
+MQ_EXTERN enum MqTypeE MQ_DECL MqBufferGetType2 (
   struct MqBufferS * const buf
-) {
-  return buf->type;
-}
+);
 
 /// \brief return the \e type from a #MQ_BUF object as single character string
 /// \buf

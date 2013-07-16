@@ -25,7 +25,7 @@ static int NS(Set ## T) (MqBufferS_ARGS) \
   L val; \
   CHECK_ ## T(val) \
   CHECK_NOARGS \
-  MqBufferSet ## T (buf, val); \
+  NS(MqBufferS_New) (interp, MqBufferSet ## T (buf, val)); \
   RETURN_TCL \
 }
 
@@ -67,7 +67,7 @@ static int NS(SetB) (MqBufferS_ARGS)
   MQ_SIZE len;
   CHECK_B(val,len)
   CHECK_NOARGS
-  MqBufferSetB (buf, val, len);
+  NS(MqBufferS_New) (interp, MqBufferSetB (buf, val, len));
   RETURN_TCL
 }
 

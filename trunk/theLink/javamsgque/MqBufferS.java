@@ -46,30 +46,41 @@ public class MqBufferS {
 
   /// \copybrief MqBufferGetY
   public native byte GetY ();
-
-  /// \copybrief MqBufferGetY
+  /// \copybrief MqBufferGetO
   public native boolean GetO ();
-
-  /// \copybrief MqBufferGetY
+  /// \copybrief MqBufferGetS
   public native short GetS ();
-
-  /// \copybrief MqBufferGetY
+  /// \copybrief MqBufferGetI
   public native int GetI ();
-
-  /// \copybrief MqBufferGetY
+  /// \copybrief MqBufferGetF
   public native float GetF ();
-
-  /// \copybrief MqBufferGetY
+  /// \copybrief MqBufferGetW
   public native long GetW ();
-
-  /// \copybrief MqBufferGetY
+  /// \copybrief MqBufferGetD
   public native double GetD ();
-
-  /// \copybrief MqBufferGetY
+  /// \copybrief MqBufferGetC
+  public native String GetC ();
+  /// \copybrief MqBufferGetB
   public native byte[] GetB ();
 
-  /// \copybrief MqBufferGetY
-  public native String GetC ();
+  /// \copybrief MqBufferSetY
+  public native MqBufferS SetY (byte val);
+  /// \copybrief MqBufferSetO
+  public native MqBufferS SetO (boolean val);
+  /// \copybrief MqBufferSetS
+  public native MqBufferS SetS (short val);
+  /// \copybrief MqBufferSetI
+  public native MqBufferS SetI (int val);
+  /// \copybrief MqBufferSetF
+  public native MqBufferS SetF (float val);
+  /// \copybrief MqBufferSetW
+  public native MqBufferS SetW (long val);
+  /// \copybrief MqBufferSetD
+  public native MqBufferS SetD (double val);
+  /// \copybrief MqBufferSetC
+  public native MqBufferS SetC (String val);
+  /// \copybrief MqBufferSetB
+  public native MqBufferS SetB (byte[] val);
 }
 
 /// \} Mq_Buffer_Java_API

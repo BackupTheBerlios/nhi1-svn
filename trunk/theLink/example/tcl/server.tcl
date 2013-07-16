@@ -430,17 +430,16 @@ proc Ot_BUFE {ctx} {
       set tmp [$ctx ContextGetBuffer]
       set buf [$ctx ReadU]
       switch -exact [$buf GetType] {
-	"Y"   { $tmp SetY [$buf GetY] }
-	"O"   { $tmp SetO [$buf GetO] }
-	"S"   { $tmp SetS [$buf GetS] }
-	"I"   { $tmp SetI [$buf GetI] }
-	"F"   { $tmp SetF [$buf GetF] }
-	"W"   { $tmp SetW [$buf GetW] }
-	"D"   { $tmp SetD [$buf GetD] }
-	"B"   { $tmp SetB [$buf GetB] }
-	"C"   { $tmp SetC [$buf GetC] }
+	"Y"   { $ctx SendU [$tmp SetY [$buf GetY]] }
+	"O"   { $ctx SendU [$tmp SetO [$buf GetO]] }
+	"S"   { $ctx SendU [$tmp SetS [$buf GetS]] }
+	"I"   { $ctx SendU [$tmp SetI [$buf GetI]] }
+	"F"   { $ctx SendU [$tmp SetF [$buf GetF]] }
+	"W"   { $ctx SendU [$tmp SetW [$buf GetW]] }
+	"D"   { $ctx SendU [$tmp SetD [$buf GetD]] }
+	"B"   { $ctx SendU [$tmp SetB [$buf GetB]] }
+	"C"   { $ctx SendU [$tmp SetC [$buf GetC]] }
       }
-      $ctx SendU $tmp
     }
   }
   $ctx SendRETURN

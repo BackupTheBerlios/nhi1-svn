@@ -174,8 +174,8 @@ namespace ccmsgque {
       }
 
       /// \api #MqBufferSetY
-      inline void SetY (MQ_BYT val) const {
-	MqBufferSetY (hdl, val);
+      inline MQ_BUF SetY (MQ_BYT val) const {
+	return MqBufferSetY (hdl, val);
       }
 
       /// \api #MqBufferGetO
@@ -186,8 +186,8 @@ namespace ccmsgque {
       }
 
       /// \api #MqBufferSetO
-      inline void SetO (MQ_BOL val) const {
-	MqBufferSetO (hdl, val);
+      inline MQ_BUF SetO (MQ_BOL val) const {
+	return MqBufferSetO (hdl, val);
       }
 
       /// \api #MqBufferGetS
@@ -198,8 +198,8 @@ namespace ccmsgque {
       }
 
       /// \api #MqBufferSetS
-      inline void SetS (MQ_SRT val) const {
-	MqBufferSetS (hdl, val);
+      inline MQ_BUF SetS (MQ_SRT val) const {
+	return MqBufferSetS (hdl, val);
       }
 
       /// \api #MqBufferGetI
@@ -210,8 +210,8 @@ namespace ccmsgque {
       }
 
       /// \api #MqBufferSetI
-      inline void SetI (MQ_INT val) const {
-	MqBufferSetI (hdl, val);
+      inline MQ_BUF SetI (MQ_INT val) const {
+	return MqBufferSetI (hdl, val);
       }
 
       /// \api #MqBufferGetF
@@ -222,8 +222,8 @@ namespace ccmsgque {
       }
 
       /// \api #MqBufferSetF
-      inline void SetF (MQ_FLT val) const {
-	MqBufferSetF (hdl, val);
+      inline MQ_BUF SetF (MQ_FLT val) const {
+	return MqBufferSetF (hdl, val);
       }
 
       /// \api #MqBufferGetW
@@ -234,8 +234,8 @@ namespace ccmsgque {
       }
 
       /// \api #MqBufferSetW
-      inline void SetW (MQ_WID val) const {
-	MqBufferSetW (hdl, val);
+      inline MQ_BUF SetW (MQ_WID val) const {
+	return MqBufferSetW (hdl, val);
       }
 
       /// \api #MqBufferGetD
@@ -246,8 +246,8 @@ namespace ccmsgque {
       }
 
       /// \api #MqBufferSetD
-      inline void SetD (MQ_DBL val) const {
-	MqBufferSetD (hdl, val);
+      inline MQ_BUF SetD (MQ_DBL val) const {
+	return MqBufferSetD (hdl, val);
       }
 
       /// \api #MqBufferGetC
@@ -258,8 +258,8 @@ namespace ccmsgque {
       }
 
       /// \api #MqBufferSetC
-      inline void SetC (MQ_CST val) const {
-	MqBufferSetC (hdl, val);
+      inline MQ_BUF SetC (MQ_CST val) const {
+	return MqBufferSetC (hdl, val);
       }
 
       /// \return handle
@@ -273,8 +273,8 @@ namespace ccmsgque {
       }
 
       /// \api #MqBufferSetB
-      inline void SetB (MQ_BIN val, MQ_SIZE len) {
-	MqBufferSetB (hdl, val, len);
+      inline MQ_BUF SetB (MQ_BIN val, MQ_SIZE len) {
+	return MqBufferSetB (hdl, val, len);
       }
 
       /// \api #MqBufferGetB
@@ -282,8 +282,8 @@ namespace ccmsgque {
       vector<MQ_BINB>& GetB () const throw(MqCException);
 
       /// \api #MqBufferSetB
-      inline void SetB (vector<MQ_BINB>& val) {
-	MqBufferSetB (hdl, val.data(), val.size());
+      inline MQ_BUF SetB (vector<MQ_BINB>& val) {
+	return MqBufferSetB (hdl, val.data(), val.size());
       }
 
       /// \api #MqBufferAppendC

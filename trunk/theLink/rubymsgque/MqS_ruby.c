@@ -102,6 +102,11 @@ static VALUE Exit(VALUE self)
   return Qnil;
 }
 
+static VALUE ContextGetBuffer(VALUE self)
+{
+  return NS(MqBufferS_New) (MqContextGetBuffer(MQCTX));
+}
+
 static VALUE Delete(VALUE self)
 {
   MqContextFree (MQCTX);
@@ -168,11 +173,12 @@ void NS(MqS_Init) (void) {
   rb_define_singleton_method(cMqS, "Init",      Init,	  -1);
   rb_define_singleton_method(cMqS, "Resolve",   Resolve,  1);
 
-  rb_define_method(cMqS, "Exit",      Exit,	0);
-  rb_define_method(cMqS, "Delete",    Delete,	0);
-  rb_define_method(cMqS, "LogC",      LogC,	3);
-  rb_define_method(cMqS, "Sleep",     Sleep,	1);
-  rb_define_method(cMqS, "USleep",    USleep,	1);
+  rb_define_method(cMqS, "Exit",	      Exit,		0);
+  rb_define_method(cMqS, "ContextGetBuffer",  ContextGetBuffer,	0);
+  rb_define_method(cMqS, "Delete",	      Delete,		0);
+  rb_define_method(cMqS, "LogC",	      LogC,		3);
+  rb_define_method(cMqS, "Sleep",	      Sleep,		1);
+  rb_define_method(cMqS, "USleep",	      USleep,		1);
 
   // Timeout
   rb_define_const(cMqS, "TIMEOUT_DEFAULT",  INT2VAL(-1));
@@ -205,5 +211,4 @@ void NS(MqS_Init) (void) {
   globalRef = rb_ary_new();
   rb_gc_register_mark_object(globalRef);
 }
-
 

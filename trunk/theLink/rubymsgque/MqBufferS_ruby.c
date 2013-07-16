@@ -22,6 +22,19 @@ VALUE cMqBufferS;
     ErrorBufToRuby(); \
   }
 
+#define Mth(T) \
+rb_define_method(cMqBufferS, MQ_CPPXSTR(Get ## T), Get ## T, 0); \
+rb_define_method(cMqBufferS, MQ_CPPXSTR(Set ## T), Set ## T, 1); \
+
+#define Mth2(T) \
+rb_define_method(cMqBufferS, MQ_CPPXSTR(Get ## T), Get ## T, 0);
+
+/*****************************************************************************/
+/*                                                                           */
+/*                                private                                    */
+/*                                                                           */
+/*****************************************************************************/
+
 #define GET(T,M) \
 static VALUE Get ## T (VALUE self) { \
   SETUP_buf \
@@ -30,23 +43,14 @@ static VALUE Get ## T (VALUE self) { \
   return M ## 2VAL (ret); \
 }
 
-#define Mth(T) \
-rb_define_method(cMqBufferS, MQ_CPPXSTR(Get ## T), Get ## T, 0); \
-
-/*****************************************************************************/
-/*                                                                           */
-/*                                private                                    */
-/*                                                                           */
-/*****************************************************************************/
-
-GET(Y,BYT);
-GET(O,BOL);
-GET(S,SRT);
-GET(I,INT);
-GET(W,WID);
-GET(F,FLT);
-GET(D,DBL);
-GET(C,CST);
+GET(Y,BYT)
+GET(O,BOL)
+GET(S,SRT)
+GET(I,INT)
+GET(W,WID)
+GET(F,FLT)
+GET(D,DBL)
+GET(C,CST)
 
 static VALUE GetB (VALUE self) {
   MQ_BIN val;
@@ -54,6 +58,26 @@ static VALUE GetB (VALUE self) {
   SETUP_buf
   ErrorBufToRubyWithCheck(MqBufferGetB(buf, &val, &len));
   return BIN2VAL(val,len);
+}
+
+#define SET(T,M) static VALUE Set ## T (VALUE self, VALUE val) { \
+  SETUP_buf \
+  return NS(MqBufferS_New) (MqBufferSet ## T (buf, VAL2 ## M (val))); \
+}
+
+SET(Y,BYT)
+SET(O,BOL)
+SET(S,SRT)
+SET(I,INT)
+SET(W,WID)
+SET(F,FLT)
+SET(D,DBL)
+SET(C,CST)
+
+static VALUE SetB (VALUE self, VALUE val) {
+  SETUP_buf
+  StringValue(val);
+  return NS(MqBufferS_New) (MqBufferSetB (buf, VAL2BIN (val)));
 }
 
 static VALUE GetType (VALUE self) {
@@ -99,6 +123,6 @@ void NS(MqBufferS_Init) (void) {
   Mth(D)  
   Mth(C)  
   Mth(B)  
-  Mth(Type)  
+  Mth2(Type)  
 }
 
