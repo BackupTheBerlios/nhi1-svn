@@ -266,6 +266,12 @@ namespace example {
 	  case 'C': tmp.C = buf.C; break;
 	}
 	SendU(tmp);
+      } else if (cmd == "mulbuf") {
+	MqBufferS tmp = ContextGetBuffer();
+	while (ReadItemExists()) {
+	  tmp = tmp.AppendC(ReadC());
+	}
+	SendU(tmp);
       }
       SendRETURN();
     }

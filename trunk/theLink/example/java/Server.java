@@ -263,6 +263,12 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 	  case 'C': SendU(tmp.SetC(buf.GetC())); break;
 	  case 'B': SendU(tmp.SetB(buf.GetB())); break;
 	}
+      } else if (cmd.equals("mulbuf")) {
+	MqBufferS tmp = ContextGetBuffer();
+	while (ReadItemExists()) {
+	  tmp = tmp.AppendC(ReadC());
+	}
+	SendU(tmp);
       }
       SendRETURN();
     }

@@ -709,28 +709,34 @@ use base qw(Net::PerlMsgque::MqS);
 
   sub BUFE {
     my $ctx = shift;
-    my $cmd = $ctx->ReadC();
 
-    $ctx->SendSTART();
-    switch ($cmd) {
+    $ctx->SendSTART;
+    switch ($ctx->ReadC) {
       case "ctxbuf" {
 	my $tmp = $ctx->ContextGetBuffer;
-	my $buf = $ctx->ReadU();
+	my $buf = $ctx->ReadU;
 	switch ($buf->GetType) {
-	  case "Y"   { $tmp->SetY($buf->GetY()) }
-	  case "O"   { $tmp->SetO($buf->GetO()) }
-	  case "S"   { $tmp->SetS($buf->GetS()) }
-	  case "I"   { $tmp->SetI($buf->GetI()) }
-	  case "F"   { $tmp->SetF($buf->GetF()) }
-	  case "W"   { $tmp->SetW($buf->GetW()) }
-	  case "D"   { $tmp->SetD($buf->GetD()) }
-	  case "B"   { $tmp->SetB($buf->GetB()) }
-	  case "C"   { $tmp->SetC($buf->GetC()) }
+	  case "Y"   { $tmp->SetY($buf->GetY) }
+	  case "O"   { $tmp->SetO($buf->GetO) }
+	  case "S"   { $tmp->SetS($buf->GetS) }
+	  case "I"   { $tmp->SetI($buf->GetI) }
+	  case "F"   { $tmp->SetF($buf->GetF) }
+	  case "W"   { $tmp->SetW($buf->GetW) }
+	  case "D"   { $tmp->SetD($buf->GetD) }
+	  case "B"   { $tmp->SetB($buf->GetB) }
+	  case "C"   { $tmp->SetC($buf->GetC) }
 	}
 	$ctx->SendU($tmp);
       } 
+      case "mulbuf" {
+	my $tmp = $ctx->ContextGetBuffer;
+	while ($ctx->ReadItemExists) {
+	  $tmp = $tmp->AppendC($ctx->ReadC);
+	}
+	$ctx->SendU($tmp);
+      }
     }
-    $ctx->SendRETURN();
+    $ctx->SendRETURN;
   }
 
   sub PRNT {

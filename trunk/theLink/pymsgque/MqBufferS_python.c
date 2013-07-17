@@ -84,7 +84,8 @@ static PyObject* NS(Set ## S) ( \
   if (!PyArg_ParseTuple(args, MQ_CPPSTR(F) ":Set" MQ_CPPSTR(S), &val)) { \
     return NULL; \
   } \
-  return MqBufferS_New(MqBufferSet ## S(self->buf, (MQ_ ## L) val)); \
+  MqBufferSet ## S(self->buf, (MQ_ ## L) val); \
+  return (PyObject*) self; \
 }
 
 SET(Y,BYT,h,short int)
@@ -104,7 +105,8 @@ PyObject* NS(SetO) (
   if (!PyArg_ParseTuple(args, "O!:SetO", &PyBool_Type, &O)) {
     return NULL;
   }
-  return MqBufferS_New(MqBufferSetO(self->buf, (MQ_BOL) (O == Py_True ? MQ_YES : MQ_NO)));
+  MqBufferSetO(self->buf, (MQ_BOL) (O == Py_True ? MQ_YES : MQ_NO));
+  return (PyObject*) self;
 }
 
 PyObject* NS(SetB) (
@@ -116,7 +118,21 @@ PyObject* NS(SetB) (
   if (!PyArg_ParseTuple(args, "O!:SetB", &PyByteArray_Type, &o)) {
     return NULL;
   }
-  return MqBufferS_New(MqBufferSetB(self->buf,(MQ_BIN)PyByteArray_AS_STRING(o),(MQ_SIZE)PyByteArray_GET_SIZE(o)));
+  MqBufferSetB(self->buf,(MQ_BIN)PyByteArray_AS_STRING(o),(MQ_SIZE)PyByteArray_GET_SIZE(o));
+  return (PyObject*) self;
+}
+
+static PyObject* NS(AppendC) (
+  MqBufferS_Obj*  self,
+  PyObject	  *args
+)
+{
+  MQ_CST val;
+  if (!PyArg_ParseTuple(args, "s:AppendC", &val)) {
+    return NULL;
+  }
+  MqBufferAppendC(self->buf, (MQ_CST) val);
+  return (PyObject*) self;
 }
 
 static PyObject* NS(GetType) (
@@ -165,6 +181,7 @@ static PyObject* NS(Delete) (
 #define SetD_DOC	    "set a MQ_DBL object into the buffer and return the buffer"
 #define SetB_DOC	    "set a MQ_BIN object into the buffer and return the buffer"
 #define SetC_DOC	    "set a MQ_STR object into the buffer and return the buffer"
+#define AppendC_DOC	    "append a MQ_STR object to the buffer and return the buffer"
 
 // Fill the Struct-Array
 
@@ -194,6 +211,8 @@ static PyMethodDef NS(MqBufferS_Methods)[] = {
     ARG(SetD,		METH_VARARGS),
     ARG(SetB,		METH_VARARGS),
     ARG(SetC,		METH_VARARGS),
+
+    ARG(AppendC,	METH_VARARGS),
 
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };

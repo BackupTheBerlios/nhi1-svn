@@ -636,7 +636,7 @@ namespace example {
 
 	SendSTART();
 
-	if (!strncmp(cmd, "ctxbuf", 6)) {
+	if (!strcmp(cmd, "ctxbuf")) {
 	  MqBufferC tmp = ContextGetBuffer();
 	  MqBufferC buf = ReadU();
 	  switch (buf.GetType()) {
@@ -650,6 +650,12 @@ namespace example {
 	    case 'B': { SendU(tmp.SetB(buf.GetB())); break; }
 	    case 'C': { SendU(tmp.SetC(buf.GetC())); break; }
 	  }
+	} else if (!strcmp(cmd, "mulbuf")) {
+	  MqBufferC tmp = ContextGetBuffer();
+	  while (ReadItemExists()) {
+	    tmp = tmp.AppendC(ReadC());
+	  }
+	  SendU(tmp);
 	}
 	SendRETURN();
       }

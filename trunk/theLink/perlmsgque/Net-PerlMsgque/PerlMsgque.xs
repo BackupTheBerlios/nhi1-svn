@@ -1426,6 +1426,13 @@ SetC (MqBufferSelf *buffer, MQ_CST val)
   OUTPUT:
     RETVAL
 
+MqBufferS*
+AppendC (MqBufferSelf *buffer, MQ_CST val)
+  CODE:
+    RETVAL = MqBufferAppendC(buffer, val);
+  OUTPUT:
+    RETVAL
+
 SV*
 GetB (MqBufferSelf *buffer)
   INIT:

@@ -2916,8 +2916,8 @@ MQ_DECL MqBufferCastTo (
 /// \brief append a single \a string to a #MqBufferS
 /// \buf
 /// \param string the text to append to \e buf
-/// \retval the size of the string appended to the MqBufferS object
-MQ_EXTERN MQ_SIZE MQ_DECL MqBufferAppendC (
+/// \retval append a string to the #MqBufferS object and retun the object
+MQ_EXTERN struct MqBufferS* MQ_DECL MqBufferAppendC (
   struct MqBufferS * const buf,
   MQ_CST const string
 );

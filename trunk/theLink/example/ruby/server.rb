@@ -360,9 +360,8 @@ class Server < MqS
   end
 
   def BUFE
-    cmd = ReadC()
     SendSTART()
-    case cmd
+    case ReadC()
       when "ctxbuf"
 	tmp = ContextGetBuffer()
 	buf = ReadU()
@@ -386,8 +385,14 @@ class Server < MqS
 	  when "C"
             SendU(tmp.SetC(buf.GetC()))
 	end
+      when "mulbuf"
+	tmp = ContextGetBuffer()
+        while ReadItemExists()
+          tmp = tmp.AppendC(ReadC())
+        end
+        SendU(tmp)
     end
-    SendRETURN();
+    SendRETURN()
   end
 
   def USLP

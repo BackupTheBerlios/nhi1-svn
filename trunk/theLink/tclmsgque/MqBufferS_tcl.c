@@ -19,16 +19,6 @@
     goto error; \
   }
 
-#define SET(T,L) \
-static int NS(Set ## T) (MqBufferS_ARGS) \
-{ \
-  L val; \
-  CHECK_ ## T(val) \
-  CHECK_NOARGS \
-  NS(MqBufferS_New) (interp, MqBufferSet ## T (buf, val)); \
-  RETURN_TCL \
-}
-
 typedef int (
   *LookupKeywordF
 ) (
@@ -52,6 +42,17 @@ static int NS(GetType) (MqBufferS_ARGS)
   RETURN_TCL
 }
 
+#define SET(T,L) \
+static int NS(Set ## T) (MqBufferS_ARGS) \
+{ \
+  L val; \
+  CHECK_ ## T(val) \
+  CHECK_NOARGS \
+  MqBufferSet ## T (buf, val); \
+  Tcl_SetObjResult(interp, objv[0]); \
+  RETURN_TCL \
+}
+
 SET(Y,MQ_BYT)
 SET(O,MQ_BOL)
 SET(S,MQ_SRT)
@@ -67,7 +68,18 @@ static int NS(SetB) (MqBufferS_ARGS)
   MQ_SIZE len;
   CHECK_B(val,len)
   CHECK_NOARGS
-  NS(MqBufferS_New) (interp, MqBufferSetB (buf, val, len));
+  MqBufferSetB (buf, val, len);
+  Tcl_SetObjResult(interp, objv[0]);
+  RETURN_TCL
+}
+
+static int NS(AppendC) (MqBufferS_ARGS)
+{
+  MQ_CST val;
+  CHECK_C(val)
+  CHECK_NOARGS
+  MqBufferAppendC (buf, val);
+  Tcl_SetObjResult(interp, objv[0]);
   RETURN_TCL
 }
 
@@ -200,6 +212,8 @@ static int NS(MqBufferS_Cmd) (
     { "GetB",	    NS(GetB)	  },
     { "GetC",	    NS(GetC)	  },
 
+    { "AppendC",    NS(AppendC)	  },
+
     { "SetY",	    NS(SetY)	  },
     { "SetO",	    NS(SetO)	  },
     { "SetS",	    NS(SetS)	  },
@@ -247,7 +261,6 @@ void NS(MqBufferS_New) (
   char buffer[30];
   sprintf(buffer, "<MqBufferS-%p>", buf);
   Tcl_CreateObjCommand (interp, buffer, NS(MqBufferS_Cmd), buf, NS(MqBufferS_Free));
-
   Tcl_SetResult (interp, buffer, TCL_VOLATILE);
   Tcl_CreateExitHandler (NS(MqBufferS_Free), buf);
 }

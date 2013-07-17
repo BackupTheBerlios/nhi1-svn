@@ -441,6 +441,13 @@ proc Ot_BUFE {ctx} {
 	"C"   { $ctx SendU [$tmp SetC [$buf GetC]] }
       }
     }
+    mulbuf {
+      set tmp [$ctx ContextGetBuffer]
+      while {[$ctx ReadItemExists]} {
+	set $tmp [$tmp AppendC [$ctx ReadC]]
+      }
+      $ctx SendU $tmp
+    }
   }
   $ctx SendRETURN
 }

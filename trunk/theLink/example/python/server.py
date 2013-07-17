@@ -287,6 +287,11 @@ class Server(MqS):
       elif typ == "B": 
         tmp.SetB (buf.GetB())
       self.SendU(tmp)
+    elif cmd == "mulbuf" :
+      tmp = self.ContextGetBuffer()
+      while self.ReadItemExists():
+        tmp = tmp.AppendC(self.ReadC())
+      self.SendU(tmp)
     self.SendRETURN()
 
   def ERLR (self):

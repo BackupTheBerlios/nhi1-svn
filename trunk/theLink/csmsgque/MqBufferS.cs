@@ -99,6 +99,9 @@ namespace csmsgque {
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferSetC")]
     private  static extern IntPtr MqBufferSetC([In]IntPtr buf, [In] string val);
 
+    [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferAppendC")]
+    private  static extern IntPtr MqBufferAppendC([In]IntPtr buf, [In] string val);
+
     [DllImport(MSGQUE_DLL, CallingConvention=MSGQUE_CC, CharSet=MSGQUE_CS, EntryPoint = "MqBufferDup")]
     private  static extern IntPtr MqBufferDup([In]IntPtr buf);
 
@@ -256,6 +259,12 @@ namespace csmsgque {
     /// \api #MqBufferDup
     public MqBufferS Dup() {
       return new MqBufferS (MqBufferDup (buf));
+    }
+
+    /// \api #MqBufferAppendC
+    public MqBufferS AppendC(string value) {
+      MqBufferAppendC (buf, value);
+      return this;
     }
 
 /// \} Mq_Buffer_Cs_API

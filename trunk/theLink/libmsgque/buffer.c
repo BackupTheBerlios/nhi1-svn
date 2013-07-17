@@ -1120,7 +1120,7 @@ MqBufferDup (
   return MqBufferCopy (MqBufferCreate (srce->context, srce->cursize), srce);
 }
 
-MQ_SIZE
+struct MqBufferS*
 MqBufferAppendC (
   register struct MqBufferS * const buf,
   MQ_CST const str
@@ -1132,7 +1132,7 @@ MqBufferAppendC (
   strcpy (buf->cur.C, str);
   buf->cursize += len;
   buf->type = MQ_STRT;
-  return len;
+  return buf;
 }
 
 MQ_SIZE

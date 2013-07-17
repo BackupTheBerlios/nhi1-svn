@@ -88,7 +88,8 @@ JNIEXPORT jobject JNICALL NB(Set ## T) ( \
 ) \
 { \
   SETUP_buf(self); \
-  return (*env)->NewObject(env, NS(Class_MqBufferS), NS(MID_MqBufferS_INIT), (jlong) MqBufferSet ## T (buf, (L) val)); \
+  MqBufferSet ## T (buf, (L) val); \
+  return self; \
 error: \
   return NULL; \
 }
@@ -113,7 +114,7 @@ JNIEXPORT jobject JNICALL NB(SetC) (
   str = JO2C_START(env,s);
   ret = MqBufferSetC(buf,str);
   JO2C_STOP(env,s,str);
-  return (*env)->NewObject(env, NS(Class_MqBufferS), NS(MID_MqBufferS_INIT), (jlong) ret);
+  return self;
 error:
   return NULL;
 }
@@ -130,7 +131,24 @@ JNIEXPORT jobject JNICALL NB(SetB) (
   tmp = (*env)->GetByteArrayElements(env,b,NULL);
   ret = MqBufferSetB(buf,(MQ_BIN)tmp,(*env)->GetArrayLength(env,b));
   (*env)->ReleaseByteArrayElements(env,b,tmp,0);
-  return (*env)->NewObject(env, NS(Class_MqBufferS), NS(MID_MqBufferS_INIT), (jlong) ret);
+  return self;
+error:
+  return NULL;
+}
+
+JNIEXPORT jobject JNICALL NB(AppendC) (
+  JNIEnv *	env, 
+  jobject	self,
+  jstring	s
+)
+{
+  const char * str;
+  MQ_BUF ret;
+  SETUP_buf(self);
+  str = JO2C_START(env,s);
+  ret = MqBufferAppendC(buf,str);
+  JO2C_STOP(env,s,str);
+  return self;
 error:
   return NULL;
 }

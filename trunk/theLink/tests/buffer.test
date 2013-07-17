@@ -60,14 +60,9 @@ foreach {typ val} {Y 5 O 1 S 1287 I 25279 F 2.66000008583 W 2236393003 D 262673.
 
 }
 
-foreach {typ val} {Y 5 O 1 S 1287 I 25279 F 2.66000008583 W 2236393003 D 262673.8236 B 562728929 C "Hallo Welt" } {
-
-  test buffer-2-($I|$B|$C|$S|$typ|$val) {create and retun a temporary buffer object} \
-    -constraints {tcl perl python ruby php } \
-    -body     { Echo1 $FH_LAST BUFE Read$typ SendC WrongBuffer Send$typ $val } \
-    -result   $val
-
-}
+test buffer-2-($I|$B|$C|$S) {multiple set a temporary buffer object} \
+  -body     { Echo1 $FH_LAST BUFE Read$typ SendC mulbuf SendC Hallo SendC World SendC now SendC future SendC space } \
+  -result   HalloWorldnowfuturespace
 
 
 

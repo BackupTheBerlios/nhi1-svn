@@ -61,7 +61,7 @@ PHP_METHOD(MsgqueForPhp_MqBufferS, GetB)
   SETUP_buf; \
   ARG2 ## M(Set ## T,val); \
   MqBufferSet ## T (buf, (MQ_ ## M)val); \
-  MqBufferS2VAL(return_value, buf); \
+  if (return_value_used) MqBufferS2VAL (return_value, buf); \
 }
 
 SET(Y,BYT);
@@ -79,7 +79,16 @@ PHP_METHOD(MsgqueForPhp_MqBufferS, SetB)
   SETUP_buf;
   ARG2CST(SendB,val);
   MqBufferSetB(buf,val,vallen);
-  MqBufferS2VAL(return_value, buf);
+  if (return_value_used) MqBufferS2VAL (return_value, buf);
+}
+
+static 
+PHP_METHOD(MsgqueForPhp_MqBufferS, AppendC)
+{
+  SETUP_buf;
+  ARG2CST(AppendC,val);
+  MqBufferAppendC (buf, (MQ_CST)val);
+  if (return_value_used) MqBufferS2VAL (return_value, buf);
 }
 
 static
@@ -137,6 +146,8 @@ static const zend_function_entry NS(MqBufferS_functions)[] = {
   PHP_ME(MsgqueForPhp_MqBufferS, SetD,		value_arg,    ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqBufferS, SetC,		value_arg,    ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqBufferS, SetB,		value_arg,    ZEND_ACC_PUBLIC)
+  
+  PHP_ME(MsgqueForPhp_MqBufferS, AppendC,	value_arg,    ZEND_ACC_PUBLIC)
 
   PHP_ME(MsgqueForPhp_MqBufferS, GetType,	no_arg,	      ZEND_ACC_PUBLIC)
   PHP_ME(MsgqueForPhp_MqBufferS, Dup,		no_arg,	      ZEND_ACC_PUBLIC)

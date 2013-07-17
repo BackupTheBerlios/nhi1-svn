@@ -1157,6 +1157,14 @@ Ot_BUFE (
 	}
       }
       MqErrorCheck(MqSendU(mqctx, tmp));
+    } else if (!strcmp(cmd,"mulbuf")) {
+      MQ_BUF tmp = MqContextGetBuffer(mqctx);
+      MQ_CST str;
+      while (MqReadItemExists(mqctx)) {
+	MqErrorCheck (MqReadC(mqctx,&str));
+	tmp = MqBufferAppendC(tmp,str);
+      }
+      MqErrorCheck (MqSendU(mqctx,tmp));
     }
 error:
   return MqSendRETURN (mqctx);

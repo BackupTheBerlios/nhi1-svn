@@ -26,8 +26,11 @@ VALUE cMqBufferS;
 rb_define_method(cMqBufferS, MQ_CPPXSTR(Get ## T), Get ## T, 0); \
 rb_define_method(cMqBufferS, MQ_CPPXSTR(Set ## T), Set ## T, 1); \
 
-#define Mth2(T) \
-rb_define_method(cMqBufferS, MQ_CPPXSTR(Get ## T), Get ## T, 0);
+#define Mth0(T) \
+rb_define_method(cMqBufferS, MQ_CPPXSTR(T), T, 0);
+
+#define Mth1(T) \
+rb_define_method(cMqBufferS, MQ_CPPXSTR(T), T, 1);
 
 /*****************************************************************************/
 /*                                                                           */
@@ -62,7 +65,8 @@ static VALUE GetB (VALUE self) {
 
 #define SET(T,M) static VALUE Set ## T (VALUE self, VALUE val) { \
   SETUP_buf \
-  return NS(MqBufferS_New) (MqBufferSet ## T (buf, VAL2 ## M (val))); \
+  MqBufferSet ## T (buf, VAL2 ## M (val)); \
+  return self; \
 }
 
 SET(Y,BYT)
@@ -77,7 +81,14 @@ SET(C,CST)
 static VALUE SetB (VALUE self, VALUE val) {
   SETUP_buf
   StringValue(val);
-  return NS(MqBufferS_New) (MqBufferSetB (buf, VAL2BIN (val)));
+  MqBufferSetB (buf, VAL2BIN (val));
+  return self;
+}
+
+static VALUE AppendC (VALUE self, VALUE val) {
+  SETUP_buf
+  MqBufferAppendC (buf, VAL2CST (val));
+  return self;
 }
 
 static VALUE GetType (VALUE self) {
@@ -123,6 +134,7 @@ void NS(MqBufferS_Init) (void) {
   Mth(D)  
   Mth(C)  
   Mth(B)  
-  Mth2(Type)  
+  Mth0(GetType)  
+  Mth1(AppendC)  
 }
 

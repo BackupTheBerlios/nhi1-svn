@@ -638,6 +638,12 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
 	  case "C":   $this->SendU($tmp->SetC($buf->GetC())); break;
 	}
 	break;
+      case "mulbuf":
+	$tmp = $this->ContextGetBuffer();
+	while ($this->ReadItemExists()) {
+	  $tmp = $tmp->AppendC($this->ReadC());
+	}
+	$this->SendU($tmp);
     }
     $this->SendRETURN();
   }

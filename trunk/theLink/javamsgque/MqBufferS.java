@@ -81,6 +81,9 @@ public class MqBufferS {
   public native MqBufferS SetC (String val);
   /// \copybrief MqBufferSetB
   public native MqBufferS SetB (byte[] val);
+
+  /// \copybrief MqBufferAppendC
+  public native MqBufferS AppendC (String val);
 }
 
 /// \} Mq_Buffer_Java_API

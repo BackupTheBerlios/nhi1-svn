@@ -125,6 +125,13 @@ func (this *MqBufferS) SetC(val string) *MqBufferS {
   return (*MqBufferS) (ret)
 }
 
+func (this *MqBufferS) AppendC(val string) *MqBufferS {
+  s := C.CString(val)
+  ret := C.MqBufferAppendC((*_Ctype_struct_MqBufferS)(this), C.MQ_CST(s))
+  C.free(unsafe.Pointer(s))
+  return (*MqBufferS) (ret)
+}
+
 func (this *MqBufferS)  GetB() *MqBinary {
   var tmp C.MQ_BIN
   var len C.MQ_SIZE

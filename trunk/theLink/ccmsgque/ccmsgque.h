@@ -174,7 +174,7 @@ namespace ccmsgque {
       }
 
       /// \api #MqBufferSetY
-      inline MQ_BUF SetY (MQ_BYT val) const {
+      inline MQ_BUF SetY (MQ_BYT val) {
 	return MqBufferSetY (hdl, val);
       }
 
@@ -287,8 +287,8 @@ namespace ccmsgque {
       }
 
       /// \api #MqBufferAppendC
-      inline void AppendC (MQ_CST str) const {
-	MqBufferAppendC (hdl, str);
+      inline MQ_BUF AppendC (MQ_CST str) const {
+	return MqBufferAppendC (hdl, str);
       }
 
       /// \api #MqBufferReset
@@ -408,7 +408,7 @@ namespace ccmsgque {
 
     public:
       /// \brief get access to an internal buffer
-      inline MQ_BUF ContextGetBuffer () { return context.ctxbuf; }
+      inline MQ_BUF ContextGetBuffer () { return MqContextGetBuffer(&context); }
       /// \api #MqExit
       inline void Exit () __attribute__((noreturn)) { MqExit(&context); } 
       /// \api #MqSysSleep

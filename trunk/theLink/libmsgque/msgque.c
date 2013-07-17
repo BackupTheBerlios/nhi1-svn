@@ -317,6 +317,7 @@ MqContextGetBuffer (
   struct MqS * const context
 )
 {
+  MqBufferReset(context->ctxbuf);
   return context->ctxbuf;
 }
 

@@ -759,6 +759,13 @@ type BUFE Server
 	  case "B": { this.SendU(tmp.SetB(buf.GetB())) }
 	}
       }
+      case "mulbuf": {
+	tmp := this.ContextGetBuffer()
+	for this.ReadItemExists() {
+	  tmp = tmp.AppendC(this.ReadC())
+	}
+	this.SendU(tmp)
+      }
     }
     this.SendRETURN()
   }
