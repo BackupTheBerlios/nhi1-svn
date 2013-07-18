@@ -32,20 +32,21 @@ ALIASES		    += "yes=\e MQ_YES"
 ALIASES		    += "no=\e MQ_NO"
 ALIASES		    += "package=\#include \"msgque.h\""
 ALIASES		    += "RNS_PREFIX{1}=Mq\1"
+ALIASES             += "server=server.c"
 
-ALIASES		    += "FactoryDefault=MqFactoryDefault(struct MqS *error, MQ_CST ident, interface...)"
+ALIASES		    += "FactoryDefault=MqFactoryDefault(\TM  error, MQ_CST ident, interface...)"
 ALIASES		    += "FactoryDefaultIdent=MQ_CST MqFactoryDefaultIdent()"
-ALIASES		    += "FactoryAdd=MqFactoryAdd(struct MqS *error, MQ_CST ident, interface...)"
+ALIASES		    += "FactoryAdd=MqFactoryAdd(\TM error, MQ_CST ident, interface...)"
 ALIASES		    += "FactoryGet=struct MqFactoryS* MqFactoryGet(MQ_CST ident)"
 ALIASES		    += "FactoryGetCalled=struct MqFactoryS* MqFactoryGetCalled(MQ_CST ident)"
 
-ALIASES		    += "FactoryNew=struct MqS* MqFactoryNew(struct MqS *error, MQ_PTR data, struct MqFactoryS * item)"
+ALIASES		    += "FactoryNew=\TM  MqFactoryNew(\TM error, MQ_PTR data, struct MqFactoryS * item)"
 ALIASES		    += "FactoryCopy=struct MqFactoryS* MqFactoryCopy(struct MqFactoryS * item, MQ_CST ident)"
 
-ALIASES		    += "FactoryCtxSet=MqFactoryCtxSet(struct MqS *ctx, struct MqFactoryS *factory)"
-ALIASES		    += "FactoryCtxGet=struct MqFactoryS* MqFactoryCtxGet(struct MqS *ctx)"
-ALIASES		    += "FactoryCtxIdentSet=MqFactoryCtxIdentSet(struct MqS *ctx, MQ_CST ident)"
-ALIASES		    += "FactoryCtxIdentGet=MQ_CST MqFactoryCtxIdentGet(struct MqS *ctx)"
+ALIASES		    += "FactoryCtxSet=MqFactoryCtxSet(\TM ctx, struct MqFactoryS *factory)"
+ALIASES		    += "FactoryCtxGet=struct MqFactoryS* MqFactoryCtxGet(\TM ctx)"
+ALIASES		    += "FactoryCtxIdentSet=MqFactoryCtxIdentSet(\TM ctx, MQ_CST ident)"
+ALIASES		    += "FactoryCtxIdentGet=MQ_CST MqFactoryCtxIdentGet(\TM ctx)"
 
 # OBJECT CREATION AND DELETION
 ALIASES		    += "object_example=\code \n\
@@ -54,35 +55,36 @@ struct MyClassDataS { \n\
   int mydata; \n\
 }; \n\
 enum MqErrorE MyClassFactory ( \n\
-  struct MqS * const tmpl, \n\
+  \TM  const tmpl, \n\
   enum MqFactoryE create, \n\
   struct MqFactoryS * const item, \n\
-  struct MqS **contextP \n\
+  \TM *contextP \n\
 ) { \n\
-  struct MqS * const ctx = *contextP = MqContextCreate(sizeof(struct MyClassDataS),tmpl); \n\
+  \TM  const ctx = *contextP = MqContextCreate(sizeof(struct MyClassDataS),tmpl); \n\
   ... \n\
   return MQ_OK; \n\
 } \n\
-struct MqS * ctx = MqFactoryNew (MQ_ERROR_PANIC, NULL, \n\
+\TM  ctx = MqFactoryNew (MQ_ERROR_PANIC, NULL, \n\
   MqFactoryAdd(MQ_ERROR_PANIC, \"MyClass\", MyClassFactory, NULL, NULL, NULL, NULL, NULL, NULL, NULL) \n\
 ); \n\
 \endcode"
 
-ALIASES		    += "ContextCreate=struct MqS* MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)"
+ALIASES		    += "ContextCreate=\TM  MqContextCreate(MQ_SIZE size, struct MqS const * const tmpl)"
 ALIASES		    += "ContextCreateSection="
-ALIASES		    += "ContextDelete=MqContextDelete(struct MqS ** ctx)"
-ALIASES		    += "Exit=MqExit(struct MqS* ctx)"
-ALIASES		    += "LogC=MqLogC(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST const message)"
+ALIASES		    += "ContextDelete=MqContextDelete(\TM * ctx)"
+ALIASES		    += "Resolve=\TM* Resolve(\C ident, \I *size)"
+ALIASES		    += "Exit=MqExit(\TM ctx)"
+ALIASES		    += "LogC=MqLogC(\TM  ctx, MQ_CST const prefix, MQ_INT level, MQ_CST const message)"
 ENABLED_SECTIONS    += HAS_LOGV
-ALIASES		    += "LogV=MqLogV(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST fmt, ...)"
+ALIASES		    += "LogV=MqLogV(\TM  ctx, MQ_CST const prefix, MQ_INT level, MQ_CST fmt, ...)"
 ENABLED_SECTIONS    += HAS_LOGVL
-ALIASES		    += "LogVL=MqLogVL(struct MqS* ctx, MQ_CST const prefix, MQ_INT level, MQ_CST const fmt, va_list var_list)"
+ALIASES		    += "LogVL=MqLogVL(\TM  ctx, MQ_CST const prefix, MQ_INT level, MQ_CST const fmt, va_list var_list)"
 
 # OBJECT CONFIGURATION
-ALIASES		    += "Init=struct MqBufferLS * init = MqInitCreate()"
+ALIASES		    += "Init=struct MqBufferLS * init = MqInitArg0()"
 ALIASES		    += "init_example=\
 \code \n\
-struct MqBufferLS * init = MqInitCreate(); \n\
+struct MqBufferLS * init = MqInitArg0(); \n\
 MqBufferLAppendC(init, \"myExecutable\"); \n\
 MqBufferLAppendC(init, \"myFirstArgument\"); \n\
 \endcode \n\
@@ -113,8 +115,8 @@ ALIASES		    += "config_set_storage=#MqConfigSetStorage (ctx, MQ_CST storageFile
 ALIASES		    += "config_get_storage=#MqConfigGetStorage (ctx)"
 
 ALIASES		    += "config_type_ident=#MQ_CST"
-ALIASES		    += "config_set_ident=#MqConfigSetIdent (struct MqS *ctx, MQ_CST ident)"
-ALIASES		    += "config_get_ident=#MqConfigGetIdent (struct MqS *ctx)"
+ALIASES		    += "config_set_ident=#MqConfigSetIdent (\TM ctx, MQ_CST ident)"
+ALIASES		    += "config_get_ident=#MqConfigGetIdent (\TM ctx)"
 
 ALIASES		    += "config_type_isSilent=#MQ_BOL"
 ALIASES		    += "config_set_isSilent=#MqConfigSetIsSilent (ctx, MQ_BOL bool)"
@@ -162,16 +164,16 @@ ALIASES		    += "config_IBgError=MqConfigSetBgError (ctx, fFunc, Data, fFree, fC
 ALIASES		    += "config_IEvent=MqConfigSetEvent (ctx, fFunc, Data, fFree, fCopy)"
 
 # LINK CREATION AND DELETION
-ALIASES		    += "LinkCreate=MqLinkCreate (struct MqS *ctx, struct MqBufferLS ** args)"
-ALIASES		    += "LinkCreateChild=MqLinkCreateChild (struct MqS *ctx, struct MqS *parent, struct MqBufferLS ** args)"
-ALIASES		    += "LinkIsConnected=MqLinkIsConnected (struct MqS *ctx)"
-ALIASES		    += "LinkGetParent=struct MqS* MqLinkGetParent (struct MqS *ctx)"
-ALIASES		    += "LinkGetCtxId=MQ_SIZE MqLinkGetCtxId (struct MqS *ctx)"
-ALIASES		    += "LinkIsParent=MQ_BOL MqLinkIsParent (struct MqS *ctx)"
-ALIASES		    += "LinkIsConnected=MQ_BOL MqLinkIsConnected (struct MqS *ctx)"
-ALIASES		    += "LinkDelete=MqLinkDelete(struct MqS *ctx)"
-ALIASES		    += "LinkConnect=MqLinkConnect(struct MqS *ctx)"
-ALIASES		    += "LinkGetTargetIdent=MQ_CST MqLinkGetTargetIdent (struct MqS *ctx)"
+ALIASES		    += "LinkCreate=MqLinkCreate (\TM ctx, struct MqBufferLS ** args)"
+ALIASES		    += "LinkCreateChild=MqLinkCreateChild (\TM ctx, \TM parent, struct MqBufferLS ** args)"
+ALIASES		    += "LinkIsConnected=MqLinkIsConnected (\TM ctx)"
+ALIASES		    += "LinkGetParent=\TM  MqLinkGetParent (\TM ctx)"
+ALIASES		    += "LinkGetCtxId=MQ_SIZE MqLinkGetCtxId (\TM ctx)"
+ALIASES		    += "LinkIsParent=MQ_BOL MqLinkIsParent (\TM ctx)"
+ALIASES		    += "LinkIsConnected=MQ_BOL MqLinkIsConnected (\TM ctx)"
+ALIASES		    += "LinkDelete=MqLinkDelete(\TM ctx)"
+ALIASES		    += "LinkConnect=MqLinkConnect(\TM ctx)"
+ALIASES		    += "LinkGetTargetIdent=MQ_CST MqLinkGetTargetIdent (\TM ctx)"
 
 # SEND DATA
 ALIASES		    += "send_example=\code \n\
@@ -215,21 +217,21 @@ MqErrorCheck (MqSendEND_AND_WAIT (mqctx, \"SRVC\", MQ_TIMEOUT_USER)); \endcode"
 
 # READ DATE
 ALIASES		    += "read_example=\code MqErrorCheck(MqReadI(ctx, &i));\nMqErrorCheck(MqReadL_START(ctx, NULL));\n  MqErrorCheck(MqReadD(ctx, &balance));\n  MqErrorCheck(MqReadC(ctx, &owner));\n  MqErrorCheck(MqReadB(ctx, &signature));\nMqReadL_END(ctx);\endcode"
-ALIASES		    += "ReadO=enum MqErrorE MqReadO(ctx, \O *val)"
-ALIASES		    += "ReadY=enum MqErrorE MqReadY(ctx, \Y *val)"
-ALIASES		    += "ReadS=enum MqErrorE MqReadS(ctx, \S *val)"
-ALIASES		    += "ReadI=enum MqErrorE MqReadI(ctx, \I *val)"
-ALIASES		    += "ReadW=enum MqErrorE MqReadW(ctx, \W *val)"
-ALIASES		    += "ReadF=enum MqErrorE MqReadF(ctx, \F *val)"
-ALIASES		    += "ReadD=enum MqErrorE MqReadD(ctx, \D *val)"
-ALIASES		    += "ReadC=enum MqErrorE MqReadC(ctx, \C *val)"
-ALIASES		    += "ReadB=enum MqErrorE MqReadB(ctx, \B *val)"
-ALIASES		    += "ReadU=enum MqErrorE MqReadU(ctx, \TB *val)"
+ALIASES		    += "ReadO=enum MqErrorE MqReadO(ctx, \O *value)"
+ALIASES		    += "ReadY=enum MqErrorE MqReadY(ctx, \Y *value)"
+ALIASES		    += "ReadS=enum MqErrorE MqReadS(ctx, \S *value)"
+ALIASES		    += "ReadI=enum MqErrorE MqReadI(ctx, \I *value)"
+ALIASES		    += "ReadW=enum MqErrorE MqReadW(ctx, \W *value)"
+ALIASES		    += "ReadF=enum MqErrorE MqReadF(ctx, \F *value)"
+ALIASES		    += "ReadD=enum MqErrorE MqReadD(ctx, \D *value)"
+ALIASES		    += "ReadC=enum MqErrorE MqReadC(ctx, \C *value)"
+ALIASES		    += "ReadB=enum MqErrorE MqReadB(ctx, \B *value)"
+ALIASES		    += "ReadU=enum MqErrorE MqReadU(ctx, \U *value)"
 ALIASES		    += "ReadN=enum MqErrorE MqReadN(ctx,MQ_CBI * const value, MQ_SIZE * const len)"
 ALIASES		    += "ReadDUMP=enum MqErrorE MqReadDUMP(ctx, struct MqDumpS ** const dump)"
 ALIASES		    += "ReadLOAD=enum MqErrorE MqReadLOAD(ctx, struct MqDumpS * const dump)"
-ALIASES		    += "ReadForward=enum MqErrorE MqReadForward(ctx, struct MqS * const otherCtx, struct MqDumpS * const dump)"
-ALIASES		    += "ReadProxy=enum MqErrorE MqReadProxy(ctx, struct MqS *otherCtx)"
+ALIASES		    += "ReadForward=enum MqErrorE MqReadForward(ctx, \TM  const otherCtx, struct MqDumpS * const dump)"
+ALIASES		    += "ReadProxy=enum MqErrorE MqReadProxy(ctx, \TM otherCtx)"
 ALIASES		    += "ReadGetNumItems=MQ_SIZE MqReadGetNumItems(ctx)"
 ALIASES		    += "ReadItemExists=MQ_BOL MqReadItemExists(ctx)"
 ALIASES		    += "ReadUndo=enum MqErrorE MqReadUndo(ctx)"
@@ -239,7 +241,7 @@ ALIASES		    += "ReadT_START=enum MqErrorE MqReadT_START(ctx, struct MqBufferS *
 ALIASES		    += "ReadT_END=enum MqErrorE MqReadT_END(ctx)"
 ALIASES		    += "ReadT_example=\code \n\
 static enum MqErrorE SRVR ( \n\
-  struct MqS * const mqctx, \n\
+  \TM  const mqctx, \n\
   MQ_PTR data \n\
 ) \n\
 { \n\
@@ -255,7 +257,7 @@ error: \n\
 
 # ADDING SERVICES
 ALIASES		    += "service_example=\code \n\
-enum MqErrorE ServerSetup(struct MqS * msgque) { \n\
+enum MqErrorE ServerSetup(\TM  msgque) { \n\
   MqErrorCheck(MqServiceCreate(msgque, \"SRV1\", SRV1, NULL, NULL)); \n\
   return MQ_OK; \n\
 error: \n\
@@ -274,17 +276,17 @@ ALIASES		    += "MQ_WAIT_FOREVER=#MQ_WAIT_FOREVER"
 ALIASES		    += "MQ_TIMEOUT_DEFAULT=#MQ_TIMEOUT_DEFAULT"
 ALIASES		    += "MQ_TIMEOUT_USER=#MQ_TIMEOUT_USER"
 ALIASES		    += "MQ_TIMEOUT_MAX=#MQ_TIMEOUT_MAX"
-ALIASES		    += "ServiceGetFilter=enum MqErrorE MqServiceGetFilter(ctx, MQ_SIZE id, struct MqS **const filter)"
+ALIASES		    += "ServiceGetFilter=enum MqErrorE MqServiceGetFilter(ctx, MQ_SIZE id, \TM *const filter)"
 ALIASES		    += "ServiceIsTransaction=int MqServiceIsTransaction (ctx)"
 ALIASES		    += "ServiceGetToken=MQ_CST MqServiceGetToken (ctx)"
 
 # SLAVE CREATION AND DELETION
 ALIASES		    += "SlaveWorker=enum MqErrorE MqSlaveWorker(ctx, MQ_SIZE id, struct MqBufferLS **argv)"
 ALIASES		    += "SlaveWorker_example=\code \nMqErrorCheck(MqSlaveWorker (ctx, 7,\n   MqBufferLCreateArgsV(ctx, \"--thread\", \"--silent\", \"@\", \"--name\", \"MyWorker\", NULL)\n);\endcode"
-ALIASES		    += "SlaveCreate=enum MqErrorE MqSlaveCreate(ctx, MQ_SIZE id, struct MqS *slaveCtx)"
+ALIASES		    += "SlaveCreate=enum MqErrorE MqSlaveCreate(ctx, MQ_SIZE id, \TM slaveCtx)"
 ALIASES		    += "SlaveDelete=enum MqErrorE MqSlaveDelete(ctx, MQ_SIZE id)"
-ALIASES		    += "SlaveGet=struct MqS* MqSlaveGet(ctx, MQ_SIZE id)"
-ALIASES		    += "SlaveGetMaster=struct MqS* MqSlaveGetMaster(ctx)"
+ALIASES		    += "SlaveGet=\TM  MqSlaveGet(ctx, MQ_SIZE id)"
+ALIASES		    += "SlaveGetMaster=\TM  MqSlaveGetMaster(ctx)"
 ALIASES		    += "SlaveIs=MQ_BOL MqSlaveIs(ctx)"
 
 # STORAGE
@@ -308,15 +310,29 @@ if (buf->type == MQ_STRT) \n\
 \endcode"
 
 ALIASES		    += "BufferObject=<I>struct MqBufferS*</I>"
-ALIASES		    += "BufferGetO=enum MqErrorE MqBufferGetO(MQ_BUF buffer, \O valP)"
-ALIASES		    += "BufferGetY=enum MqErrorE MqBufferGetY(MQ_BUF buffer, \Y valP)"
-ALIASES		    += "BufferGetS=enum MqErrorE MqBufferGetS(MQ_BUF buffer, \S valP)"
-ALIASES		    += "BufferGetI=enum MqErrorE MqBufferGetI(MQ_BUF buffer, \I valP)"
-ALIASES		    += "BufferGetW=enum MqErrorE MqBufferGetW(MQ_BUF buffer, \W valP)"
-ALIASES		    += "BufferGetF=enum MqErrorE MqBufferGetF(MQ_BUF buffer, \F valP)"
-ALIASES		    += "BufferGetD=enum MqErrorE MqBufferGetD(MQ_BUF buffer, \D valP)"
-ALIASES		    += "BufferGetC=enum MqErrorE MqBufferGetC(MQ_BUF buffer, \C valP)"
-ALIASES		    += "BufferGetB=enum MqErrorE MqBufferGetB(MQ_BUF buffer, \B valP)"
+
+ALIASES		    += "BufferGetO=enum MqErrorE MqBufferGetO(MQ_BUF buffer, \O *value)"
+ALIASES		    += "BufferGetY=enum MqErrorE MqBufferGetY(MQ_BUF buffer, \Y *value)"
+ALIASES		    += "BufferGetS=enum MqErrorE MqBufferGetS(MQ_BUF buffer, \S *value)"
+ALIASES		    += "BufferGetI=enum MqErrorE MqBufferGetI(MQ_BUF buffer, \I *value)"
+ALIASES		    += "BufferGetW=enum MqErrorE MqBufferGetW(MQ_BUF buffer, \W *value)"
+ALIASES		    += "BufferGetF=enum MqErrorE MqBufferGetF(MQ_BUF buffer, \F *value)"
+ALIASES		    += "BufferGetD=enum MqErrorE MqBufferGetD(MQ_BUF buffer, \D *value)"
+ALIASES		    += "BufferGetC=enum MqErrorE MqBufferGetC(MQ_BUF buffer, \C *value)"
+ALIASES		    += "BufferGetB=enum MqErrorE MqBufferGetB(MQ_BUF buffer, \B *value)"
+
+ALIASES		    += "BufferSetO=MQ_BUF MqBufferSetO(MQ_BUF buffer, \O value)"
+ALIASES		    += "BufferSetY=MQ_BUF MqBufferSetY(MQ_BUF buffer, \Y value)"
+ALIASES		    += "BufferSetS=MQ_BUF MqBufferSetS(MQ_BUF buffer, \S value)"
+ALIASES		    += "BufferSetI=MQ_BUF MqBufferSetI(MQ_BUF buffer, \I value)"
+ALIASES		    += "BufferSetW=MQ_BUF MqBufferSetW(MQ_BUF buffer, \W value)"
+ALIASES		    += "BufferSetF=MQ_BUF MqBufferSetF(MQ_BUF buffer, \F value)"
+ALIASES		    += "BufferSetD=MQ_BUF MqBufferSetD(MQ_BUF buffer, \D value)"
+ALIASES		    += "BufferSetC=MQ_BUF MqBufferSetC(MQ_BUF buffer, \C value)"
+ALIASES		    += "BufferSetB=MQ_BUF MqBufferSetB(MQ_BUF buffer, \B value)"
+
+ALIASES		    += "BufferAppendC=MQ_BUF MqBufferAppendC(MQ_BUF buffer, \C value)"
+
 ALIASES		    += "BufferGetType=MqBufferGetType(buffer) or buffer->type"
 ALIASES		    += "BufferDup=struct MqBufferS* MqBufferDup(MQ_BUF buffer)"
 ALIASES		    += "BufferDelete=MqBufferDelete(MQ_BUF *bufferP)"
@@ -331,11 +347,14 @@ ALIASES		    += "D=MQ_DBL"
 ALIASES		    += "C=MQ_CST"
 ALIASES		    += "B=MQ_BIN"
 ALIASES		    += "U=MQ_BUF"
+ALIASES		    += "L=MQ_BFL"
+
 ALIASES		    += "TM=struct MqS*"
-ALIASES		    += "TB=MQ_BIN"
-ALIASES		    += "TE=struct MqS*"
+ALIASES		    += "TB=unsigned char *"
+ALIASES		    += "TE=enum MqErrorE"
 ALIASES		    += "TD=struct MqDumpS*"
 ALIASES		    += "TU=struct MqBufferS*"
+ALIASES		    += "TL=struct MqBufferLS*"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\
@@ -366,4 +385,5 @@ ALIASES		    += "tut_build=\skip noinst_PROGRAMS\n\until LDADD"
 ALIASES		    += "tut_server=\skip include\n\until Exit\n\until }"
 ALIASES		    += "tut_client=\skip include\n\until Exit\n\until }"
 ALIASES		    += "tut_filter=\skip include\n\until Exit\n\until }"
+
 

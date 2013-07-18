@@ -33,15 +33,15 @@ abs_builddir="$abs_top_builddir/theLink/docs"
 
 ## template definition
 man=$abs_srcdir/man/local.generic
-libmsgque_private=$abs_srcdir/man/Doxyfile.msgque
-ccmsgque_private=$abs_srcdir/man/Doxyfile.msgque
-javamsgque_private=$abs_srcdir/man/Doxyfile.msgque
-pymsgque_private=$abs_srcdir/man/Doxyfile.msgque
-rubymsgque_private=$abs_srcdir/man/Doxyfile.msgque
-tclmsgque_private=$abs_srcdir/man/Doxyfile.msgque
-msgqueforphp_private=$abs_srcdir/man/Doxyfile.msgque
+libmsgque_private=$abs_srcdir/man/template.msgque
+ccmsgque_private=$abs_srcdir/man/template.msgque
+javamsgque_private=$abs_srcdir/man/template.msgque
+pymsgque_private=$abs_srcdir/man/template.msgque
+rubymsgque_private=$abs_srcdir/man/template.msgque
+tclmsgque_private=$abs_srcdir/man/template.msgque
+msgqueforphp_private=$abs_srcdir/man/template.msgque
 
-main=$abs_srcdir/man/Doxyfile.msgque
+main=$abs_srcdir/man/template.msgque
 
 libmsgque=$abs_srcdir/libmsgque_public/Doxyfile
 javamsgque=$abs_srcdir/javamsgque_public/Doxyfile

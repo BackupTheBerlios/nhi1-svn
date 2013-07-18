@@ -696,6 +696,7 @@ use base qw(Net::PerlMsgque::MqS);
 	$ctx->SendC ($ctx->FactoryCtxIdentGet());
       }
       case "Resolve" {
+	# Resolve-Example for PERL
 	foreach my $lctx (Net::PerlMsgque::Resolve($ctx->ReadC())) {
 	  $ctx->SendC ($lctx->LinkGetTargetIdent);
 	}
@@ -729,6 +730,7 @@ use base qw(Net::PerlMsgque::MqS);
 	$ctx->SendU($tmp);
       } 
       case "mulbuf" {
+	# Append-Example for perl
 	my $tmp = $ctx->ContextGetBuffer;
 	while ($ctx->ReadItemExists) {
 	  $tmp = $tmp->AppendC($ctx->ReadC);

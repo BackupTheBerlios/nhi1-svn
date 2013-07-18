@@ -23,6 +23,7 @@ STRIP_FROM_INC_PATH += $(SRCDIR)/libmsgque
 SHOW_FILES	    = YES
 ENABLED_SECTIONS    += MSGQUE
 EXAMPLE_PATH	    += $(SRCDIR)/libmsgque
+EXAMPLE_PATH	    += $(SRCDIR)/example/c
 
 ALIASES		    += "null=\e NULL"
 ALIASES		    += "yes=\e MQ_YES"
@@ -78,3 +79,6 @@ ALIASES		    += "D=#MQ_DBL"
 ALIASES		    += "C=#MQ_CST"
 ALIASES		    += "B=#MQ_BIN"
 ALIASES		    += "U=#MQ_BUF"
+ALIASES		    += "L=#MQ_BFL"
+
+ALIASES		    += "server=server.c"

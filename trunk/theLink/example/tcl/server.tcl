@@ -442,6 +442,7 @@ proc Ot_BUFE {ctx} {
       }
     }
     mulbuf {
+      # Append-Example for tcl
       set tmp [$ctx ContextGetBuffer]
       while {[$ctx ReadItemExists]} {
 	set $tmp [$tmp AppendC [$ctx ReadC]]
@@ -657,6 +658,7 @@ proc Ot_ROUT {ctx} {
       $ctx SendC [$ctx FactoryCtxIdentGet]
     }
     "Resolve" {
+      # Resolve-Example for TCL
       foreach myctx [tclmsgque Resolve [$ctx ReadC]] {
 	$ctx SendC [$myctx LinkGetTargetIdent]
       }

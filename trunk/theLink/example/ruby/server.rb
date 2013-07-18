@@ -350,6 +350,7 @@ class Server < MqS
       when "Ident"
         SendC(FactoryCtxIdentGet())
       when "Resolve"
+        # Resolve-Example for RUBY
         MqS.Resolve(ReadC()).each do |myctx|
           SendC(myctx.LinkGetTargetIdent())
         end
@@ -386,6 +387,7 @@ class Server < MqS
             SendU(tmp.SetC(buf.GetC()))
 	end
       when "mulbuf"
+        # Append-Example for ruby
 	tmp = ContextGetBuffer()
         while ReadItemExists()
           tmp = tmp.AppendC(ReadC())

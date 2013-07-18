@@ -622,6 +622,7 @@ namespace example {
 	} else if (!strncmp(cmd, "Ident", 5)) {
 	  SendC (FactoryCtxIdentGet());
 	} else if (!strncmp(cmd, "Resolve", 7)) {
+	  // Resolve-Example for C++
 	  for (MqC ** ret=Resolve(ReadC(),NULL); *ret != NULL; ret++) {
 	    SendC((*ret)->LinkGetTargetIdent());
 	  }
@@ -651,6 +652,7 @@ namespace example {
 	    case 'C': { SendU(tmp.SetC(buf.GetC())); break; }
 	  }
 	} else if (!strcmp(cmd, "mulbuf")) {
+	  // Append-Example for CC
 	  MqBufferC tmp = ContextGetBuffer();
 	  while (ReadItemExists()) {
 	    tmp = tmp.AppendC(ReadC());

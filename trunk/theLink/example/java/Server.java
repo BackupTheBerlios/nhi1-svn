@@ -235,6 +235,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
       } else if (cmd.equals("Ident")) {
 	SendC (FactoryCtxIdentGet());
       } else if (cmd.equals("Resolve")) {
+	// Resolve-Example for JAVA
 	for (MqS myctx: MqS.Resolve(ReadC())) {
 	  SendC(myctx.LinkGetTargetIdent());
 	}
@@ -264,6 +265,7 @@ final class Server extends MqS implements IServerSetup, IServerCleanup {
 	  case 'B': SendU(tmp.SetB(buf.GetB())); break;
 	}
       } else if (cmd.equals("mulbuf")) {
+	// Append-Example for java
 	MqBufferS tmp = ContextGetBuffer();
 	while (ReadItemExists()) {
 	  tmp = tmp.AppendC(ReadC());

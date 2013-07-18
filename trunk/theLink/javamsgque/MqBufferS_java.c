@@ -109,10 +109,9 @@ JNIEXPORT jobject JNICALL NB(SetC) (
 )
 {
   const char * str;
-  MQ_BUF ret;
   SETUP_buf(self);
   str = JO2C_START(env,s);
-  ret = MqBufferSetC(buf,str);
+  MqBufferSetC(buf,str);
   JO2C_STOP(env,s,str);
   return self;
 error:
@@ -126,10 +125,9 @@ JNIEXPORT jobject JNICALL NB(SetB) (
 )
 {
   jbyte * tmp;
-  MQ_BUF ret;
   SETUP_buf(self);
   tmp = (*env)->GetByteArrayElements(env,b,NULL);
-  ret = MqBufferSetB(buf,(MQ_BIN)tmp,(*env)->GetArrayLength(env,b));
+  MqBufferSetB(buf,(MQ_BIN)tmp,(*env)->GetArrayLength(env,b));
   (*env)->ReleaseByteArrayElements(env,b,tmp,0);
   return self;
 error:
@@ -143,10 +141,9 @@ JNIEXPORT jobject JNICALL NB(AppendC) (
 )
 {
   const char * str;
-  MQ_BUF ret;
   SETUP_buf(self);
   str = JO2C_START(env,s);
-  ret = MqBufferAppendC(buf,str);
+  MqBufferAppendC(buf,str);
   JO2C_STOP(env,s,str);
   return self;
 error:

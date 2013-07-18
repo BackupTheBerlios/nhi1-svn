@@ -29,6 +29,7 @@ ALIASES		    += "null=\e nil"
 ALIASES		    += "yes=\e true"
 ALIASES		    += "no=\e false"
 ALIASES		    += "package=import . \"gomsgque\""
+ALIASES             += "server=server.go"
 
 ENABLED_SECTIONS    += GC
 
@@ -74,6 +75,7 @@ the toplevel interface is require. The reference can be set with the \e top argu
 or with the \RNSA{SetSelf} method"
 ALIASES		    += "ContextDelete=ctx.Delete()"
 ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "Resolve=[]\TM Resolve(\C ident)"
 ALIASES		    += "LogC=ctx.LogC(prefix string, level int32, message string)"
 ENABLED_SECTIONS    += SELF
 ALIASES		    += "SetSelf=ctx.SetSelf(ifc interface{})"
@@ -340,6 +342,7 @@ if buf.GetType() == 'C' { \n\
 \endcode"
 
 ALIASES		    += "BufferObject=<I>type \TM</I>"
+
 ALIASES		    += "BufferGetO=buffer.GetO() \O"
 ALIASES		    += "BufferGetY=buffer.GetY() \Y"
 ALIASES		    += "BufferGetS=buffer.GetS() \S"
@@ -349,6 +352,19 @@ ALIASES		    += "BufferGetF=buffer.GetF() \F"
 ALIASES		    += "BufferGetD=buffer.GetD() \D"
 ALIASES		    += "BufferGetC=buffer.GetC() \C"
 ALIASES		    += "BufferGetB=buffer.GetB() \B"
+
+ALIASES		    += "BufferSetO=buffer.SetO(value \O) \TU"
+ALIASES		    += "BufferSetY=buffer.SetY(value \Y) \TU"
+ALIASES		    += "BufferSetS=buffer.SetS(value \S) \TU"
+ALIASES		    += "BufferSetI=buffer.SetI(value \I) \TU"
+ALIASES		    += "BufferSetW=buffer.SetW(value \W) \TU"
+ALIASES		    += "BufferSetF=buffer.SetF(value \F) \TU"
+ALIASES		    += "BufferSetD=buffer.SetD(value \D) \TU"
+ALIASES		    += "BufferSetC=buffer.SetC(value \C) \TU"
+ALIASES		    += "BufferSetB=buffer.SetB(value \B) \TU"
+
+ALIASES		    += "BufferAppendC=buffer.AppendC(value \C) \TU"
+
 ALIASES		    += "BufferGetType=buffer.GetType() \C"
 ALIASES		    += "BufferDup=\TU buffer.Dup()"
 ALIASES		    += "BufferDelete=buffer.Delete()"
@@ -363,11 +379,14 @@ ALIASES		    += "D=float64"
 ALIASES		    += "C=string"
 ALIASES		    += "B=[]byte"
 ALIASES		    += "U=*MqBufferS"
+ALIASES		    += "L=*MqBufferLS"
+
 ALIASES		    += "TM=*MqS"
 ALIASES		    += "TB=*MqBinary"
 ALIASES		    += "TE=*MqSException"
 ALIASES		    += "TD=*MqDumpS"
 ALIASES		    += "TU=*MqBufferS"
+ALIASES		    += "TL=*MqBufferLS"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\

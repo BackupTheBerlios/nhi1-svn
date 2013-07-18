@@ -58,7 +58,7 @@ public class MqS {
     }
   }
 
-  /// \api #MqInitCreate
+  /// \api #MqInitArg0
   public static native void	Init	      (String... argv);
   /// \api #MqResolve
   public static native MqS[]	Resolve	      (String ident);

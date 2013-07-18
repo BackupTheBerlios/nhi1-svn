@@ -35,6 +35,7 @@ ALIASES		    += "null=\e null"
 ALIASES		    += "yes=\e true"
 ALIASES		    += "no=\e false"
 ALIASES		    += "package=import javamsgque.*;"
+ALIASES             += "server=Server.java"
 
 ALIASES		    += "FactoryDefault=MqFactoryS MqFactoryS.Default(String ident, Class<T> callback)"
 ALIASES		    += "FactoryDefault2=MqFactoryS MqFactoryS.Default(Class<T> callback)"
@@ -79,6 +80,7 @@ ALIASES		    += "ContextCreate2=\TM ctx=new MqS()"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=ContextDelete: called by Garbage Collection"
 ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "Resolve=\TM[] \TM.Resolve(\C ident)"
 ALIASES		    += "LogC=ctx.LogC(String prefix, int level, String message)"
 
 # OBJECT CONFIGURATION
@@ -328,6 +330,7 @@ if (buf.GetType() == 'C') \n\
 \endcode"
 
 ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
+
 ALIASES		    += "BufferGetO=\O buffer.GetO()"
 ALIASES		    += "BufferGetY=\Y buffer.GetY()"
 ALIASES		    += "BufferGetS=\S buffer.GetS()"
@@ -337,6 +340,19 @@ ALIASES		    += "BufferGetF=\F buffer.GetF()"
 ALIASES		    += "BufferGetD=\D buffer.GetD()"
 ALIASES		    += "BufferGetC=\C buffer.GetC()"
 ALIASES		    += "BufferGetB=\B buffer.GetB()"
+
+ALIASES		    += "BufferSetO=\TU buffer.SetO(\O value)"
+ALIASES		    += "BufferSetY=\TU buffer.SetY(\Y value)"
+ALIASES		    += "BufferSetS=\TU buffer.SetS(\S value)"
+ALIASES		    += "BufferSetI=\TU buffer.SetI(\I value)"
+ALIASES		    += "BufferSetW=\TU buffer.SetW(\W value)"
+ALIASES		    += "BufferSetF=\TU buffer.SetF(\F value)"
+ALIASES		    += "BufferSetD=\TU buffer.SetD(\D value)"
+ALIASES		    += "BufferSetC=\TU buffer.SetC(\C value)"
+ALIASES		    += "BufferSetB=\TU buffer.SetB(\B value)"
+
+ALIASES		    += "BufferAppendC=\TU buffer.AppendC(\C value)"
+
 ALIASES		    += "BufferGetType=char buffer.GetType()"
 ALIASES		    += "BufferDup=\TU buffer.Dup()"
 ALIASES		    += "BufferDelete=buffer.Delete()"
@@ -351,11 +367,14 @@ ALIASES		    += "D=double"
 ALIASES		    += "C=String"
 ALIASES		    += "B=byte[]"
 ALIASES		    += "U=MqBufferS"
+ALIASES		    += "L=MqBufferLS"
+
 ALIASES		    += "TM=MqS"
 ALIASES		    += "TB=byte[]"
 ALIASES		    += "TE=MqSException"
 ALIASES		    += "TD=MqDumpS"
 ALIASES		    += "TU=MqBufferS"
+ALIASES		    += "TL=MqBufferLS"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\

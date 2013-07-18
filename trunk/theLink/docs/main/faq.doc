@@ -252,7 +252,7 @@ libmsgque-API:   ->   |         |              |         |                    *
 \section _10 10. Are services supposed to be re-entrant or serially reusable
  - INTRO: \RNS{ClientServerLink}
  - DEFINITION: <EM>Re-entrant means that the same body of code can be used by multiple threads of control at once, provided that each thread supplies its own data segment for the code to use.</EM>
- - Every Context (\parent_context and \child_context) has its own services and data.
+ - Every Context (\e parent-context and \e child-context) has its own services and data.
  - DEFINITION: <EM>Serially reusable means that the same body of code can be used by multiple threads of control, provided that execution of the code is allowed to complete before another thread can use the shared body of code.</EM>
  - The body of a service-function get the according context as first parameter of type #MqS.
    This parameter is used to read package data (example: #MqReadU) and to answer the service-request (example: #MqSendU)
@@ -260,21 +260,21 @@ libmsgque-API:   ->   |         |              |         |                    *
 
 \section _10a 10.a Can an already started server be reused for new requests?
  - INTRO: \RNS{ClientServerLink}
- - Every server has exact \b one \parent_context but multiple \child_context.
- - Every \parent_context is a process or a thread.
- - If a \parent_context is closed all \child_context are closed too and the server is shut down.
- - If a \child_context is closed the server continue to serve the other context.
- - Multiple \parent_context are created with the \ref MqConfigS::startAs "--fork", \ref MqConfigS::startAs "--thread"
+ - Every server has exact \b one \e parent-context but multiple \e child-context.
+ - Every \e parent-context is a process or a thread.
+ - If a \e parent-context is closed all \e child-context are closed too and the server is shut down.
+ - If a \e child-context is closed the server continue to serve the other context.
+ - Multiple \e parent-context are created with the \ref MqConfigS::startAs "--fork", \ref MqConfigS::startAs "--thread"
    or \ref MqConfigS::startAs "--spawn" option using \e tcp and \e uds communication \verbatim
 server --tcp --port 7777 --fork
 \endverbatim
- - For \e pipe communication multiple \parent_context are created as default.
+ - For \e pipe communication multiple \e parent-context are created as default.
  .
  
 \section _11 11. Do services have to be locked so that they can complete processing complete requests
  - DEFINITION: <EM>In this case locked means prevented from execution.</EM>
- - Every \parent_context is a process or a thread.
- - Every \child_context of this \parent_context is part of this single process too.
+ - Every \e parent-context is a process or a thread.
+ - Every \e child-context of this \e parent-context is part of this single process too.
  - One single process can handle only one request per time but is able to listen on other
    incoming requests if the original request is waiting on an external resource. This \e waiting
    is done in the #MqSendEND_AND_WAIT and the #MqProcessEvent function.

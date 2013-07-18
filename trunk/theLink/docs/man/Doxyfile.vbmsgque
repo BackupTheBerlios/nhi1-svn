@@ -30,6 +30,7 @@ ALIASES		    += "null=\e Nothing"
 ALIASES		    += "yes=\e true"
 ALIASES		    += "no=\e false"
 ALIASES		    += "package=Imports csmsgque"
+ALIASES             += "server=server.vb"
 
 ALIASES		    += "FactoryReturn=\ref csmsgque::MqFactorySException"
 ALIASES		    += "FactoryDefault=MqFactoryS<T>::Default(\C ident) As MqFactoryS<T>"
@@ -316,6 +317,7 @@ If buf.Type == "C" \n\
   Console.WriteLine(buf.C) \n\
 \endcode"
 ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
+
 ALIASES		    += "BufferGetO=buffer.O As \O"
 ALIASES		    += "BufferGetY=buffer.Y As \Y"
 ALIASES		    += "BufferGetS=buffer.S As \S"
@@ -325,6 +327,19 @@ ALIASES		    += "BufferGetF=buffer.F As \F"
 ALIASES		    += "BufferGetD=buffer.D As \D"
 ALIASES		    += "BufferGetC=buffer.C As \C"
 ALIASES		    += "BufferGetB=buffer.B As \B"
+
+ALIASES		    += "BufferSetO=buffer.O = value As \O"
+ALIASES		    += "BufferSetY=buffer.Y = value As \Y"
+ALIASES		    += "BufferSetS=buffer.S = value As \S"
+ALIASES		    += "BufferSetI=buffer.I = value As \I"
+ALIASES		    += "BufferSetW=buffer.W = value As \W"
+ALIASES		    += "BufferSetF=buffer.F = value As \F"
+ALIASES		    += "BufferSetD=buffer.D = value As \D"
+ALIASES		    += "BufferSetC=buffer.C = value As \C"
+ALIASES		    += "BufferSetB=buffer.B = value As \B"
+
+ALIASES		    += "BufferAppendC=buffer.AppendC(value As \C) As \TU"
+
 ALIASES		    += "BufferGetType=buffer.Type As Char"
 ALIASES		    += "BufferDup=buffer.Dup() As \TU"
 ALIASES		    += "BufferDelete=buffer.Delete()"
@@ -339,11 +354,14 @@ ALIASES		    += "D=Double"
 ALIASES		    += "C=String"
 ALIASES		    += "B=Byte()"
 ALIASES		    += "U=MqBufferS"
+ALIASES		    += "L=MqBufferLS"
+
 ALIASES		    += "TM=MqS"
 ALIASES		    += "TB=\B"
 ALIASES		    += "TE=MqSException"
 ALIASES		    += "TU=MqBufferS"
 ALIASES		    += "TD=MqDumpS"
+ALIASES		    += "TL=MqBufferLS"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\

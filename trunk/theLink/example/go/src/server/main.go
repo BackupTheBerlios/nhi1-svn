@@ -729,6 +729,7 @@ type ROUT Server
 	this.SendC (this.FactoryCtxIdentGet())
       }
       case "Resolve": {
+	// Resolve-Example for GO
 	for _,myctx := range Resolve(this.ReadC()) {
 	  this.SendC(myctx.LinkGetTargetIdent())
 	}
@@ -760,6 +761,7 @@ type BUFE Server
 	}
       }
       case "mulbuf": {
+	// Append-Example for go
 	tmp := this.ContextGetBuffer()
 	for this.ReadItemExists() {
 	  tmp = tmp.AppendC(this.ReadC())

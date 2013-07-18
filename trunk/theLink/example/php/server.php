@@ -609,6 +609,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
         $this->SendC($this->FactoryCtxIdentGet());
 	break;
       case "Resolve":
+	# Resolve-Example for PHP
 	foreach(MqS::Resolve($this->ReadC()) as $myctx) {
 	  $this->SendC($myctx->LinkGetTargetIdent());
 	}
@@ -639,6 +640,7 @@ class Server extends MqS implements iServerSetup, iServerCleanup {
 	}
 	break;
       case "mulbuf":
+	# Append-Example for PHP
 	$tmp = $this->ContextGetBuffer();
 	while ($this->ReadItemExists()) {
 	  $tmp = $tmp->AppendC($this->ReadC());

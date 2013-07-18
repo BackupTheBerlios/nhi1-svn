@@ -83,7 +83,7 @@ ALIASES		    += "TU=#UNKNOWN"
 
 GENERATE_HTML	    = YES
 HTML_STYLESHEET	    = customdoxygen.css
-GENERATE_MAN	    = NO
+GENERATE_MAN	    = YES
 MAN_EXTENSION	    = .n
 MAN_OUTPUT	    = $(BUILDDIR)/../man
 

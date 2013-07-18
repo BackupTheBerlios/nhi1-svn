@@ -239,6 +239,7 @@ namespace example {
       } else if (cmd == "Ident") {
 	SendC (FactoryCtxIdentGet ());
       } else if (cmd == "Resolve") {
+	// Resolve-Example for C#
 	foreach (MqS myctx in MqS.Resolve(ReadC())) {
 	  SendC(myctx.LinkGetTargetIdent());
 	}
@@ -267,6 +268,7 @@ namespace example {
 	}
 	SendU(tmp);
       } else if (cmd == "mulbuf") {
+	// Append-Example for C#
 	MqBufferS tmp = ContextGetBuffer();
 	while (ReadItemExists()) {
 	  tmp = tmp.AppendC(ReadC());

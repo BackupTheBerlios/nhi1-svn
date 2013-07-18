@@ -33,9 +33,24 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \section	\NS{desc}				INTRODUCTION
 \copydoc Mq_C_API
 
+\subsection	\NS{descr_atomic_types} ATOMIC TYPES
+\copydoc MqTypeE
+
+\subsection	\NS{descr_complex_types} COMPLEX TYPES
+
+Complex types introduced by \libmsgque and used to provide \libmsgque specific functionality
+
+- \TM | main \libmsgque data object
+- \TE | error object
+- \TD | dump-data-package object
+- \TU | buffer-data-item object
+- \TL | list of buffer-data-items object
+.
+
 \section	\NS{MqObject}				MqS OBJECT
 \RNSA{ContextCreate}\n
 \RNSA{ContextDelete}\n
+\RNSA{Resolve}\n
 \RNSA{Exit}\n \if TCL \RNSA{Main}\n \endif
 \RNSA{LogC}\n \if HAS_LOGV \RNSA{LogV}\n \endif \if HAS_LOGVL \RNSA{LogVL}\n \endif
 
@@ -54,6 +69,7 @@ The \b \lang \b Application-Server and \b Programming-Language-Micro-Kernel Proj
 \function{ContextDelete,\ContextDelete,MqContextDelete}
 \endif
 
+\function{Resolve,\Resolve}
 \function{Exit,\Exit,MqExitP}
 
 \if SELF
@@ -192,6 +208,7 @@ tclmsgque Main {
 \section        \NS{BufferObject}			MqBufferS OBJECT
 \RNSA{BufferIdentifer}\n
 \RNSA{BufferGetO,BufferGet[T]}\n
+\RNSA{BufferSetO,BufferSet[T]}\n
 \RNSA{BufferGetType}\n
 \RNSA{BufferDup}\n
 \RNSA{BufferDelete}\n
@@ -217,6 +234,20 @@ tclmsgque Main {
 \subsection \NS{BufferGetB} \BufferGetB
 C-API: #MqBufferGetO, #MqBufferGetY, #MqBufferGetS, #MqBufferGetI, #MqBufferGetW, #MqBufferGetF, #MqBufferGetD, #MqBufferGetC, #MqBufferGetB\n
 \copydoc MqBufferGetY
+
+\function3{BufferSetO,\BufferSetO}
+\function3{BufferSetY,\BufferSetY}
+\function3{BufferSetS,\BufferSetS}
+\function3{BufferSetI,\BufferSetI}
+\function3{BufferSetW,\BufferSetW}
+\function3{BufferSetF,\BufferSetF}
+\function3{BufferSetD,\BufferSetD}
+\function3{BufferSetC,\BufferSetC}
+\subsection \NS{BufferSetB} \BufferSetB
+C-API: #MqBufferSetO, #MqBufferSetY, #MqBufferSetS, #MqBufferSetI, #MqBufferSetW, #MqBufferSetF, #MqBufferSetD, #MqBufferSetC, #MqBufferSetB\n
+\copydoc MqBufferSetY
+
+\function{BufferAppendC, \BufferAppendC}
 \function{BufferGetType, \BufferGetType}
 \function{BufferDup, \BufferDup}
 \function{BufferDelete, \BufferDelete}
@@ -294,7 +325,7 @@ No special \e binary-object is used. All \e binary-data is available as \B.
 \copydoc Mq_Config_C_API
 
 \subsection \NS{Init} static: \Init
-\copydoc MqInitCreate
+\copydoc MqInitArg0
 
 \b Example: initialize the \e stratup-prefix with \e myExecutable and \e myFirstArgument \init_example
 
@@ -960,4 +991,5 @@ tclmsgque, perlmsgque, msgqueforphp, vbmsgque
 
 
 */
+
 

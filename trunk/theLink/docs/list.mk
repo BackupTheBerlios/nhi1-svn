@@ -29,7 +29,7 @@ man/Doxyfile.csmsgque \
 man/Doxyfile.gomsgque \
 man/Doxyfile.javamsgque \
 man/Doxyfile.libmsgque \
-man/Doxyfile.msgque \
+man/template.msgque \
 man/Doxyfile.msgqueforphp \
 man/Doxyfile.perlmsgque \
 man/Doxyfile.pymsgque \

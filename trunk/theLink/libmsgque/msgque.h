@@ -1790,12 +1790,20 @@ MQ_EXTERN void MQ_DECL MqMark (
 );
 
 /// \brief return a list of all \e context belonging to \e ident
+///
+/// This api-proc is used to return all \e server-context belonging to the 
+/// \e unique-application-name \c ident.
+/// The \e unique-application-nam is the \RNSO{Factory} identifer and ist set with
+/// \RNSA{FactoryAdd}, \RNSA{FactoryDefault} or the \c --factory \c ident option.
+/// \dontinclude \server
+/// \skip Resolve-Example
+/// \until SendC
 /// \param[in] ident the identifier to search the context for
 /// \param[out] size if not \c NULL the length of the result-array will be added.
-/// \return an array of MqS* items, the last item is a NULL.
-/// \attention 
-///   - the \e return-value is owned by \libmsgque -> do not free !!
-///   - the live-time of the \e return-value is up to the next call of \e MqResolve in the current thread.
+/// \return an array of \TM items, the last item is a NULL.
+///   - the \e return-value is owned by \libmsgque and using thread-local storage -> do not free !!
+///   - the live-time of the \e return-value is up to the next call to \RNSA{Resolve} in the current thread.
+///   .
 MQ_EXTERN struct MqS ** MQ_DECL MqResolve (
   MQ_CST ident,
   MQ_SIZE *size
@@ -2437,37 +2445,45 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqProcessEvent (
 #define MQ_TYPE_IS_NATIVE   (	MQ_TYPE_IS_1_BYTE | MQ_TYPE_IS_2_BYTE |	    \
 				MQ_TYPE_IS_4_BYTE | MQ_TYPE_IS_8_BYTE	)
 
-/// \brief a collection of all \e native-data-types supported
-///
-/// The \e type-identifier (TYPE) is a \e one-character-value (Y,O,S,I,W,F,D,B,C,L,U) for every 
-/// \e native-data-type supported.
-/// A \e buffer-data-package is type safe, this mean that every item has a \e type-prefix and every
-/// \RNSA{ReadO,Read[T]} or \RNSA{BufferGetO,BufferGet[T]} have to match the previous \RNSA{SendO,Read[T]} with the same 
-/// \e TYPE. One exception is allowed, the cast from and to the \C data-type (TYPE=C) is allowed.
-/// The following type identifier's are available:
-///  - \c Y : 1 byte signed character (\Y) 
-///  - \c O : 1 byte boolean value using \yes or \no (\O)
-///  - \c S : 2 byte signed short (\S)
-///  - \c I : 4 byte signed integer (\I)
-///  - \c W : 8 byte signed long long integer (\W)
-///  - \c F : 4 byte float (\F)
-///  - \c D : 8 byte double (\D)
-///  - \c B : unsigned char array used for binary data (\B)
-///  - \c C : string data using a \c \\0 at the end (\C)
-///  - \c L : list type able to hold a list of all items from above
-///  - \c U : typeless buffer able to hold a single item from above (\U)
-///  .
-/// \ifnot MAN
-/// The type is a one byte character with the following syntax:
-/// - bit 1 up to 4 has the size of the native type
-/// - bit 5 up to 8 has the type, up to 16 types are allowed
-/// .
-/// \attention In the package the space for the type is only \e on char. If additional
-/// space is needed the protocol have to be adjusted
-/// \endif
-/// \if MSGQUE
-/// \anchor \NS{BufferIdentifer}
-/// \endif
+/**
+\brief a collection of all \e native-data-types supported
+
+The \e type-identifier (TYPE) is a \e one-character-value (Y,O,S,I,W,F,D,B,C,L,U) for every 
+\e atomic-data-type supported.
+A \e buffer-data-package is type safe, this mean that every item has a \e type-prefix and every
+\RNSA{ReadO,Read[T]} have to match the previous \RNSA{SendO,Send[T]} and every
+\RNSA{BufferGetO,BufferGet[T]} have to match the previous \RNSA{BufferSetO,BufferSet[T]} 
+with the same \e TYPE. 
+One exception is allowed, the cast from and to the \C data-type (TYPE=C) is allowed.
+
+The following atomic-type identifier's are available:
+- \c Y      | \Y     | 1 byte signed character
+- \c O      | \O     | 1 byte boolean value using \yes or \no
+- \c S      | \S     | 2 byte signed short
+- \c I      | \I     | 4 byte signed integer
+- \c W      | \W     | 8 byte signed long long integer
+- \c F      | \F     | 4 byte float
+- \c D      | \D     | 8 byte double
+- \c B      | \B     | unsigned char array used for binary data
+- \c C      | \C     | string data using a \c \\0 at the end
+
+The following compose-type identifier's are available:
+- \c U      | \U     | typeless buffer able to hold a single atomic-type-item from above
+- \c L      | \L     | list-of-items-type able to hold all types-of-items data
+.
+
+\ifnot MAN
+The type is a one byte character with the following syntax:
+- bit 1 up to 4 has the size of the native type
+- bit 5 up to 8 has the type, up to 16 types are allowed
+.
+\attention In the package the space for the type is only \e on char. If additional
+space is needed the protocol have to be adjusted
+\endif
+\if MSGQUE
+\anchor \NS{BufferIdentifer}
+\endif
+**/
 enum MqTypeE {
   MQ_BYTT = (1<<4 | MQ_TYPE_IS_1_BYTE),  ///< Y: 1 byte 'byte' type
   MQ_BOLT = (2<<4 | MQ_TYPE_IS_1_BYTE),  ///< O: 1 byte 'boolean' type
@@ -2612,7 +2628,7 @@ MQ_EXTERN void MQ_DECL MqBufferReset (
 /// \brief copy the #MqBufferS from \a srce to \a dest
 /// \param dest target of the copy
 /// \param srce source of the copy
-/// \retval the \e dest object
+/// \returns the \e dest object
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferCopy (
   register struct MqBufferS * const dest,
   register struct MqBufferS const * const srce
@@ -2620,7 +2636,7 @@ MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferCopy (
 
 /// \brief create an new object as duplication of an existing object
 /// \param srce source of the duplication
-/// \retval the new object
+/// \returns the new object
 /// \attention the new object have to be deleted with \RNSA{BufferDelete}
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferDup (
   struct MqBufferS const * const srce
@@ -2714,7 +2730,7 @@ MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferCreateU (
 
 /// \brief read a \RNS{BufferIdentifer} from a \RNS{BufferObject}
 /// \buffer
-/// \param[out] value the value to read from the object or an error
+/// \param[out] value the data-item to read from the \e buffer-object
 /// \retMqErrorE
 /// \if MSGQUE
 /// \anchor \NS{BufferGetTYPE}
@@ -2762,49 +2778,49 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetD (
 
 /// \brief function to read an #MQ_BIN from an #MQ_BUF object
 /// \buffer
-/// \retval out the pointer to an MQ_BIN array object
-/// \retval size the size of the array the array pointer
+/// \param[out] value the pointer to an MQ_BIN array object
+/// \param[out] size the size of the array the array pointer
 /// \retMqErrorE
 /// \attention the return-pointer (\e out) is owned by the #MQ_BUF object -> never free this pointer
 MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetB (
   struct MqBufferS * const buffer,
-  MQ_BIN  * const out,
+  MQ_BIN  * const value,
   MQ_SIZE * const size
 );
 
 /// \brief function to read an #MQ_STR from an #MQ_BUF object
-/// \buf
-/// \retval out the pointer to an MQ_STR object
+/// \buffer
+/// \param[out] value the pointer to an MQ_STR object
 /// \retMqErrorE
 /// \attention the return-pointer (\e out) is owned by the #MQ_BUF object -> never free this pointer
 MQ_EXTERN enum MqErrorE MQ_DECL MqBufferGetC (
-  struct MqBufferS * const buf,
-  MQ_CST * const out
+  struct MqBufferS * const buffer,
+  MQ_CST * const value
 );
 
 /// \brief return the \e type from a #MQ_BUF object as single character value
-/// \buf
+/// \buffer
 MQ_EXTERN char MQ_DECL MqBufferGetType (
-  struct MqBufferS * const buf
+  struct MqBufferS * const buffer
 );
 
 /// \brief return the #MqTypeE from a #MQ_BUF object
-/// \buf
+/// \buffer
 MQ_EXTERN enum MqTypeE MQ_DECL MqBufferGetType2 (
-  struct MqBufferS * const buf
+  struct MqBufferS * const buffer
 );
 
 /// \brief return the \e type from a #MQ_BUF object as single character string
-/// \buf
+/// \buffer
 MQ_EXTERN MQ_CST MQ_DECL MqBufferGetType3 (
-  struct MqBufferS * const buf
+  struct MqBufferS * const buffer
 );
 
 /// \brief return the #MqErrorS object from a #MQ_BUF object
-/// \buf
+/// \buffer
 /// \return the #MqErrorS object
 MQ_EXTERN struct MqS * MQ_DECL MqBufferGetContext (
-  struct MqBufferS * const buf
+  struct MqBufferS * const buffer
 );
 
 /*****************************************************************************/
@@ -2814,96 +2830,96 @@ MQ_EXTERN struct MqS * MQ_DECL MqBufferGetContext (
 /*****************************************************************************/
 
 /// \brief set the #MqBufferS object with a native typed value
-/// \buf
-/// \param[in] val the value to set the buffer to
+/// \buffer
+/// \param[in] value the value to set the buffer to
 /// \retMqBufferS
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetY (
-  struct MqBufferS * const buf,
-  MQ_BYT const val
+  struct MqBufferS * const buffer,
+  MQ_BYT const value
 );
 
 /// \copydoc MqBufferSetY
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetO (
-  struct MqBufferS * const buf,
-  MQ_BOL const val
+  struct MqBufferS * const buffer,
+  MQ_BOL const value
 );
 
 /// \copydoc MqBufferSetY
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetS (
-  struct MqBufferS * const buf,
-  MQ_SRT const val
+  struct MqBufferS * const buffer,
+  MQ_SRT const value
 );
 
 /// \copydoc MqBufferSetY
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetI (
-  struct MqBufferS * const buf,
-  MQ_INT const val
+  struct MqBufferS * const buffer,
+  MQ_INT const value
 );
 
 /// \copydoc MqBufferSetY
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetF (
-  struct MqBufferS * const buf,
-  MQ_FLT const val
+  struct MqBufferS * const buffer,
+  MQ_FLT const value
 );
 
 /// \copydoc MqBufferSetY
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetW (
-  struct MqBufferS * const buf,
-  MQ_WID const val
+  struct MqBufferS * const buffer,
+  MQ_WID const value
 );
 
 /// \copydoc MqBufferSetY
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetD (
-  struct MqBufferS * const buf,
-  MQ_DBL const val
+  struct MqBufferS * const buffer,
+  MQ_DBL const value
 );
 
 /// \brief set the #MqBufferS object with an #MQ_STR object
-/// \buf
+/// \buffer
 /// \param in the string to set the buffer
 /// \retMqBufferS
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetC (
-  struct MqBufferS * const buf,
+  struct MqBufferS * const buffer,
   MQ_CST const in
 );
 
 /// \brief set the #MqBufferS object with an #MQ_BIN object
-/// \buf
+/// \buffer
 /// \param in the \e byte-array to set the buffer
 /// \param len the length of the \e byte-array data
 /// \retMqBufferS
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetB (
-  struct MqBufferS * const buf,
+  struct MqBufferS * const buffer,
   MQ_CBI  const in,
   MQ_SIZE const len
 );
 
 /// \brief set the #MqBufferS object with an #MQ_BUF object
-/// \buf
+/// \buffer
 /// \param in the MQ_BUF to set the buffer
 /// \retMqBufferS
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetU (
-  struct MqBufferS * const buf,
+  struct MqBufferS * const buffer,
   struct MqBufferS const * const in
 );
 
 /// \brief set the MqBufferS to a vararg \e string with \e format
-/// \buf
+/// \buffer
 /// \format
 /// \retMqBufferS
 MQ_EXTERN struct MqBufferS * MQ_DECL MqBufferSetV (
-  struct MqBufferS * const buf,
+  struct MqBufferS * const buffer,
   MQ_CST const fmt,
   ...
 ) __attribute__ ((format (printf, 2, 3)));
 
 /// \brief change the type of an MqBufferS object to \e type
-/// \buf
+/// \buffer
 /// \type
 /// \retMqErrorE
 MQ_EXTERN struct MqBufferS *
 MQ_DECL MqBufferCastTo (
-  struct MqBufferS * const buf,
+  struct MqBufferS * const buffer,
   enum MqTypeE const type
 );
 
@@ -2913,32 +2929,36 @@ MQ_DECL MqBufferCastTo (
 /*                                                                           */
 /*****************************************************************************/
 
-/// \brief append a single \a string to a #MqBufferS
-/// \buf
-/// \param string the text to append to \e buf
-/// \retval append a string to the #MqBufferS object and retun the object
+/// \brief append a single \a string to a #MqBufferS object
+///
+/// \dontinclude \server
+/// \skip Append-Example
+/// \until SendU
+/// \buffer
+/// \param value the text to append to \e buffer
+/// \returns the #MqBufferS object with the new value
 MQ_EXTERN struct MqBufferS* MQ_DECL MqBufferAppendC (
-  struct MqBufferS * const buf,
-  MQ_CST const string
+  struct MqBufferS * const buffer,
+  MQ_CST const value
 );
 
 /// \brief append a single string with \a format and \a var_list arguments to a MqBufferS
-/// \buf
+/// \buffer
 /// \format
 /// \var_list
-/// \retval the size of the string appended to the MqBufferS object
+/// \returns the size of the string appended to the MqBufferS object
 MQ_EXTERN MQ_SIZE MQ_DECL MqBufferAppendVL (
-  struct MqBufferS * const buf,
+  struct MqBufferS * const buffer,
   MQ_CST const fmt,
   va_list var_list
 );
 
 /// \brief append a single string with \a format and \a ... arguments to a MqBufferS
-/// \buf
+/// \buffer
 /// \format
-/// \retval the size of the string appended to the MqBufferS object
+/// \returns the size of the string appended to the MqBufferS object
 MQ_EXTERN MQ_SIZE MQ_DECL MqBufferAppendV (
-  struct MqBufferS * const buf,
+  struct MqBufferS * const buffer,
   MQ_CST const fmt,
   ...
 ) __attribute__ ((format (printf, 2, 3)));
@@ -2950,20 +2970,20 @@ MQ_EXTERN MQ_SIZE MQ_DECL MqBufferAppendV (
 /*****************************************************************************/
 
 /// \brief add \a str to the #MqBufferS
-/// \buf
-/// \param string the text to append to \e buf
-/// \retval the size of the string appended to the MqBufferS object
+/// \buffer
+/// \param string the text to append to \e buffer
+/// \returns the size of the string appended to the MqBufferS object
 MQ_EXTERN MQ_SIZE MQ_DECL MqBufferPush (
-  register struct MqBufferS * const buf,
+  register struct MqBufferS * const buffer,
   MQ_CST const string
 );
 
 /// \brief delete \a str from the #MqBufferS
-/// \buf
-/// \param string the text to remove from \e buf
-/// \retval the size of the string removed from the MqBufferS object
+/// \buffer
+/// \param string the text to remove from \e buffer
+/// \returns the size of the string removed from the MqBufferS object
 MQ_EXTERN MQ_SIZE MQ_DECL MqBufferPop (
-  register struct MqBufferS * const buf,
+  register struct MqBufferS * const buffer,
   MQ_CST const string
 );
 
@@ -2975,21 +2995,21 @@ MQ_EXTERN MQ_SIZE MQ_DECL MqBufferPop (
 
 /// \brief log the whole #MqBufferS object to the stderr device
 /// \context
-/// \buf
+/// \buffer
 /// \param prefix item to identify the output
 MQ_EXTERN void MQ_DECL MqBufferLog (
   struct MqS const * const context,
-  struct MqBufferS const * const buf,
+  struct MqBufferS const * const buffer,
   MQ_CST const prefix
 );
 
 /// \brief log the short #MqBufferS object data to the stderr device
 /// \context
-/// \buf
+/// \buffer
 /// \param prefix item to identify the output
 MQ_EXTERN void MQ_DECL MqBufferLogS (
   struct MqS const * const context,
-  struct MqBufferS const * const buf,
+  struct MqBufferS const * const buffer,
   MQ_CST const prefix
 );
 
@@ -3041,20 +3061,19 @@ MQ_EXTERN struct MqBufferLS * MQ_DECL MqBufferLCreate (
  *  \brief create and initialize a MqBufferLS object with argc/argv data
  *  \param argc the argc from the initial \b main function
  *  \param argv the arguments from the initial \b main function
- *  \retval args the new created MqBufferLS object including all arguments from argv \b before the first #MQ_ALFA
- *  \retval alfa the new created MqBufferLS object including all arguments from argv \b after the first #MQ_ALFA
+ *  \return the new created #MqBufferLS object
  *
  *  This function is usually called by the client (the initiator) of a msgque request. The \e alfa arguments
  *  will be used to start the server during the creation of the msgque object in #MqLinkCreate.
- *  \code
+\code
 int
 main ( int argc, char **argv)
 {
   // the command-line-arguments before (largv) and after (lalfa) the first MQ_ALFA
   struct MqBufferLS * largs = MqBufferLCreateArgs(argc, argv);
 ....
- * \endcode
- */
+\endcode
+ **/
 MQ_EXTERN struct MqBufferLS * MQ_DECL MqBufferLCreateArgs (
   int const argc,
   MQ_CST argv[]
@@ -3229,7 +3248,7 @@ MqBufferLAppendU (
 /// \context
 /// \bufL0
 /// \optionL
-/// \retval var if \e opt is found set \e var to #MQ_YES otherwise #MQ_NO
+/// \param[out] var if \e opt is found set \e var to #MQ_YES otherwise #MQ_NO
 /// \retMqErrorE
 /// \attention if \e option is found the entry is deleted from the MqBufferLS object
 MQ_EXTERN enum MqErrorE MQ_DECL MqBufferLCheckOptionO (
@@ -3398,7 +3417,7 @@ MQ_EXTERN void MQ_DECL MqBufferLLogS (
 /// \context
 /// \bufL
 /// \param index get the \e index'th element of the \e buf list
-/// \retval var the MqBufferS object to return
+/// \param[out] var the MqBufferS object to return
 /// \attention the \e index'th element of the \e buf list \b will be deleted from the buffer list
 /// \retMqErrorE
 /// \attention if \e bufL is \b not \c NULL the object from \e bufL will be deleted first
@@ -3830,50 +3849,50 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadT_END (
 
 /// \brief read a \RNS{BufferIdentifer} from the \e read-data-package
 /// \ctx
-/// \param[out] val the value to read
+/// \param[out] value the value to read
 /// \retException
 /// \if MSGQUE
 /// \anchor \NS{ReadTYPE}
 /// \endif
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadY (
   struct MqS * const ctx,
-  MQ_BYT * const val
+  MQ_BYT * const value
 ) __attribute__((nonnull(1)));
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadO (
   struct MqS * const ctx,
-  MQ_BOL * const val
+  MQ_BOL * const value
 ) __attribute__((nonnull(1)));
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadS (
   struct MqS * const ctx,
-  MQ_SRT * const val
+  MQ_SRT * const value
 ) __attribute__((nonnull(1)));
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadI (
   struct MqS * const ctx,
-  MQ_INT * const val
+  MQ_INT * const value
 ) __attribute__((nonnull(1)));
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadF (
   struct MqS * const ctx,
-  MQ_FLT * const val
+  MQ_FLT * const value
 ) __attribute__((nonnull(1)));
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadW (
   struct MqS * const ctx,
-  MQ_WID * const val
+  MQ_WID * const value
 ) __attribute__((nonnull(1)));
 
 /// \copydoc MqReadY
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadD (
   struct MqS * const ctx,
-  MQ_DBL * const val
+  MQ_DBL * const value
 ) __attribute__((nonnull(1)));
 
 /// \brief generic function to read an #MQ_STR object from the \e Read-Buffer object
@@ -3882,11 +3901,11 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadD (
 /// up to the next call of any \RNS{ReadData} function. If a long-term object is required
 /// the string have-to-be duplicated.
 /// \context
-/// \retval out the string to return
+/// \param[out] value the string to return
 /// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadC (
   struct MqS * const context,
-  MQ_CST * const out
+  MQ_CST * const value
 ) __attribute__((nonnull(1)));
 
 /// \brief generic function to read an #MQ_BIN object from the \e Read-Buffer object
@@ -3895,12 +3914,12 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadC (
 /// up to the next call of any \RNS{ReadData} function. If a long-term object is required
 /// the string have-to-be duplicated.
 /// \context
-/// \retval out the \e byte-array data to return
-/// \retval len the length of the \e byte-array data
+/// \param[out] value the \e byte-array data to return
+/// \param[out] len the length of the \e byte-array data
 /// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadB (
   struct MqS * const context,
-  MQ_BIN  * const out,
+  MQ_BIN  * const value,
   MQ_SIZE * const len
 ) __attribute__((nonnull(1)));
 
@@ -3910,16 +3929,16 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadB (
 /// \e data-type and the \e native data object as information. The \e item extracted
 /// can be saved into an external storage and be send later using \RNSA{SendN}.
 /// \ctx
-/// \param[out] val the \e body-item as \e byte-array
-/// \param[out] len the \e byte-array-length of the \e val
+/// \param[out] value the \e body-item to return
+/// \param[out] len the length of the \e body-item data
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
   struct MqS * const ctx,
-  MQ_CBI  * const val,
+  MQ_CBI  * const value,
   MQ_SIZE * const len
 ) __attribute__((nonnull(1)));
 
-/// \brief signature used in \ref MqDumpS::signature
+/// \brief signature used in \c MqDumpS::signature
 #define MQ_MqDumpS_SIGNATURE 0x00127364
 
 /// \brief dump the \e read-data-package suitable to store into an external storage
@@ -3930,7 +3949,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
 /// The \e export can be saved into an external storage or be used in a \e network-tunnel 
 /// (example: the \e agurad tool).
 /// \context
-/// \param[out] out the \e read-package-data to save
+/// \param[out] value the \e read-package-data to save
 /// \retException
 /// \attention 
 /// -# The memory is \e dynamic-allocated and have to be freed using \RNSA{DumpDelete}.
@@ -3938,7 +3957,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadN (
 /// .
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadDUMP (
   struct MqS * const context,
-  struct MqDumpS ** const out
+  struct MqDumpS ** const value
 ) __attribute__((nonnull(1)));
 
 
@@ -3962,22 +3981,22 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadLOAD (
 /// up to the next call of any \RNS{ReadData} function. If a long-term object is required
 /// use \RNS{BufferDup} and \RNS{BufferDelete} later.
 /// \ctx
-/// \param[out] val the buffer as output
+/// \param[out] value the buffer as output
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadU (
   struct MqS * const ctx,
-  struct MqBufferS ** val
+  struct MqBufferS ** value
 ) __attribute__((nonnull(1)));
 
 /// \brief read an MqBufferLS object from all items of the \e Read-Buffer object
 /// \context
-/// \param[in,out] out data will be appended to \e *out, if \e *out != \c NULL the
-///    \e *out value will be used otherwise \e *out will be set to a new
+/// \param[out] value data will be appended to \e *value, if \e *value != \c NULL the
+///    \e *value value will be used otherwise \e *value will be set to a new
 ///    #MqBufferLS object.
 /// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqReadL (
   struct MqS * const context,
-  struct MqBufferLS ** const out
+  struct MqBufferLS ** const value
 ) __attribute__((nonnull(1)));
 
 /// \brief link two \e context-objects to direct pass a data item from one object to the other.
@@ -4171,12 +4190,12 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendC (
 
 /// \brief append a #MQ_BIN object to the \e Send-Buffer object
 /// \context
-/// \param in the \e byte-array data to send
+/// \param value the \e byte-array data to send
 /// \param len the size of the \e byte-array data to send
 /// \retException
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendB (
   struct MqS * const context,
-  MQ_CBI  const in,
+  MQ_CBI  const value,
   MQ_SIZE const len
 );
 
@@ -4198,21 +4217,21 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendN (
 
 /// \brief append a #MqBufferS object to the \e Send-Buffer object
 /// \context
-/// \param[in] in the pointer to an #MqBufferS object to send
+/// \param[in] value the pointer to an #MqBufferS object to send
 /// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendU (
   struct MqS * const context,
-  struct MqBufferS * const in
+  struct MqBufferS * const value
 );
 
 /// \brief append a #MqBufferLS object to the \e Send-Buffer object
 /// \context
-/// \param in the pointer to an #MqBufferLS object to send
+/// \param[in] value the pointer to an #MqBufferLS object to send
 /// \retMqErrorE
 /// \attention all items of \e in are appended as single arguments to the call using #MqSendU
 MQ_EXTERN enum MqErrorE MQ_DECL MqSendL (
   struct MqS * const context,
-  struct MqBufferLS const * const in
+  struct MqBufferLS const * const value
 );
 
 /// \brief append a vararg string to the \e Send-Buffer object
@@ -4426,16 +4445,16 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendT_END (
 ///             |-  server2  -|- client1-2 -|- server5 ...  \endverbatim
 ///
 /// <B>Definition of a "master-context"</B>\n
-///  - the \e master-context is a \parent_context without a \child_context available.
-///  - the \e master-context is a \client_context or a \server_context.
-///  - the \e master-context is responsible to create or delete the \child_context of the \e slave.
-///  - the \e master-context is responsible to delete the \parent_context of the \e slave.
+///  - the \e master-context is a \e parent-context without a \e child-context available.
+///  - the \e master-context is a \e client-context or a \e server-context.
+///  - the \e master-context is responsible to create or delete the \e child-context of the \e slave.
+///  - the \e master-context is responsible to delete the \e parent-context of the \e slave.
 ///  - the \e link between the \e master-context and the \e slave-context is done using \RNSA{SlaveWorker}
 ///  .
 /// 
 /// <B>Definition of a "slave-context"</B>\n
-///  - the \e slave-context is a \parent_context without a \child_context available.
-///  - the \e slave-context is a \client_context.
+///  - the \e slave-context is a \e parent-context without a \e child-context available.
+///  - the \e slave-context is a \e client-context.
 ///  - the \e slave-context lifetime is controlled by the \e master-context.
 ///  - the \e slave-context report all error-messages to the \e master-context.
 ///  - a special form of a \e slave-context is a \e worker-context
@@ -4443,7 +4462,7 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqSendT_END (
 /// 
 /// <B>Definition of a "worker-context"</B>\n
 ///  - the \e worker-context is a \e slave-context using the image of the \e master-context self.
-///  - the \e master-context have to be a \server_context.
+///  - the \e master-context have to be a \e server-context.
 ///  - the \e worker-context is created using \RNSA{SlaveWorker}
 ///  - the \e worker-context is identified by a \e unique integer starting with \c 0.
 ///  .
@@ -4601,7 +4620,7 @@ typedef int (*MqSysSelectF) (int, void*, void*, void*, struct timeval*);
 
 /// \brief \b fork syscall
 /// \details additional info: <TT>man fork</TT>
-/// \retval the process identifier of the new child (in the parent process) or 0 (in the child process)
+/// \returns the process identifier of the new child (in the parent process) or 0 (in the child process)
 typedef MQ_IDNT (*MqSysForkF) (void);
 
 /// signal type of the \e MqIdS data \e val
@@ -4946,8 +4965,8 @@ MQ_EXTERN MQ_STR MQ_DECL MqSysBasename (
 /// \syscall{gettimeofday}
 /// \details additional info: <TT>man gettimeofday</TT>
 /// \context
-/// \retval tv the timeval object
-/// \retval tz the timezone object
+/// \param[out] tv the timeval object
+/// \param[out] tz the timezone object
 /// \retMqErrorE
 MQ_EXTERN enum MqErrorE MQ_DECL MqSysGetTimeOfDay (
   struct MqS * const context,

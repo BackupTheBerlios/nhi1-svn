@@ -32,6 +32,7 @@ ALIASES		    += "null=\e None"
 ALIASES		    += "yes=\e True"
 ALIASES		    += "no=\e False"
 ALIASES		    += "package=from pymsgque import *"
+ALIASES             += "server=server.py"
 
 ALIASES		    += "FactoryDefault=MqFactoryS FactoryDefault(?\C ident,? Class cs)"
 ALIASES		    += "FactoryDefaultIdent=\C FactoryDefaultIdent()"
@@ -64,6 +65,7 @@ ALIASES		    += "ContextCreate=ctx=MqS(?tmpl?)"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=ctx.Delete()"
 ALIASES		    += "Exit=ctx.Exit()"
+ALIASES		    += "Resolve=\TM[] Resolve(\C ident)"
 ALIASES		    += "SqlSetDb=ctx.SqlSetDb(\C storageFile)"
 ALIASES		    += "LogC=ctx.LogC(prefix,level,message)"
 
@@ -315,6 +317,7 @@ if buf.GetType() == 'C' : \n\
   print(buf.GetC()) \n\
 \endcode"
 ALIASES		    += "BufferObject=<I>pymsgque.MqBufferS()</I>"
+
 ALIASES		    += "BufferGetO=\O buffer.GetO()"
 ALIASES		    += "BufferGetY=\Y buffer.GetY()"
 ALIASES		    += "BufferGetS=\S buffer.GetS()"
@@ -324,6 +327,19 @@ ALIASES		    += "BufferGetF=\F buffer.GetF()"
 ALIASES		    += "BufferGetD=\D buffer.GetD()"
 ALIASES		    += "BufferGetC=\C buffer.GetC()"
 ALIASES		    += "BufferGetB=\B buffer.GetB()"
+
+ALIASES		    += "BufferSetO=\TU buffer.SetO(\O value)"
+ALIASES		    += "BufferSetY=\TU buffer.SetY(\Y value)"
+ALIASES		    += "BufferSetS=\TU buffer.SetS(\S value)"
+ALIASES		    += "BufferSetI=\TU buffer.SetI(\I value)"
+ALIASES		    += "BufferSetW=\TU buffer.SetW(\W value)"
+ALIASES		    += "BufferSetF=\TU buffer.SetF(\F value)"
+ALIASES		    += "BufferSetD=\TU buffer.SetD(\D value)"
+ALIASES		    += "BufferSetC=\TU buffer.SetC(\C value)"
+ALIASES		    += "BufferSetB=\TU buffer.SetB(\B value)"
+
+ALIASES		    += "BufferAppendC=\TU buffer.AppendC(\C value)"
+
 ALIASES		    += "BufferGetType=PyUnicode buffer.GetType()"
 ALIASES		    += "BufferDup=\TU buffer.Dup()"
 ALIASES		    += "BufferDelete=buffer.Delete()"
@@ -338,11 +354,14 @@ ALIASES		    += "D=PyFloat"
 ALIASES		    += "C=PyUnicode"
 ALIASES		    += "B=PyByteArray"
 ALIASES		    += "U=MqBufferS"
+ALIASES		    += "L=MqBufferLS"
+
 ALIASES		    += "TM=MqS"
 ALIASES		    += "TB=PyByteArray"
 ALIASES		    += "TE=MqSException"
 ALIASES		    += "TU=MqBufferS"
 ALIASES		    += "TD=MqDumpS"
+ALIASES		    += "TL=MqDumpLS"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\

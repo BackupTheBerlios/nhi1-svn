@@ -31,6 +31,7 @@ ALIASES		    += "null=\e undef"
 ALIASES		    += "yes=\e 1"
 ALIASES		    += "no=\e 0"
 ALIASES		    += "package=use Net::PerlMsgque;<BR>package MyServer;<BR>use base qw(Net::PerlMsgque::MqS);"
+ALIASES             += "server=server.pl"
 
 ALIASES		    += "FactoryDefault=MqFactoryS MqFactoryS::Default(ident,?class-package?)"
 ALIASES		    += "FactoryDefaultIdent=\C MqFactoryS::DefaultIdent()"
@@ -69,6 +70,7 @@ ALIASES		    += "ContextCreate=our $ctx=new MqS(?tmpl?)"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=$ctx->Delete()"
 ALIASES		    += "Exit=$ctx->Exit()"
+ALIASES		    += "Resolve=\TM[] Net::PerlMsgque::Resolve(\C ident)"
 ALIASES		    += "SqlSetDb=$ctx->SqlSetDb(storageFile)"
 ALIASES		    += "LogC=$ctx->LogC(prefix,level,message)"
 
@@ -297,6 +299,7 @@ if {$buf->GetType() eq 'C'} { \n\
 \endcode"
 
 ALIASES		    += "BufferObject=<I>class MqBufferS</I>"
+
 ALIASES		    += "BufferGetO=\O $buffer->GetO()"
 ALIASES		    += "BufferGetY=\Y $buffer->GetY()"
 ALIASES		    += "BufferGetS=\S $buffer->GetS()"
@@ -306,6 +309,19 @@ ALIASES		    += "BufferGetF=\F $buffer->GetF()"
 ALIASES		    += "BufferGetD=\D $buffer->GetD()"
 ALIASES		    += "BufferGetC=\C $buffer->GetC()"
 ALIASES		    += "BufferGetB=\B $buffer->GetB()"
+
+ALIASES		    += "BufferSetO=\TU $buffer->SetO(\O value)"
+ALIASES		    += "BufferSetY=\TU $buffer->SetY(\Y value)"
+ALIASES		    += "BufferSetS=\TU $buffer->SetS(\S value)"
+ALIASES		    += "BufferSetI=\TU $buffer->SetI(\I value)"
+ALIASES		    += "BufferSetW=\TU $buffer->SetW(\W value)"
+ALIASES		    += "BufferSetF=\TU $buffer->SetF(\F value)"
+ALIASES		    += "BufferSetD=\TU $buffer->SetD(\D value)"
+ALIASES		    += "BufferSetC=\TU $buffer->SetC(\C value)"
+ALIASES		    += "BufferSetB=\TU $buffer->SetB(\B value)"
+
+ALIASES		    += "BufferAppendC=\TU $buffer->AppendC(\C value)"
+
 ALIASES		    += "BufferGetType=char $buffer->GetType()"
 ALIASES		    += "BufferDup=\TU $buffer->Dup()"
 ALIASES		    += "BufferDelete=$buffer->Delete()"
@@ -320,11 +336,14 @@ ALIASES		    += "D=double"
 ALIASES		    += "C=string"
 ALIASES		    += "B=byteArray"
 ALIASES		    += "U=MqBufferS"
+ALIASES		    += "L=MqBufferLS"
+
 ALIASES		    += "TM=MqS"
 ALIASES		    += "TB=byteArray"
 ALIASES		    += "TE=MqSException"
 ALIASES		    += "TU=MqBufferS"
 ALIASES		    += "TD=MqDumpS"
+ALIASES		    += "TL=MqBufferLS"
 
 # CONTEXT LOCAL STORAGE
 ENABLED_SECTIONS    += DATA

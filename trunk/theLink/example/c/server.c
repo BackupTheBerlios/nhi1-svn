@@ -1158,6 +1158,7 @@ Ot_BUFE (
       }
       MqErrorCheck(MqSendU(mqctx, tmp));
     } else if (!strcmp(cmd,"mulbuf")) {
+      // Append-Example for C
       MQ_BUF tmp = MqContextGetBuffer(mqctx);
       MQ_CST str;
       while (MqReadItemExists(mqctx)) {
@@ -1365,6 +1366,7 @@ Ot_ROUT (
   } else if (!strncmp (cmd, "Ident", 5)) {
     MqSendC(mqctx,  MqFactoryCtxIdentGet (mqctx));
   } else if (!strncmp (cmd, "Resolve", 7)) {
+    // Resolve-Example for C
     MQ_CST rmtIdent;
     MqErrorCheck (MqReadC (mqctx, &rmtIdent));
     for (struct MqS ** ret=MqResolve(rmtIdent,NULL); *ret != NULL; ret++) {

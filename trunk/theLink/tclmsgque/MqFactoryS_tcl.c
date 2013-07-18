@@ -18,8 +18,7 @@
 /*                                                                           */
 /*****************************************************************************/
 
-#define FACTORY_ARGS \
-Tcl_Interp * interp, struct MqFactoryS * const item, int skip, int objc, struct Tcl_Obj *const *objv
+#define MqFactoryS_ARGS Tcl_Interp * interp, struct MqFactoryS * const item, int skip, int objc, struct Tcl_Obj *const *objv
 
 #define FS(n)    Tclmsgque_MqFactoryS_ ## n
 
@@ -38,8 +37,8 @@ struct LookupKeyword {
   LookupKeywordF  keyF;
 };
 
-static int FS(New) (FACTORY_ARGS);
-static int FS(Copy) (FACTORY_ARGS);
+static int FS(New) (MqFactoryS_ARGS);
+static int FS(Copy) (MqFactoryS_ARGS);
 
 static int FS(Cmd) (
   ClientData clientData,
@@ -97,7 +96,7 @@ static int FS(Create) (
   }
 }
 
-static int FS(Copy) (FACTORY_ARGS)
+static int FS(Copy) (MqFactoryS_ARGS)
 {
   MQ_CST ident;
   CHECK_C(ident)
@@ -107,7 +106,7 @@ error:
   return TCL_ERROR;
 }
 
-static int FS(New) (FACTORY_ARGS)
+static int FS(New) (MqFactoryS_ARGS)
 {
   struct MqS * mqctx;
   CHECK_NOARGS

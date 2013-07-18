@@ -255,6 +255,7 @@ class Server(MqS):
     elif cmd == "Ident":
       self.SendC(self.FactoryCtxIdentGet())
     elif cmd == "Resolve":
+      # Resolve-Example for Python
       for lctx in Resolve(self.ReadC()):
         self.SendC (lctx.LinkGetTargetIdent())
     else:
@@ -288,6 +289,7 @@ class Server(MqS):
         tmp.SetB (buf.GetB())
       self.SendU(tmp)
     elif cmd == "mulbuf" :
+      # Append-Example for python
       tmp = self.ContextGetBuffer()
       while self.ReadItemExists():
         tmp = tmp.AppendC(self.ReadC())

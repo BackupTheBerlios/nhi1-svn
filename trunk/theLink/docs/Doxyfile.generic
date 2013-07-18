@@ -284,13 +284,6 @@ ALIASES                = "libmsgque=\ref libmsgqueref" \
                          "api=\brief implement the \libmsgque API object:" \
                          "sameas{1}=\brief same as #\1 but using the #MqS object \e msgque as input" \
                          "id=\param[in] id an \e integer used as \e unique identifer for the master/slave link" \
-                         "master_context=\RNSA{SlaveContext,master-context}" \
-                         "slave_context=\RNSA{SlaveContext,slave-context}" \
-                         "client_context=\RNSA{ClientServerLink,client-context}" \
-                         "server_context=\RNSA{ClientServerLink,server-context}" \
-                         "parent_context=\RNSA{ClientServerLink,parent-context}" \
-                         "child_context=\RNSA{ClientServerLink,child-context}" \
-                         "worker_context=\RNSA{SlaveContext,worker-context}" \
                          "PLMK=<A HREF= http://openfacts2.berlios.de/wikien/index.php/BerliosProject:NHI1_-_TheKernel>PMLK</A>" \
                          "copyall{1}=\brief \copybrief \1 \n\details \copydetails \1" \
                          "syscall{1}=\brief <B>\1</B> syscall with #MqS error plugin"

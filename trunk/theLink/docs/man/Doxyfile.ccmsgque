@@ -32,6 +32,7 @@ ALIASES		    += "null=\e NULL"
 ALIASES		    += "yes=\e MQ_YES"
 ALIASES		    += "no=\e MQ_NO"
 ALIASES		    += "package=\#include \"ccmsgque.h\"<br>using namespace ccmsgque;"
+ALIASES             += "server=server.cc"
 
 ALIASES		    += "FactoryDefault=MqFactoryC<T> MqFactoryC<T>::Default(\C ident)"
 ALIASES		    += "FactoryDefault2=MqFactoryC<T> MqFactoryC<T>::Default()"
@@ -75,6 +76,7 @@ ENABLED_SECTIONS    += ContextCreate2
 ALIASES		    += "ContextCreate2=MqC *ctx=new MqC()"
 ALIASES		    += "ContextCreateSection="
 ALIASES		    += "ContextDelete=delete(ctx)"
+ALIASES		    += "Resolve=\TM* Resolve(\C ident, \I *size)"
 ALIASES		    += "Exit=ctx.Exit()"
 ALIASES		    += "LogC=ctx.LogC(MQ_CST const prefix, MQ_INT level, MQ_CST const message)"
 ENABLED_SECTIONS    += HAS_LOGV
@@ -83,10 +85,10 @@ ENABLED_SECTIONS    += HAS_LOGVL
 ALIASES		    += "LogVL=ctx.LogVL(MQ_CST const prefix, MQ_INT level, MQ_CST const fmt, va_list var_list)"
 
 # OBJECT CONFIGURATION
-ALIASES		    += "Init=struct MqBufferLS * init = MqInitCreate()"
+ALIASES		    += "Init=struct MqBufferLS * init = MqInitArg0()"
 ALIASES		    += "init_example=\
 \code \n\
-struct MqBufferLS * init = MqInitCreate(); \n\
+struct MqBufferLS * init = MqInitArg0(); \n\
 MqBufferLAppendC(init, \"myExecutable\"); \n\
 MqBufferLAppendC(init, \"myFirstArgument\"); \n\
 \endcode \n\
@@ -367,6 +369,7 @@ if (buf->type == MQ_STRT) \n\
   printf(buf->cur.C); \n\
 \endcode"
 ALIASES		    += "BufferObject=<I>class MqBufferC</I>"
+
 ALIASES		    += "BufferGetO=\O buffer.GetO()"
 ALIASES		    += "BufferGetY=\Y buffer.GetY()"
 ALIASES		    += "BufferGetS=\S buffer.GetS()"
@@ -376,6 +379,19 @@ ALIASES		    += "BufferGetF=\F buffer.GetF()"
 ALIASES		    += "BufferGetD=\D buffer.GetD()"
 ALIASES		    += "BufferGetC=\C buffer.GetC()"
 ALIASES		    += "BufferGetB=\B buffer.GetB()"
+
+ALIASES		    += "BufferSetO=MQ_BUF buffer.SetO(\O value)"
+ALIASES		    += "BufferSetY=MQ_BUF buffer.SetY(\Y value)"
+ALIASES		    += "BufferSetS=MQ_BUF buffer.SetS(\S value)"
+ALIASES		    += "BufferSetI=MQ_BUF buffer.SetI(\I value)"
+ALIASES		    += "BufferSetW=MQ_BUF buffer.SetW(\W value)"
+ALIASES		    += "BufferSetF=MQ_BUF buffer.SetF(\F value)"
+ALIASES		    += "BufferSetD=MQ_BUF buffer.SetD(\D value)"
+ALIASES		    += "BufferSetC=MQ_BUF buffer.SetC(\C value)"
+ALIASES		    += "BufferSetB=MQ_BUF buffer.SetB(\B value)"
+
+ALIASES		    += "BufferAppendC=MQ_BUF buffer.AppendC(\C value)"
+
 ALIASES		    += "BufferGetType=enum MqTypeE buffer.GetType()"
 ALIASES		    += "BufferDup=\TU buffer.Dup()"
 ALIASES		    += "BufferDelete=buffer.Delete()"
@@ -390,12 +406,15 @@ ALIASES		    += "D=MQ_DBL"
 ALIASES		    += "C=MQ_CST"
 ALIASES		    += "B=MQ_BIN"
 ALIASES		    += "U=MQ_BUF"
+ALIASES		    += "L=MQ_BFL"
+
 ALIASES		    += "TM=MqC*"
 ALIASES		    += "TMR=MqC&"
 ALIASES		    += "TB=MQ_BIN"
 ALIASES		    += "TE=MqCException*"
 ALIASES		    += "TD=MqDumpC*"
 ALIASES		    += "TU=MqBufferC*"
+ALIASES		    += "TL=MqBufferLC*"
 
 # ERROR OBJECT
 ALIASES		    += "error_example=\code \n\
