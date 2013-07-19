@@ -276,7 +276,7 @@ G_HelpProc='Usage'
 G_Option break-on-non-option
 G_Argument 'prefix:prefix:no:prefix test with:L:no:vg:gdb:ddd:kdbg:lc:sr:st:sp:mdb:sdk:windbg:depends'
 G_Argument 'lookup:lookup:no:lookup a test-script:B'
-G_Argument 'remote:remote:no:add "--tcp --port 7777 --thread" to the argument(s):B'
+G_Argument 'remote:remote:no:add "--tcp --port 7777" to the argument(s):B'
 
 EOF
   )"
@@ -289,7 +289,7 @@ if [[ "$lookup" == 'yes' ]] ; then
 fi
 
 if [[ "$remote" == 'yes' ]] ; then
-  set -- "$@" --tcp --port 7777 --thread
+  set -- "$@" --tcp --port 7777
 fi
 
 case "$prefix" in

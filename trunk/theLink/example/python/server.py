@@ -294,6 +294,19 @@ class Server(MqS):
       while self.ReadItemExists():
         tmp = tmp.AppendC(self.ReadC())
       self.SendU(tmp)
+    elif cmd == "writereadonledonly" :
+      print("writereadonledonly"); sys.stdout.flush()
+      # ReadU - Example, read a buffer-object and append a string
+      buf = self.ReadU()
+      buf.AppendC("- a realy log text to overwrite the already allocated space")
+      self.SendU(buf)
+      self.SendI(self.ReadI()+1)
+    elif cmd == "doublereadbuf" :
+      print("doublereadbuf"); sys.stdout.flush()
+      buf1 = self.ReadU()
+      buf2 = self.ReadU()
+      self.SendU(buf1)
+      self.SendU(buf2)
     self.SendRETURN()
 
   def ERLR (self):

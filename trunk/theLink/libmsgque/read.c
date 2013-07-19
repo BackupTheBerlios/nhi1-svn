@@ -100,6 +100,7 @@ pReadDelete (
   pCacheDelete (&read->saveCache);
 
   MqBufferDelete (&read->hdr);
+
   MqBufferDelete (&read->readBuf);
   MqBufferDelete (&read->tranBuf);
 
@@ -752,6 +753,11 @@ MqDumpGetHandShake (
     bcur.B += (HDR_INT_LEN + 1); \
   } \
  \
+  /* clear local dynamic memory */ \
+  if (out->bits.alloc == MQ_ALLOC_DYNAMIC) { \
+    MqSysFree(out->data); \
+    out->bits.alloc = MQ_ALLOC_STATIC; \
+  } \
   /* read argument */ \
   out->data = out->cur.B = bcur.B; \
  \

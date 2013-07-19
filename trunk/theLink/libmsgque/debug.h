@@ -213,7 +213,7 @@ END_C_DECLS
 #define printMI(msgque,var)  printLog(msgque,#var " = <" MQ_FORMAT_I  ">\n", var);fflush(stderr);
 
 #define printM(mq) MqDLogV(mq,__func__,0,"(%s:%d) -> <" #mq ">\n", __FILE__, __LINE__);
-#define printU(var) MqBufferLog(MQ_CONTEXT_S, var, #var);
+#define printU(var) MqBufferLog(var->context, var, #var);
 #define printXU(ctx,var) MqBufferLog(ctx, var, #var);
 #define printUL(var) MqBufferLLog(MQ_CONTEXT_S, var, #var);
 #define printXUL(x,var) MqBufferLLog(x, var, #var);

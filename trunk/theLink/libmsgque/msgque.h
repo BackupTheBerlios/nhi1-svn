@@ -3978,8 +3978,13 @@ MQ_EXTERN enum MqErrorE MQ_DECL MqReadLOAD (
 /// \brief extract a \b temporary \RNS{BufferObject} from the \e read-data-package
 ///
 /// The object returned is owned by the \e read-data-package and is \b only valid
-/// up to the next call of any \RNS{ReadData} function. If a long-term object is required
-/// use \RNS{BufferDup} and \RNS{BufferDelete} later.
+/// up to the next call of any \RNS{ReadData} function. The returned buffer-object
+/// can be updated (\RNSA{BufferAppendC}...), the memory will be automatic cleaned later.
+/// If a long-term object is required use \RNS{BufferDup} to create your own copy and 
+/// use \RNS{BufferDelete} to free the copy later.
+/// \dontinclude \server
+/// \skip ReadU - Example
+/// \until SendU
 /// \ctx
 /// \param[out] value the buffer as output
 /// \retException

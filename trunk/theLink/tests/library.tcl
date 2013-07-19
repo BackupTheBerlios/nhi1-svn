@@ -802,7 +802,7 @@ while {true} {
       set argv [list --only-binary --max 5 --only-spawn --only-tcp {*}$argv]
     }
     {^--remote-testing$} {
-      set argv [list --only-tcp --port 7777 --only-thread --only-binary --use-remote --max 5 {*}$argv]
+      set argv [list --only-tcp --port 7777 --only-binary --only-spawn --use-remote --max 5 {*}$argv]
     }
     {^--use-remote$} {
       set env(USE_REMOTE) true
@@ -930,7 +930,7 @@ while {true} {
       puts "  --thread-testing . --only-binary --max 5 --only-thread --only-tcp"
       puts "  --fork-testing ... --only-binary --max 5 --only-fork --only-tcp"
       puts "  --spawn-testing .. --only-binary --max 5 --only-spawn --only-tcp"
-      puts "  --remote-testing . --only-binary/thread/tcp, --port 7777 and --use-remote --max 5"
+      puts "  --remote-testing . --only-binary/tcp/spawn, --port 7777 and --use-remote --max 5"
       exit 1
     }
     {^--help-msgque$} {

@@ -1166,6 +1166,21 @@ Ot_BUFE (
 	tmp = MqBufferAppendC(tmp,str);
       }
       MqErrorCheck (MqSendU(mqctx,tmp));
+    } else if (!strcmp(cmd,"writereadonledonly")) {
+      MQ_INT i;
+      // ReadU - Example, read a buffer-object and append a string 
+      MQ_BUF buf;
+      MqErrorCheck (MqReadU(mqctx,&buf));
+      MqBufferAppendC(buf,"- a realy log text to overwrite the already allocated space");
+      MqErrorCheck (MqSendU(mqctx,buf));
+      MqErrorCheck (MqReadI(mqctx,&i));
+      MqErrorCheck (MqSendI(mqctx,i+1));
+    } else if (!strcmp(cmd,"doublereadbuf")) {
+      MQ_BUF buf1,buf2;
+      MqErrorCheck (MqReadU(mqctx,&buf1));
+      MqErrorCheck (MqReadU(mqctx,&buf2));
+      MqErrorCheck (MqSendU(mqctx,buf1));
+      MqErrorCheck (MqSendU(mqctx,buf2));
     }
 error:
   return MqSendRETURN (mqctx);

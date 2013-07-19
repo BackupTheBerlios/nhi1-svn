@@ -249,7 +249,11 @@ pBufferDeleteRef (
   struct MqBufferS ** const bufP
 )
 {
-  if (unlikely (bufP == NULL || *bufP == NULL)) return;
+  MQ_BUF buf;
+  if (unlikely (bufP == NULL || (buf=*bufP) == NULL)) return;
+  if (buf->data && buf->data != buf->bls && buf->bits.alloc == MQ_ALLOC_DYNAMIC ) {
+    MqSysFree (buf->data);
+  }
   (*bufP)->signature = 0;
   MqSysFree (*bufP);
 }
@@ -262,17 +266,23 @@ MqBufferDelete (
   struct MqBufferS *buf;
   // do NOT detete an invalid pointer
   if (unlikely (bufP == NULL || (buf=*bufP) == NULL)) return;
+printP(buf)
   // do NOT delete an invalid buffer object
   if (buf->signature != MQ_MqBufferS_SIGNATURE) return;
-  // do not delete a local refernence
-  if (buf->bits.ref == MQ_REF_LOCAL) return;
   // do NOT delete STATIC storage 
   if (buf->data && buf->data != buf->bls && buf->bits.alloc == MQ_ALLOC_DYNAMIC ) {
     MqSysFree (buf->data);
+    buf->data = buf->bls;
+    buf->size = MQ_BLS_SIZE;
+    buf->cursize = 0;
+    buf->bits.alloc = MQ_ALLOC_STATIC;
   }
-  // NOW delete
-  buf->signature = 0;
-  MqSysFree (*bufP);
+  // do not delete a local reference
+  if (buf->bits.ref != MQ_REF_LOCAL) {
+    // NOW delete
+    buf->signature = 0;
+    MqSysFree (*bufP);
+  }
 }
 
 void
@@ -421,7 +431,9 @@ _pBufferNewSize (
     buf->data = (MQ_BIN) MqSysRealloc (MQ_ERROR_PANIC, buf->data, size+1);
   } else {
     // this is "MQ_ALLOC_STATIC"
+    MQ_BIN tmp = buf->data;
     buf->data = (MQ_BIN)MqSysMalloc (MQ_ERROR_PANIC, size+1);
+    memcpy(buf->data, tmp, buf->cursize);
     buf->bits.alloc = MQ_ALLOC_DYNAMIC;
   }
   buf->size = size;

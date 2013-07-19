@@ -279,11 +279,14 @@ PyObject* NS(SendU) (
   PyObject  *args
 )
 {
+M0
   SETUP_context
   MqBufferS_Obj *bufO = NULL;
   if (!PyArg_ParseTuple(args, "O!:SendO", &NS(MqBufferS), &bufO)) {
     return NULL;
   }
+printP(bufO)
+printP(bufO->buf)
   ErrorMqToPythonWithCheck (MqSendU(context,bufO->buf));
   SETUP_RETURN
 }

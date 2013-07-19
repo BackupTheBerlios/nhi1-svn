@@ -64,6 +64,25 @@ test buffer-2-($I|$B|$C|$S) {multiple set a temporary buffer object} \
   -body     { Echo1 $FH_LAST BUFE Read$typ SendC mulbuf SendC Hallo SendC World SendC now SendC future SendC space } \
   -result   HalloWorldnowfuturespace
 
+test buffer-3-($I|$B|$C|$S) {write a read-only buffer} \
+  -body     { EchoL $FH_LAST BUFE SendC "writereadonledonly" SendC "Hallo World" SendI 7 } \
+  -result   {{Hallo World- a realy log text to overwrite the already allocated space} 8}
+
+test buffer-4-($I|$B|$C|$S) {write a read-only buffer multiple} \
+  -body     { 
+    set txt "Hallo World"
+    set num 0
+    while {$num < 10} {
+      foreach {txt num} [EchoL $FH_LAST BUFE SendC "writereadonledonly" SendC $txt SendI $num] break
+    }
+    return "$num -> $txt"
+  } \
+  -result   {10 -> Hallo World- a realy log text to overwrite the already allocated space- a realy log text to overwrite the already allocated space- a realy log text to overwrite the already allocated space- a realy log text to overwrite the already allocated space- a realy log text to overwrite the already allocated space- a realy log text to overwrite the already allocated space- a realy log text to overwrite the already allocated space- a realy log text to overwrite the already allocated space- a realy log text to overwrite the already allocated space- a realy log text to overwrite the already allocated space}
+
+test buffer-5-($I|$B|$C|$S) {double read buffer} \
+  -body     { EchoL $FH_LAST BUFE SendC "doublereadbuf" SendI 10 SendF 0.11 } \
+  -result   {0.109999999404 0.109999999404}
+
 
 
 # cleanup ---------------------------
