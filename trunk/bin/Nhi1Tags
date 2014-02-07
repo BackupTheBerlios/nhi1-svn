@@ -112,7 +112,7 @@ test -f $abs_top_dir/tags && cp $abs_top_dir/tags .
     PY_API=/cygdrive/c/Python32
   else
     PY_HOME=$HOME/src/python-latest/
-    PY_API=$HOME/ext/$MACHTYPE/test/lib/perl5
+    PY_API=$HOME/ext/$MACHTYPE/test/include/python3.3m
   fi
   test -n "$PY_API" && find $PY_API -name "*.h" | \
     xargs ctags -a $ADD -I PyAPI_DATA,PyAPI_FUNC

@@ -266,7 +266,7 @@ MqBufferDelete (
   struct MqBufferS *buf;
   // do NOT detete an invalid pointer
   if (unlikely (bufP == NULL || (buf=*bufP) == NULL)) return;
-printP(buf)
+//printP(buf)
   // do NOT delete an invalid buffer object
   if (buf->signature != MQ_MqBufferS_SIGNATURE) return;
   // do NOT delete STATIC storage 

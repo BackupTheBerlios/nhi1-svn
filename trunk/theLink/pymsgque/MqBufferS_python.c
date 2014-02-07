@@ -229,13 +229,19 @@ static PyMethodDef NS(MqBufferS_Methods)[] = {
 static void
 NS(MqBufferS_dealloc)(MqBufferS_Obj* self)
 {
+printP(self)
   Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
 PyTypeObject NS(MqBufferS) = {
   {PyObject_HEAD_INIT(NULL)},
   "pymsgque.MqBufferS",		  /* tp_name */
-  sizeof(MqBufferS_Obj),	  /* tp_basicsize */
+
+  // mystic +1 to avoid an memory error in "buffer-[45]-*"
+  // Problem: the return pointer in PyObject_New called by MqBufferS_New for two
+  // calls !! overlap !! -> difference smaller then "tp_basicsize" -> mystic.
+  sizeof(MqBufferS_Obj)+1,	  /* tp_basicsize */
+
   0,				  /* tp_itemsize */
   (destructor)NS(MqBufferS_dealloc),	  /* tp_dealloc */
   0,				  /* tp_print */

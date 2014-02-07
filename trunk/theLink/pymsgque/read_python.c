@@ -238,7 +238,6 @@ PyObject* NS(ReadU) (
   SETUP_context
   MQ_BUF buffer;
   ErrorMqToPythonWithCheck(MqReadU(context, &buffer));
-printP(buffer)
   obj = MqBufferS_New(buffer);
 printP(obj)
   return obj;

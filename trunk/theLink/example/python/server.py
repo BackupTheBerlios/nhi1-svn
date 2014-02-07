@@ -13,6 +13,8 @@
 import sys
 import os
 import time
+import ctypes
+
 from pymsgque import *
 
 class Client(MqS):
@@ -295,9 +297,13 @@ class Server(MqS):
         tmp = tmp.AppendC(self.ReadC())
       self.SendU(tmp)
     elif cmd == "writereadonledonly" :
-      print("writereadonledonly"); sys.stdout.flush()
+      print("writereadonledonly");
+      sys.stdout.flush();
+
       # ReadU - Example, read a buffer-object and append a string
       buf = self.ReadU()
+
+
       buf.AppendC("- a realy log text to overwrite the already allocated space")
       self.SendU(buf)
       self.SendI(self.ReadI()+1)
